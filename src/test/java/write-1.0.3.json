@@ -1,0 +1,141 @@
+{
+    "_id": "npm/npmjs/-/write/1.0.3", 
+    "_meta": {
+        "schemaVersion": "1.6.1", 
+        "updated": "2019-04-02T11:38:48.675Z"
+    }, 
+    "coordinates": {
+        "name": "write", 
+        "provider": "npmjs", 
+        "revision": "1.0.3", 
+        "type": "npm"
+    }, 
+    "described": {
+        "files": 4, 
+        "hashes": {
+            "sha1": "0800e14523b923a387e415123c865616aae0f5c3", 
+            "sha256": "8970fa014fd07716369b9962b27f17212945d2247759afa98241876dea1518e8"
+        }, 
+        "issueTracker": "https://github.com/jonschlinkert/write/issues", 
+        "projectWebsite": "https://github.com/jonschlinkert/write", 
+        "releaseDate": "2017-07-11", 
+        "score": {
+            "date": 30, 
+            "source": 70, 
+            "total": 100
+        }, 
+        "sourceLocation": {
+            "name": "write", 
+            "namespace": "jonschlinkert", 
+            "provider": "github", 
+            "revision": "f5397515060bf42f75151fcc3c4722517e4e322a", 
+            "type": "git", 
+            "url": "https://github.com/jonschlinkert/write/tree/f5397515060bf42f75151fcc3c4722517e4e322a"
+        }, 
+        "toolScore": {
+            "date": 30, 
+            "source": 70, 
+            "total": 100
+        }, 
+        "tools": [
+            "clearlydefined/1.3.4", 
+            "licensee/9.12.1", 
+            "scancode/3.2.2", 
+            "fossology/3.6.0"
+        ], 
+        "urls": {
+            "download": "https://registry.npmjs.com/write/-/write-1.0.3.tgz", 
+            "registry": "https://npmjs.com/package/write", 
+            "version": "https://npmjs.com/package/write/v/1.0.3"
+        }
+    }, 
+    "files": [
+        {
+            "attributions": [
+                "Copyright (c) 2014-2017, Jon Schlinkert."
+            ], 
+            "hashes": {
+                "sha1": "2d068b89820b596b358e9751c35622f386f3aaa8", 
+                "sha256": "0ead7e8cd8b0bc66a981ee69acaf1297ffa838cfce1b156a039bb24f997c0a27"
+            }, 
+            "license": "MIT", 
+            "natures": [
+                "license"
+            ], 
+            "path": "package/LICENSE", 
+            "token": "0ead7e8cd8b0bc66a981ee69acaf1297ffa838cfce1b156a039bb24f997c0a27"
+        }, 
+        {
+            "hashes": {
+                "sha1": "9a7ca4b516153ebddcb5b69bb2dfe1ae07430fdc", 
+                "sha256": "3ba557effc61ca2ed9f7bed15d1272555d62ae897a1a3ce0ce366b22e89c0d42"
+            }, 
+            "license": "MIT", 
+            "path": "package/package.json", 
+            "token": "3ba557effc61ca2ed9f7bed15d1272555d62ae897a1a3ce0ce366b22e89c0d42"
+        }, 
+        {
+            "attributions": [
+                "Copyright (c) 2014-2017, Jon Schlinkert."
+            ], 
+            "hashes": {
+                "sha1": "e7ddaa5e1d0b63e02b4a1ae71b3f56606c57abe7", 
+                "sha256": "610ee63b12eaa36e3bc50cb9808ea6c517d0086653e2f5a1f2fdea1fd87b12cb"
+            }, 
+            "license": "MIT", 
+            "path": "package/index.js"
+        }, 
+        {
+            "attributions": [
+                "Copyright (c) 2017, Jon Schlinkert (https://github.com/jonschlinkert)."
+            ], 
+            "hashes": {
+                "sha1": "94c02b37584ff7f9c7ae65f75b01dbe7bc624972", 
+                "sha256": "18edccacf6af206128d9a2e584fa091f366e839348c6563d520659bada2a0a60"
+            }, 
+            "license": "MIT", 
+            "path": "package/README.md"
+        }
+    ], 
+    "licensed": {
+        "declared": "MIT", 
+        "facets": {
+            "core": {
+                "attribution": {
+                    "parties": [
+                        "Copyright (c) 2014-2017, Jon Schlinkert.", 
+                        "Copyright (c) 2017, Jon Schlinkert (https://github.com/jonschlinkert)."
+                    ], 
+                    "unknown": 1
+                }, 
+                "discovered": {
+                    "expressions": [
+                        "MIT"
+                    ], 
+                    "unknown": 0
+                }, 
+                "files": 4
+            }
+        }, 
+        "score": {
+            "consistency": 15, 
+            "declared": 30, 
+            "discovered": 19, 
+            "spdx": 15, 
+            "texts": 15, 
+            "total": 94
+        }, 
+        "toolScore": {
+            "consistency": 15, 
+            "declared": 30, 
+            "discovered": 19, 
+            "spdx": 15, 
+            "texts": 15, 
+            "total": 94
+        }
+    }, 
+    "scores": {
+        "effective": 97, 
+        "tool": 97
+    }
+}
