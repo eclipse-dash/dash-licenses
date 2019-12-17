@@ -7,9 +7,14 @@ import org.junit.jupiter.api.Test;
 class ContentIdTests {
 
 	@Test
-	void test() {
-		IContentId id = new ContentId("npm/npmjs/-/write/1.0.3");
+	void testValid() {
+		IContentId id = ContentId.getContentId("npm/npmjs/-/write/1.0.3");
 		assertEquals("npm/npmjs/-/write/1.0.3",id.toString());
+	}
+	
+	@Test
+	void testInvalid() {
+		assertThrows(IllegalArgumentException.class, () -> ContentId.getContentId("write/1.0.3"));
 	}
 
 }

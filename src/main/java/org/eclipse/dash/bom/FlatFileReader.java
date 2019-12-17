@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class FlatFileReader implements DependencyListReader {
+public class FlatFileReader implements IDependencyListReader {
 	
 	List<ContentIdParser> parsers = new ArrayList<>();
 

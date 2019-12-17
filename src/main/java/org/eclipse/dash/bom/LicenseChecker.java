@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
@@ -28,19 +29,20 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.eclipse.dash.bom.LicenseSupport.Status;
 
 @Singleton
 public class LicenseChecker {
-	private Settings settings;
+	private ISettings settings;
 	
 	@Inject
 	Set<ContentIdParser> contentIdParsers;
 		
-	public LicenseChecker(Settings settings) {
+	public LicenseChecker(ISettings settings) {
 		this.settings = settings;
 	}
 	
-	public void getLicenseData(List<IContentId> values, Consumer<IContentData> consumer) {
+	public void getLicenseData(List<IContentId> values, BiConsumer<IContentData, Status> consumer) {
 		Iterator<IContentId> dependencies = values.iterator();
 		while (dependencies.hasNext()) {
 			List<IContentId> batch = new ArrayList<>();
@@ -50,25 +52,27 @@ public class LicenseChecker {
 					batch.add(id);
 					if (batch.size() > settings.getBatchSize()) break;					
 				} else {
-					consumer.accept(new InvalidContentData(id));
+					consumer.accept(new InvalidContentData(id), Status.Restricted);
 				}
 			}
 			getContentData(batch, consumer);
 		}
 	}
 	
-	public void getContentData(List<IContentId> ids, Consumer<IContentData> consumer) {
+	public void getContentData(List<IContentId> ids, BiConsumer<IContentData, Status> consumer) {
+		LicenseSupport licenses = LicenseSupport.getLicenseSupport(settings);
+		
 		Set<IContentId> unresolved = new HashSet<>();
 		unresolved.addAll(ids);
 		
 		matchAgainstFoundationData(ids, data -> {
 			unresolved.remove(data.getId());
-			consumer.accept(data);
+			consumer.accept(data, data.getStatus());
 		});
 		
 		matchAgainstClearlyDefined(unresolved, data -> {
 			unresolved.remove(data.getId());
-			consumer.accept(data);
+			consumer.accept(data, licenses.getStatus(data.getLicense()));
 		});
 		
 		unresolved.forEach(id -> new InvalidContentData(id));
@@ -99,11 +103,11 @@ public class LicenseChecker {
             	
             	JsonObject approved = read.getJsonObject("approved");
 				if (approved != null)
-					approved.forEach((key,each) -> consumer.accept(new FoundationData(each)));
+					approved.forEach((key,each) -> consumer.accept(new FoundationData(each.asJsonObject())));
 				
 				JsonObject restricted = read.getJsonObject("restricted");
 				if (restricted != null)
-					restricted.forEach((key,each) -> consumer.accept(new FoundationData(each)));
+					restricted.forEach((key,each) -> consumer.accept(new FoundationData(each.asJsonObject())));
             	
             	content.close();
             }
@@ -138,6 +142,7 @@ public class LicenseChecker {
 	 */
 	private void matchAgainstClearlyDefined(Collection<IContentId> ids, Consumer<IContentData> consumer) {
 		if (ids.size() == 0) return;
+		
 		String url = settings.getClearlyDefinedDefinitionsUrl();
         CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
@@ -154,7 +159,8 @@ public class LicenseChecker {
             	JsonReader reader = Json.createReader(new InputStreamReader(content, "UTF-8"));
             	JsonObject read = (JsonObject)reader.read();
             	
-            	read.forEach((key,each) -> consumer.accept(new ClearlyDefinedContentData(key, each)));
+            	read.forEach((key,each) -> 
+            		consumer.accept(new ClearlyDefinedContentData(key, each.asJsonObject())));
 				
             	content.close();
             }

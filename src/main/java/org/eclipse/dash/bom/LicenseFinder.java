@@ -7,14 +7,16 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.dash.bom.LicenseSupport.Status;
+
 public class LicenseFinder {
 
 	public static void main(String[] args) {
-		Settings settings = Settings.getSettings(args);
+		ISettings settings = CommandLineSettings.getSettings(args);
 		if (settings == null) return;
 		
         Arrays.stream(args).forEach(name -> {
-        	DependencyListReader reader = null;
+        	IDependencyListReader reader = null;
 			try {
 				reader = getReader(name);
 			} catch (FileNotFoundException e) {
@@ -25,14 +27,16 @@ public class LicenseFinder {
         		List<IContentId> dependencies = reader.iterator();
         		
         		LicenseChecker checker = new LicenseChecker(settings);
-        		checker.getLicenseData(dependencies, data -> {
-        			System.out.println(data.getId() + data.getLicense());
+        		checker.getLicenseData(dependencies, (data, status) -> {
+        			// FIXME Support different options for output.
+        			// CSV for now.
+        			System.out.println(String.format("%s, %s, %s, %s", data.getId(), data.getLicense(), status == Status.Approved ? "approved" : "restricted", data.getAuthority()));
         		});    		
         	}
         });
 	}
 	
-	private static DependencyListReader getReader(String name) throws FileNotFoundException {
+	private static IDependencyListReader getReader(String name) throws FileNotFoundException {
     	if ("-".equals(name)) {
     		return new FlatFileReader(new InputStreamReader(System.in));
     	} else {

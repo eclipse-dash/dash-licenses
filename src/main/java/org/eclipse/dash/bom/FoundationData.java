@@ -1,6 +1,8 @@
 package org.eclipse.dash.bom;
 
-import javax.json.JsonValue;
+import javax.json.JsonObject;
+
+import org.eclipse.dash.bom.LicenseSupport.Status;
 
 public class FoundationData implements IContentData {
 
@@ -21,24 +23,36 @@ public class FoundationData implements IContentData {
 	 *   }
 	 * </pre>
 	 */
-	private JsonValue data;
+	private JsonObject data;
 
-	public FoundationData(JsonValue data) {
+	public FoundationData(JsonObject data) {
 		this.data = data;
 	}
 
 	@Override
 	public IContentId getId() {
-		return new ContentId(data.asJsonObject().getString("id"));
+		return ContentId.getContentId(data.getString("id"));
 	}
 
 	@Override
 	public String getLicense() {
-		return data.asJsonObject().getString("license");
+		return data.getString("license");
 	}
 
 	@Override
 	public int getScore() {
-		return data.asJsonObject().getInt("confidence");
+		return data.getInt("confidence");
+	}
+	
+	@Override
+	public Status getStatus() {
+		if ("approved".equals(data.getString("status"))) 
+			return LicenseSupport.Status.Approved;
+		return LicenseSupport.Status.Restricted;
+	}
+
+	@Override
+	public String getAuthority() {
+		return data.getString("authority");
 	}
 }

@@ -8,7 +8,7 @@ public class PurlIdParser implements ContentIdParser {
 	
 	private static Pattern purlPattern = Pattern
 		.compile("\\s*"
-				+ "(?<namespace>@\\S+\\/)?"
+				+ "(?:(?<namespace>@\\S+)\\/)?"
 				+ "(?<name>\\S+)"
 				+ "@(?<version>\\d+(?:\\.\\d+){0,2})"
 				+ "\\s*");

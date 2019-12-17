@@ -11,7 +11,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-public class Settings {
+public class CommandLineSettings implements ISettings {
 	private static final String CD_URL_DEFAULT = "https://api.clearlydefined.io/definitions";
 	private static final String EF_URL_DEFAULT = "https://www.eclipse.org/projects/services/license_check.php";
 	private static final String CD_URL_OPTION = "cd";
@@ -19,6 +19,7 @@ public class Settings {
 	private static final String BATCH_OPTION = "batch";
 	private CommandLine commandLine;
 
+	@Override
 	public int getBatchSize() {
 		if (!commandLine.hasOption(BATCH_OPTION)) return 1000;
 		try {
@@ -29,20 +30,22 @@ public class Settings {
 		}
 	}
 
+	@Override
 	public String getLicenseCheckUrl() {
 		//String url = "http://localhost/projects/services/license_check.php?XDEBUG_SESSION_START=ECLIPSE_DBGP&KEY=15743965682411";
         return commandLine.getOptionValue(EF_URL_OPTION, EF_URL_DEFAULT);
 	}
 
-	String getClearlyDefinedDefinitionsUrl() {
+	@Override
+	public String getClearlyDefinedDefinitionsUrl() {
 		return commandLine.getOptionValue(CD_URL_OPTION, CD_URL_DEFAULT);
 	}
 	
-	private Settings(CommandLine commandLine) {
+	private CommandLineSettings(CommandLine commandLine) {
 		this.commandLine = commandLine;
 	}
 	
-	public static Settings getSettings(String[] args) {
+	public static ISettings getSettings(String[] args) {
 		CommandLine commandLine = getCommandLine(args);
 		if (commandLine == null) {
 			printUsage(System.out);
@@ -54,7 +57,7 @@ public class Settings {
 			return null;
 		}
 		
-		return new Settings(commandLine);
+		return new CommandLineSettings(commandLine);
 	}
 	
 	private static CommandLine getCommandLine(final String[] args)	{
@@ -103,7 +106,7 @@ public class Settings {
 
 	public static void printUsage(PrintStream out) {
 	   final HelpFormatter formatter = new HelpFormatter();
-	   final String syntax = "LicenseFinder";
+	   final String syntax = LicenseFinder.class.getName();
 
 	   final PrintWriter writer  = new PrintWriter(out);
 	   formatter.printUsage(writer, 80, syntax, getOptions());
@@ -113,7 +116,7 @@ public class Settings {
 	public static void printHelp(PrintStream out) {
 		// TODO Fix this ugly mess.
 		final HelpFormatter formatter = new HelpFormatter();
-		final String syntax = "LicenseFinder [options] <file> ...";
+		final String syntax = String.format("%s [options] <file> ...", LicenseFinder.class.getName());
 		final String usageHeader = "Sort out the licenses and approval of dependencies.";
 		final String usageFooter = "\n" 
 				+ "\n<file> is the path to a file, or \"-\" to indicate stdin. "
@@ -121,5 +124,11 @@ public class Settings {
 				+ "\nnpm list | grep -Poh \"\\S+@\\d+(?:\\.\\d+){2}\" | sort | uniq | LicenseFinder -";
 
 		formatter.printHelp(syntax, usageHeader, getOptions(), usageFooter);
+	}
+
+	@Override
+	public String getApprovedLicensesUrl() {
+		// TODO Auto-generated method stub
+		return "https://www.eclipse.org/legal/licenses.json";
 	}
 }

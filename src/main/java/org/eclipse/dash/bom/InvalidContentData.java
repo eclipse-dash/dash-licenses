@@ -23,4 +23,9 @@ public class InvalidContentData implements IContentData {
 		return 0;
 	}
 
+	@Override
+	public String getAuthority() {
+		return null;
+	}
+
 }

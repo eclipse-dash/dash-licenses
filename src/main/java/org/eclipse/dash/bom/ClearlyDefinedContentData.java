@@ -1,6 +1,6 @@
 package org.eclipse.dash.bom;
 
-import javax.json.JsonValue;
+import javax.json.JsonObject;
 
 public class ClearlyDefinedContentData implements IContentData {
 
@@ -62,24 +62,25 @@ public class ClearlyDefinedContentData implements IContentData {
 	 *	}
 	 * </pre>
 	 */
-	private JsonValue data;
+	private JsonObject data;
 	private String id;
 
-	public ClearlyDefinedContentData(String id, JsonValue data) {
+	public ClearlyDefinedContentData(String id, JsonObject data) {
 		this.id = id;
 		this.data = data;
 	}
 
 	@Override
 	public String getLicense() {
+		// FIXME Should combine the declared and discovered licenses.
 		return getDeclaredLicense();
 	}
 
 	public String getDeclaredLicense() {
-		if (data.asJsonObject().containsKey("licensed")) {
-			JsonValue licensed = data.asJsonObject().get("licensed");
-			if (licensed.asJsonObject().containsKey("declared")) {
-				return licensed.asJsonObject().getString("declared");
+		if (data.containsKey("licensed")) {
+			JsonObject licensed = data.get("licensed").asJsonObject();
+			if (licensed.containsKey("declared")) {
+				return licensed.getString("declared");
 			}
 		}
 		return null;
@@ -91,11 +92,17 @@ public class ClearlyDefinedContentData implements IContentData {
 	}
 	
 	public int getEffectiveScore() {
-		return data.asJsonObject().get("scores").asJsonObject().getInt("effective");
+		return data.get("scores").asJsonObject().getInt("effective");
 	}
 
 	@Override
 	public ContentId getId() {
-		return new ContentId(id);
+		return ContentId.getContentId(id);
+	}
+
+	@Override
+	public String getAuthority() {
+		// Maybe return the Clearly Defined URL instead?
+		return "clearlydefined";
 	}
 }

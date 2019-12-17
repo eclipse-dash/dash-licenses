@@ -1,5 +1,7 @@
 package org.eclipse.dash.bom;
 
+import org.eclipse.dash.bom.LicenseSupport.Status;
+
 public interface IContentData {
 
 	IContentId getId();
@@ -7,5 +9,11 @@ public interface IContentData {
 	String getLicense();
 
 	int getScore();
+
+	default Status getStatus() {
+		return Status.Restricted;
+	}
+
+	String getAuthority();
 
 }
