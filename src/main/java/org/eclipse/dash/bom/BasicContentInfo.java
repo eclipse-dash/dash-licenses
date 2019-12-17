@@ -5,11 +5,13 @@ public class BasicContentInfo implements ContentInfo {
 	private License license;
 	private ContentId id;
 	private String state;
+	private int score;
 
-	public BasicContentInfo(ContentId id, License license, String state) {
+	public BasicContentInfo(ContentId id, License license, String state, int score) {
 		this.id = id;
 		this.license = license;
 		this.state = state;
+		this.score = score;
 	}
 
 	public License getLicense() {
@@ -22,6 +24,11 @@ public class BasicContentInfo implements ContentInfo {
 
 	public String getState() {
 		return state;
+	}
+
+	@Override
+	public int getScore() {
+		return score;
 	}
 
 }

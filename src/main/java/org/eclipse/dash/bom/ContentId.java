@@ -1,6 +1,6 @@
 package org.eclipse.dash.bom;
 
-public class ContentId {
+public class ContentId implements IContentId {
 
 	private String type;
 	private String source;
@@ -14,7 +14,6 @@ public class ContentId {
 		this.namespace = namespace;
 		this.name = name;
 		this.version = version;
-		// TODO Auto-generated constructor stub
 	}
 	
 	public ContentId(String string) {
@@ -43,5 +42,35 @@ public class ContentId {
 	@Override
 	public int hashCode() {
 		return toString().hashCode();
+	}
+
+	@Override
+	public String getNamespace() {
+		return namespace;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getVersion() {
+		return version;
+	}
+
+	@Override
+	public String getType() {
+		return type;
+	}
+
+	@Override
+	public String getSource() {
+		return source;
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
 	}
 }

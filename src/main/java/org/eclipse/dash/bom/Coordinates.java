@@ -2,7 +2,7 @@ package org.eclipse.dash.bom;
 
 public abstract class Coordinates {
 
-	public ContentId getId() {
+	public IContentId getId() {
 		return new ContentId(getType(), getSource(), getNamespace(), getName(), getVersion());
 	}
 

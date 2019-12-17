@@ -1,0 +1,2869 @@
+{
+    "npm/npmjs/-/get-caller-file/1.0.3": {
+        "_id": "npm/npmjs/-/get-caller-file/1.0.3", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-01T16:18:28.890Z"
+        }, 
+        "coordinates": {
+            "name": "get-caller-file", 
+            "provider": "npmjs", 
+            "revision": "1.0.3", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 4, 
+            "hashes": {
+                "sha1": "f978fa4c90d1dfe7ff2d6beda2a515e713bdcf4a", 
+                "sha256": "9d0406179fcf0878c05a8c9c71e6c3ba2f49a3f27bed593c78c7aa2051292b68"
+            }, 
+            "issueTracker": "https://github.com/stefanpenner/get-caller-file/issues", 
+            "projectWebsite": "https://github.com/stefanpenner/get-caller-file#readme", 
+            "releaseDate": "2018-07-11", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "get-caller-file", 
+                "namespace": "stefanpenner", 
+                "provider": "github", 
+                "revision": "8519eaca478b51b44e575617759a503dcf13a345", 
+                "type": "git", 
+                "url": "https://github.com/stefanpenner/get-caller-file/tree/8519eaca478b51b44e575617759a503dcf13a345"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/get-caller-file/-/get-caller-file-1.0.3.tgz", 
+                "registry": "https://npmjs.com/package/get-caller-file", 
+                "version": "https://npmjs.com/package/get-caller-file/v/1.0.3"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "f3b06705f6720c719921447d97d6bd00a999933c", 
+                    "sha256": "aa2f6490c783e6c5ae3bd700ed774d514ae152aeb7f9fdeb77e2f62afe98bb44"
+                }, 
+                "path": "package/index.js"
+            }, 
+            {
+                "attributions": [
+                    "Copyright 2018 Stefan Penner"
+                ], 
+                "hashes": {
+                    "sha1": "d5761e6d64537c2b177608dbf8a0ef510ecd62b2", 
+                    "sha256": "902dbb4154679fb2b8d7c33878183f45b268d01eae5e5033dddaa8852d45f213"
+                }, 
+                "license": "ISC", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE.md", 
+                "token": "902dbb4154679fb2b8d7c33878183f45b268d01eae5e5033dddaa8852d45f213"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "9cc908c04b9d544b0426739c12ec44efb9221f6a", 
+                    "sha256": "9fa5706640f3fc6ceee3a576908015904f823d917e05b3b55a7bce32f257e7b8"
+                }, 
+                "path": "package/README.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "86cfe6aaf878fe75d8d78914c644a563f1b1958b", 
+                    "sha256": "fed303de5f484101de03edfc85c2d60f6fbcdcd304a99b2fec5bb0a838ed3bf0"
+                }, 
+                "license": "ISC", 
+                "path": "package/package.json", 
+                "token": "fed303de5f484101de03edfc85c2d60f6fbcdcd304a99b2fec5bb0a838ed3bf0"
+            }
+        ], 
+        "licensed": {
+            "declared": "GPL-3.0", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright 2018 Stefan Penner"
+                        ], 
+                        "unknown": 3
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "ISC"
+                        ], 
+                        "unknown": 2
+                    }, 
+                    "files": 4
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 6, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 81
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 6, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 81
+            }
+        }, 
+        "scores": {
+            "effective": 90, 
+            "tool": 90
+        }
+    }, 
+    "npm/npmjs/-/require-main-filename/1.0.1": {
+        "_id": "npm/npmjs/-/require-main-filename/1.0.1", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-02T11:02:16.490Z"
+        }, 
+        "coordinates": {
+            "name": "require-main-filename", 
+            "provider": "npmjs", 
+            "revision": "1.0.1", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 7, 
+            "hashes": {
+                "sha1": "97f717b69d48784f5f526a6c5aa8ffdda055a4d1", 
+                "sha256": "63a72dd24ef77958d01bcf2797a2e5fe57e1c5d11579fbd1bdc8b784c89999c3"
+            }, 
+            "issueTracker": "https://github.com/yargs/require-main-filename/issues", 
+            "projectWebsite": "https://github.com/yargs/require-main-filename#readme", 
+            "releaseDate": "2016-02-17", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "require-main-filename", 
+                "namespace": "yargs", 
+                "provider": "github", 
+                "revision": "6dd2291332bed764c56302ccdd14da8a213249a1", 
+                "type": "git", 
+                "url": "https://github.com/yargs/require-main-filename/tree/6dd2291332bed764c56302ccdd14da8a213249a1"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/require-main-filename/-/require-main-filename-1.0.1.tgz", 
+                "registry": "https://npmjs.com/package/require-main-filename", 
+                "version": "https://npmjs.com/package/require-main-filename/v/1.0.1"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "b2e2ed326ba2a0915d8fea9930d8edaa3f2aea42", 
+                    "sha256": "76bdb44f47dd32ec2f67501a54c29df6d03e5e033f21c6d458f4476dea940523"
+                }, 
+                "license": "ISC", 
+                "path": "package/package.json", 
+                "token": "76bdb44f47dd32ec2f67501a54c29df6d03e5e033f21c6d458f4476dea940523"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "fd1b772c5387c396492a5a50069caeb02c66f0b3", 
+                    "sha256": "122b74f20949ca4f5a194b3962a8defc2f5f802ee71d86c4134eadd7dc62a2e0"
+                }, 
+                "path": "package/.npmignore"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "bbc8cdc333da54dd07a1fe984d85371d0ea10f4e", 
+                    "sha256": "2ef41461635fc6b9689fdf72a9989dd2f675757483d85658968056ccec0eab21"
+                }, 
+                "path": "package/index.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "4c883668f0d69fe13b1dfa520b32c00841452776", 
+                    "sha256": "5c71d0b3841b668697cea30d8ad369a695e54add095cee40fdd8db3e37d27013"
+                }, 
+                "license": "ISC", 
+                "path": "package/README.md"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2016"
+                ], 
+                "hashes": {
+                    "sha1": "47edc4b4e929248ad6e423bf3a6736c320a3277c", 
+                    "sha256": "365496ca1f56da40b23c9815fc40fa9005847b2f8f8fd1c1a4929ef25ec8cd1d"
+                }, 
+                "license": "ISC", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE.txt", 
+                "token": "365496ca1f56da40b23c9815fc40fa9005847b2f8f8fd1c1a4929ef25ec8cd1d"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "2223b332cc21a817fb77dc07feec75284c06e2ab", 
+                    "sha256": "030482ab9ebbec02d19a4313f19b3e640ea0fb50ab07e318ef191d0a91f47a91"
+                }, 
+                "path": "package/.travis.yml"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "8ec937b943d10b1992732f73dd6f748f8f2f2c06", 
+                    "sha256": "07ebe3bd78247e502cf512315ac402eb046252fe5b40260bad0baa9640efc8ea"
+                }, 
+                "path": "package/test.js"
+            }
+        ], 
+        "licensed": {
+            "declared": "ISC", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright (c) 2016"
+                        ], 
+                        "unknown": 6
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "ISC"
+                        ], 
+                        "unknown": 4
+                    }, 
+                    "files": 7
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 4, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 79
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 4, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 79
+            }
+        }, 
+        "scores": {
+            "effective": 89, 
+            "tool": 89
+        }
+    }, 
+    "npm/npmjs/-/write/1.0.3": {
+        "_id": "npm/npmjs/-/write/1.0.3", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-02T11:38:48.675Z"
+        }, 
+        "coordinates": {
+            "name": "write", 
+            "provider": "npmjs", 
+            "revision": "1.0.3", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 4, 
+            "hashes": {
+                "sha1": "0800e14523b923a387e415123c865616aae0f5c3", 
+                "sha256": "8970fa014fd07716369b9962b27f17212945d2247759afa98241876dea1518e8"
+            }, 
+            "issueTracker": "https://github.com/jonschlinkert/write/issues", 
+            "projectWebsite": "https://github.com/jonschlinkert/write", 
+            "releaseDate": "2017-07-11", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "write", 
+                "namespace": "jonschlinkert", 
+                "provider": "github", 
+                "revision": "f5397515060bf42f75151fcc3c4722517e4e322a", 
+                "type": "git", 
+                "url": "https://github.com/jonschlinkert/write/tree/f5397515060bf42f75151fcc3c4722517e4e322a"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/write/-/write-1.0.3.tgz", 
+                "registry": "https://npmjs.com/package/write", 
+                "version": "https://npmjs.com/package/write/v/1.0.3"
+            }
+        }, 
+        "files": [
+            {
+                "attributions": [
+                    "Copyright (c) 2014-2017, Jon Schlinkert."
+                ], 
+                "hashes": {
+                    "sha1": "2d068b89820b596b358e9751c35622f386f3aaa8", 
+                    "sha256": "0ead7e8cd8b0bc66a981ee69acaf1297ffa838cfce1b156a039bb24f997c0a27"
+                }, 
+                "license": "MIT", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE", 
+                "token": "0ead7e8cd8b0bc66a981ee69acaf1297ffa838cfce1b156a039bb24f997c0a27"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "9a7ca4b516153ebddcb5b69bb2dfe1ae07430fdc", 
+                    "sha256": "3ba557effc61ca2ed9f7bed15d1272555d62ae897a1a3ce0ce366b22e89c0d42"
+                }, 
+                "license": "MIT", 
+                "path": "package/package.json", 
+                "token": "3ba557effc61ca2ed9f7bed15d1272555d62ae897a1a3ce0ce366b22e89c0d42"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2014-2017, Jon Schlinkert."
+                ], 
+                "hashes": {
+                    "sha1": "e7ddaa5e1d0b63e02b4a1ae71b3f56606c57abe7", 
+                    "sha256": "610ee63b12eaa36e3bc50cb9808ea6c517d0086653e2f5a1f2fdea1fd87b12cb"
+                }, 
+                "license": "MIT", 
+                "path": "package/index.js"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2017, Jon Schlinkert (https://github.com/jonschlinkert)."
+                ], 
+                "hashes": {
+                    "sha1": "94c02b37584ff7f9c7ae65f75b01dbe7bc624972", 
+                    "sha256": "18edccacf6af206128d9a2e584fa091f366e839348c6563d520659bada2a0a60"
+                }, 
+                "license": "MIT", 
+                "path": "package/README.md"
+            }
+        ], 
+        "licensed": {
+            "declared": "MIT", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright (c) 2014-2017, Jon Schlinkert.", 
+                            "Copyright (c) 2017, Jon Schlinkert (https://github.com/jonschlinkert)."
+                        ], 
+                        "unknown": 1
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "MIT"
+                        ], 
+                        "unknown": 0
+                    }, 
+                    "files": 4
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 19, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 94
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 19, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 94
+            }
+        }, 
+        "scores": {
+            "effective": 97, 
+            "tool": 97
+        }
+    }, 
+    "npm/npmjs/-/ws/7.1.2": {
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-08-16T08:56:46.985Z"
+        }, 
+        "coordinates": {
+            "name": "ws", 
+            "provider": "npmjs", 
+            "revision": "7.1.2", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 16, 
+            "hashes": {
+                "sha1": "c672d1629de8bb27a9699eb599be47aeeedd8f73", 
+                "sha256": "c072a236db499a6cb4716877ac9739c3f94118ddedbfc4687ccf6015f53accca"
+            }, 
+            "issueTracker": "https://github.com/websockets/ws/issues", 
+            "projectWebsite": "https://github.com/websockets/ws", 
+            "releaseDate": "2019-08-12", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "ws", 
+                "namespace": "websockets", 
+                "provider": "github", 
+                "revision": "74bac8e592ff5dbbdda1190d1d4b209c504979d4", 
+                "type": "git", 
+                "url": "https://github.com/websockets/ws/tree/74bac8e592ff5dbbdda1190d1d4b209c504979d4"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.13.0", 
+                "scancode/3.2.2"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/ws/-/ws-7.1.2.tgz", 
+                "registry": "https://npmjs.com/package/ws", 
+                "version": "https://npmjs.com/package/ws/v/7.1.2"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "0d2353d63883a86bdc6bd9e320f764e6a21fedf6", 
+                    "sha256": "23c39182f1782f468ca423d58cb7ac0107156da1a643e9a9aa1e6258039162ea"
+                }, 
+                "path": "package/browser.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "b5b573008ba06d39aaaf7cdc32fa8cde43e82cd2", 
+                    "sha256": "c2b0c9905540a51acb276523bb024ef3c11bd118b03a90d92962080ebd07fec9"
+                }, 
+                "path": "package/index.js"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2011 Einar Otto Stangvik <einaros@gmail.com>"
+                ], 
+                "hashes": {
+                    "sha1": "5267b8c02607adefda571a85283fcd110ae081ba", 
+                    "sha256": "3de284c8e6fa7e8437eff6f53695471e0332129a5b42a79361e17b7637de94b3"
+                }, 
+                "license": "MIT", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE", 
+                "token": "3de284c8e6fa7e8437eff6f53695471e0332129a5b42a79361e17b7637de94b3"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "dd5d33ba2467b936022f4c6d64ec4cc4b5c03e0c", 
+                    "sha256": "d2e1b9fd612647db476ec44b33694cb8ee239b08a402415c47093667cc225efe"
+                }, 
+                "license": "MIT", 
+                "path": "package/package.json", 
+                "token": "d2e1b9fd612647db476ec44b33694cb8ee239b08a402415c47093667cc225efe"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "915ed6a4a508ccdbe3282e3edd3428d8796692b0", 
+                    "sha256": "9754e24aed092702956f64f39d0e2e00419bbc3ccd4e1ebcc414eaaaa5503e09"
+                }, 
+                "path": "package/README.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "27d8b287faa16ee2d6ff340d04262089a22c7896", 
+                    "sha256": "780317f1092cb1f4d8b8a4f256b3dd45ede0dcc23b97967d56a30e1bd66be82e"
+                }, 
+                "path": "package/lib/buffer-util.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "2a8c95ea6c7c81be85ca73a079c4aa5956f22c89", 
+                    "sha256": "2c2e8f6abbb7c2314d5736ef0a8d11f04ddc3cf4faf1c710df5d75c4170e937e"
+                }, 
+                "path": "package/lib/constants.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "1e4bb3ddf963bfcffd23ec59dd3d6a6bc5595b07", 
+                    "sha256": "0c9fe5e3af67d27985edb476af99949a36714573c8397da9374e8b6102eda4d7"
+                }, 
+                "path": "package/lib/event-target.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "1caf01f7c99267f3b86b5e2fa23da859288dfb95", 
+                    "sha256": "13b228a92d2dad9d1bffd09faaae6b64bfc1f713dd966010ad479a901c243a86"
+                }, 
+                "path": "package/lib/extension.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "a7ad616c788c5cada0f053177d47e8a6eb6bf36f", 
+                    "sha256": "de4046222b8390e702c607cc05d899968e1b8362644c2bb8368d22769ac8baac"
+                }, 
+                "path": "package/lib/permessage-deflate.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "62689080cf70998b71950bd76246d8604d398186", 
+                    "sha256": "51f563518bc3494322477e761beac24ae0f09b3ca593e3717f86ad359fbc068f"
+                }, 
+                "path": "package/lib/receiver.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "b56ae721ab6e10ea353a61ab82758992f20a4a03", 
+                    "sha256": "acf11505a7f2e0fc57cbeeffce482fc0f1303f67c7bdd6517700d4173ade3deb"
+                }, 
+                "path": "package/lib/sender.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "b3221dedfed9fc555c6430a29ff2778626b79ecb", 
+                    "sha256": "49a5c327f7ffb94f5416b131fb3e6433a574a61cf0b5f016c275dcecf783e9bb"
+                }, 
+                "path": "package/lib/stream.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "f5d65d2c297323e56fa536349e4cf71de2a6f12d", 
+                    "sha256": "761cbc7b9ebc4cc2c5ba9e8f4c664e0c49ca8138ca5ace6ea2d430a9fe6ce8eb"
+                }, 
+                "path": "package/lib/validation.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "30dc335f3dfeb73529ffc81323b93792dd2bb027", 
+                    "sha256": "761b77558254b35d22e1555522c5848d239b13ab3bbc29d932f6ceaa1c80b7e4"
+                }, 
+                "path": "package/lib/websocket-server.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "f3036dfb6585f3e5415b6aa256c2d7f6c0bd84fe", 
+                    "sha256": "08b856a91ec02281c34ddf613202c05439de1d547d96393bbb8fa447d37bb94c"
+                }, 
+                "path": "package/lib/websocket.js"
+            }
+        ], 
+        "licensed": {
+            "declared": "MIT", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright (c) 2011 Einar Otto Stangvik <einaros@gmail.com>"
+                        ], 
+                        "unknown": 15
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "MIT"
+                        ], 
+                        "unknown": 14
+                    }, 
+                    "files": 16
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 2, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 77
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 2, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 77
+            }
+        }, 
+        "scores": {
+            "effective": 88, 
+            "tool": 88
+        }
+    }, 
+    "npm/npmjs/-/xml-name-validator/3.0.0": {
+        "_id": "npm/npmjs/-/xml-name-validator/3.0.0", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-01T16:18:28.874Z"
+        }, 
+        "coordinates": {
+            "name": "xml-name-validator", 
+            "provider": "npmjs", 
+            "revision": "3.0.0", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 6, 
+            "hashes": {
+                "sha1": "6ae73e06de4d8c6e47f9fb181f78d648ad457c6a", 
+                "sha256": "8485d18015a58a730ff5cdfdb85692a411e0b5da6a581d746d1aec4f431352bd"
+            }, 
+            "issueTracker": "https://github.com/jsdom/xml-name-validator/issues", 
+            "projectWebsite": "https://github.com/jsdom/xml-name-validator#readme", 
+            "releaseDate": "2017-10-23", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "xml-name-validator", 
+                "namespace": "jsdom", 
+                "provider": "github", 
+                "revision": "f2bbf6ffee851b95381cd98053d777ab47419697", 
+                "type": "git", 
+                "url": "https://github.com/jsdom/xml-name-validator/tree/f2bbf6ffee851b95381cd98053d777ab47419697"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/xml-name-validator/-/xml-name-validator-3.0.0.tgz", 
+                "registry": "https://npmjs.com/package/xml-name-validator", 
+                "version": "https://npmjs.com/package/xml-name-validator/v/3.0.0"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "a6a5418b4d67d9f3a33cbf184b25ac7f9fa87d33", 
+                    "sha256": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9"
+                }, 
+                "license": "Apache-2.0", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE.txt", 
+                "token": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "72bb56b6759cbf422ec8639722197c43e86bf3d3", 
+                    "sha256": "37999ec14076de568811b11a53bcaa18cff5cf21864bcd9aca82fea2c53270de"
+                }, 
+                "path": "package/lib/grammar.pegjs"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "0edd101e42e6289727dde55d0044cfb7dfa4caa0", 
+                    "sha256": "eb1b614b2e7121e574db4ab51630f599bc423b070273c2ee3cf4d4705736f5c7"
+                }, 
+                "license": "Apache-2.0", 
+                "path": "package/package.json", 
+                "token": "eb1b614b2e7121e574db4ab51630f599bc423b070273c2ee3cf4d4705736f5c7"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "1bc8e7409c9f0eb0d0d2d56887389881845c16f5", 
+                    "sha256": "d9f465ca2b9b977387f1bec44b2b9166ee036adb75469edca70db14580ec755f"
+                }, 
+                "path": "package/README.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "270c7576f2a663d50eb05e829c746c0e830e826a", 
+                    "sha256": "36c7a8f601cfa34990c09e09266679ddb3f9f098bd1c76f8616cacbb8d3c1454"
+                }, 
+                "path": "package/lib/generated-parser.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "bac2981ef70d2f87e4c0a681205199fa264f9a3c", 
+                    "sha256": "debe8ae2150de88dc3041a81526ec6a26999ee41fe496e63bc2b7c1d1901dd45"
+                }, 
+                "path": "package/lib/xml-name-validator.js"
+            }
+        ], 
+        "licensed": {
+            "declared": "Apache-2.0", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "unknown": 6
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "Apache-2.0"
+                        ], 
+                        "unknown": 4
+                    }, 
+                    "files": 6
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 0, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 75
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 0, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 75
+            }
+        }, 
+        "scores": {
+            "effective": 87, 
+            "tool": 87
+        }
+    }, 
+    "npm/npmjs/-/xmlchars/2.2.0": {
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-09-06T16:54:29.705Z"
+        }, 
+        "coordinates": {
+            "name": "xmlchars", 
+            "provider": "npmjs", 
+            "revision": "2.2.0", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 18, 
+            "hashes": {
+                "sha1": "060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb", 
+                "sha256": "bdf900298963e4bd95b76aa95e96d29f05687e6ae662d617061778267b576da8"
+            }, 
+            "issueTracker": "https://github.com/lddubeau/xmlchars/issues", 
+            "projectWebsite": "https://github.com/lddubeau/xmlchars#readme", 
+            "releaseDate": "2019-09-06", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "xmlchars", 
+                "namespace": "lddubeau", 
+                "provider": "github", 
+                "revision": "1b54de0e417a1744a505f101b28314466b380bb0", 
+                "type": "git", 
+                "url": "https://github.com/lddubeau/xmlchars/tree/1b54de0e417a1744a505f101b28314466b380bb0"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.13.0", 
+                "scancode/3.2.2"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/xmlchars/-/xmlchars-2.2.0.tgz", 
+                "registry": "https://npmjs.com/package/xmlchars", 
+                "version": "https://npmjs.com/package/xmlchars/v/2.2.0"
+            }
+        }, 
+        "files": [
+            {
+                "attributions": [
+                    "Copyright Louis-Dominique Dubeau and contributors"
+                ], 
+                "hashes": {
+                    "sha1": "b844ac27b65ab04adc5ae909bf415e50034c6aa7", 
+                    "sha256": "45d196313c2647d313cc65ca9b093d2d6974b64d35ee7346f2c60c9d518dff2c"
+                }, 
+                "license": "MIT", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE", 
+                "token": "45d196313c2647d313cc65ca9b093d2d6974b64d35ee7346f2c60c9d518dff2c"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "dfd43e36a6181fcb86676d331d1490da9362d6e4", 
+                    "sha256": "a91c0b20003ff9399dde1de8c59681f1b6901c6fb1aac71780a3a876dc548583"
+                }, 
+                "license": "MIT", 
+                "path": "package/package.json", 
+                "token": "a91c0b20003ff9399dde1de8c59681f1b6901c6fb1aac71780a3a876dc548583"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "b1fe4648da858fd47e3b34baf45fcc4f51b8e5ae", 
+                    "sha256": "eb05246b228f24bd82f40d1c80ac8d56afc6bc96731d188e013a41564e445bda"
+                }, 
+                "path": "package/README.md"
+            }, 
+            {
+                "attributions": [
+                    "copyright Louis-Dominique Dubeau"
+                ], 
+                "hashes": {
+                    "sha1": "ef4728aa9f17742dd52bc09fd8a62cd3ef3a79b7", 
+                    "sha256": "72dfe9bac2276537ab273ef47e017f3cd488d6df075ff7224903a80d37ba66f6"
+                }, 
+                "license": "MIT", 
+                "path": "package/xmlchars.d.ts"
+            }, 
+            {
+                "attributions": [
+                    "copyright Louis-Dominique Dubeau"
+                ], 
+                "hashes": {
+                    "sha1": "d1ddd89e7996a6b21463b34bd787b1ac3ad7372c", 
+                    "sha256": "d5024cfd86dc4624feda301419bb56f5f3bd2b63963c2bdf88aff7c6afb6bdf2"
+                }, 
+                "license": "MIT", 
+                "path": "package/xmlchars.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "d690944fac66840b63347e143c6aaf33dd1b3416", 
+                    "sha256": "7a1358ab44707d1d8a68d13453c01547ffe158a4929a56849bfc5f411ebed8cc"
+                }, 
+                "path": "package/xmlchars.js.map"
+            }, 
+            {
+                "attributions": [
+                    "copyright Louis-Dominique Dubeau"
+                ], 
+                "hashes": {
+                    "sha1": "5f5bbabfa8abedb6253ecdd218de7f02993c90dd", 
+                    "sha256": "31a482a4cb8b5bfa0a0fa9cf21a405a2f510704c99fa9c492265facda534bca4"
+                }, 
+                "license": "MIT", 
+                "path": "package/xml/1.0/ed4.d.ts"
+            }, 
+            {
+                "attributions": [
+                    "copyright Louis-Dominique Dubeau"
+                ], 
+                "hashes": {
+                    "sha1": "7842144d906f088204d92c92983d4c7b928a728d", 
+                    "sha256": "7ae981a2801658ff2eb92d418c000376381044a5caed40392fea9ad38c9d08c8"
+                }, 
+                "license": "MIT", 
+                "path": "package/xml/1.0/ed4.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "c0e37ca194648fc132e4347eab0e2b8089d7aff8", 
+                    "sha256": "ae07b2d2592ddb2bad17126cfc6f40e11b5d085d4d51cdc796a626d9e3bf2c9e"
+                }, 
+                "path": "package/xml/1.0/ed4.js.map"
+            }, 
+            {
+                "attributions": [
+                    "copyright Louis-Dominique Dubeau"
+                ], 
+                "hashes": {
+                    "sha1": "9e196d9afa46d9854e0b1481f65433dc06d8bc7b", 
+                    "sha256": "a8d1920a105bb364d37f471ac777e9d8972df98c5487bf9b0fab7043eb49e4d4"
+                }, 
+                "license": "MIT", 
+                "path": "package/xml/1.0/ed5.d.ts"
+            }, 
+            {
+                "attributions": [
+                    "copyright Louis-Dominique Dubeau"
+                ], 
+                "hashes": {
+                    "sha1": "71f1f36e856670458e3031c94e17e8a48be4a5e9", 
+                    "sha256": "ea350479ab6f6553c0c3395c30ec440fb39821f6902081939831ddf1b5e8fd0f"
+                }, 
+                "license": "MIT", 
+                "path": "package/xml/1.0/ed5.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "a684d59127180dec45773951563a3a67367a285e", 
+                    "sha256": "458e372d99ae5c62cf95320f1df61ec4843a355bfd2e36f3bf8e67384ee5aa12"
+                }, 
+                "path": "package/xml/1.0/ed5.js.map"
+            }, 
+            {
+                "attributions": [
+                    "copyright Louis-Dominique Dubeau"
+                ], 
+                "hashes": {
+                    "sha1": "0b1b069e2d1d8767cfd22e176878cbc8b6c609e7", 
+                    "sha256": "764391775fc90a5904c833a9538f44012c83baf81116f2bb6c4cce2a182eca4d"
+                }, 
+                "license": "MIT", 
+                "path": "package/xml/1.1/ed2.d.ts"
+            }, 
+            {
+                "attributions": [
+                    "copyright Louis-Dominique Dubeau"
+                ], 
+                "hashes": {
+                    "sha1": "51c025f58edc4812bf71e2675e8539ba4434e9d5", 
+                    "sha256": "461d5c71cc6076dc16aebbfd2d3c506481df5a74f43631d82372a6ffdc239d69"
+                }, 
+                "license": "MIT", 
+                "path": "package/xml/1.1/ed2.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "00bad1d09720a9c61a1243faa3b60bdfe412f365", 
+                    "sha256": "4dc036dc6f13bb07581fe268d6858f89074ed8ce971c38a1b630938100a6b19b"
+                }, 
+                "path": "package/xml/1.1/ed2.js.map"
+            }, 
+            {
+                "attributions": [
+                    "copyright Louis-Dominique Dubeau"
+                ], 
+                "hashes": {
+                    "sha1": "d358eb228f636db8879836f3bad133cc6082c820", 
+                    "sha256": "8514561762de5684298a79453ea83e515af0d061710e64b2851ec89f3a4221d9"
+                }, 
+                "license": "MIT", 
+                "path": "package/xmlns/1.0/ed3.d.ts"
+            }, 
+            {
+                "attributions": [
+                    "copyright Louis-Dominique Dubeau"
+                ], 
+                "hashes": {
+                    "sha1": "336287818f83b23893d8f4ef0508fa192b27ec50", 
+                    "sha256": "ff14ffa3a2cdfdd1b6077c4a8443dc949f53d5bb56de5ed89d4dbc5d9fdf08f7"
+                }, 
+                "license": "MIT", 
+                "path": "package/xmlns/1.0/ed3.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "507904475b80cd217dc804bf36734ee7f3706b71", 
+                    "sha256": "2dabf94f8ae6eb305ed5c1b432f7a49dcd91f29b29cde05375d5c9f5dfa7e300"
+                }, 
+                "path": "package/xmlns/1.0/ed3.js.map"
+            }
+        ], 
+        "licensed": {
+            "declared": "MIT", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "copyright Louis-Dominique Dubeau", 
+                            "Copyright Louis-Dominique Dubeau and contributors"
+                        ], 
+                        "unknown": 7
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "MIT"
+                        ], 
+                        "unknown": 6
+                    }, 
+                    "files": 18
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 15, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 90
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 15, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 90
+            }
+        }, 
+        "scores": {
+            "effective": 95, 
+            "tool": 95
+        }
+    }, 
+    "npm/npmjs/-/xtend/4.0.2": {
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-07-08T14:15:29.275Z"
+        }, 
+        "coordinates": {
+            "name": "xtend", 
+            "provider": "npmjs", 
+            "revision": "4.0.2", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 7, 
+            "hashes": {
+                "sha1": "bb72779f5fa465186b1f438f674fa347fdb5db54", 
+                "sha256": "bd22a01d43c799be7bb53dfa9e775b132045e39525e51efb977528a00041ba48"
+            }, 
+            "issueTracker": "https://github.com/Raynos/xtend/issues", 
+            "projectWebsite": "https://github.com/Raynos/xtend", 
+            "releaseDate": "2019-07-08", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "xtend", 
+                "namespace": "Raynos", 
+                "provider": "github", 
+                "revision": "37816c0e2e25da2901d584442235946d5cd8c80d", 
+                "type": "git", 
+                "url": "https://github.com/Raynos/xtend/tree/37816c0e2e25da2901d584442235946d5cd8c80d"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.13.0", 
+                "scancode/3.2.2"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/xtend/-/xtend-4.0.2.tgz", 
+                "registry": "https://npmjs.com/package/xtend", 
+                "version": "https://npmjs.com/package/xtend/v/4.0.2"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "da24cac8e0e7f15e3b4ee6944741e01d53f9056e", 
+                    "sha256": "da3531289454b9a256c622c1a74771440d4f0e57092262902cefbc6830ec3a7c"
+                }, 
+                "path": "package/.jshintrc"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "3c1de57f8d038e3ebc9e1ab278fe2f683866079c", 
+                    "sha256": "04986f168b8f16f4f25237d0608cdf57b6ca14f100fed62c0295bda2559ab24b"
+                }, 
+                "path": "package/immutable.js"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2012-2014 Raynos."
+                ], 
+                "hashes": {
+                    "sha1": "1a1273ff1c6909f0dac9b3b6ff65fbe1b4641dc5", 
+                    "sha256": "82e67379203d5794e7c44549847d8d64ae6904591381682360470898bd306821"
+                }, 
+                "license": "MIT", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE", 
+                "token": "82e67379203d5794e7c44549847d8d64ae6904591381682360470898bd306821"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "0b00bff9bc925c6c258ef4afb77e7f50640e6555", 
+                    "sha256": "71a38649c77408217483f81f55daee1d6646d6c670e3d034a4482cb3453886e9"
+                }, 
+                "path": "package/mutable.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "1ff55cea8456af743102bdd7fc40b95fe34a7770", 
+                    "sha256": "b02ffef8cda96c5c3ee00a00390e63f608362c2ddfb3ed754e181d013a45d48a"
+                }, 
+                "license": "MIT", 
+                "path": "package/package.json", 
+                "token": "b02ffef8cda96c5c3ee00a00390e63f608362c2ddfb3ed754e181d013a45d48a"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "3bdced0d772e378379a8102589ef8aa745a929ee", 
+                    "sha256": "fe5fb4d83470799709c32207fc1fff3e522070b2c625a9818f191125406cd360"
+                }, 
+                "path": "package/README.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "1081e633e451f5b3c19355336abe12c1183c1bdc", 
+                    "sha256": "4a7a6d3aade85095607c4aa3bd99f74fa6adaa69058d156677ad7756955e80f6"
+                }, 
+                "path": "package/test.js"
+            }
+        ], 
+        "licensed": {
+            "declared": "MIT", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright (c) 2012-2014 Raynos."
+                        ], 
+                        "unknown": 6
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "MIT"
+                        ], 
+                        "unknown": 5
+                    }, 
+                    "files": 7
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 4, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 79
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 4, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 79
+            }
+        }, 
+        "scores": {
+            "effective": 89, 
+            "tool": 89
+        }
+    }, 
+    "npm/npmjs/-/y18n/4.0.0": {
+        "_id": "npm/npmjs/-/y18n/4.0.0", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-03T01:11:39.009Z"
+        }, 
+        "coordinates": {
+            "name": "y18n", 
+            "provider": "npmjs", 
+            "revision": "4.0.0", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 5, 
+            "hashes": {
+                "sha1": "95ef94f85ecc81d007c264e190a120f0a3c8566b", 
+                "sha256": "b943bb06d2d33d846a5decf9f3a83509dda405862a2faa664dd6231f22dc216f"
+            }, 
+            "issueTracker": "https://github.com/yargs/y18n/issues", 
+            "projectWebsite": "https://github.com/yargs/y18n", 
+            "releaseDate": "2017-10-10", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "y18n", 
+                "namespace": "yargs", 
+                "provider": "github", 
+                "revision": "45d2568800d6c57be045e76dc4984b2ef3432233", 
+                "type": "git", 
+                "url": "https://github.com/yargs/y18n/tree/45d2568800d6c57be045e76dc4984b2ef3432233"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/y18n/-/y18n-4.0.0.tgz", 
+                "registry": "https://npmjs.com/package/y18n", 
+                "version": "https://npmjs.com/package/y18n/v/4.0.0"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "1fe1cccc9418b05f021f61cc2c561b1dccb28014", 
+                    "sha256": "2f8f369eee2c91319895940d907c4edfe735e1d2554e39e22a0cef5e02cacf34"
+                }, 
+                "path": "package/CHANGELOG.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "6ed60342c45d3dd4743ab07e7d028c70558c5540", 
+                    "sha256": "230eff3f840c6d29b3f03293d37c446e0cc30148ab72843893cd91720b27027f"
+                }, 
+                "license": "ISC", 
+                "path": "package/README.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "20cf7f0560eb021e980aa6e7b4f4b04054be04b3", 
+                    "sha256": "4bce4c04ecec0be641bfdc5f09441698703dfc9be7f17562b94ed8bb91cfaf16"
+                }, 
+                "license": "ISC", 
+                "path": "package/package.json", 
+                "token": "4bce4c04ecec0be641bfdc5f09441698703dfc9be7f17562b94ed8bb91cfaf16"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2015"
+                ], 
+                "hashes": {
+                    "sha1": "d1e0173a0697ade86e242be697a030918b770336", 
+                    "sha256": "2034cce3b6fafcddd642c4175e01d3ddfc332a53b9f20fdc46b1466dc89ac469"
+                }, 
+                "license": "ISC", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE", 
+                "token": "2034cce3b6fafcddd642c4175e01d3ddfc332a53b9f20fdc46b1466dc89ac469"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "2a395da460c974a8856814cc5164beacf5d3bf6f", 
+                    "sha256": "19d5f0a6b40962c14af84f551b938fb5fe47fb59a4950bc0112d013c23c4a7e3"
+                }, 
+                "path": "package/index.js"
+            }
+        ], 
+        "licensed": {
+            "declared": "ISC", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright (c) 2015"
+                        ], 
+                        "unknown": 4
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "ISC"
+                        ], 
+                        "unknown": 2
+                    }, 
+                    "files": 5
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 5, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 80
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 5, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 80
+            }
+        }, 
+        "scores": {
+            "effective": 90, 
+            "tool": 90
+        }
+    }, 
+    "npm/npmjs/-/yallist/2.1.2": {
+        "_id": "npm/npmjs/-/yallist/2.1.2", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-01T22:52:52.929Z"
+        }, 
+        "coordinates": {
+            "name": "yallist", 
+            "provider": "npmjs", 
+            "revision": "2.1.2", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 5, 
+            "hashes": {
+                "sha1": "1c11f9218f076089a47dd512f93c6699a6a81d52", 
+                "sha256": "c7b31084d3525e17314b46c28e58ceb6cd8f10a9ff926daf48303976f8acb0b2"
+            }, 
+            "issueTracker": "https://github.com/isaacs/yallist/issues", 
+            "projectWebsite": "https://github.com/isaacs/yallist#readme", 
+            "releaseDate": "2017-03-13", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "yallist", 
+                "namespace": "isaacs", 
+                "provider": "github", 
+                "revision": "566cd4cd1e2ce57ffa84e295981cd9aa72319391", 
+                "type": "git", 
+                "url": "https://github.com/isaacs/yallist/tree/566cd4cd1e2ce57ffa84e295981cd9aa72319391"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/yallist/-/yallist-2.1.2.tgz", 
+                "registry": "https://npmjs.com/package/yallist", 
+                "version": "https://npmjs.com/package/yallist/v/2.1.2"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "c042dba0e8d1672a56531936a03533f5aaaca9de", 
+                    "sha256": "f605b18fb129e502dcf50cbead77c862fa923f9f89eb33c2aa44e1809c97c466"
+                }, 
+                "path": "package/yallist.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "baf1ff1052a38543b84d4bba85a62dc78b1ab107", 
+                    "sha256": "c8c3b45ee2bd74d2095f7d64fae387af1e06260793fc28b98dbeb5a405f7301f"
+                }, 
+                "path": "package/iterator.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "9bb41341f8ea287f8d35d4b823e1d14928dc03c4", 
+                    "sha256": "8f259dd73c4550f7eca34f62a985a3550a7090c330f740788293656a4eecbba1"
+                }, 
+                "license": "ISC", 
+                "path": "package/package.json", 
+                "token": "8f259dd73c4550f7eca34f62a985a3550a7090c330f740788293656a4eecbba1"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) Isaac Z. Schlueter and Contributors"
+                ], 
+                "hashes": {
+                    "sha1": "bb408e929caeb1731945b2ba54bc337edb87cc66", 
+                    "sha256": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b"
+                }, 
+                "license": "ISC", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE", 
+                "token": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "930460a06c3414c2dceeeca378fbe0057779fab5", 
+                    "sha256": "cf293896dc0c704e9ed655ebb43341cc1ac5d0b2214f78377bed4370b7c6dd0f"
+                }, 
+                "path": "package/README.md"
+            }
+        ], 
+        "licensed": {
+            "declared": "ISC", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright (c) Isaac Z. Schlueter and Contributors"
+                        ], 
+                        "unknown": 4
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "ISC"
+                        ], 
+                        "unknown": 3
+                    }, 
+                    "files": 5
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 5, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 80
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 5, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 80
+            }
+        }, 
+        "scores": {
+            "effective": 90, 
+            "tool": 90
+        }
+    }, 
+    "npm/npmjs/-/yargs-parser/11.1.1": {
+        "_id": "npm/npmjs/-/yargs-parser/11.1.1", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-02T11:07:36.203Z"
+        }, 
+        "coordinates": {
+            "name": "yargs-parser", 
+            "provider": "npmjs", 
+            "revision": "11.1.1", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 6, 
+            "hashes": {
+                "sha1": "879a0865973bca9f6bab5cbdf3b1c67ec7d3bcf4", 
+                "sha256": "f4b8010dd53ee799e96703c25f1f72f2d6dac3d87806b72421cf5b418f1c999a"
+            }, 
+            "issueTracker": "https://github.com/yargs/yargs-parser/issues", 
+            "projectWebsite": "https://github.com/yargs/yargs-parser#readme", 
+            "releaseDate": "2018-11-19", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "yargs-parser", 
+                "namespace": "yargs", 
+                "provider": "github", 
+                "revision": "ee122f89ab9417241b06c6b3ce6aabb2ac8ce5f2", 
+                "type": "git", 
+                "url": "https://github.com/yargs/yargs-parser/tree/ee122f89ab9417241b06c6b3ce6aabb2ac8ce5f2"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/yargs-parser/-/yargs-parser-11.1.1.tgz", 
+                "registry": "https://npmjs.com/package/yargs-parser", 
+                "version": "https://npmjs.com/package/yargs-parser/v/11.1.1"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "c5441015d2875c7b34b55908793a24760e9035da", 
+                    "sha256": "991dc759819b8f7585bb4e43107fbc4e8c03188e4e73bdd0c083b855d338f6b1"
+                }, 
+                "license": "ISC", 
+                "path": "package/README.md"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2016"
+                ], 
+                "hashes": {
+                    "sha1": "47edc4b4e929248ad6e423bf3a6736c320a3277c", 
+                    "sha256": "365496ca1f56da40b23c9815fc40fa9005847b2f8f8fd1c1a4929ef25ec8cd1d"
+                }, 
+                "license": "ISC", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE.txt", 
+                "token": "365496ca1f56da40b23c9815fc40fa9005847b2f8f8fd1c1a4929ef25ec8cd1d"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "8d6536ccf22136fcccc67bcb310d40902d4e1e79", 
+                    "sha256": "6b72dae97325c92dc863a24c491df38effbb72a013afb6d7e6bfc0d48e8be9d0"
+                }, 
+                "license": "ISC", 
+                "path": "package/package.json", 
+                "token": "6b72dae97325c92dc863a24c491df38effbb72a013afb6d7e6bfc0d48e8be9d0"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "aa2c355be7217105c011255dec7c151efdb99b42", 
+                    "sha256": "94be9ffb7cabf01d1fd03b50763d87f5064bf2ecd93596b549fc5320ba0b05e1"
+                }, 
+                "path": "package/index.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "43f63048c08a05d096174454ae2ac3daf992c166", 
+                    "sha256": "8217cb76f0dde4ab4de4c7fe061aa7c0e36d1c1dc50644a1837bdaf8eef976aa"
+                }, 
+                "path": "package/CHANGELOG.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "162313c853e98594df2cd9394c6b722df29deac9", 
+                    "sha256": "948e20f9fae8730bcb21e7a6188a6c95394fd7ad963364005da92082ade4cf79"
+                }, 
+                "path": "package/lib/tokenize-arg-string.js"
+            }
+        ], 
+        "licensed": {
+            "declared": "ISC", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright (c) 2016"
+                        ], 
+                        "unknown": 5
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "ISC"
+                        ], 
+                        "unknown": 3
+                    }, 
+                    "files": 6
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 4, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 79
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 4, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 79
+            }
+        }, 
+        "scores": {
+            "effective": 89, 
+            "tool": 89
+        }
+    }, 
+    "npm/npmjs/-/yargs-parser/13.0.0": {
+        "_id": "npm/npmjs/-/yargs-parser/13.0.0", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-01T23:50:55.684Z"
+        }, 
+        "coordinates": {
+            "name": "yargs-parser", 
+            "provider": "npmjs", 
+            "revision": "13.0.0", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 6, 
+            "hashes": {
+                "sha1": "3fc44f3e76a8bdb1cc3602e860108602e5ccde8b", 
+                "sha256": "373e63f2590ac0f1f8c8bbabe7194b789338fea8f9c119aa601605f6ec4978b1"
+            }, 
+            "issueTracker": "https://github.com/yargs/yargs-parser/issues", 
+            "projectWebsite": "https://github.com/yargs/yargs-parser#readme", 
+            "releaseDate": "2019-02-02", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "yargs-parser", 
+                "namespace": "yargs", 
+                "provider": "github", 
+                "revision": "710eebaf30fa0c0008c470f6c52cc11602511776", 
+                "type": "git", 
+                "url": "https://github.com/yargs/yargs-parser/tree/710eebaf30fa0c0008c470f6c52cc11602511776"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/yargs-parser/-/yargs-parser-13.0.0.tgz", 
+                "registry": "https://npmjs.com/package/yargs-parser", 
+                "version": "https://npmjs.com/package/yargs-parser/v/13.0.0"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "cd727b7dd3529a96568c291de63a7956e4ad09e3", 
+                    "sha256": "3eb2ba97e0982a1554ba3c67af2d99eb7efbf97faf0fd50411c03ad7e17278e6"
+                }, 
+                "license": "ISC", 
+                "path": "package/package.json", 
+                "token": "3eb2ba97e0982a1554ba3c67af2d99eb7efbf97faf0fd50411c03ad7e17278e6"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2016"
+                ], 
+                "hashes": {
+                    "sha1": "47edc4b4e929248ad6e423bf3a6736c320a3277c", 
+                    "sha256": "365496ca1f56da40b23c9815fc40fa9005847b2f8f8fd1c1a4929ef25ec8cd1d"
+                }, 
+                "license": "ISC", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE.txt", 
+                "token": "365496ca1f56da40b23c9815fc40fa9005847b2f8f8fd1c1a4929ef25ec8cd1d"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "7cf4b7bf5a6e8f47630010b6f1ebe247f2b24d36", 
+                    "sha256": "dcdc920e2de5f909e54bd1e9473b2f0cb933b7a78e8b0d5aa3c66e0ef8b2a534"
+                }, 
+                "path": "package/lib/tokenize-arg-string.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "9d011cede1083abb6237172171306d7f40f46b45", 
+                    "sha256": "8afa0d60d553b695431addf67a086e3eb491993decf4c646ce471c5b638566e9"
+                }, 
+                "path": "package/CHANGELOG.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "491ce49a903d4ae6533ad59b26786c496f7118fb", 
+                    "sha256": "537440e48bc1e741efc72096a55eca90bc44045bbc402210e0918c00d21f74e4"
+                }, 
+                "license": "ISC", 
+                "path": "package/README.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "dfbeef9be96e34ab3ec9ed9acf9586e0847daef2", 
+                    "sha256": "b718ec3c47476706911b6cc219a88980a793b01c559d0d19f5b6d91ddabce8c7"
+                }, 
+                "path": "package/index.js"
+            }
+        ], 
+        "licensed": {
+            "declared": "ISC", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright (c) 2016"
+                        ], 
+                        "unknown": 5
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "ISC"
+                        ], 
+                        "unknown": 3
+                    }, 
+                    "files": 6
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 4, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 79
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 4, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 79
+            }
+        }, 
+        "scores": {
+            "effective": 89, 
+            "tool": 89
+        }
+    }, 
+    "npm/npmjs/-/yargs-unparser/1.5.0": {
+        "_id": "npm/npmjs/-/yargs-unparser/1.5.0", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-02T00:13:58.964Z"
+        }, 
+        "coordinates": {
+            "name": "yargs-unparser", 
+            "provider": "npmjs", 
+            "revision": "1.5.0", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 5, 
+            "hashes": {
+                "sha1": "f2bb2a7e83cbc87bb95c8e572828a06c9add6e0d", 
+                "sha256": "1eaf04ca5c7a99a6b330324c7e9ee2525ba1530f9e0c2ba8ef006eae7494183c"
+            }, 
+            "issueTracker": "https://github.com/yargs/yargs-unparser/issues", 
+            "projectWebsite": "https://github.com/yargs/yargs-unparser", 
+            "releaseDate": "2018-12-05", 
+            "score": {
+                "date": 30, 
+                "source": 0, 
+                "total": 30
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 0, 
+                "total": 30
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/yargs-unparser/-/yargs-unparser-1.5.0.tgz", 
+                "registry": "https://npmjs.com/package/yargs-unparser", 
+                "version": "https://npmjs.com/package/yargs-unparser/v/1.5.0"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "1f123cb9f6901c4a2c6c68d71eb946e2ba3ce1ac", 
+                    "sha256": "718c9a3c948790fdbe0088eac5a6c03357be7e246287f753a9595394d0b85416"
+                }, 
+                "path": "package/index.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "8f08475951f1bcf79c70155a802a69d0c4a02dbe", 
+                    "sha256": "1c97242203fd3d28a251682d862cb3bb958094884dd9f554f572337467f961eb"
+                }, 
+                "license": "MIT", 
+                "path": "package/package.json", 
+                "token": "1c97242203fd3d28a251682d862cb3bb958094884dd9f554f572337467f961eb"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "c0496ec5b6da7916f4e7a86ff6b6e4e0cca4eefb", 
+                    "sha256": "58a5d657b0ddb7bfd18ec810847a69704e876c8df42a005da03f361381c827bb"
+                }, 
+                "path": "package/CHANGELOG.md"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2017 Made With MOXY Lda"
+                ], 
+                "hashes": {
+                    "sha1": "798c4e9524dc8d21fc95df2e276971d9f2321976", 
+                    "sha256": "30877d17f7e38530d46b49fb375ee98ce2e8b085b3ee72d4c2888710416ef139"
+                }, 
+                "license": "MIT", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE", 
+                "token": "30877d17f7e38530d46b49fb375ee98ce2e8b085b3ee72d4c2888710416ef139"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "24cdef96dff6b25768e23028f34f73254fc04d0f", 
+                    "sha256": "7090aae69d70aedb7a9f8e084b8d1531c661252198baf8977f73153b71e6b548"
+                }, 
+                "license": "MIT", 
+                "path": "package/README.md"
+            }
+        ], 
+        "licensed": {
+            "declared": "MIT", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright (c) 2017 Made With MOXY Lda"
+                        ], 
+                        "unknown": 4
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "MIT"
+                        ], 
+                        "unknown": 2
+                    }, 
+                    "files": 5
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 5, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 80
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 5, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 80
+            }
+        }, 
+        "scores": {
+            "effective": 55, 
+            "tool": 55
+        }
+    }, 
+    "npm/npmjs/-/yargs/12.0.5": {
+        "_id": "npm/npmjs/-/yargs/12.0.5", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-01T22:51:58.812Z"
+        }, 
+        "coordinates": {
+            "name": "yargs", 
+            "provider": "npmjs", 
+            "revision": "12.0.5", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 40, 
+            "hashes": {
+                "sha1": "05f5997b609647b64f66b81e3b4b10a368e7ad13", 
+                "sha256": "913cd51c34b08c9caef0d1c5c844e6fdd4eb4ccd2dff260c72221edd902cb228"
+            }, 
+            "issueTracker": "https://github.com/yargs/yargs/issues", 
+            "projectWebsite": "https://yargs.js.org/", 
+            "releaseDate": "2018-11-19", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "yargs", 
+                "namespace": "yargs", 
+                "provider": "github", 
+                "revision": "8789bf4f56940248316c58997b107b029dbdb297", 
+                "type": "git", 
+                "url": "https://github.com/yargs/yargs/tree/8789bf4f56940248316c58997b107b029dbdb297"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/yargs/-/yargs-12.0.5.tgz", 
+                "registry": "https://npmjs.com/package/yargs", 
+                "version": "https://npmjs.com/package/yargs/v/12.0.5"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "7a3c575e53ab41a7ba20c7e9ed3da20db880896c", 
+                    "sha256": "db4466f9296f3eef86a3806ca004a03619f0186d606c499f9419842b77b36115"
+                }, 
+                "path": "package/index.js"
+            }, 
+            {
+                "attributions": [
+                    "Copyright 2014", 
+                    "Copyright 2010 James Halliday (mail@substack.net)"
+                ], 
+                "hashes": {
+                    "sha1": "c4c74f60713e9765f16f8a016c1f997ca648f910", 
+                    "sha256": "fe71524a15f30aab0f39af7165d38fc64a4269b7d2a0caffebc907355aec9c92"
+                }, 
+                "license": "MIT", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE", 
+                "token": "fe71524a15f30aab0f39af7165d38fc64a4269b7d2a0caffebc907355aec9c92"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "2d1b1b2b0958e3cecec0d4450e7645f9208c5355", 
+                    "sha256": "1ff1339e9cfee663c48d7e411110cd3992216d81e7b5a5a72c4443d51f0634a7"
+                }, 
+                "path": "package/locales/ru.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "ca57798f46937b7cc73ad379de34bb79a8b1ff7a", 
+                    "sha256": "0e66add12f48117254852ebac22250ad18bbc859b5de40301dd047800be40e36"
+                }, 
+                "path": "package/locales/pirate.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "8e14b2a63562e603dcae45d1e5d901d5610a2d6c", 
+                    "sha256": "24581e1ce3b4e277291531ec609906748fb5c9ecee6b4816984fbd5ece65b5f9"
+                }, 
+                "path": "package/locales/pt.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "33557f89a17f5b0b4f383535449d397371cc13b8", 
+                    "sha256": "6d2e3750e1e7f4b73b6944e5a22cee98d00edc94227eb09d0bdff18b9a38ac12"
+                }, 
+                "path": "package/locales/zh_TW.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "45215cf376604fc66da854f0eda28fd05522d729", 
+                    "sha256": "963d94b3e74332f07002d15a346ba14a69c3eeafbf139d54a7b43fa462116145"
+                }, 
+                "path": "package/locales/th.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "42c34116947bc998e7e41d02d97075dae3c42502", 
+                    "sha256": "5e7e25a8005a080d6eaf0c3f57d7f8bcd23e665c8b8d65253e5b5d559d275e0b"
+                }, 
+                "path": "package/locales/id.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "eba3321fbc861a42cbddb74e438e68476999464c", 
+                    "sha256": "b1c5d51f31d5d2e06afe07ef72994754de09998d938d35da994c71f82faa28c8"
+                }, 
+                "path": "package/locales/hu.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "69dcc42e9a1c4da73b32a5a16ab20764fd09343a", 
+                    "sha256": "6edede8f837b3c483903a3241bbba11f12fc4baddd982ef29331e42eb85e4418"
+                }, 
+                "path": "package/locales/en.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "6b378bf0ee31eeeb745b849f6dc41cbf6ae2f0e0", 
+                    "sha256": "422337e2bd398962e70843a6eb013430e81647efea76b3b89a7a76915b1b9f3f"
+                }, 
+                "path": "package/locales/nl.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "53436ccff16e1a77bf42cedc5f981434c7a20eaa", 
+                    "sha256": "dbface91834397a7033bc3a24b7926d514a350462535ae8ec05c1e7bd73341f7"
+                }, 
+                "path": "package/locales/nn.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "31826a3c3cf56e8072abe9a2c65cb322e76629a1", 
+                    "sha256": "e101ceedc8a5fe52ab7e31e784e9981f514c90c24fbf7f7d6b2ed2343127aaf5"
+                }, 
+                "path": "package/locales/be.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "86b8b9c8185a09aa1355c82503b29e4168647259", 
+                    "sha256": "70ffd11aef26379392b3b78a9baa8f8f9d183cb0832b10c5ff6419c3ceb20f6f"
+                }, 
+                "path": "package/locales/it.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "e99bd1886b5259b792d6e39f1a7b94b1768b804d", 
+                    "sha256": "a1e04a62ee5e96013e2cbaad348846506881510294818ec4c65639e26efba270"
+                }, 
+                "path": "package/lib/command.js"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2011 Andrei Mackenzie"
+                ], 
+                "hashes": {
+                    "sha1": "7555cb4b12f2aa5554131d4b632d99f3455e8b0f", 
+                    "sha256": "1702581698595ed65f87081e009127604b8dc4d1de31ce699c0f57254d267e38"
+                }, 
+                "license": "MIT", 
+                "path": "package/lib/levenshtein.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "ad90a6eae127b9d0e409d564de6afd6c5b80ceeb", 
+                    "sha256": "b17705bcd2f27209c3cd04fd92b3dcd23f90247b28592cfa0924094a2bdd401d"
+                }, 
+                "path": "package/lib/validation.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "7a3e1564e699966856df51073fc9da44d02c1614", 
+                    "sha256": "8fad5729ffb2232002d7aa098fade7ee2b44c4888caffbbde2e040709887582a"
+                }, 
+                "path": "package/lib/middleware.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "95a4276010af5eb56dcd204ab61169d1ae541d18", 
+                    "sha256": "9b1a3e87f8baeea49c7f7f4f8a95cdcba1e15835c594a437756e94d89ef7355a"
+                }, 
+                "path": "package/lib/completion.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "1f7d7edf9b2227efd816f7599bd2f8598df9ceec", 
+                    "sha256": "8c46847d9c4fc9c670091767d31220bd07d7df462eb985b034e820d9f9ede0a6"
+                }, 
+                "license": "MIT", 
+                "path": "package/package.json", 
+                "token": "8c46847d9c4fc9c670091767d31220bd07d7df462eb985b034e820d9f9ede0a6"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "1bccd81b3b5bf8b076a10adcd25949f55d2ed2bc", 
+                    "sha256": "7617a5176a7c943045667394eb487342f3344b3be1450afcae1bca1d9dd4452f"
+                }, 
+                "path": "package/completion.sh.hbs"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "f633d9e4856281b84b50a970d4af79a244e67309", 
+                    "sha256": "357894094f841503555ec15d34444d7bcac90dfe79471689f3603e397bff837f"
+                }, 
+                "path": "package/yargs.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "734f343dc25ab6b266ec4cc9331e33ba80950bd4", 
+                    "sha256": "d644ece0141fe732ab3f70095378fabcfa3f43daeb5a4e244e313d2172215a09"
+                }, 
+                "path": "package/README.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "e403fe1b98d1397d7dcebe779bd188e6651aef3c", 
+                    "sha256": "b4bb9ccff921197d4415d743750fa15e8a0db171dd315141ecd8ab6d8f8b12db"
+                }, 
+                "path": "package/locales/pl.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "2162bce2deb9c420be969f7435f0c2364950e9fd", 
+                    "sha256": "ba6f0f262b0b5912a578dbbc703d341ba1b50cc83b9fe1b111ecbcf3389ef2ec"
+                }, 
+                "path": "package/locales/tr.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "c02e53a465864fe10ec9e53c6af8456138952572", 
+                    "sha256": "54af51247df89a319cd5f57f9c60fc90c0ff2b17ad55f1b971ea83286276b786"
+                }, 
+                "path": "package/locales/es.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "99b7ea8dd47f15ec6f56d08c82ddc026b6c409ef", 
+                    "sha256": "164d7c347b6a31fdc58dd71a39231bfd25a3d242f052ace5510791cc88112c80"
+                }, 
+                "path": "package/locales/ko.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "f015e2b7fb55f5a67a8c41a2794158eb3e90e6dc", 
+                    "sha256": "93de78be5a4b194c2b6102b8e6a8d4b62bba681fc229696f054ceb3794e3c1c6"
+                }, 
+                "path": "package/locales/fr.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "53f7ad35195a563a92453d9eb4b5e356d3e26b16", 
+                    "sha256": "d54f00659e8af714ab72e213ec33d432037ec61f3023da4a9ce7a511a649c34d"
+                }, 
+                "path": "package/locales/hi.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "d3bb155ceee0a13a9ce58a0508f34b58652b5487", 
+                    "sha256": "c0b61ac8ef4b402ff0c8382c46a1fad3e21983ea78871c45533422cf16403321"
+                }, 
+                "path": "package/locales/pt_BR.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "231fd5b2d7b5f6d0ac18c6635647dc18a2c33407", 
+                    "sha256": "a1f0d24daac7a58afe6fcaef8520c6fbc4baebed03648637646042a3281d1f99"
+                }, 
+                "path": "package/locales/zh_CN.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "5b8cc74995413f828bddbbbbdbf64abb23545c21", 
+                    "sha256": "f44d2e00c60a696e5aa83d59d6c20c1aa6fff0b0aee8c92fadc24b1f9ab092a9"
+                }, 
+                "path": "package/locales/ja.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "71f1a0af0d5b496ddacf36d3d7453f4458558979", 
+                    "sha256": "d25ce1efb4570c36dace07ac87eadb04203db5208044c13417bf453e4d9a9581"
+                }, 
+                "path": "package/locales/nb.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "89c5fec6c140e83665111a8247baa9547692c0f0", 
+                    "sha256": "dc07c6dd20bea9c114284122b2ccaed155dad2969d036021d09008dafcdfc67a"
+                }, 
+                "path": "package/locales/de.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "8cf12fccd53541b3d30c488abe7ba6444ed67178", 
+                    "sha256": "46a9f0c4655e8b7cdace8bc9c93aa64857f48e6a843be202b60d3f15eba6fae5"
+                }, 
+                "license": "NOASSERTION", 
+                "path": "package/CHANGELOG.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "2b94b25adae2a9159a4c8a9054688bedfc297648", 
+                    "sha256": "f9cafc737d944b4e9e044b29b5dfa64e5c91aab3c4d03c86fffad2aad391c0d8"
+                }, 
+                "path": "package/lib/argsert.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "7e8ae0c881224e849921db4668a894a28dc789b5", 
+                    "sha256": "d475e451ec86dff19034dd5ef471a05b0502988ef4b3a8d8a6401c34fd721cd8"
+                }, 
+                "path": "package/lib/apply-extends.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "4885186668a2c7d1dc3798f27a28ffa99a6c2843", 
+                    "sha256": "af993c92d4df6bb3bc1cf8de4cc886196b451c4456bd0f6e9f7702f39ee940de"
+                }, 
+                "path": "package/lib/yerror.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "8ce5cb6883732dbd213fcf82a66648a55574afdd", 
+                    "sha256": "488ef025d44b2f802a07af892571bae946bcb33e0e0683534fd262031793231a"
+                }, 
+                "path": "package/lib/usage.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "5b7d1e5f06432bfca21247e5206a2e1a3bdda524", 
+                    "sha256": "9184dc83a84c652da1c592b3245509521171c9d4c52c6c5edbc5544dc0527a42"
+                }, 
+                "path": "package/lib/obj-filter.js"
+            }
+        ], 
+        "licensed": {
+            "declared": "MIT", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright 2014", 
+                            "Copyright (c) 2011 Andrei Mackenzie", 
+                            "Copyright 2010 James Halliday (mail@substack.net)"
+                        ], 
+                        "unknown": 38
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "MIT", 
+                            "NOASSERTION"
+                        ], 
+                        "unknown": 36
+                    }, 
+                    "files": 40
+                }
+            }, 
+            "score": {
+                "consistency": 0, 
+                "declared": 30, 
+                "discovered": 1, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 61
+            }, 
+            "toolScore": {
+                "consistency": 0, 
+                "declared": 30, 
+                "discovered": 1, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 61
+            }
+        }, 
+        "scores": {
+            "effective": 80, 
+            "tool": 80
+        }
+    }, 
+    "npm/npmjs/-/yargs/13.2.2": {
+        "_id": "npm/npmjs/-/yargs/13.2.2", 
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-04-02T11:36:42.118Z"
+        }, 
+        "coordinates": {
+            "name": "yargs", 
+            "provider": "npmjs", 
+            "revision": "13.2.2", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 43, 
+            "hashes": {
+                "sha1": "0c101f580ae95cea7f39d927e7770e3fdc97f993", 
+                "sha256": "29732841d88ed6fa576963e15c218a0538c455c60f604e6c7a2a04ce6617d2b0"
+            }, 
+            "issueTracker": "https://github.com/yargs/yargs/issues", 
+            "projectWebsite": "https://yargs.js.org/", 
+            "releaseDate": "2019-03-06", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "yargs", 
+                "namespace": "yargs", 
+                "provider": "github", 
+                "revision": "e7f29379707f9e3d5eb6edc09ba278f53cc7db74", 
+                "type": "git", 
+                "url": "https://github.com/yargs/yargs/tree/e7f29379707f9e3d5eb6edc09ba278f53cc7db74"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.12.1", 
+                "scancode/3.2.2", 
+                "fossology/3.6.0"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/yargs/-/yargs-13.2.2.tgz", 
+                "registry": "https://npmjs.com/package/yargs", 
+                "version": "https://npmjs.com/package/yargs/v/13.2.2"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "5b8cc74995413f828bddbbbbdbf64abb23545c21", 
+                    "sha256": "f44d2e00c60a696e5aa83d59d6c20c1aa6fff0b0aee8c92fadc24b1f9ab092a9"
+                }, 
+                "path": "package/locales/ja.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "86b8b9c8185a09aa1355c82503b29e4168647259", 
+                    "sha256": "70ffd11aef26379392b3b78a9baa8f8f9d183cb0832b10c5ff6419c3ceb20f6f"
+                }, 
+                "path": "package/locales/it.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "e403fe1b98d1397d7dcebe779bd188e6651aef3c", 
+                    "sha256": "b4bb9ccff921197d4415d743750fa15e8a0db171dd315141ecd8ab6d8f8b12db"
+                }, 
+                "path": "package/locales/pl.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "231fd5b2d7b5f6d0ac18c6635647dc18a2c33407", 
+                    "sha256": "a1f0d24daac7a58afe6fcaef8520c6fbc4baebed03648637646042a3281d1f99"
+                }, 
+                "path": "package/locales/zh_CN.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "c02e53a465864fe10ec9e53c6af8456138952572", 
+                    "sha256": "54af51247df89a319cd5f57f9c60fc90c0ff2b17ad55f1b971ea83286276b786"
+                }, 
+                "path": "package/locales/es.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "89c5fec6c140e83665111a8247baa9547692c0f0", 
+                    "sha256": "dc07c6dd20bea9c114284122b2ccaed155dad2969d036021d09008dafcdfc67a"
+                }, 
+                "path": "package/locales/de.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "45215cf376604fc66da854f0eda28fd05522d729", 
+                    "sha256": "963d94b3e74332f07002d15a346ba14a69c3eeafbf139d54a7b43fa462116145"
+                }, 
+                "path": "package/locales/th.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "6b378bf0ee31eeeb745b849f6dc41cbf6ae2f0e0", 
+                    "sha256": "422337e2bd398962e70843a6eb013430e81647efea76b3b89a7a76915b1b9f3f"
+                }, 
+                "path": "package/locales/nl.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "d3bb155ceee0a13a9ce58a0508f34b58652b5487", 
+                    "sha256": "c0b61ac8ef4b402ff0c8382c46a1fad3e21983ea78871c45533422cf16403321"
+                }, 
+                "path": "package/locales/pt_BR.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "42c34116947bc998e7e41d02d97075dae3c42502", 
+                    "sha256": "5e7e25a8005a080d6eaf0c3f57d7f8bcd23e665c8b8d65253e5b5d559d275e0b"
+                }, 
+                "path": "package/locales/id.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "f015e2b7fb55f5a67a8c41a2794158eb3e90e6dc", 
+                    "sha256": "93de78be5a4b194c2b6102b8e6a8d4b62bba681fc229696f054ceb3794e3c1c6"
+                }, 
+                "path": "package/locales/fr.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "53f7ad35195a563a92453d9eb4b5e356d3e26b16", 
+                    "sha256": "d54f00659e8af714ab72e213ec33d432037ec61f3023da4a9ce7a511a649c34d"
+                }, 
+                "path": "package/locales/hi.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "010d50164c891dbffa8e96033ecf96518efc5f7d", 
+                    "sha256": "25add6c409e0e43c66b8127f779624aa3eaa7341e9f6a998c0aa39ee637a8a81"
+                }, 
+                "license": "NOASSERTION", 
+                "path": "package/CHANGELOG.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "157291c3e2d866c2f2ae2078ca245910467ca89b", 
+                    "sha256": "2e801ef9f28639ebd4586c750c266bbdf0ed9b084f13c3e5cb99d92dfe27f31a"
+                }, 
+                "path": "package/lib/is-promise.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "7e8ae0c881224e849921db4668a894a28dc789b5", 
+                    "sha256": "d475e451ec86dff19034dd5ef471a05b0502988ef4b3a8d8a6401c34fd721cd8"
+                }, 
+                "path": "package/lib/apply-extends.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "5b7d1e5f06432bfca21247e5206a2e1a3bdda524", 
+                    "sha256": "9184dc83a84c652da1c592b3245509521171c9d4c52c6c5edbc5544dc0527a42"
+                }, 
+                "path": "package/lib/obj-filter.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "79917036a03d94ce83ea5ed0a3d4c1a1e4f35196", 
+                    "sha256": "976abe1f9c0679104522c349a42cc01f524888514a7e98fd8acb63e628cb6939"
+                }, 
+                "path": "package/lib/completion.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "ad90a6eae127b9d0e409d564de6afd6c5b80ceeb", 
+                    "sha256": "b17705bcd2f27209c3cd04fd92b3dcd23f90247b28592cfa0924094a2bdd401d"
+                }, 
+                "path": "package/lib/validation.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "4885186668a2c7d1dc3798f27a28ffa99a6c2843", 
+                    "sha256": "af993c92d4df6bb3bc1cf8de4cc886196b451c4456bd0f6e9f7702f39ee940de"
+                }, 
+                "path": "package/lib/yerror.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "ceb137e02d3212af35a337442ada6df1030e3f12", 
+                    "sha256": "32c532a67fc0fc8e6973e04b30d2f1e60fb63cc0c22a6c448e28c45f7a32e819"
+                }, 
+                "license": "MIT", 
+                "path": "package/package.json", 
+                "token": "32c532a67fc0fc8e6973e04b30d2f1e60fb63cc0c22a6c448e28c45f7a32e819"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "63d6121f46c6bfc283455cb6973f065109de9e9e", 
+                    "sha256": "f3a990cbde4d73f726c8a45c310df9662296a38507a68ecc2ec13b64cf2b61f8"
+                }, 
+                "path": "package/completion.zsh.hbs"
+            }, 
+            {
+                "attributions": [
+                    "Copyright 2014", 
+                    "Copyright 2010 James Halliday (mail@substack.net)"
+                ], 
+                "hashes": {
+                    "sha1": "c4c74f60713e9765f16f8a016c1f997ca648f910", 
+                    "sha256": "fe71524a15f30aab0f39af7165d38fc64a4269b7d2a0caffebc907355aec9c92"
+                }, 
+                "license": "MIT", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/LICENSE", 
+                "token": "fe71524a15f30aab0f39af7165d38fc64a4269b7d2a0caffebc907355aec9c92"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "31826a3c3cf56e8072abe9a2c65cb322e76629a1", 
+                    "sha256": "e101ceedc8a5fe52ab7e31e784e9981f514c90c24fbf7f7d6b2ed2343127aaf5"
+                }, 
+                "path": "package/locales/be.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "2d1b1b2b0958e3cecec0d4450e7645f9208c5355", 
+                    "sha256": "1ff1339e9cfee663c48d7e411110cd3992216d81e7b5a5a72c4443d51f0634a7"
+                }, 
+                "path": "package/locales/ru.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "53436ccff16e1a77bf42cedc5f981434c7a20eaa", 
+                    "sha256": "dbface91834397a7033bc3a24b7926d514a350462535ae8ec05c1e7bd73341f7"
+                }, 
+                "path": "package/locales/nn.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "69dcc42e9a1c4da73b32a5a16ab20764fd09343a", 
+                    "sha256": "6edede8f837b3c483903a3241bbba11f12fc4baddd982ef29331e42eb85e4418"
+                }, 
+                "path": "package/locales/en.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "2162bce2deb9c420be969f7435f0c2364950e9fd", 
+                    "sha256": "ba6f0f262b0b5912a578dbbc703d341ba1b50cc83b9fe1b111ecbcf3389ef2ec"
+                }, 
+                "path": "package/locales/tr.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "eba3321fbc861a42cbddb74e438e68476999464c", 
+                    "sha256": "b1c5d51f31d5d2e06afe07ef72994754de09998d938d35da994c71f82faa28c8"
+                }, 
+                "path": "package/locales/hu.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "33557f89a17f5b0b4f383535449d397371cc13b8", 
+                    "sha256": "6d2e3750e1e7f4b73b6944e5a22cee98d00edc94227eb09d0bdff18b9a38ac12"
+                }, 
+                "path": "package/locales/zh_TW.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "ca57798f46937b7cc73ad379de34bb79a8b1ff7a", 
+                    "sha256": "0e66add12f48117254852ebac22250ad18bbc859b5de40301dd047800be40e36"
+                }, 
+                "path": "package/locales/pirate.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "99b7ea8dd47f15ec6f56d08c82ddc026b6c409ef", 
+                    "sha256": "164d7c347b6a31fdc58dd71a39231bfd25a3d242f052ace5510791cc88112c80"
+                }, 
+                "path": "package/locales/ko.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "71f1a0af0d5b496ddacf36d3d7453f4458558979", 
+                    "sha256": "d25ce1efb4570c36dace07ac87eadb04203db5208044c13417bf453e4d9a9581"
+                }, 
+                "path": "package/locales/nb.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "8e14b2a63562e603dcae45d1e5d901d5610a2d6c", 
+                    "sha256": "24581e1ce3b4e277291531ec609906748fb5c9ecee6b4816984fbd5ece65b5f9"
+                }, 
+                "path": "package/locales/pt.json"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "7a3c575e53ab41a7ba20c7e9ed3da20db880896c", 
+                    "sha256": "db4466f9296f3eef86a3806ca004a03619f0186d606c499f9419842b77b36115"
+                }, 
+                "path": "package/index.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "85957d0f572490cf4099e81873664e7d64c055fe", 
+                    "sha256": "d10b49ba5ed4fffda03b21439cb34a6105edbab470b4a153f5fe01392fa3b6ca"
+                }, 
+                "path": "package/yargs.js"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
+                ], 
+                "hashes": {
+                    "sha1": "d63cdb3ff11e20bfc77eec1e78d3de8e1760d391", 
+                    "sha256": "4d00607543032f94238f228d6d7364b287f87227ad403ad1574cdfa4f0416100"
+                }, 
+                "license": "MIT", 
+                "path": "package/lib/decamelize.js"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) 2011 Andrei Mackenzie"
+                ], 
+                "hashes": {
+                    "sha1": "4f2b579765ac3a235e01b945d9ac5b117586c894", 
+                    "sha256": "ea4b6861abd3f6a5305f274052fd98fd7fe1e3c83bd68ea3069708193c026440"
+                }, 
+                "license": "MIT", 
+                "path": "package/lib/levenshtein.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "05c5671b856c384250e2f0d3bb67d458b3d13469", 
+                    "sha256": "1dc40f0f7a22da8b8ae1c1399e3b2993372ea9fdbd23c33530d0e5155b9d6f27"
+                }, 
+                "path": "package/lib/middleware.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "abca77a4725d7fba7636894988f955fad3e77111", 
+                    "sha256": "890e16773e73975440288a9be0a540bcb46b231b439374e3012a82ec426f82a1"
+                }, 
+                "path": "package/lib/usage.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "6d99cb09b3b08be26c8a2fe2149638d4a12f3e05", 
+                    "sha256": "e5341d74bc0a71a72867b8d6e3d13f6ee51accbb54961aefe836cff2704557eb"
+                }, 
+                "path": "package/lib/argsert.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "0196bbb7334fea3563e7f0a74296e6c23a1e8593", 
+                    "sha256": "2aa41a348a05722b43896b006a382ec029e23598ea48ba6d749764ab214f0b12"
+                }, 
+                "path": "package/lib/command.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "7de77a9ef203318ee7d36b8e61b158a6caffa882", 
+                    "sha256": "5f7e42fede5217a3e6017f08868e8743790e8afe1009824e97d89eff66206e5b"
+                }, 
+                "path": "package/README.md"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "218e0f095bd2693b6da3cd25f65b4dbc612683f5", 
+                    "sha256": "b3fa18310aff164238217ede9061b4917a47df7915b92a8b566e12197ee17953"
+                }, 
+                "path": "package/completion.sh.hbs"
+            }
+        ], 
+        "licensed": {
+            "declared": "MIT", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "Copyright 2014", 
+                            "Copyright (c) 2011 Andrei Mackenzie", 
+                            "Copyright 2010 James Halliday (mail@substack.net)", 
+                            "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
+                        ], 
+                        "unknown": 40
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "MIT", 
+                            "NOASSERTION"
+                        ], 
+                        "unknown": 38
+                    }, 
+                    "files": 43
+                }
+            }, 
+            "score": {
+                "consistency": 0, 
+                "declared": 30, 
+                "discovered": 2, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 62
+            }, 
+            "toolScore": {
+                "consistency": 0, 
+                "declared": 30, 
+                "discovered": 2, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 62
+            }
+        }, 
+        "scores": {
+            "effective": 81, 
+            "tool": 81
+        }
+    }, 
+    "npm/npmjs/-/yn/3.1.1": {
+        "_meta": {
+            "schemaVersion": "1.6.1", 
+            "updated": "2019-08-01T18:53:32.820Z"
+        }, 
+        "coordinates": {
+            "name": "yn", 
+            "provider": "npmjs", 
+            "revision": "3.1.1", 
+            "type": "npm"
+        }, 
+        "described": {
+            "files": 6, 
+            "hashes": {
+                "sha1": "1e87401a09d767c1d5eab26a6e4c185182d2eb50", 
+                "sha256": "677e8120a05c119993df555de0e66e3cf1fecd927c624d374785f9f9dc6d3822"
+            }, 
+            "issueTracker": "https://github.com/sindresorhus/yn/issues", 
+            "projectWebsite": "https://github.com/sindresorhus/yn#readme", 
+            "releaseDate": "2019-07-30", 
+            "score": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "sourceLocation": {
+                "name": "yn", 
+                "namespace": "sindresorhus", 
+                "provider": "github", 
+                "revision": "322fa950779cc4db09b57b0543735b326b9e0c87", 
+                "type": "git", 
+                "url": "https://github.com/sindresorhus/yn/tree/322fa950779cc4db09b57b0543735b326b9e0c87"
+            }, 
+            "toolScore": {
+                "date": 30, 
+                "source": 70, 
+                "total": 100
+            }, 
+            "tools": [
+                "clearlydefined/1.3.4", 
+                "licensee/9.13.0", 
+                "scancode/3.2.2"
+            ], 
+            "urls": {
+                "download": "https://registry.npmjs.com/yn/-/yn-3.1.1.tgz", 
+                "registry": "https://npmjs.com/package/yn", 
+                "version": "https://npmjs.com/package/yn/v/3.1.1"
+            }
+        }, 
+        "files": [
+            {
+                "hashes": {
+                    "sha1": "1c3fca70fe84e80eb8d579a29fd4cb37a50cbc95", 
+                    "sha256": "fb44cea3c412236c4ca11c3d32be76f6c4d55af29a3226302f73f948cfefb597"
+                }, 
+                "path": "package/index.d.ts"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "9e472c0ca5d213e9431d91f33ac2f4b304c98ebe", 
+                    "sha256": "5c1f00f2a1a72b87e024870d71ee8d43fa5ac019ba7ba0adb47c5454930183d4"
+                }, 
+                "path": "package/index.js"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "73b5199acb6619ad1080a09d15af274b817d18b9", 
+                    "sha256": "870f109b509320ed31f31ca01940c2d024888d36044d8b0ec2da9978332a21f3"
+                }, 
+                "path": "package/lenient.js"
+            }, 
+            {
+                "attributions": [
+                    "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
+                ], 
+                "hashes": {
+                    "sha1": "5aaf48196ddd4d007a3067aa7f30303ca8e4b29c", 
+                    "sha256": "48da2f39e100d4085767e94966b43f4fa95ff6a0698fba57ed460914e35f94a0"
+                }, 
+                "license": "MIT", 
+                "natures": [
+                    "license"
+                ], 
+                "path": "package/license", 
+                "token": "48da2f39e100d4085767e94966b43f4fa95ff6a0698fba57ed460914e35f94a0"
+            }, 
+            {
+                "hashes": {
+                    "sha1": "37e6b2c5c8648f646563dd2408e9291c883c5aa3", 
+                    "sha256": "1a735adfb326707476086dd836334385fd53827f3aa218d208297104bfbb2c29"
+                }, 
+                "license": "MIT", 
+                "path": "package/package.json", 
+                "token": "1a735adfb326707476086dd836334385fd53827f3aa218d208297104bfbb2c29"
+            }, 
+            {
+                "attributions": [
+                    "(c) Sindre Sorhus (https://sindresorhus.com)"
+                ], 
+                "hashes": {
+                    "sha1": "4f53d1a4e5b8117051201f3dc9355cb08fef79a4", 
+                    "sha256": "3e179725895291cdfc01791720747f05511c76571bef380e87347b86651254ca"
+                }, 
+                "license": "MIT", 
+                "path": "package/readme.md"
+            }
+        ], 
+        "licensed": {
+            "declared": "MIT", 
+            "facets": {
+                "core": {
+                    "attribution": {
+                        "parties": [
+                            "(c) Sindre Sorhus (https://sindresorhus.com)", 
+                            "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
+                        ], 
+                        "unknown": 4
+                    }, 
+                    "discovered": {
+                        "expressions": [
+                            "MIT"
+                        ], 
+                        "unknown": 3
+                    }, 
+                    "files": 6
+                }
+            }, 
+            "score": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 8, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 83
+            }, 
+            "toolScore": {
+                "consistency": 15, 
+                "declared": 30, 
+                "discovered": 8, 
+                "spdx": 15, 
+                "texts": 15, 
+                "total": 83
+            }
+        }, 
+        "scores": {
+            "effective": 91, 
+            "tool": 91
+        }
+    }
+}

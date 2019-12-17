@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class LicenseFinderTests {
+public class LicenseFinderTests {
 
 	private ContentRegistry registry;
 	private ContentResolver resolver;
@@ -28,7 +28,7 @@ class LicenseFinderTests {
 		
 		registry = new InMemoryRegistry();
 		for(String[] csv : data) {
-			registry.cache(new BasicContentInfo(new ContentId(csv[0]), new License(csv[1]), csv[2]));
+			registry.cache(new BasicContentInfo(new ContentId(csv[0]), new License(csv[1]), csv[2], 100));
 		}
 	}
 	
@@ -38,7 +38,7 @@ class LicenseFinderTests {
 			public Results resolve(ContentId id) {
 				switch (id.toString()) {
 				case "maven/mavencentral/org.junit.jupiter/junit-jupiter/5.5.5":
-					final ContentInfo info = new BasicContentInfo(id, new License("EPL-2.0"), "approved");
+					final ContentInfo info = new BasicContentInfo(id, new License("EPL-2.0"), "approved", 100);
 					return new Results() {
 						public List<ContentInfo> getAll() {
 							return Collections.singletonList(info);
