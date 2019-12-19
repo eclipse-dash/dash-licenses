@@ -12,8 +12,6 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -31,11 +29,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.eclipse.dash.bom.LicenseSupport.Status;
 
-@Singleton
 public class LicenseChecker {
 	private ISettings settings;
 	
-	@Inject
 	Set<ContentIdParser> contentIdParsers;
 		
 	public LicenseChecker(ISettings settings) {

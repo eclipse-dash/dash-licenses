@@ -12,18 +12,23 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 public class CommandLineSettings implements ISettings {
-	private static final String CD_URL_DEFAULT = "https://api.clearlydefined.io/definitions";
-	private static final String EF_URL_DEFAULT = "https://www.eclipse.org/projects/services/license_check.php";
 	private static final String CD_URL_OPTION = "cd";
 	private static final String EF_URL_OPTION = "ef";
+	private static final String WL_URL_OPTION = "wl";
 	private static final String BATCH_OPTION = "batch";
+	
+	private static final String CD_URL_DEFAULT = "https://api.clearlydefined.io/definitions";
+	private static final String EF_URL_DEFAULT = "https://www.eclipse.org/projects/services/license_check.php";
+	private static final String WL_URL_DEFAULT = "https://www.eclipse.org/legal/licenses.json";
+	private static final int BATCH_DEFAULT = 1000;
+	
 	private CommandLine commandLine;
 
 	@Override
 	public int getBatchSize() {
-		if (!commandLine.hasOption(BATCH_OPTION)) return 1000;
+		if (!commandLine.hasOption(BATCH_OPTION)) return BATCH_DEFAULT;
 		try {
-			return (int) commandLine.getParsedOptionValue(BATCH_OPTION);
+			return ((Number)commandLine.getParsedOptionValue(BATCH_OPTION)).intValue();
 		} catch (ParseException e) {
 			// TODO Deal with this
 			throw new RuntimeException(e);
@@ -41,12 +46,18 @@ public class CommandLineSettings implements ISettings {
 		return commandLine.getOptionValue(CD_URL_OPTION, CD_URL_DEFAULT);
 	}
 	
+	@Override
+	public String getApprovedLicensesUrl() {
+		return commandLine.getOptionValue(WL_URL_OPTION, WL_URL_DEFAULT);
+	}
+	
 	private CommandLineSettings(CommandLine commandLine) {
 		this.commandLine = commandLine;
 	}
 	
 	public static ISettings getSettings(String[] args) {
 		CommandLine commandLine = getCommandLine(args);
+		// TODO Validate parameters here, so we can print help
 		if (commandLine == null) {
 			printUsage(System.out);
 			return null;
@@ -72,7 +83,7 @@ public class CommandLineSettings implements ISettings {
 	
 	private static Options getOptions()	{
 		final Options options = new Options();
-
+		
 		options.addOption(Option.builder(EF_URL_OPTION)
 			.longOpt("foundation-api")
 			.required(false)
@@ -86,11 +97,18 @@ public class CommandLineSettings implements ISettings {
 			.hasArg()
 			.desc("Clearly Defined API URL")
 			.build());
+
+		options.addOption(Option.builder(WL_URL_OPTION)
+			.longOpt("white-list")
+			.required(false)
+			.hasArg()
+			.desc("License White List URL")
+			.build());
 		
 		options.addOption(Option.builder(BATCH_OPTION)
 			.required(false)
 			.hasArg()
-			.type(Integer.class)
+			.type(Number.class)
 			.desc("Batch size (number of entries sent per API call)")
 			.build());
 
@@ -126,9 +144,4 @@ public class CommandLineSettings implements ISettings {
 		formatter.printHelp(syntax, usageHeader, getOptions(), usageFooter);
 	}
 
-	@Override
-	public String getApprovedLicensesUrl() {
-		// TODO Auto-generated method stub
-		return "https://www.eclipse.org/legal/licenses.json";
-	}
 }

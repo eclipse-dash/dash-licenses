@@ -73,7 +73,7 @@ public class LicenseSupport {
 		return null;        
 	}
 
-	public static Map<String, String> getApprovedLicenses(Reader contentReader) {
+	private static Map<String, String> getApprovedLicenses(Reader contentReader) {
 		JsonReader reader = Json.createReader(contentReader);
 		JsonObject read = (JsonObject)reader.read();
 		
@@ -93,7 +93,24 @@ public class LicenseSupport {
 		return licenses;
 	}
 
+	/**
+	 * Answer the compatibility status of an SPDX expression with the license white
+	 * list. The expression could be the id of a single license (e.g., "epl-1.0" or
+	 * "apache-2.0"), or an expression (e.g., "epl-1.0 or apache-2.0"). Matches are
+	 * case insensitive.
+	 * <p>
+	 * The expression is considered "approved" if it is either a single license on
+	 * the white list, or if any of the license in a disjunctive expression. All
+	 * others, including more complex expressions, are considered "restricted" and
+	 * require review by the IP Team.
+	 * 
+	 * @param expression an SPDX expression.
+	 * @return <code>Status.Approved</code> when the expression is approve, or
+	 *         <code>Status.Restricted</code> otherwise
+	 */
 	public Status getStatus(String expression) {
+		if (expression == null) return Status.Restricted;
+		
 		// TODO We possibly need more sophisticated expression parsing.
 		
 		// This is a quick and dirty "for now" solution. I'm reasoning that
