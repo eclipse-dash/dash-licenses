@@ -33,9 +33,12 @@ public class LicenseChecker {
 	private ISettings settings;
 	
 	Set<ContentIdParser> contentIdParsers;
+
+	private ClearlyDefinedSupport clearlyDefinedSupport;
 		
 	public LicenseChecker(ISettings settings) {
 		this.settings = settings;
+		clearlyDefinedSupport = new ClearlyDefinedSupport(settings.getClearlyDefinedDefinitionsUrl());
 	}
 	
 	public void getLicenseData(List<IContentId> values, BiConsumer<IContentData, Status> consumer) {
@@ -66,8 +69,9 @@ public class LicenseChecker {
 			consumer.accept(data, data.getStatus());
 		});
 		
-		matchAgainstClearlyDefined(unresolved, data -> {
+		clearlyDefinedSupport.matchAgainstClearlyDefined(unresolved, data -> {
 			unresolved.remove(data.getId());
+			// TODO Consider moving the license evaluation into ClearlyDefinedSupport
 			consumer.accept(data, licenses.getStatus(data.getLicense()));
 		});
 		
@@ -105,59 +109,6 @@ public class LicenseChecker {
 				if (restricted != null)
 					restricted.forEach((key,each) -> consumer.accept(new FoundationData(each.asJsonObject())));
             	
-            	content.close();
-            }
-            response.close();
-        } catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-            try {
-				httpclient.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * {
-	 * 	"maven/mavencentral/io.netty/netty-transport/4.1.42":{ ... },
-	 *  "maven/mavencentral/io.netty/netty-resolver/4.1.42":{ ... }
-	 * }
-	 * </pre>
-	 * 
-	 * @param ids
-	 * @param consumer
-	 */
-	private void matchAgainstClearlyDefined(Collection<IContentId> ids, Consumer<IContentData> consumer) {
-		if (ids.size() == 0) return;
-		
-		String url = settings.getClearlyDefinedDefinitionsUrl();
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        try {
-        	JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
-        	ids.stream().forEach(id -> builder.add(id.toString()));
-        	String json = builder.build().toString();
-        	
-            HttpPost post = new HttpPost(url);
-            post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
-        		            
-            CloseableHttpResponse response = httpclient.execute(post);
-            if (response.getStatusLine().getStatusCode() == 200) {
-            	InputStream content = response.getEntity().getContent();
-            	JsonReader reader = Json.createReader(new InputStreamReader(content, "UTF-8"));
-            	JsonObject read = (JsonObject)reader.read();
-            	
-            	read.forEach((key,each) -> 
-            		consumer.accept(new ClearlyDefinedContentData(key, each.asJsonObject())));
-				
             	content.close();
             }
             response.close();
