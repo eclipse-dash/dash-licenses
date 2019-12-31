@@ -1,4 +1,4 @@
-package org.eclipse.dash.bom;
+package org.eclipse.dash.bom.clearlydefined;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,13 +18,16 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.eclipse.dash.bom.ISettings;
+import org.eclipse.dash.bom.IContentData;
+import org.eclipse.dash.bom.IContentId;
 
 public class ClearlyDefinedSupport {
 
-	private String apiUrl;
+	private ISettings settings;
 	
-	public ClearlyDefinedSupport(String apiUrl) {
-		this.apiUrl = apiUrl;
+	public ClearlyDefinedSupport(ISettings settings) {
+		this.settings = settings;
 	}
 	
 	/**
@@ -48,7 +51,7 @@ public class ClearlyDefinedSupport {
         	ids.stream().forEach(id -> builder.add(id.toString()));
         	String json = builder.build().toString();
         	
-            HttpPost post = new HttpPost(apiUrl);
+            HttpPost post = new HttpPost(settings.getClearlyDefinedDefinitionsUrl());
             post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
         		            
             CloseableHttpResponse response = httpclient.execute(post);
