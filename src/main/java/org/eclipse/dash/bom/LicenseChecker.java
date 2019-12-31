@@ -22,12 +22,11 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.eclipse.dash.bom.LicenseSupport.Status;
+import org.eclipse.dash.bom.clearlydefined.ClearlyDefinedSupport;
 
 public class LicenseChecker {
 	private ISettings settings;
@@ -35,10 +34,13 @@ public class LicenseChecker {
 	Set<ContentIdParser> contentIdParsers;
 
 	private ClearlyDefinedSupport clearlyDefinedSupport;
+
+	private LicenseSupport licenses;
 		
 	public LicenseChecker(ISettings settings) {
 		this.settings = settings;
-		clearlyDefinedSupport = new ClearlyDefinedSupport(settings.getClearlyDefinedDefinitionsUrl());
+		clearlyDefinedSupport = new ClearlyDefinedSupport(settings);
+		licenses = LicenseSupport.getLicenseSupport(settings);
 	}
 	
 	public void getLicenseData(List<IContentId> values, BiConsumer<IContentData, Status> consumer) {
@@ -59,7 +61,6 @@ public class LicenseChecker {
 	}
 	
 	public void getContentData(List<IContentId> ids, BiConsumer<IContentData, Status> consumer) {
-		LicenseSupport licenses = LicenseSupport.getLicenseSupport(settings);
 		
 		Set<IContentId> unresolved = new HashSet<>();
 		unresolved.addAll(ids);
