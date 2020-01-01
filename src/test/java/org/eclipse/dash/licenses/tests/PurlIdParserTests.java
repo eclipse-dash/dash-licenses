@@ -7,21 +7,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
-package org.eclipse.dash.bom;
+package org.eclipse.dash.licenses.tests;
 
-import org.junit.platform.suite.api.SelectClasses;
-import org.junit.runner.RunWith;
-import org.junit.platform.runner.JUnitPlatform;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(JUnitPlatform.class)
-@SelectClasses({ 
-	ClearlyDefinedContentDataTests.class, 
-	ClearlyDefinedSupportTests.class,
-	CommandLineSettingsTest.class, 
-	ContentIdTests.class,
-	LicenseSupportTests.class, 
-	MavenIdParserTests.class, 
-	PurlIdParserTests.class 
-})
-public class TestSuite {
+import org.eclipse.dash.licenses.PurlIdParser;
+import org.junit.jupiter.api.Test;
+
+class PurlIdParserTests {
+
+	@Test
+	void testValid() {
+		assertEquals("npm/npmjs/@babel/highlight/7.5.0", new PurlIdParser().parseId("@babel/highlight@7.5.0").get().toString());
+		assertEquals("npm/npmjs/-/highlight/7.5.0", new PurlIdParser().parseId("highlight@7.5.0").get().toString());
+	}
 }

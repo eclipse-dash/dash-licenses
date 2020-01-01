@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
-package org.eclipse.dash.bom;
+package org.eclipse.dash.licenses.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
