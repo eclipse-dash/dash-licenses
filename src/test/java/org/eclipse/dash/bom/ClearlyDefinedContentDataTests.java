@@ -10,7 +10,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 
-import org.eclipse.dash.bom.clearlydefined.ClearlyDefinedContentData;
+import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedContentData;
 import org.junit.jupiter.api.Test;
 
 class ClearlyDefinedContentDataTests {

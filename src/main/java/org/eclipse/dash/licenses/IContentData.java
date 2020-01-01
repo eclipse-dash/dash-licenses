@@ -1,6 +1,6 @@
-package org.eclipse.dash.bom;
+package org.eclipse.dash.licenses;
 
-import org.eclipse.dash.bom.LicenseSupport.Status;
+import org.eclipse.dash.licenses.LicenseSupport.Status;
 
 public interface IContentData {
 

@@ -1,4 +1,4 @@
-package org.eclipse.dash.bom.clearlydefined;
+package org.eclipse.dash.licenses.clearlydefined;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,9 +18,9 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.eclipse.dash.bom.ISettings;
-import org.eclipse.dash.bom.IContentData;
-import org.eclipse.dash.bom.IContentId;
+import org.eclipse.dash.licenses.IContentData;
+import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.ISettings;
 
 public class ClearlyDefinedSupport {
 

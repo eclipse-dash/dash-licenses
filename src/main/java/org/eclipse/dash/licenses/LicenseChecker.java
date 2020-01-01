@@ -1,4 +1,4 @@
-package org.eclipse.dash.bom;
+package org.eclipse.dash.licenses;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +25,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.eclipse.dash.bom.LicenseSupport.Status;
-import org.eclipse.dash.bom.clearlydefined.ClearlyDefinedSupport;
+import org.eclipse.dash.licenses.LicenseSupport.Status;
+import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 
 public class LicenseChecker {
 	private ISettings settings;

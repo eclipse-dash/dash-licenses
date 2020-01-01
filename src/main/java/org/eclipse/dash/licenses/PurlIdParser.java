@@ -1,4 +1,4 @@
-package org.eclipse.dash.bom;
+package org.eclipse.dash.licenses;
 
 import java.util.Optional;
 import java.util.regex.Matcher;

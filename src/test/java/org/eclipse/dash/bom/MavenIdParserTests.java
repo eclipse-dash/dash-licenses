@@ -2,6 +2,8 @@ package org.eclipse.dash.bom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.MavenIdParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

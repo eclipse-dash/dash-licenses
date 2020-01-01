@@ -2,6 +2,8 @@ package org.eclipse.dash.bom;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.eclipse.dash.licenses.ContentId;
+import org.eclipse.dash.licenses.IContentId;
 import org.junit.jupiter.api.Test;
 
 class ContentIdTests {

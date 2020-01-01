@@ -1,8 +1,8 @@
-package org.eclipse.dash.bom;
+package org.eclipse.dash.licenses;
 
 import javax.json.JsonObject;
 
-import org.eclipse.dash.bom.LicenseSupport.Status;
+import org.eclipse.dash.licenses.LicenseSupport.Status;
 
 public class FoundationData implements IContentData {
 

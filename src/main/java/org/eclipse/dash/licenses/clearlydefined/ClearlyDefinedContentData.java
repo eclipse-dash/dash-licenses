@@ -1,9 +1,9 @@
-package org.eclipse.dash.bom.clearlydefined;
+package org.eclipse.dash.licenses.clearlydefined;
 
 import javax.json.JsonObject;
 
-import org.eclipse.dash.bom.ContentId;
-import org.eclipse.dash.bom.IContentData;
+import org.eclipse.dash.licenses.ContentId;
+import org.eclipse.dash.licenses.IContentData;
 
 public class ClearlyDefinedContentData implements IContentData {
 

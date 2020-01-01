@@ -2,6 +2,8 @@ package org.eclipse.dash.bom;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.eclipse.dash.licenses.CommandLineSettings;
+import org.eclipse.dash.licenses.ISettings;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

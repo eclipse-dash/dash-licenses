@@ -2,6 +2,7 @@ package org.eclipse.dash.bom;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.eclipse.dash.licenses.PurlIdParser;
 import org.junit.jupiter.api.Test;
 
 class PurlIdParserTests {

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import org.eclipse.dash.licenses.LicenseSupport;
 import org.junit.jupiter.api.Test;
 
 class LicenseSupportTests {

@@ -1,4 +1,4 @@
-package org.eclipse.dash.bom;
+package org.eclipse.dash.licenses;
 
 public interface ISettings {
 
