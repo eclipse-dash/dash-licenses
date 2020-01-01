@@ -39,12 +39,11 @@ class ClearlyDefinedSupportTests {
 		// refactor to allow testing against a local file, or spin up a server
 		// capable of (at least) faking the interaction in a consistent manner.
 		clearlyDefinedSupport.matchAgainstClearlyDefined(
-			Collections.singleton(ContentId.getContentId("maven/mavencentral/io.netty/netty-transport/4.1.4")), 
+			Collections.singleton(ContentId.getContentId("npm/npmjs/-/write/0.2.0")), 
 			data -> results.add(data));
 		assertEquals(1, results.size());
-		assertEquals("maven/mavencentral/io.netty/netty-transport/4.1.4", results.get(0).getId().toString());
+		assertEquals("npm/npmjs/-/write/0.2.0", results.get(0).getId().toString());
 		assertEquals("clearlydefined", results.get(0).getAuthority());
-		assertEquals(LicenseSupport.Status.Approved, results.get(0).getStatus());
+		assertEquals("MIT", results.get(0).getLicense());
 	}
-
 }
