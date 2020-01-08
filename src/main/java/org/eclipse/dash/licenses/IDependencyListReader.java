@@ -9,10 +9,10 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface IDependencyListReader {
 
-	List<IContentId> iterator();
+	Collection<IContentId> getContentIds();
 
 }

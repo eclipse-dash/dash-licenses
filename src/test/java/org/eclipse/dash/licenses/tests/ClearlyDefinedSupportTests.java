@@ -18,7 +18,6 @@ import java.util.List;
 import org.eclipse.dash.licenses.CommandLineSettings;
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentData;
-import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

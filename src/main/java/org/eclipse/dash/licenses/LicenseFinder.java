@@ -10,11 +10,12 @@
 package org.eclipse.dash.licenses;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 
@@ -33,7 +34,7 @@ public class LicenseFinder {
 				e.printStackTrace();
 			}
         	if (reader != null) {
-        		List<IContentId> dependencies = reader.iterator();
+        		Collection<IContentId> dependencies = reader.getContentIds();
         		
         		LicenseChecker checker = new LicenseChecker(settings);
         		checker.getLicenseData(dependencies, (data, status) -> {
@@ -51,6 +52,9 @@ public class LicenseFinder {
     	} else {
     		File input = new File(name);
     		if (input.exists()) {
+    			if ("package-lock.json".equals(input.getName())) {
+    				return new PackageLockFileReader(new FileInputStream(input));
+    			}
 				return new FlatFileReader(new FileReader(input));
     		}
     	}

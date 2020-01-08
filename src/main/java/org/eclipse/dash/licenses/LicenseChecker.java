@@ -52,7 +52,7 @@ public class LicenseChecker {
 		licenses = LicenseSupport.getLicenseSupport(settings);
 	}
 	
-	public void getLicenseData(List<IContentId> values, BiConsumer<IContentData, Status> consumer) {
+	public void getLicenseData(Collection<IContentId> values, BiConsumer<IContentData, Status> consumer) {
 		Iterator<IContentId> dependencies = values.iterator();
 		while (dependencies.hasNext()) {
 			List<IContentId> batch = new ArrayList<>();

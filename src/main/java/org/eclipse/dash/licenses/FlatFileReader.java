@@ -29,7 +29,7 @@ public class FlatFileReader implements IDependencyListReader {
 	}
 	
 	@Override
-	public List<IContentId> iterator() {
+	public List<IContentId> getContentIds() {
 		return reader.lines().map(line -> getContentId(line)).collect(Collectors.toList());
 	}
 	
