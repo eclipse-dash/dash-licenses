@@ -7,9 +7,11 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
-package org.eclipse.dash.licenses;
+package org.eclipse.dash.licenses.cli;
 
 import java.util.Collection;
+
+import org.eclipse.dash.licenses.IContentId;
 
 public interface IDependencyListReader {
 

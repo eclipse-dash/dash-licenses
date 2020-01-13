@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
-package org.eclipse.dash.licenses;
+package org.eclipse.dash.licenses.cli;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +17,9 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.ISettings;
+import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 
 public class LicenseFinder {

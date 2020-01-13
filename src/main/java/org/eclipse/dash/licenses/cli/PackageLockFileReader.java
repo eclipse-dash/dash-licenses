@@ -1,4 +1,4 @@
-package org.eclipse.dash.licenses;
+package org.eclipse.dash.licenses.cli;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -8,6 +8,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import javax.json.JsonObject;
+
+import org.eclipse.dash.licenses.ContentId;
+import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.JsonUtils;
 
 public class PackageLockFileReader implements IDependencyListReader {
 

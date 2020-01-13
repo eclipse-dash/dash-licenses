@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
-package org.eclipse.dash.licenses;
+package org.eclipse.dash.licenses.cli;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -19,6 +19,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.eclipse.dash.licenses.ISettings;
 
 public class CommandLineSettings implements ISettings {
 	private static final String CD_URL_OPTION = "cd";

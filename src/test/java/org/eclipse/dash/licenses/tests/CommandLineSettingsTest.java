@@ -11,8 +11,8 @@ package org.eclipse.dash.licenses.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.eclipse.dash.licenses.CommandLineSettings;
 import org.eclipse.dash.licenses.ISettings;
+import org.eclipse.dash.licenses.cli.CommandLineSettings;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

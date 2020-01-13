@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
-package org.eclipse.dash.licenses;
+package org.eclipse.dash.licenses.cli;
 
 import java.io.BufferedReader;
 import java.io.Reader;
@@ -15,6 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.eclipse.dash.licenses.ContentIdParser;
+import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.InvalidContentId;
+import org.eclipse.dash.licenses.MavenIdParser;
+import org.eclipse.dash.licenses.PurlIdParser;
 
 public class FlatFileReader implements IDependencyListReader {
 	
