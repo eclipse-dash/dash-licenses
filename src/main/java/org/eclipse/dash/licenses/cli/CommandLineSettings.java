@@ -136,23 +136,54 @@ public class CommandLineSettings implements ISettings {
 	private static Options getOptions() {
 		final Options options = new Options();
 
-		options.addOption(Option.builder(EF_URL_OPTION).longOpt("foundation-api").required(false).hasArg()
-				.desc("Eclipse Foundation license check API URL.").build());
+		// @formatter:off
+		options.addOption(Option.builder(EF_URL_OPTION)
+			.longOpt("foundation-api")
+			.required(false)
+			.hasArg()
+			.argName("url")
+			.desc("Eclipse Foundation license check API URL.")
+			.build());
 
-		options.addOption(Option.builder(CD_URL_OPTION).longOpt("clearly-defined-api").required(false).hasArg()
-				.desc("Clearly Defined API URL").build());
+		options.addOption(Option.builder(CD_URL_OPTION)
+			.longOpt("clearly-defined-api")
+			.required(false)
+			.hasArg()
+			.argName("url")
+			.desc("Clearly Defined API URL")
+			.build());
 
-		options.addOption(Option.builder(WL_URL_OPTION).longOpt("white-list").required(false).hasArg()
-				.desc("License White List URL").build());
+		options.addOption(Option.builder(WL_URL_OPTION)
+			.longOpt("white-list")
+			.required(false)
+			.hasArg()
+			.argName("url")
+			.desc("License White List URL")
+			.build());
 
-		options.addOption(Option.builder(BATCH_OPTION).required(false).hasArg().type(Number.class)
-				.desc("Batch size (number of entries sent per API call)").build());
+		options.addOption(Option.builder(BATCH_OPTION)
+			.required(false)
+			.hasArg()
+			.argName("int")
+			.type(Number.class)
+			.desc("Batch size (number of entries sent per API call)")
+			.build());
 
-		options.addOption(Option.builder(CONFIDENCE_OPTION).required(false).hasArg().type(Number.class)
-				.desc("Confidence threshold expressed as integer percent (0-100)").build());
+		options.addOption(Option.builder(CONFIDENCE_OPTION)
+			.required(false)
+			.hasArg()
+			.argName("int")
+			.type(Number.class)
+			.desc("Confidence threshold expressed as integer percent (0-100)")
+			.build());
 
-		options.addOption(Option.builder(HELP_OPTION).longOpt(HELP_OPTION).required(false).hasArg(false)
-				.desc("Display help").build());
+		options.addOption(Option.builder(HELP_OPTION)
+			.longOpt(HELP_OPTION)
+			.required(false)
+			.hasArg(false)
+			.desc("Display help")
+			.build());
+		// @formatter:on
 
 		return options;
 	}
