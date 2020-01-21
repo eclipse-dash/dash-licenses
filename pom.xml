@@ -74,6 +74,9 @@
 									<mainClass>org.eclipse.dash.licenses.cli.LicenseFinder</mainClass>
 								</transformer>
 							</transformers>
+							<createDependencyReducedPom>
+								false
+							</createDependencyReducedPom>
 						</configuration>
 					</execution>
 				</executions>
