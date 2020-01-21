@@ -9,11 +9,11 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.cli.CommandLineSettings;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class CommandLineSettingsTest {
@@ -30,11 +30,10 @@ class CommandLineSettingsTest {
 		assertEquals(1000, settings.getBatchSize());
 	}
 
-	@Disabled("This doesn't work yet")
 	@Test
 	void testInvalidBatchSize() {
-		ISettings settings = CommandLineSettings.getSettings(new String[] {"-batch", "xx"});
-		assertNull(settings.getBatchSize());
+		CommandLineSettings settings = CommandLineSettings.getSettings(new String[] {"-batch", "xx"});
+		assertFalse(settings.isValid());
 	}
 	
 	@Test

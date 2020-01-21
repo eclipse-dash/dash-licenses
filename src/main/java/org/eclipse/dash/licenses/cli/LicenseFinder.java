@@ -18,15 +18,21 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.eclipse.dash.licenses.IContentId;
-import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 
 public class LicenseFinder {
 
 	public static void main(String[] args) {
-		ISettings settings = CommandLineSettings.getSettings(args);
-		if (settings == null) return;
+		CommandLineSettings settings = CommandLineSettings.getSettings(args);		
+		if (!settings.isValid()) {
+			CommandLineSettings.printUsage(System.out);
+			return;
+		}
+		
+		if (settings.isShowHelp()) {
+			CommandLineSettings.printHelp(System.out);
+		}
 		
         Arrays.stream(args).forEach(name -> {
         	IDependencyListReader reader = null;

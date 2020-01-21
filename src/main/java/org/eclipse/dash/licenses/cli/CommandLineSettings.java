@@ -22,6 +22,7 @@ import org.apache.commons.cli.ParseException;
 import org.eclipse.dash.licenses.ISettings;
 
 public class CommandLineSettings implements ISettings {
+	private static final String HELP_OPTION = "help";
 	private static final String CD_URL_OPTION = "cd";
 	private static final String EF_URL_OPTION = "ef";
 	private static final String WL_URL_OPTION = "wl";
@@ -74,22 +75,30 @@ public class CommandLineSettings implements ISettings {
 		}
 	}
 	
+	public boolean isValid() {
+		if (commandLine == null) return false;
+		// TODO validate URLs etc.
+		try {
+			// TODO Extend to deal with valid ranges
+			if (commandLine.hasOption(BATCH_OPTION)) commandLine.getParsedOptionValue(BATCH_OPTION);
+			if (commandLine.hasOption(CONFIDENCE_OPTION)) commandLine.getParsedOptionValue(CONFIDENCE_OPTION);
+			
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
+	}
+	
+	public boolean isShowHelp() {
+		return commandLine.hasOption(HELP_OPTION);
+	}
+	
 	private CommandLineSettings(CommandLine commandLine) {
 		this.commandLine = commandLine;
 	}
 	
-	public static ISettings getSettings(String[] args) {
+	public static CommandLineSettings getSettings(String[] args) {
 		CommandLine commandLine = getCommandLine(args);
-		// TODO Validate parameters here, so we can print help
-		if (commandLine == null) {
-			printUsage(System.out);
-			return null;
-		}
-		
-		if (commandLine.hasOption("help")) {
-			printHelp(System.out);
-			return null;
-		}
 		
 		return new CommandLineSettings(commandLine);
 	}
@@ -134,7 +143,7 @@ public class CommandLineSettings implements ISettings {
 			.type(Number.class)
 			.desc("Batch size (number of entries sent per API call)")
 			.build());
-		
+				
 		options.addOption(Option.builder(CONFIDENCE_OPTION)
 			.required(false)
 			.hasArg()
@@ -142,8 +151,8 @@ public class CommandLineSettings implements ISettings {
 			.desc("Confidence threshold expressed as integer percent (0-100)")
 			.build());
 
-		options.addOption(Option.builder("help")
-			.longOpt("help")
+		options.addOption(Option.builder(HELP_OPTION)
+			.longOpt(HELP_OPTION)
 			.required(false)
 			.hasArg(false)
 			.desc("Display help")
