@@ -81,6 +81,10 @@ public class CommandLineSettings implements ISettings {
 	public boolean isValid() {
 		if (commandLine == null)
 			return false;
+
+		if (getFileNames().length == 0)
+			return false;
+
 		// TODO validate URLs etc.
 		try {
 			// TODO Extend to deal with valid ranges
@@ -93,6 +97,16 @@ public class CommandLineSettings implements ISettings {
 		} catch (ParseException e) {
 			return false;
 		}
+	}
+
+	/**
+	 * Answer the file names. Any value entered on the command line that is not
+	 * otherwise recognized as a parameter is is considered a file name.
+	 * 
+	 * @return An array of file names.
+	 */
+	public String[] getFileNames() {
+		return commandLine.getArgs();
 	}
 
 	public boolean isShowHelp() {

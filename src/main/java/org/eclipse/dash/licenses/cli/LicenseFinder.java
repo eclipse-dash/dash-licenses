@@ -34,7 +34,7 @@ public class LicenseFinder {
 			CommandLineSettings.printHelp(System.out);
 		}
 
-		Arrays.stream(args).forEach(name -> {
+		Arrays.stream(settings.getFileNames()).forEach(name -> {
 			IDependencyListReader reader = null;
 			try {
 				reader = getReader(name);
