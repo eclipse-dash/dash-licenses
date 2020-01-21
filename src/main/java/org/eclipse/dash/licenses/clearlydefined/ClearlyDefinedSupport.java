@@ -29,14 +29,15 @@ import org.eclipse.dash.licenses.JsonUtils;
 public class ClearlyDefinedSupport {
 
 	private ISettings settings;
-	
+
 	public ClearlyDefinedSupport(ISettings settings) {
 		this.settings = settings;
 	}
-	
+
 	/**
-	 * The ClearlyDefined API expects a flat array of ids in JSON format
-	 * in the payload of the POST request.
+	 * The ClearlyDefined API expects a flat array of ids in JSON format in the
+	 * payload of the POST request.
+	 * 
 	 * <pre>
 	 * {
 	 *	"maven/mavencentral/io.netty/netty-transport/4.1.42",
@@ -45,8 +46,7 @@ public class ClearlyDefinedSupport {
 	 * }
 	 * </pre>
 	 * 
-	 * And answers an associative array in JSON format similar to the 
-	 * following.
+	 * And answers an associative array in JSON format similar to the following.
 	 * 
 	 * <pre>
 	 * {
@@ -58,49 +58,50 @@ public class ClearlyDefinedSupport {
 	 * 
 	 * See the {@link ClearlyDefinedSupport} type for an example of the value.
 	 * 
-	 * Note that the ClearlyDefined API will always return a value for every
-	 * id that is provided. In cases where the id is not in the ClearlyDefined
-	 * database, the score is reported as 0.
+	 * Note that the ClearlyDefined API will always return a value for every id that
+	 * is provided. In cases where the id is not in the ClearlyDefined database, the
+	 * score is reported as 0.
 	 * 
-	 * @param ids ids to search in five-part ClearlyDefined format.
-	 * @param consumer the closure to execute with a instance of 
-	 * {@link ClearlyDefinedContentData} for each value included in the result.
+	 * @param ids      ids to search in five-part ClearlyDefined format.
+	 * @param consumer the closure to execute with a instance of
+	 *                 {@link ClearlyDefinedContentData} for each value included in
+	 *                 the result.
 	 */
 	public void matchAgainstClearlyDefined(Collection<IContentId> ids, Consumer<IContentData> consumer) {
-		if (ids.size() == 0) return;
-		
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        try {
-        	HttpPost post = new HttpPost(settings.getClearlyDefinedDefinitionsUrl());
-            post.setEntity(new StringEntity(JsonUtils.toJson(ids), ContentType.APPLICATION_JSON));
-        		            
-            CloseableHttpResponse response = httpclient.execute(post);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            	InputStream content = response.getEntity().getContent();
-            	
-            	JsonUtils.readJson(content).forEach((key,each) -> 
-            		{
-						ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
-						if (data.getScore() > settings.getConfidenceThreshold()) {
-							consumer.accept(data);
-						}
-					});
-				
-            	content.close();
-            } else {
-            	// TODO Deal with anything other than a 200 response code
-            }
-            response.close();
-        } catch (IOException e) {
+		if (ids.size() == 0)
+			return;
+
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		try {
+			HttpPost post = new HttpPost(settings.getClearlyDefinedDefinitionsUrl());
+			post.setEntity(new StringEntity(JsonUtils.toJson(ids), ContentType.APPLICATION_JSON));
+
+			CloseableHttpResponse response = httpclient.execute(post);
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				InputStream content = response.getEntity().getContent();
+
+				JsonUtils.readJson(content).forEach((key, each) -> {
+					ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
+					if (data.getScore() > settings.getConfidenceThreshold()) {
+						consumer.accept(data);
+					}
+				});
+
+				content.close();
+			} else {
+				// TODO Deal with anything other than a 200 response code
+			}
+			response.close();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		} finally {
-            try {
+			try {
 				httpclient.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				throw new RuntimeException(e);
 			}
-        }
+		}
 	}
 }

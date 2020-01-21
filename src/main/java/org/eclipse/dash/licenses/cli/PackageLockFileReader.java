@@ -35,15 +35,16 @@ public class PackageLockFileReader implements IDependencyListReader {
 	}
 
 	/**
-	 * Walk through the structure to identify the dependencies, and 
-	 * (recursively) the dependencies of the dependencies.
+	 * Walk through the structure to identify the dependencies, and (recursively)
+	 * the dependencies of the dependencies.
 	 * 
-	 * @param json A "dependency" list from a package-lock.json file
+	 * @param json     A "dependency" list from a package-lock.json file
 	 * @param consumer A single argument consumer of each listed item.
 	 */
 	private void dependenciesDo(JsonObject json, Consumer<ContentId> consumer) {
-		if (json == null) return;
-		json.forEach((key,value)-> {
+		if (json == null)
+			return;
+		json.forEach((key, value) -> {
 			String[] parts = key.split("/");
 			String namespace;
 			String name;
@@ -56,7 +57,7 @@ public class PackageLockFileReader implements IDependencyListReader {
 			}
 			String version = value.asJsonObject().getString("version");
 			consumer.accept(new ContentId("npm", "npmjs", namespace, name, version));
-			
+
 			dependenciesDo(json.getJsonObject("dependencies"), consumer);
 		});
 	}

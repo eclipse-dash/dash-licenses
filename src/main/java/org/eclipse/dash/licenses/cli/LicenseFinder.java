@@ -24,49 +24,50 @@ import org.eclipse.dash.licenses.LicenseSupport.Status;
 public class LicenseFinder {
 
 	public static void main(String[] args) {
-		CommandLineSettings settings = CommandLineSettings.getSettings(args);		
+		CommandLineSettings settings = CommandLineSettings.getSettings(args);
 		if (!settings.isValid()) {
 			CommandLineSettings.printUsage(System.out);
 			return;
 		}
-		
+
 		if (settings.isShowHelp()) {
 			CommandLineSettings.printHelp(System.out);
 		}
-		
-        Arrays.stream(args).forEach(name -> {
-        	IDependencyListReader reader = null;
+
+		Arrays.stream(args).forEach(name -> {
+			IDependencyListReader reader = null;
 			try {
 				reader = getReader(name);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        	if (reader != null) {
-        		Collection<IContentId> dependencies = reader.getContentIds();
-        		
-        		LicenseChecker checker = new LicenseChecker(settings);
-        		checker.getLicenseData(dependencies, (data, status) -> {
-        			// FIXME Support different options for output.
-        			// CSV for now.
-        			System.out.println(String.format("%s, %s, %s, %s", data.getId(), data.getLicense(), status == Status.Approved ? "approved" : "restricted", data.getAuthority()));
-        		});    		
-        	}
-        });
+			if (reader != null) {
+				Collection<IContentId> dependencies = reader.getContentIds();
+
+				LicenseChecker checker = new LicenseChecker(settings);
+				checker.getLicenseData(dependencies, (data, status) -> {
+					// FIXME Support different options for output.
+					// CSV for now.
+					System.out.println(String.format("%s, %s, %s, %s", data.getId(), data.getLicense(),
+							status == Status.Approved ? "approved" : "restricted", data.getAuthority()));
+				});
+			}
+		});
 	}
-	
+
 	private static IDependencyListReader getReader(String name) throws FileNotFoundException {
-    	if ("-".equals(name)) {
-    		return new FlatFileReader(new InputStreamReader(System.in));
-    	} else {
-    		File input = new File(name);
-    		if (input.exists()) {
-    			if ("package-lock.json".equals(input.getName())) {
-    				return new PackageLockFileReader(new FileInputStream(input));
-    			}
+		if ("-".equals(name)) {
+			return new FlatFileReader(new InputStreamReader(System.in));
+		} else {
+			File input = new File(name);
+			if (input.exists()) {
+				if ("package-lock.json".equals(input.getName())) {
+					return new PackageLockFileReader(new FileInputStream(input));
+				}
 				return new FlatFileReader(new FileReader(input));
-    		}
-    	}
-    	return null;
+			}
+		}
+		return null;
 	}
 }

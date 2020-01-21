@@ -97,12 +97,12 @@ public class ClearlyDefinedContentData implements IContentData {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public int getScore() {
 		return getEffectiveScore();
 	}
-	
+
 	public int getEffectiveScore() {
 		return data.get("scores").asJsonObject().getInt("effective");
 	}

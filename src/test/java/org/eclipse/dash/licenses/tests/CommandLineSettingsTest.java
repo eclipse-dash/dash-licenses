@@ -20,7 +20,7 @@ class CommandLineSettingsTest {
 
 	@Test
 	void testCustomBatchSize() {
-		ISettings settings = CommandLineSettings.getSettings(new String[] {"-batch", "42"});
+		ISettings settings = CommandLineSettings.getSettings(new String[] { "-batch", "42" });
 		assertEquals(42, settings.getBatchSize());
 	}
 
@@ -32,37 +32,37 @@ class CommandLineSettingsTest {
 
 	@Test
 	void testInvalidBatchSize() {
-		CommandLineSettings settings = CommandLineSettings.getSettings(new String[] {"-batch", "xx"});
+		CommandLineSettings settings = CommandLineSettings.getSettings(new String[] { "-batch", "xx" });
 		assertFalse(settings.isValid());
 	}
-	
+
 	@Test
 	void testCustomLicenseCheckUrl() {
 		String url = "http://localhost/license.php";
-		ISettings settings = CommandLineSettings.getSettings(new String[] {"-ef", url});
+		ISettings settings = CommandLineSettings.getSettings(new String[] { "-ef", url });
 		assertEquals(url, settings.getLicenseCheckUrl());
 	}
 
 	@Test
 	void testCustomClearlyDefinedDefinitionsUrl() {
 		String url = "http://localhost/license.php";
-		ISettings settings = CommandLineSettings.getSettings(new String[] {"-cd", url});
+		ISettings settings = CommandLineSettings.getSettings(new String[] { "-cd", url });
 		assertEquals(url, settings.getClearlyDefinedDefinitionsUrl());
 	}
 
 	@Test
 	void testCustomApprovedLicensesUrl() {
 		String url = "http://localhost/license.php";
-		ISettings settings = CommandLineSettings.getSettings(new String[] {"-wl", url});
+		ISettings settings = CommandLineSettings.getSettings(new String[] { "-wl", url });
 		assertEquals(url, settings.getApprovedLicensesUrl());
 	}
-	
+
 	@Test
 	void testCustomConfidence() {
-		ISettings settings = CommandLineSettings.getSettings(new String[] {"-confidence", "42"});
+		ISettings settings = CommandLineSettings.getSettings(new String[] { "-confidence", "42" });
 		assertEquals(42, settings.getConfidenceThreshold());
 	}
-	
+
 	@Test
 	void testDefaultConfidence() {
 		ISettings settings = CommandLineSettings.getSettings(new String[] {});

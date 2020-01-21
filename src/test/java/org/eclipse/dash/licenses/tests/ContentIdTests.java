@@ -20,9 +20,9 @@ class ContentIdTests {
 	@Test
 	void testValid() {
 		IContentId id = ContentId.getContentId("npm/npmjs/-/write/1.0.3");
-		assertEquals("npm/npmjs/-/write/1.0.3",id.toString());
+		assertEquals("npm/npmjs/-/write/1.0.3", id.toString());
 	}
-	
+
 	@Test
 	void testInvalid() {
 		assertThrows(IllegalArgumentException.class, () -> ContentId.getContentId("write/1.0.3"));

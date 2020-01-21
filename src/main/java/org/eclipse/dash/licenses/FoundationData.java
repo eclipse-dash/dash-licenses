@@ -52,10 +52,10 @@ public class FoundationData implements IContentData {
 	public int getScore() {
 		return data.getInt("confidence");
 	}
-	
+
 	@Override
 	public Status getStatus() {
-		if ("approved".equals(data.getString("status"))) 
+		if ("approved".equals(data.getString("status")))
 			return LicenseSupport.Status.Approved;
 		return LicenseSupport.Status.Restricted;
 	}

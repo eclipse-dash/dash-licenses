@@ -27,7 +27,7 @@ class ClearlyDefinedContentDataTests {
 	void test() throws Exception {
 		InputStream input = this.getClass().getResourceAsStream("/write-1.0.3.json");
 		JsonReader reader = Json.createReader(new InputStreamReader(input, "UTF-8"));
-    	JsonObject data = ((JsonValue)reader.read()).asJsonObject();
+		JsonObject data = ((JsonValue) reader.read()).asJsonObject();
 		ClearlyDefinedContentData info = new ClearlyDefinedContentData("npm/npmjs/-/write/1.0.3", data);
 
 		assertEquals("npm/npmjs/-/write/1.0.3", info.getId().toString());

@@ -48,7 +48,7 @@ public class MavenIdParserTests {
 		assertEquals("artifactid", value.getName());
 		assertEquals("1.2.3", value.getVersion());
 	}
-	
+
 	@Test
 	public void testWithPhase() {
 		IContentId value = parser.parseId("groupid:artifactid:jar:1.2.3:compile").get();
@@ -84,11 +84,13 @@ public class MavenIdParserTests {
 		assertEquals("org.eclipse.core.jobs", value.getName());
 		assertEquals("3.8.0", value.getVersion());
 	}
-	
+
 	@Test
 	@Disabled
 	public void testWithVersionInNestedJar() {
-		IContentId value = parser.parseId("p2.eclipse-plugin:org.eclipse.wst.jsdt.chromium:jar:lib/json_simple/json_simple-1.1.jar:0.5.200.v201610211901:system").get();
+		IContentId value = parser.parseId(
+				"p2.eclipse-plugin:org.eclipse.wst.jsdt.chromium:jar:lib/json_simple/json_simple-1.1.jar:0.5.200.v201610211901:system")
+				.get();
 		assertEquals("p2", value.getType());
 		assertEquals("orbit", value.getSource());
 		assertEquals("org.eclipse.wst.jsdt.chromium", value.getNamespace());
@@ -103,15 +105,16 @@ public class MavenIdParserTests {
 	@Disabled
 	@Test
 	public void testWithNestedJar() {
-		IContentId value = parser.parseId("p2.eclipse-plugin:org.jaxen:jar:lib/jaxen-1.1.6.jar:1.1.6.201804090728:system").get();
+		IContentId value = parser
+				.parseId("p2.eclipse-plugin:org.jaxen:jar:lib/jaxen-1.1.6.jar:1.1.6.201804090728:system").get();
 
 		assertEquals("jaxen", value.getName());
 		assertEquals("org.jaxen", value.getNamespace());
 		assertEquals("1.1.6", value.getVersion());
 		assertEquals("maven", value.getType());
 		assertEquals("mavencentral", value.getSource());
-		
+
 		// assertEquals("201804090728", value.getQualifier());
 	}
-	
+
 }

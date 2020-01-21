@@ -17,7 +17,7 @@ public class InvalidContentId implements IContentId {
 		this.value = value;
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
 	public String toString() {
 		return "# " + value;

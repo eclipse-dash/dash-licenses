@@ -38,8 +38,7 @@ class ClearlyDefinedSupportTests {
 		// refactor to allow testing against a local file, or spin up a server
 		// capable of (at least) faking the interaction in a consistent manner.
 		clearlyDefinedSupport.matchAgainstClearlyDefined(
-			Collections.singleton(ContentId.getContentId("npm/npmjs/-/write/0.2.0")), 
-			data -> results.add(data));
+				Collections.singleton(ContentId.getContentId("npm/npmjs/-/write/0.2.0")), data -> results.add(data));
 		assertEquals(1, results.size());
 		assertEquals("npm/npmjs/-/write/0.2.0", results.get(0).getId().toString());
 		assertEquals("clearlydefined", results.get(0).getAuthority());

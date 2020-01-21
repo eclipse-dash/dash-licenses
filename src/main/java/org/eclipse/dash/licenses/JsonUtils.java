@@ -18,10 +18,10 @@ public class JsonUtils {
 		String json = builder.build().toString();
 		return json;
 	}
-	
+
 	public static JsonObject readJson(InputStream content) throws UnsupportedEncodingException {
 		JsonReader reader = Json.createReader(new InputStreamReader(content, "UTF-8"));
-		JsonObject json = (JsonObject)reader.read();
+		JsonObject json = (JsonObject) reader.read();
 		return json;
 	}
 }

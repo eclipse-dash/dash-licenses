@@ -24,10 +24,11 @@ public class ContentId implements IContentId {
 		this.name = name;
 		this.version = version;
 	}
-	
+
 	public static ContentId getContentId(String string) {
 		String[] parts = string.split("\\/");
-		if (parts.length != 5) throw new IllegalArgumentException("Ids must contain five parts");
+		if (parts.length != 5)
+			throw new IllegalArgumentException("Ids must contain five parts");
 		String type = parts[0];
 		String source = parts[1];
 		String namespace = parts[2];
@@ -40,7 +41,7 @@ public class ContentId implements IContentId {
 	public String toString() {
 		return type + "/" + source + "/" + namespace + "/" + name + "/" + version;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof ContentId) {
