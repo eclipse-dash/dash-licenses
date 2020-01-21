@@ -32,6 +32,10 @@ public class MavenIdParser implements ContentIdParser {
 		// coordinates, but we may be able to map it to something that we can match with
 		// EF data. We might, for example, try to do some sort of bundle mapping with (for this
 		// particular example, CQ 11159.
+		
+		// We originally implemented this using Aether, but Aether breaks when a phase is
+		// included in the value.  So, we brute force it with a regular expression. While we're here
+		// we attempt to parse out qualifiers from the version.
 		Matcher matcher = mavenPattern.matcher(value.trim());
 		if (!matcher.matches()) return Optional.empty();
 
