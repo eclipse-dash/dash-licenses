@@ -57,5 +57,17 @@ class CommandLineSettingsTest {
 		ISettings settings = CommandLineSettings.getSettings(new String[] {"-wl", url});
 		assertEquals(url, settings.getApprovedLicensesUrl());
 	}
+	
+	@Test
+	void testCustomConfidence() {
+		ISettings settings = CommandLineSettings.getSettings(new String[] {"-confidence", "42"});
+		assertEquals(42, settings.getConfidenceThreshold());
+	}
+	
+	@Test
+	void testDefaultConfidence() {
+		ISettings settings = CommandLineSettings.getSettings(new String[] {});
+		assertEquals(50, settings.getConfidenceThreshold());
+	}
 
 }

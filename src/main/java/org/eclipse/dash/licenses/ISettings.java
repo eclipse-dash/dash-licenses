@@ -19,4 +19,6 @@ public interface ISettings {
 
 	String getApprovedLicensesUrl();
 
+	int getConfidenceThreshold();
+
 }

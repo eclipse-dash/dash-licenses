@@ -26,11 +26,13 @@ public class CommandLineSettings implements ISettings {
 	private static final String EF_URL_OPTION = "ef";
 	private static final String WL_URL_OPTION = "wl";
 	private static final String BATCH_OPTION = "batch";
+	private static final String CONFIDENCE_OPTION = "confidence";
 	
 	private static final String CD_URL_DEFAULT = "https://api.clearlydefined.io/definitions";
 	private static final String EF_URL_DEFAULT = "https://www.eclipse.org/projects/services/license_check.php";
 	private static final String WL_URL_DEFAULT = "https://www.eclipse.org/legal/licenses.json";
 	private static final int BATCH_DEFAULT = 1000;
+	private static final int CONFIDENCE_DEFAULT = 50;
 	
 	private CommandLine commandLine;
 
@@ -59,6 +61,17 @@ public class CommandLineSettings implements ISettings {
 	@Override
 	public String getApprovedLicensesUrl() {
 		return commandLine.getOptionValue(WL_URL_OPTION, WL_URL_DEFAULT);
+	}
+	
+	@Override
+	public int getConfidenceThreshold() {
+		if (!commandLine.hasOption(CONFIDENCE_OPTION)) return CONFIDENCE_DEFAULT;
+		try {
+			return ((Number)commandLine.getParsedOptionValue(CONFIDENCE_OPTION)).intValue();
+		} catch (ParseException e) {
+			// TODO Deal with this
+			throw new RuntimeException(e);
+		}
 	}
 	
 	private CommandLineSettings(CommandLine commandLine) {
@@ -120,6 +133,13 @@ public class CommandLineSettings implements ISettings {
 			.hasArg()
 			.type(Number.class)
 			.desc("Batch size (number of entries sent per API call)")
+			.build());
+		
+		options.addOption(Option.builder(CONFIDENCE_OPTION)
+			.required(false)
+			.hasArg()
+			.type(Number.class)
+			.desc("Confidence threshold expressed as integer percent (0-100)")
 			.build());
 
 		options.addOption(Option.builder("help")

@@ -79,7 +79,12 @@ public class ClearlyDefinedSupport {
             	InputStream content = response.getEntity().getContent();
             	
             	JsonUtils.readJson(content).forEach((key,each) -> 
-            		consumer.accept(new ClearlyDefinedContentData(key, each.asJsonObject())));
+            		{
+						ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
+						if (data.getScore() > settings.getConfidenceThreshold()) {
+							consumer.accept(data);
+						}
+					});
 				
             	content.close();
             } else {
