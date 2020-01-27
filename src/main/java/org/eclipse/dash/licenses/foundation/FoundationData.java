@@ -7,10 +7,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
-package org.eclipse.dash.licenses;
+package org.eclipse.dash.licenses.foundation;
 
 import javax.json.JsonObject;
 
+import org.eclipse.dash.licenses.ContentId;
+import org.eclipse.dash.licenses.IContentData;
+import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 
 public class FoundationData implements IContentData {

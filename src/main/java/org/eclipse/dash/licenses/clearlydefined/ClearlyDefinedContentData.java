@@ -13,6 +13,7 @@ import javax.json.JsonObject;
 
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentData;
+import org.eclipse.dash.licenses.LicenseSupport.Status;
 
 public class ClearlyDefinedContentData implements IContentData {
 
@@ -76,6 +77,7 @@ public class ClearlyDefinedContentData implements IContentData {
 	 */
 	private JsonObject data;
 	private String id;
+	private Status status;
 
 	public ClearlyDefinedContentData(String id, JsonObject data) {
 		this.id = id;
@@ -116,5 +118,14 @@ public class ClearlyDefinedContentData implements IContentData {
 	public String getAuthority() {
 		// Maybe return the Clearly Defined URL instead?
 		return "clearlydefined";
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	@Override
+	public Status getStatus() {
+		return status;
 	}
 }

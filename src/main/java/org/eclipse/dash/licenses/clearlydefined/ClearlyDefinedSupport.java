@@ -23,15 +23,20 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.ILicenseDataProvider;
 import org.eclipse.dash.licenses.ISettings;
-import org.eclipse.dash.licenses.JsonUtils;
+import org.eclipse.dash.licenses.LicenseSupport;
+import org.eclipse.dash.licenses.util.JsonUtils;
 
-public class ClearlyDefinedSupport {
+public class ClearlyDefinedSupport implements ILicenseDataProvider {
 
 	private ISettings settings;
+	// TODO Obvious opportunity for dependency injection
+	private LicenseSupport licenseSupport;
 
 	public ClearlyDefinedSupport(ISettings settings) {
 		this.settings = settings;
+		licenseSupport = LicenseSupport.getLicenseSupport(settings);
 	}
 
 	/**
@@ -60,14 +65,17 @@ public class ClearlyDefinedSupport {
 	 * 
 	 * Note that the ClearlyDefined API will always return a value for every id that
 	 * is provided. In cases where the id is not in the ClearlyDefined database, the
-	 * score is reported as 0.
+	 * score is reported as 0. This implementation will only pass those values that
+	 * have a score greater than the confidence threshold (as specified by the
+	 * settings); other values are ignored.
 	 * 
 	 * @param ids      ids to search in five-part ClearlyDefined format.
 	 * @param consumer the closure to execute with a instance of
 	 *                 {@link ClearlyDefinedContentData} for each value included in
 	 *                 the result.
 	 */
-	public void matchAgainstClearlyDefined(Collection<IContentId> ids, Consumer<IContentData> consumer) {
+	@Override
+	public void queryLicenseData(Collection<IContentId> ids, Consumer<IContentData> consumer) {
 		if (ids.size() == 0)
 			return;
 
@@ -82,6 +90,7 @@ public class ClearlyDefinedSupport {
 
 				JsonUtils.readJson(content).forEach((key, each) -> {
 					ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
+					data.setStatus(licenseSupport.getStatus(data.getLicense()));
 					if (data.getScore() > settings.getConfidenceThreshold()) {
 						consumer.accept(data);
 					}

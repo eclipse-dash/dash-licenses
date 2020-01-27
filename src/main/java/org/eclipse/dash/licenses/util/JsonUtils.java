@@ -1,4 +1,4 @@
-package org.eclipse.dash.licenses;
+package org.eclipse.dash.licenses.util;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,6 +9,8 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+
+import org.eclipse.dash.licenses.IContentId;
 
 public class JsonUtils {
 	public static String toJson(Collection<IContentId> ids) {

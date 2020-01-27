@@ -9,134 +9,57 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.eclipse.dash.licenses.LicenseSupport.Status;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
+import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
+import org.eclipse.dash.licenses.util.Batchifier;
 
 public class LicenseChecker {
 	private ISettings settings;
 
-	Set<ContentIdParser> contentIdParsers;
-
-	private ClearlyDefinedSupport clearlyDefinedSupport;
-
-	private LicenseSupport licenses;
+	// TODO Dependency injection opportunity. Order matters.
+	private ILicenseDataProvider[] dataProviders;
 
 	public LicenseChecker(ISettings settings) {
 		this.settings = settings;
-		clearlyDefinedSupport = new ClearlyDefinedSupport(settings);
-		licenses = LicenseSupport.getLicenseSupport(settings);
+		// @formatter:off
+		this.dataProviders = new ILicenseDataProvider[] { 
+			new EclipseFoundationSupport(settings),
+			new ClearlyDefinedSupport(settings) 
+		};
+		// @formatter:on
 	}
 
-	public void getLicenseData(Collection<IContentId> values, BiConsumer<IContentData, Status> consumer) {
-		Iterator<IContentId> dependencies = values.iterator();
-		while (dependencies.hasNext()) {
-			List<IContentId> batch = new ArrayList<>();
-			while (dependencies.hasNext()) {
-				IContentId id = dependencies.next();
-				if (id.isValid()) {
-					batch.add(id);
-					if (batch.size() > settings.getBatchSize())
-						break;
-				} else {
-					consumer.accept(new InvalidContentData(id), Status.Restricted);
-				}
-			}
-			getContentData(batch, consumer);
-		}
-	}
-
-	public void getContentData(List<IContentId> ids, BiConsumer<IContentData, Status> consumer) {
-
+	/**
+	 * Get the license data from the providers.
+	 * 
+	 * @param ids
+	 * @param consumer
+	 */
+	public void getLicenseData(Collection<IContentId> ids, Consumer<IContentData> consumer) {
 		Set<IContentId> unresolved = new HashSet<>();
 		unresolved.addAll(ids);
 
-		matchAgainstFoundationData(ids, data -> {
-			unresolved.remove(data.getId());
-			consumer.accept(data, data.getStatus());
-		});
-
-		clearlyDefinedSupport.matchAgainstClearlyDefined(unresolved, data -> {
-			unresolved.remove(data.getId());
-			// TODO Consider moving the license evaluation into ClearlyDefinedSupport
-			consumer.accept(data, licenses.getStatus(data.getLicense()));
-		});
+		for (ILicenseDataProvider provider : dataProviders) {
+			Set<IContentId> resolved = new HashSet<>();
+			// @formatter:off
+			new Batchifier<IContentId>()
+				.setBatchSize(settings.getBatchSize())
+				.setConsumer(batch -> {
+					provider.queryLicenseData(batch, data -> {
+						consumer.accept(data);
+						resolved.add(data.getId());
+					});
+				})
+				.batchify(unresolved.stream().filter(item -> item.isValid()).iterator());
+			// @formatter:on
+			unresolved.removeAll(resolved);
+		}
 
 		unresolved.forEach(id -> new InvalidContentData(id));
-	}
-
-	private void matchAgainstFoundationData(Collection<IContentId> ids, Consumer<IContentData> consumer) {
-		if (ids.size() == 0)
-			return;
-
-		String url = settings.getLicenseCheckUrl();
-
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-		try {
-			JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
-			ids.stream().forEach(id -> builder.add(id.toString()));
-			String json = builder.build().toString();
-
-			HttpPost post = new HttpPost(url);
-			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
-			parameters.add(new BasicNameValuePair("json", json));
-
-			post.setEntity(new UrlEncodedFormEntity(parameters, "UTF-8"));
-
-			CloseableHttpResponse response = httpclient.execute(post);
-			if (response.getStatusLine().getStatusCode() == 200) {
-				InputStream content = response.getEntity().getContent();
-				JsonReader reader = Json.createReader(new InputStreamReader(content, "UTF-8"));
-				JsonObject read = (JsonObject) reader.read();
-
-				JsonObject approved = read.getJsonObject("approved");
-				if (approved != null)
-					approved.forEach((key, each) -> consumer.accept(new FoundationData(each.asJsonObject())));
-
-				JsonObject restricted = read.getJsonObject("restricted");
-				if (restricted != null)
-					restricted.forEach((key, each) -> consumer.accept(new FoundationData(each.asJsonObject())));
-
-				content.close();
-			}
-			response.close();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				httpclient.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 }

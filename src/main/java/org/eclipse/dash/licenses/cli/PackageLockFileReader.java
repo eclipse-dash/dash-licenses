@@ -11,7 +11,7 @@ import javax.json.JsonObject;
 
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
-import org.eclipse.dash.licenses.JsonUtils;
+import org.eclipse.dash.licenses.util.JsonUtils;
 
 public class PackageLockFileReader implements IDependencyListReader {
 

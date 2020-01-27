@@ -46,11 +46,11 @@ public class LicenseFinder {
 				Collection<IContentId> dependencies = reader.getContentIds();
 
 				LicenseChecker checker = new LicenseChecker(settings);
-				checker.getLicenseData(dependencies, (data, status) -> {
+				checker.getLicenseData(dependencies, data -> {
 					// FIXME Support different options for output.
 					// CSV for now.
 					System.out.println(String.format("%s, %s, %s, %s", data.getId(), data.getLicense(),
-							status == Status.Approved ? "approved" : "restricted", data.getAuthority()));
+							data.getStatus() == Status.Approved ? "approved" : "restricted", data.getAuthority()));
 				});
 			}
 		});
