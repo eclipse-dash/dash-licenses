@@ -60,6 +60,6 @@ public class LicenseChecker {
 			unresolved.removeAll(resolved);
 		}
 
-		unresolved.forEach(id -> new InvalidContentData(id));
+		unresolved.forEach(id -> consumer.accept(new InvalidContentData(id)));
 	}
 }
