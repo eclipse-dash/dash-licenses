@@ -24,6 +24,7 @@ import org.eclipse.dash.licenses.PurlIdParser;
 
 public class FlatFileReader implements IDependencyListReader {
 
+	// TODO Dependency injection opportunity
 	List<ContentIdParser> parsers = new ArrayList<>();
 
 	private BufferedReader reader;
@@ -41,7 +42,13 @@ public class FlatFileReader implements IDependencyListReader {
 
 	public IContentId getContentId(String value) {
 		// TODO Having ContentIdParser return an Option is probably excessive.
-		return parsers.stream().map(parser -> parser.parseId(value)).filter(id -> id.isPresent()).findFirst()
-				.orElseGet(() -> Optional.of(new InvalidContentId(value))).get();
+		// @formatter:off
+		return parsers.stream()
+			.map(parser -> parser.parseId(value))
+			.filter(id -> id.isPresent())
+			.findFirst()
+			.orElseGet(() -> Optional.of(new InvalidContentId(value)))
+			.get();
+		// @formatter:on
 	}
 }

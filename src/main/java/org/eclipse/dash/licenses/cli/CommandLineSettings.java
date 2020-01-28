@@ -190,7 +190,7 @@ public class CommandLineSettings implements ISettings {
 
 	public static void printUsage(PrintStream out) {
 		final HelpFormatter formatter = new HelpFormatter();
-		final String syntax = LicenseFinder.class.getName();
+		final String syntax = Main.class.getName();
 
 		final PrintWriter writer = new PrintWriter(out);
 		formatter.printUsage(writer, 80, syntax, getOptions());
@@ -200,7 +200,7 @@ public class CommandLineSettings implements ISettings {
 	public static void printHelp(PrintStream out) {
 		// TODO Fix this ugly mess.
 		final HelpFormatter formatter = new HelpFormatter();
-		final String syntax = String.format("%s [options] <file> ...", LicenseFinder.class.getName());
+		final String syntax = String.format("%s [options] <file> ...", Main.class.getName());
 		final String usageHeader = "Sort out the licenses and approval of dependencies.";
 		final String usageFooter = "\n" + "\n<file> is the path to a file, or \"-\" to indicate stdin. "
 				+ "Multiple files may be provided" + "\ne.g.,"

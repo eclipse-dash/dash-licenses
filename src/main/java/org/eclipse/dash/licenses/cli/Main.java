@@ -16,12 +16,32 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 
-public class LicenseFinder {
+/**
+ * This class provides a CLI entrypoint to determine licenses for content. The
+ * tool can be invoked in a few different ways, e.g.
+ * 
+ * <pre>
+ * mvn dependency:list -DskipTests -Dmaven.javadoc.skip=true | 
+ * grep -Poh "\S+:(system|provided|compile) |
+ * sort | uniq | java -jar licenses.jar -batch 100 -
+ * </pre>
+ * 
+ * or
+ * 
+ * <pre>
+ * java -jar licenses.jar -batch 100 package-lock.json
+ * 
+ * <pre>
+ * 
+ * @param args
+ */
+public class Main {
 
 	public static void main(String[] args) {
 		CommandLineSettings settings = CommandLineSettings.getSettings(args);
@@ -49,8 +69,10 @@ public class LicenseFinder {
 				checker.getLicenseData(dependencies, data -> {
 					// FIXME Support different options for output.
 					// CSV for now.
-					System.out.println(String.format("%s, %s, %s, %s", data.getId(), data.getLicense(),
-							data.getStatus() == Status.Approved ? "approved" : "restricted", data.getAuthority()));
+					System.out.println(String.format("%s, %s, %s, %s", data.getId(),
+							Optional.ofNullable(data.getLicense()).orElse("unknown"),
+							data.getStatus() == Status.Approved ? "approved" : "restricted",
+							Optional.ofNullable(data.getAuthority()).orElse("none")));
 				});
 			}
 		});

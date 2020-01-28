@@ -24,7 +24,7 @@ public class InvalidContentData implements IContentData {
 
 	@Override
 	public String getLicense() {
-		return "";
+		return null;
 	}
 
 	@Override
