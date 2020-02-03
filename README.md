@@ -53,7 +53,7 @@ $ java -jar org.eclipse.dash.license-<version>.jar yarn.deps</pre>
 
 The output (for now) is a CSV list.
 
-For example:
+### Example 1: Maven
 
 <pre>$ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)" | sort | uniq > maven.deps
 $ cat maven.deps
@@ -80,7 +80,19 @@ for `org.glassfish:jakarta.json:jar:1.1.6:compile`). Note that this particular a
 of the Eclipse GlassFish project; at the time that we ran the tool, this information was not correctly 
 captured in our database.
 
-The CLI tool does provide help:
+### Example 2: Gradle
+
+Find all of the potentially problematic third party libraries from a Gradle build.
+
+<pre>$ ./gradlew dependencies | grep -Poh "[^:\s]+:[^:]+:[^:\s]+" | grep -v "^org\.eclipse" | sort | uniq \
+ | java -jar /gitroot/dash/org.eclipse.dash.bom/target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar - \
+ | grep restricted</pre>
+ 
+Note that this example pre-filters content that comes from Eclipse projects (`grep -v "^org\.eclipse"`).
+ 
+### Example 3: Help
+
+The CLI tool does provide help.
 
 <pre>$ java -jar target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -help df
 usage: org.eclipse.dash.licenses.cli.Main [options] <file> ...
