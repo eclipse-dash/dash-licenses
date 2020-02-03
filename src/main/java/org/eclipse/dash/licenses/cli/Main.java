@@ -47,11 +47,12 @@ public class Main {
 		CommandLineSettings settings = CommandLineSettings.getSettings(args);
 		if (!settings.isValid()) {
 			CommandLineSettings.printUsage(System.out);
-			return;
+			System.exit(0);;
 		}
 
 		if (settings.isShowHelp()) {
 			CommandLineSettings.printHelp(System.out);
+			System.exit(0);
 		}
 
 		Arrays.stream(settings.getFileNames()).forEach(name -> {
@@ -59,8 +60,9 @@ public class Main {
 			try {
 				reader = getReader(name);
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println(String.format("The file \"%s\" does not exist.", name));
+				CommandLineSettings.printUsage(System.out);
+				System.exit(0);
 			}
 			if (reader != null) {
 				Collection<IContentId> dependencies = reader.getContentIds();
@@ -88,8 +90,9 @@ public class Main {
 					return new PackageLockFileReader(new FileInputStream(input));
 				}
 				return new FlatFileReader(new FileReader(input));
+			} else {
+				throw new FileNotFoundException(name);
 			}
 		}
-		return null;
 	}
 }
