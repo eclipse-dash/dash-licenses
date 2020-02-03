@@ -24,7 +24,7 @@ Eclipse project's use of that content.
 
 The project uses standard Maven to build. From the root:
 
-<pre>&gt; mvn clean package</pre>
+<pre>$ mvn clean package</pre>
 
 The build generates a shaded JAR, `org.eclipse.dash.license-<version>.jar` that contains 
 everything that is required to run.
@@ -79,6 +79,26 @@ From this output, we know that we need to have the IP Team investigate
 for `org.glassfish:jakarta.json:jar:1.1.6:compile`). Note that this particular artifact is a part 
 of the Eclipse GlassFish project; at the time that we ran the tool, this information was not correctly 
 captured in our database.
+
+The CLI tool does provide help:
+
+<pre?$ java -jar target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -help df
+usage: org.eclipse.dash.licenses.cli.Main [options] <file> ...
+Sort out the licenses and approval of dependencies.
+ -batch <int>                      Batch size (number of entries sent per
+                                   API call)
+ -cd,--clearly-defined-api <url>   Clearly Defined API URL
+ -confidence <int>                 Confidence threshold expressed as
+                                   integer percent (0-100)
+ -ef,--foundation-api <url>        Eclipse Foundation license check API
+                                   URL.
+ -help,--help                      Display help
+ -wl,--white-list <url>            License White List URL
+
+<file> is the path to a file, or "-" to indicate stdin. Multiple files may
+be provided
+e.g.,
+npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -</pre>
 
 ## Help Wanted
 
