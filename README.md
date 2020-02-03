@@ -82,7 +82,7 @@ captured in our database.
 
 The CLI tool does provide help:
 
-<pre?$ java -jar target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -help df
+<pre>$ java -jar target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -help df
 usage: org.eclipse.dash.licenses.cli.Main [options] <file> ...
 Sort out the licenses and approval of dependencies.
  -batch <int>                      Batch size (number of entries sent per
