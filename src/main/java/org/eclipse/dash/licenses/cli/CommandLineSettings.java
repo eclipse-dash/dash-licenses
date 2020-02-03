@@ -82,6 +82,9 @@ public class CommandLineSettings implements ISettings {
 		if (commandLine == null)
 			return false;
 
+		if (isShowHelp())
+			return true;
+
 		if (getFileNames().length == 0)
 			return false;
 
