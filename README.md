@@ -48,7 +48,7 @@ or, if you already have a `package-lock.json` file:
 
 or, if you're using `yarn`:
 
-<pre>$ yarn list | grep -Poh "(?:([^\/\s]+)\/)?([^\/\s]+)@\D*(\d+(?:\.\d+)*)" > yarn.deps
+<pre>$ yarn list | grep -Poh "(?:([^\/\s]+)\/)?([^\/\s]+)@(\d+(?:\.\d+)*)" > yarn.deps
 $ java -jar org.eclipse.dash.license-<version>.jar yarn.deps</pre>
 
 The output (for now) is a CSV list.
