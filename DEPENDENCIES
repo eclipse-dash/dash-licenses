@@ -1,0 +1,6 @@
+maven/mavencentral/commons-codec/commons-codec/1.11, Apache-2.0, approved, CQ15971
+maven/mavencentral/commons-cli/commons-cli/1.4, Apache-2.0, approved, CQ13132
+maven/mavencentral/commons-logging/commons-logging/1.2, Apache-2.0, approved, CQ10162
+maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.12, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.apache.httpcomponents/httpclient/4.5.10, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.apache.commons/commons-csv/1.6, Apache-2.0, approved, clearlydefined
