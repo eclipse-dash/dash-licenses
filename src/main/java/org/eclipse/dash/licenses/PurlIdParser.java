@@ -16,7 +16,14 @@ import java.util.regex.Pattern;
 public class PurlIdParser implements ContentIdParser {
 
 	private static Pattern purlPattern = Pattern.compile(
-			"\\s*" + "(?:(?<namespace>@\\S+)\\/)?" + "(?<name>\\S+)" + "@(?<version>\\d+(?:\\.\\d+){0,2})" + "\\s*");
+	// @formatter:off
+			"\\s*" 
+			+ "(?:(?<namespace>@\\S+)\\/)?" 
+			+ "(?<name>\\S+)" 
+			+ "@(?<version>\\d+(?:\\.\\d+){0,2})" 
+			+ "\\s*"
+	// @formatter:on
+	);
 
 	@Override
 	public Optional<IContentId> parseId(String value) {
