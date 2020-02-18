@@ -28,7 +28,6 @@ public class PackageLockFileReader implements IDependencyListReader {
 			JsonObject json = JsonUtils.readJson(input);
 			dependenciesDo(json.getJsonObject("dependencies"), id -> content.add(id));
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
 		return content;

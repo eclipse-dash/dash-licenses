@@ -23,7 +23,6 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -79,18 +78,14 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 				content.close();
 			}
 			response.close();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// FIXME Handle gradefuly
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				httpclient.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 	}

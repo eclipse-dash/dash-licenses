@@ -60,7 +60,7 @@ public class Batchifier<T> {
 	 * word "batch" here, but since a batch can be either noun or a verb, we decided
 	 * to be a bit playful with the name to make it more obvious that this method
 	 * does something. Yes, all method names are verbs... this way just feels more
-	 * understable.
+	 * understandable.
 	 * 
 	 * @param input The data to process.
 	 * @return the receiver

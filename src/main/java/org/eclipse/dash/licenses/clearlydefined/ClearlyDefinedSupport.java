@@ -102,13 +102,11 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 			}
 			response.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		} finally {
 			try {
 				httpclient.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				throw new RuntimeException(e);
 			}
 		}
