@@ -47,7 +47,8 @@ $ java -jar org.eclipse.dash.license-<version>.jar package-lock.json
 or, if you're using `yarn`:
 
 ```
-$ yarn list | grep -Poh "(?:([^\/\s]+)\/)?([^\/\s]+)@(\d+(?:\.\d+)*)" > yarn.deps
+$ (cd yarn && yarn install)
+$ (cd <path-to-project> && node $PWD/yarn/index.js) > yarn.deps
 $ java -jar org.eclipse.dash.license-<version>.jar yarn.deps
 ```
 

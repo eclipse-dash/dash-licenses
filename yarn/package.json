@@ -1,0 +1,13 @@
+{
+  "name": "licenses-yarn-processor",
+  "version": "1.0.0",
+  "description": "Converts a yarn.lock file into yarn.deps",
+  "author": "Jonah Graham",
+  "license": "EPL-2.0",
+  "scripts": {
+    "process": "node index.js"
+  },
+  "dependencies": {
+    "@yarnpkg/lockfile": "^1.1.0"
+  }
+}
