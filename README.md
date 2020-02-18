@@ -16,7 +16,9 @@ The idea was to have some code that can be used to check the licenses of content
 
 The project uses standard Maven to build. From the root:
 
-<pre>$ mvn clean package</pre>
+```
+$ mvn clean package
+```
 
 The build generates a shaded JAR, `org.eclipse.dash.license-<version>.jar` that contains 
 everything that is required to run.
@@ -25,9 +27,11 @@ everything that is required to run.
 
 Generate a dependency list from Maven and invoke the tool on the output:
 
-<pre>$ mvn clean install -DskipTests
+```
+$ mvn clean install -DskipTests
 $ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)" | sort | uniq > maven.deps
-$ java -jar org.eclipse.dash.license-<version>.jar maven.deps</pre>
+$ java -jar org.eclipse.dash.license-<version>.jar maven.deps
+```
 
 Note that Maven's dependency:list plugin has the ability to output directly to a file 
 (rather than pulling this information from stdout); if you use this feature, be sure to 
@@ -36,18 +40,23 @@ module in your build.
 
 or, if you already have a `package-lock.json` file:
 
-<pre>$ java -jar org.eclipse.dash.license-<version>.jar package-lock.json</pre>
+```
+$ java -jar org.eclipse.dash.license-<version>.jar package-lock.json
+```
 
 or, if you're using `yarn`:
 
-<pre>$ yarn list | grep -Poh "(?:([^\/\s]+)\/)?([^\/\s]+)@(\d+(?:\.\d+)*)" > yarn.deps
-$ java -jar org.eclipse.dash.license-<version>.jar yarn.deps</pre>
+```
+$ yarn list | grep -Poh "(?:([^\/\s]+)\/)?([^\/\s]+)@(\d+(?:\.\d+)*)" > yarn.deps
+$ java -jar org.eclipse.dash.license-<version>.jar yarn.deps
+```
 
 The output (for now) is a CSV list.
 
 ### Example 1: Maven
 
-<pre>$ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)" | sort | uniq > maven.deps
+```
+$ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)" | sort | uniq > maven.deps
 $ cat maven.deps
 commons-cli:commons-cli:jar:1.4:compile
 commons-codec:commons-codec:jar:1.11:compile
@@ -64,7 +73,8 @@ maven/mavencentral/commons-logging/commons-logging/1.2, Apache-2.0, approved, CQ
 maven/mavencentral/org.apache.commons/commons-csv/1.6, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.apache.httpcomponents/httpclient/4.5.10, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.12, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.glassfish/jakarta.json/1.1.6, NOASSERTION, restricted, clearlydefined</pre>
+maven/mavencentral/org.glassfish/jakarta.json/1.1.6, NOASSERTION, restricted, clearlydefined
+```
 
 From this output, we know that we need to have the IP Team investigate 
 `maven/mavencentral/org.glassfish/jakarta.json/1.1.6` (which are the ClearlyDefined coordinates 
@@ -76,9 +86,11 @@ captured in our database.
 
 Find all of the potentially problematic third party libraries from a Gradle build.
 
-<pre>$ ./gradlew dependencies | grep -Poh "[^:\s]+:[^:]+:[^:\s]+" | grep -v "^org\.eclipse" | sort | uniq \
+```
+$ ./gradlew dependencies | grep -Poh "[^:\s]+:[^:]+:[^:\s]+" | grep -v "^org\.eclipse" | sort | uniq \
  | java -jar /gitroot/dash/org.eclipse.dash.bom/target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar - \
- | grep restricted</pre>
+ | grep restricted
+```
  
 Note that this example pre-filters content that comes from Eclipse projects (`grep -v "^org\.eclipse"`).
  
@@ -86,7 +98,8 @@ Note that this example pre-filters content that comes from Eclipse projects (`gr
 
 The CLI tool does provide help.
 
-<pre>$ java -jar target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -help df
+```
+$ java -jar target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -help df
 usage: org.eclipse.dash.licenses.cli.Main [options] <file> ...
 Sort out the licenses and approval of dependencies.
  -batch <int>                      Batch size (number of entries sent per
@@ -102,7 +115,8 @@ Sort out the licenses and approval of dependencies.
 <file> is the path to a file, or "-" to indicate stdin. Multiple files may
 be provided
 e.g.,
-npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -</pre>
+npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -
+```
 
 ## Help Wanted
 
