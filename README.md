@@ -2,23 +2,15 @@
 
 **This repository will be moved into the Eclipse Dash project.**
 
-The idea was to have some code that can be used to check the licenses of content. 
-I've tried to write it in manner that would make it easy to generate, for example, 
-a Maven plug-in. My main focus, however, has been making this work as a CLI so that 
-it can be used to sort out licenses for Maven, package-lock.json, yarn, etc.
+This "License Tool" (which clearly needs a more interesting name) identifies the licenses of content.
 
-This implementation uses two sources for license information. The first source is an
-Eclipse Foundation service that leverages data that the Eclipse Foundation's IP Team
-has collected over the years. When that source does not have information for a piece
-of content, [ClearlyDefined](https://clearlydefined.io/)'s service are used. 
+Each individual bit of content is identified by its ClearlyDefined id. This id uniquely defines, for example, a particular version of a JAR file, or a particular version of an NPM module. This tool knows how to read and convert Maven and pURL coordinates into ClearlyDefined ids. 
 
-Content is indentified by ClearlyDefined id. This tool knows how to convert Maven and
-pURL coordinates into ClearlyDefined. The CLI accepts a flat file with each line 
-representing a piece of content, or a node package-lock.json file. The current 
-implementation generates CSV content with one line for each line of input, mapping
-a package to a license along with whether that content is `approved` for use by an
-Eclipse project or `restricted`, meaning that the IP Team needs to have a look at the
-Eclipse project's use of that content.
+The CLI accepts a flat file with each line containing a content identifier (ClearlyDefined id, Maven coordinates, or pUrl), or a node `package-lock.json` file. The current implementation generates CSV content with one line for each line of input, mapping a package to a license along with whether that content is `approved` for use by an Eclipse project or `restricted`, meaning that the Eclipse IP Team needs to have a look at the Eclipse project's use of that content.
+
+The current implementation uses two sources for license information. The first source is an Eclipse Foundation service that leverages data that the Eclipse Foundation's IP Team has collected over the years. When that source does not have information for a piece of content, [ClearlyDefined](https://clearlydefined.io/)'s service are used. 
+
+The idea was to have some code that can be used to check the licenses of content, but write it in a manner that would make it easy to generate, for example, a Maven plug-in. The main focus, however, has been making this work as a CLI so that it can be used to sort out licenses for Maven, `package-lock.json`, yarn, etc.
 
 ## Build
 
