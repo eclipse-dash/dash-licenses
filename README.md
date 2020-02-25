@@ -119,6 +119,20 @@ e.g.,
 npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -
 ```
 
+**Note for Mac users**: `grep` command on Mac users doesn't support the -P parameter. So the command `grep -Poh "\S+:(system|provided|compile)"`
+will fail. To solve this issue, you must install GNU grep on your Mac with the command:
+```
+$ brew install grep
+```
+The Homebrew `grep` will be accessible via `ggrep` and the prvious code should be changed accordingly:
+
+```
+$ mvn clean install -DskipTests
+$ mvn dependency:list | ggrep -Poh "\S+:(system|provided|compile)" | sort | uniq > maven.deps
+$ java -jar org.eclipse.dash.license-<version>.jar maven.deps
+```
+
+
 ## Help Wanted
 
 Stuff that we need to add:
