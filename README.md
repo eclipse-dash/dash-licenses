@@ -68,20 +68,17 @@ org.apache.httpcomponents:httpcore:jar:4.4.12:compile
 org.glassfish:jakarta.json:jar:1.1.6:compile
 
 $ java -jar target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar maven.deps
+Vetted license information was found for all content. No further investigation is required.
+
+$ cat DEPENDENCIES
+maven/mavencentral/org.glassfish/jakarta.json/1.1.6, EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0, approved, emo_ip_team
 maven/mavencentral/commons-codec/commons-codec/1.11, Apache-2.0, approved, CQ15971
 maven/mavencentral/commons-cli/commons-cli/1.4, Apache-2.0, approved, CQ13132
+maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.12, Apache-2.0, approved, CQ18704
 maven/mavencentral/commons-logging/commons-logging/1.2, Apache-2.0, approved, CQ10162
+maven/mavencentral/org.apache.httpcomponents/httpclient/4.5.10, Apache-2.0, approved, CQ18703
 maven/mavencentral/org.apache.commons/commons-csv/1.6, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.apache.httpcomponents/httpclient/4.5.10, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.12, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.glassfish/jakarta.json/1.1.6, NOASSERTION, restricted, clearlydefined
 ```
-
-From this output, we know that we need to have the IP Team investigate 
-`maven/mavencentral/org.glassfish/jakarta.json/1.1.6` (which are the ClearlyDefined coordinates 
-for `org.glassfish:jakarta.json:jar:1.1.6:compile`). Note that this particular artifact is a part 
-of the Eclipse GlassFish project; at the time that we ran the tool, this information was not correctly 
-captured in our database.
 
 ### Example 2: Gradle
 
