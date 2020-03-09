@@ -12,15 +12,16 @@ package org.eclipse.dash.licenses.cli;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseChecker;
-import org.eclipse.dash.licenses.LicenseSupport.Status;
 
 /**
  * This class provides a CLI entrypoint to determine licenses for content. The
@@ -55,6 +56,17 @@ public class Main {
 			System.exit(0);
 		}
 
+		// TODO Set up collectors based on command line parameters
+		IResultsCollector primaryCollector = new NeedsReviewCollector(System.out);
+		List<IResultsCollector> collectors = new ArrayList<>();
+		collectors.add(primaryCollector);
+		try {
+			collectors.add(new CSVCollector(new FileOutputStream(new File("DEPENDENCIES"))));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		Arrays.stream(settings.getFileNames()).forEach(name -> {
 			IDependencyListReader reader = null;
 			try {
@@ -69,15 +81,14 @@ public class Main {
 
 				LicenseChecker checker = new LicenseChecker(settings);
 				checker.getLicenseData(dependencies, data -> {
-					// FIXME Support different options for output.
-					// CSV for now.
-					System.out.println(String.format("%s, %s, %s, %s", data.getId(),
-							Optional.ofNullable(data.getLicense()).orElse("unknown"),
-							data.getStatus() == Status.Approved ? "approved" : "restricted",
-							Optional.ofNullable(data.getAuthority()).orElse("none")));
+					collectors.forEach(collector -> collector.accept(data));
 				});
 			}
 		});
+
+		collectors.forEach(IResultsCollector::close);
+
+		System.exit(primaryCollector.getStatus());
 	}
 
 	private static IDependencyListReader getReader(String name) throws FileNotFoundException {
