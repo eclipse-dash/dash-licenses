@@ -86,6 +86,21 @@ public class MavenIdParserTests {
 	}
 
 	@Test
+	public void testEclipseFeature() {
+		IContentId value = parser
+				.parseId(
+						"org.eclipse.acceleo.features:org.eclipse.acceleo.doc:eclipse-feature:3.7.10-SNAPSHOT:provided")
+				.get();
+		// TODO The default values for type and source are obviously bogus in this case
+		assertEquals("maven", value.getType());
+		assertEquals("mavencentral", value.getSource());
+		assertEquals("org.eclipse.acceleo.features", value.getNamespace());
+		assertEquals("org.eclipse.acceleo.doc", value.getName());
+		// TODO This should probably be "3.7.10-SNAPSHOT"
+		assertEquals("3.7.10", value.getVersion());
+	}
+
+	@Test
 	@Disabled
 	public void testWithVersionInNestedJar() {
 		IContentId value = parser.parseId(
