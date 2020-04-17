@@ -9,7 +9,7 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.dash.licenses.PurlIdParser;
 import org.junit.jupiter.api.Test;
@@ -21,5 +21,7 @@ class PurlIdParserTests {
 		assertEquals("npm/npmjs/@babel/highlight/7.5.0",
 				new PurlIdParser().parseId("@babel/highlight@7.5.0").get().toString());
 		assertEquals("npm/npmjs/-/highlight/7.5.0", new PurlIdParser().parseId("highlight@7.5.0").get().toString());
+		assertEquals("npm/npmjs/-/cheerio/1.0.0-rc.3",
+				new PurlIdParser().parseId("cheerio@1.0.0-rc.3").get().toString());
 	}
 }

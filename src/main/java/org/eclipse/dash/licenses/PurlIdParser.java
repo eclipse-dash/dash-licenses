@@ -20,7 +20,7 @@ public class PurlIdParser implements ContentIdParser {
 			"\\s*" 
 			+ "(?:(?<namespace>@\\S+)\\/)?" 
 			+ "(?<name>\\S+)" 
-			+ "@(?<version>\\d+(?:\\.\\d+){0,2})" 
+			+ "@(?<version>[^@]+)" 
 			+ "\\s*"
 	// @formatter:on
 	);
