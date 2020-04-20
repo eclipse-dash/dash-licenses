@@ -13,6 +13,12 @@ public interface ISettings {
 
 	int getBatchSize();
 
+	/**
+	 * The license check URL is the address of the Eclipse Foundation license data
+	 * service.
+	 * 
+	 * @return the URL (String)
+	 */
 	String getLicenseCheckUrl();
 
 	String getClearlyDefinedDefinitionsUrl();
@@ -21,4 +27,12 @@ public interface ISettings {
 
 	int getConfidenceThreshold();
 
+	/**
+	 * How long do we wait for a response from a license data provider?
+	 * 
+	 * @return the timeout in seconds (int).
+	 */
+	default int getTimeout() {
+		return 60;
+	}
 }

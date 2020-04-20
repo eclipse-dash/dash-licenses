@@ -12,15 +12,17 @@ package org.eclipse.dash.licenses.clearlydefined;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import org.apache.http.HttpStatus;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
@@ -79,13 +81,32 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		if (ids.size() == 0)
 			return;
 
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+		// FIXME Use proper logging
+		System.out.println(String.format("Querying ClearlyDefined for license data for %1$d items.", ids.size()));
+
+		int timeout = settings.getTimeout();
+
+		// @formatter:off
+		RequestConfig config = RequestConfig.custom()
+			.setConnectTimeout(timeout * 1000)
+			.setConnectionRequestTimeout(timeout * 1000)
+			.setSocketTimeout(timeout * 1000)
+			.build();
+
+		CloseableHttpClient httpclient = HttpClientBuilder.create()
+			.setDefaultRequestConfig(config)
+			.build();
+		// @formatter:on
+
 		try {
 			HttpPost post = new HttpPost(settings.getClearlyDefinedDefinitionsUrl());
 			post.setEntity(new StringEntity(JsonUtils.toJson(ids), ContentType.APPLICATION_JSON));
 
 			CloseableHttpResponse response = httpclient.execute(post);
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				// FIXME Seems like overkill.
+				AtomicInteger counter = new AtomicInteger();
+
 				InputStream content = response.getEntity().getContent();
 
 				JsonUtils.readJson(content).forEach((key, each) -> {
@@ -93,12 +114,17 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 					data.setStatus(licenseSupport.getStatus(data.getLicense()));
 					if (data.getScore() > settings.getConfidenceThreshold()) {
 						consumer.accept(data);
+						counter.incrementAndGet();
 					}
 				});
 
 				content.close();
+
+				// FIXME Use proper logging
+				System.out.println(String.format("Found %1$d items.", counter.get()));
 			} else {
-				// TODO Deal with anything other than a 200 response code
+				// FIXME Use proper logging
+				System.out.println("ClearlyDefined data search time out; maybe decrease batch size.");
 			}
 			response.close();
 		} catch (IOException e) {
