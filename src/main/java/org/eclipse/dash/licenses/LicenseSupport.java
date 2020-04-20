@@ -124,7 +124,12 @@ public class LicenseSupport {
 		String spdx = expression.toUpperCase();
 		if (spdx.contains("AND"))
 			return Status.Restricted;
-		for (String id : spdx.split("/\\s+OR\\s+/i")) {
+
+		// FIXME This will have some odd results
+		// e.g., "GPL-2.0 OR EPL-2.0 or Apache-2.0" will work, but "GPL-2.0 OR (EPL-2.0
+		// or Apache-2.0)"
+		// will not.
+		for (String id : spdx.split("\\s+OR\\s+")) {
 			if (approvedLicenses.containsKey(id))
 				return Status.Approved;
 		}

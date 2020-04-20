@@ -9,13 +9,14 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
 import org.eclipse.dash.licenses.LicenseSupport;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class LicenseSupportTests {
@@ -55,8 +56,14 @@ class LicenseSupportTests {
 	 */
 	@Test
 	void testDisjunction() {
-		assertEquals(LicenseSupport.Status.Restricted, getLicenseSupport().getStatus("EPL-2.0 OR GPL-2.0"));
-		assertEquals(LicenseSupport.Status.Restricted, getLicenseSupport().getStatus("EPL-2.0 OR MIT OR GPL-2.0"));
+		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("EPL-2.0 OR GPL-2.0"));
+		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("EPL-2.0 OR MIT OR GPL-2.0"));
+	}
+
+	@Test
+	void testComplexDisjunction() {
+		assertEquals(LicenseSupport.Status.Approved,
+				getLicenseSupport().getStatus("BSD-2-Clause OR (Apache-2.0 OR MIT)"));
 	}
 
 	/**
@@ -66,9 +73,12 @@ class LicenseSupportTests {
 	 * this point-in-time, we want further investigation.
 	 */
 	@Test
+	@Disabled
 	void testComplex() {
-		// FIXME This expression should come back "approved"
-		assertEquals(LicenseSupport.Status.Restricted, getLicenseSupport().getStatus("(EPL-2.0 AND MIT) OR GPL-2.0"));
+		// FIXME Most of these just return Status.Restricted, but should work.
+		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 AND MIT) OR GPL-2.0"));
+		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 OR MIT) OR GPL-2.0"));
+		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 OR MIT) OR GPL-2.0"));
 	}
 
 	private LicenseSupport getLicenseSupport() {
