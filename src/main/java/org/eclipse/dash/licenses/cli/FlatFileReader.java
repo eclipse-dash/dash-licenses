@@ -20,7 +20,7 @@ import org.eclipse.dash.licenses.ContentIdParser;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.InvalidContentId;
 import org.eclipse.dash.licenses.MavenIdParser;
-import org.eclipse.dash.licenses.PurlIdParser;
+import org.eclipse.dash.licenses.NpmJsIdParser;
 
 public class FlatFileReader implements IDependencyListReader {
 
@@ -32,7 +32,7 @@ public class FlatFileReader implements IDependencyListReader {
 	public FlatFileReader(Reader input) {
 		reader = new BufferedReader(input);
 		parsers.add(new MavenIdParser());
-		parsers.add(new PurlIdParser());
+		parsers.add(new NpmJsIdParser());
 	}
 
 	@Override

@@ -10,18 +10,37 @@
 package org.eclipse.dash.licenses.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.eclipse.dash.licenses.PurlIdParser;
+import org.eclipse.dash.licenses.NpmJsIdParser;
 import org.junit.jupiter.api.Test;
 
-class PurlIdParserTests {
+class NpmJsIdParserTests {
 
 	@Test
-	void testValid() {
+	void testBasic() {
+		assertEquals("npm/npmjs/-/highlight/7.5.0", new NpmJsIdParser().parseId("highlight@7.5.0").get().toString());
+	}
+
+	@Test
+	void testWithScope() {
 		assertEquals("npm/npmjs/@babel/highlight/7.5.0",
-				new PurlIdParser().parseId("@babel/highlight@7.5.0").get().toString());
-		assertEquals("npm/npmjs/-/highlight/7.5.0", new PurlIdParser().parseId("highlight@7.5.0").get().toString());
+				new NpmJsIdParser().parseId("@babel/highlight@7.5.0").get().toString());
+	}
+
+	@Test
+	void testWithComplexVersion() {
 		assertEquals("npm/npmjs/-/cheerio/1.0.0-rc.3",
-				new PurlIdParser().parseId("cheerio@1.0.0-rc.3").get().toString());
+				new NpmJsIdParser().parseId("cheerio@1.0.0-rc.3").get().toString());
+	}
+
+	@Test
+	void testMissingName() {
+		assertTrue(new NpmJsIdParser().parseId("@1.0.0-rc.3").isEmpty());
+	}
+
+	@Test
+	void testMissingVersion() {
+		assertTrue(new NpmJsIdParser().parseId("cheerio@").isEmpty());
 	}
 }

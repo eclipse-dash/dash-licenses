@@ -13,21 +13,35 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PurlIdParser implements ContentIdParser {
+/**
+ * Parse an ID provided in the NPM JS repository format.
+ * 
+ * <p>
+ * NPM JS coordinates take the form &quot;[@scope/]name@version&quot; used to
+ * identify content in the npmjs.com repository. This implementation is intended
+ * to parse identifiers that point to very specific content, so version ranges
+ * (which are supported by the format) are not supported.
+ * 
+ * <p>
+ * See the <a href="https://docs.npmjs.com/files/package.json">npm-package.json
+ * specification</a> for more information.
+ * 
+ * @author wayne
+ *
+ */
+public class NpmJsIdParser implements ContentIdParser {
 
-	private static Pattern purlPattern = Pattern.compile(
+	private static Pattern pattern = Pattern.compile(
 	// @formatter:off
-			"\\s*" 
-			+ "(?:(?<namespace>@\\S+)\\/)?" 
+			"(?:(?<namespace>@\\S+)\\/)?" 
 			+ "(?<name>\\S+)" 
-			+ "@(?<version>[^@]+)" 
-			+ "\\s*"
+			+ "@(?<version>[^@]+)"
 	// @formatter:on
 	);
 
 	@Override
 	public Optional<IContentId> parseId(String value) {
-		Matcher matcher = purlPattern.matcher(value);
+		Matcher matcher = pattern.matcher(value.trim());
 		if (!matcher.matches())
 			return Optional.empty();
 
