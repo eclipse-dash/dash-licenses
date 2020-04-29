@@ -84,13 +84,13 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		// FIXME Use proper logging
 		System.out.println(String.format("Querying ClearlyDefined for license data for %1$d items.", ids.size()));
 
-		int timeout = settings.getTimeout();
+		int timeout = settings.getTimeout() * 1000;
 
 		// @formatter:off
 		RequestConfig config = RequestConfig.custom()
-			.setConnectTimeout(timeout * 1000)
-			.setConnectionRequestTimeout(timeout * 1000)
-			.setSocketTimeout(timeout * 1000)
+			.setConnectTimeout(timeout)
+			.setConnectionRequestTimeout(timeout)
+			.setSocketTimeout(timeout)
 			.build();
 
 		CloseableHttpClient httpclient = HttpClientBuilder.create()
