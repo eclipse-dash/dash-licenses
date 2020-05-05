@@ -51,30 +51,20 @@ public class LicenseSupport {
 	private static Map<String, String> getApprovedLicenses(ISettings settings) {
 
 		String url = settings.getApprovedLicensesUrl();
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-		try {
+
+		try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
 			HttpGet get = new HttpGet(url);
 
-			CloseableHttpResponse response = httpclient.execute(get);
-			if (response.getStatusLine().getStatusCode() == 200) {
-				InputStream content = null;
-				try {
-					content = response.getEntity().getContent();
-					InputStreamReader contentReader = new InputStreamReader(content, StandardCharsets.UTF_8);
-					return getApprovedLicenses(contentReader);
-				} finally {
-					content.close();
+			try (CloseableHttpResponse response = httpclient.execute(get)) {
+				if (response.getStatusLine().getStatusCode() == 200) {
+					try (InputStream content = response.getEntity().getContent();
+							InputStreamReader contentReader = new InputStreamReader(content, StandardCharsets.UTF_8)) {
+						return getApprovedLicenses(contentReader);
+					}
 				}
 			}
-			response.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		} finally {
-			try {
-				httpclient.close();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
 		}
 		return null;
 	}

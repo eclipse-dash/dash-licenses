@@ -63,62 +63,54 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			.setSocketTimeout(timeout)
 			.build();
 
-		CloseableHttpClient httpclient = HttpClientBuilder.create()
-			.setDefaultRequestConfig(config)
-			.build();
+		
 		// @formatter:on
 
-		try {
+		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(config).build()) {
 			JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
 			ids.stream().forEach(id -> builder.add(id.toString()));
 			String json = builder.build().toString();
 
 			HttpPost post = new HttpPost(url);
-			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
+			List<NameValuePair> parameters = new ArrayList<>();
 			parameters.add(new BasicNameValuePair("json", json));
 
 			post.setEntity(new UrlEncodedFormEntity(parameters, StandardCharsets.UTF_8));
 
-			CloseableHttpResponse response = httpclient.execute(post);
-			if (response.getStatusLine().getStatusCode() == 200) {
-				// FIXME Seems like overkill.
-				AtomicInteger counter = new AtomicInteger();
+			try (CloseableHttpResponse response = httpclient.execute(post)) {
+				if (response.getStatusLine().getStatusCode() == 200) {
+					// FIXME Seems like overkill.
+					AtomicInteger counter = new AtomicInteger();
 
-				InputStream content = response.getEntity().getContent();
-				JsonReader reader = Json.createReader(new InputStreamReader(content, StandardCharsets.UTF_8));
-				JsonObject read = (JsonObject) reader.read();
+					try (InputStream content = response.getEntity().getContent()) {
+						JsonReader reader = Json.createReader(new InputStreamReader(content, StandardCharsets.UTF_8));
+						JsonObject read = (JsonObject) reader.read();
 
-				JsonObject approved = read.getJsonObject("approved");
-				if (approved != null)
-					approved.forEach((key, each) -> {
-						consumer.accept(new FoundationData(each.asJsonObject()));
-						counter.incrementAndGet();
-					});
+						JsonObject approved = read.getJsonObject("approved");
+						if (approved != null)
+							approved.forEach((key, each) -> {
+								consumer.accept(new FoundationData(each.asJsonObject()));
+								counter.incrementAndGet();
+							});
 
-				JsonObject restricted = read.getJsonObject("restricted");
-				if (restricted != null)
-					restricted.forEach((key, each) -> {
-						consumer.accept(new FoundationData(each.asJsonObject()));
-						counter.incrementAndGet();
-					});
+						JsonObject restricted = read.getJsonObject("restricted");
+						if (restricted != null)
+							restricted.forEach((key, each) -> {
+								consumer.accept(new FoundationData(each.asJsonObject()));
+								counter.incrementAndGet();
+							});
 
-				content.close();
-				// FIXME Use proper logging
-				System.out.println(String.format("Found %1$d items.", counter.get()));
-			} else {
-				// FIXME Use proper logging
-				System.out.println("Eclipse Foundation data search time out; maybe decrease batch size.");
+					}
+					// FIXME Use proper logging
+					System.out.println(String.format("Found %1$d items.", counter.get()));
+				} else {
+					// FIXME Use proper logging
+					System.out.println("Eclipse Foundation data search time out; maybe decrease batch size.");
+				}
 			}
-			response.close();
 		} catch (IOException e) {
 			// FIXME Handle gracefully
 			throw new RuntimeException(e);
-		} finally {
-			try {
-				httpclient.close();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
 		}
 	}
 }
