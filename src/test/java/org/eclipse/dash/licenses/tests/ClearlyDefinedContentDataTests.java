@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -26,7 +27,7 @@ class ClearlyDefinedContentDataTests {
 	@Test
 	void test() throws Exception {
 		InputStream input = this.getClass().getResourceAsStream("/write-1.0.3.json");
-		JsonReader reader = Json.createReader(new InputStreamReader(input, "UTF-8"));
+		JsonReader reader = Json.createReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 		JsonObject data = ((JsonValue) reader.read()).asJsonObject();
 		ClearlyDefinedContentData info = new ClearlyDefinedContentData("npm/npmjs/-/write/1.0.3", data);
 

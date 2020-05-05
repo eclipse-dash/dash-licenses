@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +60,7 @@ public class LicenseSupport {
 				InputStream content = null;
 				try {
 					content = response.getEntity().getContent();
-					InputStreamReader contentReader = new InputStreamReader(content, "UTF-8");
+					InputStreamReader contentReader = new InputStreamReader(content, StandardCharsets.UTF_8);
 					return getApprovedLicenses(contentReader);
 				} finally {
 					content.close();

@@ -12,6 +12,7 @@ package org.eclipse.dash.licenses.foundation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -76,7 +77,7 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 			parameters.add(new BasicNameValuePair("json", json));
 
-			post.setEntity(new UrlEncodedFormEntity(parameters, "UTF-8"));
+			post.setEntity(new UrlEncodedFormEntity(parameters, StandardCharsets.UTF_8));
 
 			CloseableHttpResponse response = httpclient.execute(post);
 			if (response.getStatusLine().getStatusCode() == 200) {
@@ -84,7 +85,7 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 				AtomicInteger counter = new AtomicInteger();
 
 				InputStream content = response.getEntity().getContent();
-				JsonReader reader = Json.createReader(new InputStreamReader(content, "UTF-8"));
+				JsonReader reader = Json.createReader(new InputStreamReader(content, StandardCharsets.UTF_8));
 				JsonObject read = (JsonObject) reader.read();
 
 				JsonObject approved = read.getJsonObject("approved");

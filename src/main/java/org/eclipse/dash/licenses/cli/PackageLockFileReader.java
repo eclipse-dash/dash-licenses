@@ -1,7 +1,6 @@
 package org.eclipse.dash.licenses.cli;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,12 +23,8 @@ public class PackageLockFileReader implements IDependencyListReader {
 	@Override
 	public Collection<IContentId> getContentIds() {
 		Set<IContentId> content = new HashSet<>();
-		try {
-			JsonObject json = JsonUtils.readJson(input);
-			dependenciesDo(json.getJsonObject("dependencies"), id -> content.add(id));
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
+		JsonObject json = JsonUtils.readJson(input);
+		dependenciesDo(json.getJsonObject("dependencies"), id -> content.add(id));
 		return content;
 	}
 
