@@ -18,17 +18,17 @@ The project uses standard Maven to build. From the root:
 $ mvn clean package
 ```
 
-The build generates a shaded JAR, `org.eclipse.dash.license-<version>.jar` that contains 
-everything that is required to run.
+The build generates a shaded JAR, `org.eclipse.dash.licenses-<version>.jar` that contains 
+everything that is required to run from the command line.
 
 ## Usage
 
 Generate a dependency list from Maven and invoke the tool on the output:
 
 ```
-$ mvn clean install -DskipTests
-$ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)" | sort | uniq > maven.deps
-$ java -jar org.eclipse.dash.license-<version>.jar maven.deps
+$ mvn clean install
+$ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)" | sort | uniq \
+ | java -jar org.eclipse.dash.licenses-<version>.jar maven.deps
 ```
 
 Note that Maven's `dependency:list` plugin has the ability to output directly to a file 
@@ -39,7 +39,7 @@ module in your build.
 or, if you already have a `package-lock.json` file:
 
 ```
-$ java -jar org.eclipse.dash.license-<version>.jar package-lock.json
+$ java -jar org.eclipse.dash.licenses-<version>.jar package-lock.json
 ```
 
 The output (for now) is either a statement that the licenses for all of the content have
@@ -92,14 +92,14 @@ We provide a tool to generate a dependency list for yarn-based builds.
 ```
 $ (cd <path-to-this-repo>yarn && yarn install)
 $ (cd <path-to-project> && node <path-to-this-repo>/yarn/index.js) \
- | java -jar org.eclipse.dash.license-<version>.jar -
+ | java -jar org.eclipse.dash.licenses-<version>.jar -
 ```
 
 For example:
 
 ```
-$ node /gitroot/dash/org.eclipse.dash.license/yarn/index.js \
-| java -jar /gitroot/dash/org.eclipse.dash.license/target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -
+$ node /dash-licenses/yarn/index.js \
+| java -jar /dash-licenses/target/org.eclipse.dash.licenses-<version>.jar -
 License information could not automatically verified for the following content:
 
 npm/npmjs/-/typed-rest-client/1.2.0 (null)
@@ -115,7 +115,7 @@ Please create contribution questionnaires for this content.
 The CLI tool does provide help.
 
 ```
-$ java -jar target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -help df
+$ java -jar target/org.eclipse.dash.licenses-<version>.jar -help df
 usage: org.eclipse.dash.licenses.cli.Main [options] <file> ...
 Sort out the licenses and approval of dependencies.
  -batch <int>                      Batch size (number of entries sent per
