@@ -25,9 +25,6 @@ import java.util.regex.Pattern;
  * <p>
  * See the <a href="https://docs.npmjs.com/files/package.json">npm-package.json
  * specification</a> for more information.
- * 
- * @author wayne
- *
  */
 public class NpmJsIdParser implements ContentIdParser {
 

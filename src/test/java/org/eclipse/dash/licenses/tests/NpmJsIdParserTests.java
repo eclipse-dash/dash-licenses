@@ -9,8 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.dash.licenses.NpmJsIdParser;
 import org.junit.jupiter.api.Test;
@@ -36,11 +36,11 @@ class NpmJsIdParserTests {
 
 	@Test
 	void testMissingName() {
-		assertTrue(new NpmJsIdParser().parseId("@1.0.0-rc.3").isEmpty());
+		assertFalse(new NpmJsIdParser().parseId("@1.0.0-rc.3").isPresent());
 	}
 
 	@Test
 	void testMissingVersion() {
-		assertTrue(new NpmJsIdParser().parseId("cheerio@").isEmpty());
+		assertFalse(new NpmJsIdParser().parseId("cheerio@").isPresent());
 	}
 }
