@@ -92,49 +92,39 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 			.setConnectionRequestTimeout(timeout)
 			.setSocketTimeout(timeout)
 			.build();
-
-		CloseableHttpClient httpclient = HttpClientBuilder.create()
-			.setDefaultRequestConfig(config)
-			.build();
+		
 		// @formatter:on
 
-		try {
+		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(config).build()) {
 			HttpPost post = new HttpPost(settings.getClearlyDefinedDefinitionsUrl());
 			post.setEntity(new StringEntity(JsonUtils.toJson(ids), ContentType.APPLICATION_JSON));
 
-			CloseableHttpResponse response = httpclient.execute(post);
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-				// FIXME Seems like overkill.
-				AtomicInteger counter = new AtomicInteger();
+			try (CloseableHttpResponse response = httpclient.execute(post)) {
+				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					// FIXME Seems like overkill.
+					AtomicInteger counter = new AtomicInteger();
 
-				InputStream content = response.getEntity().getContent();
+					try (InputStream content = response.getEntity().getContent()) {
 
-				JsonUtils.readJson(content).forEach((key, each) -> {
-					ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
-					data.setStatus(licenseSupport.getStatus(data.getLicense()));
-					if (data.getScore() > settings.getConfidenceThreshold()) {
-						consumer.accept(data);
-						counter.incrementAndGet();
+						JsonUtils.readJson(content).forEach((key, each) -> {
+							ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
+							data.setStatus(licenseSupport.getStatus(data.getLicense()));
+							if (data.getScore() > settings.getConfidenceThreshold()) {
+								consumer.accept(data);
+								counter.incrementAndGet();
+							}
+						});
 					}
-				});
 
-				content.close();
-
-				// FIXME Use proper logging
-				System.out.println(String.format("Found %1$d items.", counter.get()));
-			} else {
-				// FIXME Use proper logging
-				System.out.println("ClearlyDefined data search time out; maybe decrease batch size.");
+					// FIXME Use proper logging
+					System.out.println(String.format("Found %1$d items.", counter.get()));
+				} else {
+					// FIXME Use proper logging
+					System.out.println("ClearlyDefined data search time out; maybe decrease batch size.");
+				}
 			}
-			response.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		} finally {
-			try {
-				httpclient.close();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
 		}
 	}
 }

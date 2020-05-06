@@ -91,6 +91,7 @@ public class Main {
 		System.exit(primaryCollector.getStatus());
 	}
 
+	@SuppressWarnings("resource")
 	private static IDependencyListReader getReader(String name) throws FileNotFoundException {
 		if ("-".equals(name)) {
 			return new FlatFileReader(new InputStreamReader(System.in));

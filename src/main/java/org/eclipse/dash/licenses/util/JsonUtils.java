@@ -2,7 +2,7 @@ package org.eclipse.dash.licenses.util;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 import javax.json.Json;
@@ -21,8 +21,8 @@ public class JsonUtils {
 		return json;
 	}
 
-	public static JsonObject readJson(InputStream content) throws UnsupportedEncodingException {
-		JsonReader reader = Json.createReader(new InputStreamReader(content, "UTF-8"));
+	public static JsonObject readJson(InputStream content) {
+		JsonReader reader = Json.createReader(new InputStreamReader(content, StandardCharsets.UTF_8));
 		JsonObject json = (JsonObject) reader.read();
 		return json;
 	}
