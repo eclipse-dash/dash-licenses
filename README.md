@@ -1,7 +1,5 @@
 # Extract License Information from Content
 
-**This repository will be moved into the Eclipse Dash project.**
-
 This "License Tool" (which clearly needs a more interesting name) identifies the licenses of content.
 
 Each individual bit of content is identified by its ClearlyDefined id. This id uniquely defines, for example, a particular version of a JAR file, or a particular version of an NPM module. This tool knows how to read and convert Maven and pURL coordinates into ClearlyDefined ids. 
@@ -100,8 +98,8 @@ $ (cd <path-to-project> && node <path-to-this-repo>/yarn/index.js) \
 For example:
 
 ```
-$ node /gitroot/dash/org.eclipse.dash.bom/yarn/index.js \
-| java -jar /gitroot/dash/org.eclipse.dash.bom/target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -
+$ node /gitroot/dash/org.eclipse.dash.license/yarn/index.js \
+| java -jar /gitroot/dash/org.eclipse.dash.license/target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -
 License information could not automatically verified for the following content:
 
 npm/npmjs/-/typed-rest-client/1.2.0 (null)
@@ -141,9 +139,10 @@ npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -
 
 Stuff that we need to add:
 
-* Create a Maven plug-in;
-* Add an option with more specific "you need to create a CQ for these";
+* Create a Maven plug-in (#7);
 * Links to make creating CQs semi-automatic (or even automatic);
-* Logging;
-* Make the implementation more extensible by adding dependency injection;
-* Support for other technologies (e.g., cmake, go, ...)
+* Logging (#9);
+* Make the implementation more extensible by adding dependency injection (#8);
+* Support for other technologies (e.g., cmake, go, ...) (#10)
+
+For a more complete list, and status, see the open issues.
