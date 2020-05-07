@@ -66,7 +66,7 @@ class CommandLineSettingsTest {
 	@Test
 	void testDefaultConfidence() {
 		ISettings settings = CommandLineSettings.getSettings(new String[] {});
-		assertEquals(50, settings.getConfidenceThreshold());
+		assertEquals(80, settings.getConfidenceThreshold());
 	}
 
 }
