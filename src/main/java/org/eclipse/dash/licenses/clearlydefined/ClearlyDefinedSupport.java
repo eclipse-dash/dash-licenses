@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2019,2020 The Eclipse Foundation and others.
  * 
  * This program and the accompanying materials are made available under 
  * the terms of the Eclipse Public License 2.0 which accompanies this 
@@ -109,7 +109,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 						JsonUtils.readJson(content).forEach((key, each) -> {
 							ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
 							data.setStatus(licenseSupport.getStatus(data.getLicense()));
-							if (data.getScore() > settings.getConfidenceThreshold()) {
+							if (data.getScore() >= settings.getConfidenceThreshold()) {
 								consumer.accept(data);
 								counter.incrementAndGet();
 							}
