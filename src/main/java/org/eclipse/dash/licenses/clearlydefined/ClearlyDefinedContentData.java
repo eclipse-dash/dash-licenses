@@ -9,11 +9,15 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.clearlydefined;
 
+import java.util.stream.Stream;
+
 import javax.json.JsonObject;
+import javax.json.JsonString;
 
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
+import org.eclipse.dash.licenses.util.JsonUtils;
 
 public class ClearlyDefinedContentData implements IContentData {
 
@@ -127,5 +131,18 @@ public class ClearlyDefinedContentData implements IContentData {
 	@Override
 	public Status getStatus() {
 		return status;
+	}
+
+	/**
+	 * Answer the discovered licenses as a stream.
+	 * 
+	 * @return
+	 */
+	public Stream<String> discoveredLicenses() {
+		// @formatter:off
+		return JsonUtils.getJsonArray(data, "licensed", "facets", "core", "discovered", "expressions")
+			.getValuesAs(JsonString.class)
+			.stream().map(value -> value.getString());
+		// @formatter:on
 	}
 }

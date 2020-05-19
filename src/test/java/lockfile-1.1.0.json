@@ -1,0 +1,125 @@
+{
+   "_id" : "npm/npmjs/@yarnpkg/lockfile/1.1.0",
+   "_meta" : {
+      "schemaVersion" : "1.6.1",
+      "updated" : "2019-04-01T23:30:39.635Z"
+   },
+   "coordinates" : {
+      "name" : "lockfile",
+      "namespace" : "@yarnpkg",
+      "provider" : "npmjs",
+      "revision" : "1.1.0",
+      "type" : "npm"
+   },
+   "described" : {
+      "files" : 3,
+      "hashes" : {
+         "sha1" : "e77a97fbd345b76d83245edcd17d393b1b41fb31",
+         "sha256" : "1fc6fdaf70323755351ae9e10c719891a20c03e6d12d4fc940877aece1993944"
+      },
+      "releaseDate" : "2018-09-10",
+      "score" : {
+         "date" : 30,
+         "source" : 70,
+         "total" : 100
+      },
+      "sourceLocation" : {
+         "name" : "yarn",
+         "namespace" : "yarnpkg",
+         "provider" : "github",
+         "revision" : "ee5d4a153a3fe85145c45c0bb251ffffffcfe210",
+         "type" : "git",
+         "url" : "https://github.com/yarnpkg/yarn/tree/ee5d4a153a3fe85145c45c0bb251ffffffcfe210"
+      },
+      "toolScore" : {
+         "date" : 30,
+         "source" : 70,
+         "total" : 100
+      },
+      "tools" : [
+         "clearlydefined/1.3.4",
+         "licensee/9.12.1",
+         "scancode/3.2.2",
+         "fossology/3.6.0"
+      ],
+      "urls" : {
+         "download" : "https://registry.npmjs.com/lockfile/@yarnpkg/lockfile-1.1.0.tgz",
+         "registry" : "https://npmjs.com/package/@yarnpkg/lockfile",
+         "version" : "https://npmjs.com/package/@yarnpkg/lockfile/v/1.1.0"
+      }
+   },
+   "files" : [
+      {
+         "hashes" : {
+            "sha1" : "e10af3e97072f13a1c24d1909a27511a9e2a9646",
+            "sha256" : "40b02d6bd906ceb10acd716721e0fbf1d7ae51db4962621c348abc5229aa7d48"
+         },
+         "license" : "BSD-2-Clause",
+         "path" : "package/package.json",
+         "token" : "40b02d6bd906ceb10acd716721e0fbf1d7ae51db4962621c348abc5229aa7d48"
+      },
+      {
+         "attributions" : [
+            "copyright (c) 2018 Denis Pushkarev",
+            "Copyright (c) 2013-present, Facebook, Inc.",
+            "Copyright Joyent, Inc. and other Node contributors."
+         ],
+         "hashes" : {
+            "sha1" : "3003035c0c73b4253cf5297a0de246e0bfc50b68",
+            "sha256" : "23b16b3cb31ec51e558971e64251ec7f9f97ad64380929d7a09718bf9dd23439"
+         },
+         "license" : "MIT",
+         "path" : "package/index.js"
+      },
+      {
+         "hashes" : {
+            "sha1" : "48ddbf4f3dc5b8a8ff6d48c5420a1239f0d9fe0f",
+            "sha256" : "048f65602fe36d89232dff6fff8496433a284d6ab9e160a79e50a05f5ca2f6ae"
+         },
+         "path" : "package/README.md"
+      }
+   ],
+   "licensed" : {
+      "declared" : "BSD-2-Clause",
+      "facets" : {
+         "core" : {
+            "attribution" : {
+               "parties" : [
+                  "copyright (c) 2018 Denis Pushkarev",
+                  "Copyright (c) 2013-present, Facebook, Inc.",
+                  "Copyright Joyent, Inc. and other Node contributors."
+               ],
+               "unknown" : 2
+            },
+            "discovered" : {
+               "expressions" : [
+                  "BSD-2-Clause",
+                  "MIT"
+               ],
+               "unknown" : 1
+            },
+            "files" : 3
+         }
+      },
+      "score" : {
+         "consistency" : 0,
+         "declared" : 30,
+         "discovered" : 8,
+         "spdx" : 15,
+         "texts" : 0,
+         "total" : 53
+      },
+      "toolScore" : {
+         "consistency" : 0,
+         "declared" : 30,
+         "discovered" : 8,
+         "spdx" : 15,
+         "texts" : 0,
+         "total" : 53
+      }
+   },
+   "scores" : {
+      "effective" : 76,
+      "tool" : 76
+   }
+}

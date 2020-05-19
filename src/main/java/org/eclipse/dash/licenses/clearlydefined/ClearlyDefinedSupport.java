@@ -98,7 +98,8 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 						JsonUtils.readJson(content).forEach((key, each) -> {
 							ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
 							data.setStatus(licenseSupport.getStatus(data.getLicense()));
-							if (data.getScore() >= settings.getConfidenceThreshold()) {
+
+							if (isAccepted(data)) {
 								consumer.accept(data);
 								counter.incrementAndGet();
 							}
@@ -115,6 +116,14 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private boolean isAccepted(ClearlyDefinedContentData data) {
+		if (data.getScore() < settings.getConfidenceThreshold())
+			return false;
+		return !data.discoveredLicenses()
+				.filter(license -> licenseSupport.getStatus(license) == LicenseSupport.Status.Restricted).findAny()
+				.isPresent();
 	}
 
 	private CloseableHttpClient getHttpClient() {

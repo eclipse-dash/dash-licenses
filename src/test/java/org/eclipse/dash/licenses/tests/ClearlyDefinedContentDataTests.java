@@ -9,6 +9,7 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.InputStream;
@@ -25,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 class ClearlyDefinedContentDataTests {
 	@Test
-	void test() throws Exception {
+	void testSingleLicense() throws Exception {
 		InputStream input = this.getClass().getResourceAsStream("/write-1.0.3.json");
 		JsonReader reader = Json.createReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 		JsonObject data = ((JsonValue) reader.read()).asJsonObject();
@@ -33,6 +34,17 @@ class ClearlyDefinedContentDataTests {
 
 		assertEquals("npm/npmjs/-/write/1.0.3", info.getId().toString());
 		assertEquals("MIT", info.getLicense());
+		assertArrayEquals(new String[] { "MIT" }, info.discoveredLicenses().toArray(String[]::new));
 		assertEquals(97, info.getScore());
+	}
+
+	@Test
+	void testDiscoveredLicenses() throws Exception {
+		InputStream input = this.getClass().getResourceAsStream("/lockfile-1.1.0.json");
+		JsonReader reader = Json.createReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+		JsonObject data = ((JsonValue) reader.read()).asJsonObject();
+		ClearlyDefinedContentData info = new ClearlyDefinedContentData("npm/npmjs/-/lockfile/1.1.1", data);
+
+		assertArrayEquals(new String[] { "BSD-2-Clause", "MIT" }, info.discoveredLicenses().toArray(String[]::new));
 	}
 }

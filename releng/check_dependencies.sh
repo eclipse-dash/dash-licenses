@@ -1,0 +1,1 @@
+{ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)"; cd yarn && node index.js; } | sort | uniq | java -jar /gitroot/dash/org.eclipse.dash.bom/target/org.eclipse.dash.licenses-0.0.1-SNAPSHOT.jar -

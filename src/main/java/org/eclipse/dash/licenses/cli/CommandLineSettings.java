@@ -33,7 +33,7 @@ public class CommandLineSettings implements ISettings {
 	private static final String EF_URL_DEFAULT = "https://www.eclipse.org/projects/services/license_check.php";
 	private static final String WL_URL_DEFAULT = "https://www.eclipse.org/legal/licenses.json";
 	private static final int BATCH_DEFAULT = 1000;
-	private static final int CONFIDENCE_DEFAULT = 80;
+	private static final int CONFIDENCE_DEFAULT = 75;
 
 	private CommandLine commandLine;
 
