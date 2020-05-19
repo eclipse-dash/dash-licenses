@@ -54,19 +54,8 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 		System.out.println(String.format("Querying Eclipse Foundation for license data for %1$d items.", ids.size()));
 
 		String url = settings.getLicenseCheckUrl();
-		int timeout = settings.getTimeout() * 1000;
 
-		// @formatter:off
-		RequestConfig config = RequestConfig.custom()
-			.setConnectTimeout(timeout)
-			.setConnectionRequestTimeout(timeout)
-			.setSocketTimeout(timeout)
-			.build();
-
-		
-		// @formatter:on
-
-		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(config).build()) {
+		try (CloseableHttpClient httpclient = getHttpClient()) {
 			JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
 			ids.stream().forEach(id -> builder.add(id.toString()));
 			String json = builder.build().toString();
@@ -112,5 +101,19 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			// FIXME Handle gracefully
 			throw new RuntimeException(e);
 		}
+	}
+
+	private CloseableHttpClient getHttpClient() {
+		int timeout = settings.getTimeout() * 1000;
+
+		// @formatter:off
+		RequestConfig config = RequestConfig.custom()
+			.setConnectTimeout(timeout)
+			.setConnectionRequestTimeout(timeout)
+			.setSocketTimeout(timeout)
+			.build();
+		// @formatter:on
+
+		return HttpClientBuilder.create().setDefaultRequestConfig(config).build();
 	}
 }

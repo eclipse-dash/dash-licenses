@@ -37,8 +37,7 @@ import org.eclipse.dash.licenses.LicenseChecker;
  * 
  * <pre>
  * java -jar licenses.jar -batch 100 package-lock.json
- * 
- * <pre>
+ * </pre>
  * 
  * @param args
  */

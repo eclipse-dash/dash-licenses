@@ -84,18 +84,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		// FIXME Use proper logging
 		System.out.println(String.format("Querying ClearlyDefined for license data for %1$d items.", ids.size()));
 
-		int timeout = settings.getTimeout() * 1000;
-
-		// @formatter:off
-		RequestConfig config = RequestConfig.custom()
-			.setConnectTimeout(timeout)
-			.setConnectionRequestTimeout(timeout)
-			.setSocketTimeout(timeout)
-			.build();
-		
-		// @formatter:on
-
-		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(config).build()) {
+		try (CloseableHttpClient httpclient = getHttpClient()) {
 			HttpPost post = new HttpPost(settings.getClearlyDefinedDefinitionsUrl());
 			post.setEntity(new StringEntity(JsonUtils.toJson(ids), ContentType.APPLICATION_JSON));
 
@@ -126,5 +115,19 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private CloseableHttpClient getHttpClient() {
+		int timeout = settings.getTimeout() * 1000;
+
+		// @formatter:off
+		RequestConfig config = RequestConfig.custom()
+			.setConnectTimeout(timeout)
+			.setConnectionRequestTimeout(timeout)
+			.setSocketTimeout(timeout)
+			.build();
+		// @formatter:on
+
+		return HttpClientBuilder.create().setDefaultRequestConfig(config).build();
 	}
 }
