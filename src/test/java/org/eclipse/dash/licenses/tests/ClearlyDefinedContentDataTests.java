@@ -35,7 +35,8 @@ class ClearlyDefinedContentDataTests {
 		assertEquals("npm/npmjs/-/write/1.0.3", info.getId().toString());
 		assertEquals("MIT", info.getLicense());
 		assertArrayEquals(new String[] { "MIT" }, info.discoveredLicenses().toArray(String[]::new));
-		assertEquals(97, info.getScore());
+		assertEquals(94, info.getScore());
+		assertEquals(97, info.getEffectiveScore());
 	}
 
 	@Test
@@ -46,5 +47,14 @@ class ClearlyDefinedContentDataTests {
 		ClearlyDefinedContentData info = new ClearlyDefinedContentData("npm/npmjs/-/lockfile/1.1.1", data);
 
 		assertArrayEquals(new String[] { "BSD-2-Clause", "MIT" }, info.discoveredLicenses().toArray(String[]::new));
+	}
+
+	@Test
+	void testMissingData() {
+		ClearlyDefinedContentData info = new ClearlyDefinedContentData("test", JsonValue.EMPTY_JSON_OBJECT);
+		assertEquals(0, info.getScore());
+		assertEquals(0, info.getEffectiveScore());
+		assertEquals("", info.getLicense());
+		assertArrayEquals(new String[] {}, info.discoveredLicenses().toArray(String[]::new));
 	}
 }

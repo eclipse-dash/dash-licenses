@@ -11,13 +11,14 @@ package org.eclipse.dash.licenses.clearlydefined;
 
 import java.util.stream.Stream;
 
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonString;
+import javax.json.JsonValue;
 
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
-import org.eclipse.dash.licenses.util.JsonUtils;
 
 public class ClearlyDefinedContentData implements IContentData {
 
@@ -95,22 +96,36 @@ public class ClearlyDefinedContentData implements IContentData {
 	}
 
 	public String getDeclaredLicense() {
-		if (data.containsKey("licensed")) {
-			JsonObject licensed = data.get("licensed").asJsonObject();
-			if (licensed.containsKey("declared")) {
-				return licensed.getString("declared");
-			}
-		}
-		return null;
+		// @formatter:off
+		JsonString license = data
+			.getOrDefault("licensed", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
+			.getJsonString("declared");
+		// @formatter:on
+		return license == null ? "" : license.getString();
 	}
 
 	@Override
 	public int getScore() {
-		return getEffectiveScore();
+		return getLicenseScore();
 	}
 
 	public int getEffectiveScore() {
-		return data.get("scores").asJsonObject().getInt("effective");
+		// @formatter:off
+		JsonNumber score = data
+			.getOrDefault("scores", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
+			.getJsonNumber("effective");
+		// @formatter:on
+		return score == null ? 0 : score.intValue();
+	}
+
+	public int getLicenseScore() {
+		// @formatter:off
+		JsonNumber score = data
+			.getOrDefault("licensed", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
+			.getOrDefault("score", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
+			.getJsonNumber("total");
+		// @formatter:on
+		return score == null ? 0 : score.intValue();
 	}
 
 	@Override
@@ -140,9 +155,17 @@ public class ClearlyDefinedContentData implements IContentData {
 	 */
 	public Stream<String> discoveredLicenses() {
 		// @formatter:off
-		return JsonUtils.getJsonArray(data, "licensed", "facets", "core", "discovered", "expressions")
-			.getValuesAs(JsonString.class)
-			.stream().map(value -> value.getString());
+		return data
+			.getOrDefault("licensed", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
+			.getOrDefault("facets", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
+			.getOrDefault("core", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
+			.getOrDefault("discovered", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
+			.getOrDefault("expressions", JsonValue.EMPTY_JSON_ARRAY).asJsonArray()
+			.getValuesAs(JsonString.class).stream().map(JsonString::getString);
 		// @formatter:on
+	}
+
+	public String getUrl() {
+		return "https://clearlydefined.io/definitions/" + getId();
 	}
 }
