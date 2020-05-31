@@ -121,7 +121,22 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		}
 	}
 
-	private boolean isAccepted(ClearlyDefinedContentData data) {
+	/**
+	 * Answers whether or not an entry retrieved from ClearlyDefined should be
+	 * accepted. This is <code>true</code> when the score is not below the threshold
+	 * (as defined by the settings) and all of the discovered licenses are in the
+	 * Eclipse Foundation acceptable licenses list. Answers <code>false</code>
+	 * otherwise.
+	 * 
+	 * @see LicenseSupport
+	 * @see ClearlyDefinedContentData
+	 * 
+	 * @param data An instance of {@link ClearlyDefinedContentData} representing one
+	 *             row from the results.
+	 * @return <code>true</code> when the data is acceptable, <code>false</code>
+	 *         otherwise.
+	 */
+	public boolean isAccepted(ClearlyDefinedContentData data) {
 		if (data.getScore() < settings.getConfidenceThreshold())
 			return false;
 		if (licenseSupport.getStatus(data.getLicense()) != LicenseSupport.Status.Approved)
@@ -130,13 +145,13 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 				.isPresent();
 	}
 
-	private boolean isDiscoveredLicenseApproved(String license) {
+	boolean isDiscoveredLicenseApproved(String license) {
 		if ("NOASSERTION".equals(license))
 			return true;
 		return licenseSupport.getStatus(license) == LicenseSupport.Status.Approved;
 	}
 
-	private CloseableHttpClient getHttpClient() {
+	CloseableHttpClient getHttpClient() {
 		int timeout = settings.getTimeout() * 1000;
 
 		// @formatter:off

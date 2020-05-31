@@ -11,6 +11,7 @@ package org.eclipse.dash.licenses.util;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
@@ -21,7 +22,7 @@ import javax.json.JsonReader;
 
 import org.eclipse.dash.licenses.IContentId;
 
-public class JsonUtils {
+public final class JsonUtils {
 	public static String toJson(Collection<IContentId> ids) {
 		// TODO Consider generalizing
 		JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
@@ -31,7 +32,11 @@ public class JsonUtils {
 	}
 
 	public static JsonObject readJson(InputStream content) {
-		JsonReader reader = Json.createReader(new InputStreamReader(content, StandardCharsets.UTF_8));
+		return readJson(new InputStreamReader(content, StandardCharsets.UTF_8));
+	}
+
+	public static JsonObject readJson(Reader content) {
+		JsonReader reader = Json.createReader(content);
 		JsonObject json = (JsonObject) reader.read();
 		return json;
 	}

@@ -9,8 +9,9 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,6 +38,8 @@ class ClearlyDefinedContentDataTests {
 		assertArrayEquals(new String[] { "MIT" }, info.discoveredLicenses().toArray(String[]::new));
 		assertEquals(94, info.getScore());
 		assertEquals(97, info.getEffectiveScore());
+		assertEquals("https://clearlydefined.io/definitions/npm/npmjs/-/write/1.0.3", info.getUrl());
+		assertNull(info.getStatus());
 	}
 
 	@Test
