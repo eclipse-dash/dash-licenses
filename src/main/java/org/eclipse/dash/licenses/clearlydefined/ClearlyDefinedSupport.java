@@ -137,12 +137,14 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 *         otherwise.
 	 */
 	public boolean isAccepted(ClearlyDefinedContentData data) {
-		if (data.getScore() < settings.getConfidenceThreshold())
-			return false;
-		if (licenseSupport.getStatus(data.getLicense()) != LicenseSupport.Status.Approved)
-			return false;
-		return !data.discoveredLicenses().filter(license -> !isDiscoveredLicenseApproved(license)).findAny()
-				.isPresent();
+		if (data.getEffectiveScore() >= settings.getConfidenceThreshold()
+				|| data.getLicenseScore() >= settings.getConfidenceThreshold()) {
+			if (licenseSupport.getStatus(data.getLicense()) != LicenseSupport.Status.Approved)
+				return false;
+			return !data.discoveredLicenses().filter(license -> !isDiscoveredLicenseApproved(license)).findAny()
+					.isPresent();
+		}
+		return false;
 	}
 
 	boolean isDiscoveredLicenseApproved(String license) {
