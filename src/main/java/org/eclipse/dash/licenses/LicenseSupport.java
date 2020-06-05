@@ -25,6 +25,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.eclipse.dash.licenses.spdx.SpdxExpressionParser;
 
 public class LicenseSupport {
 
@@ -108,23 +109,10 @@ public class LicenseSupport {
 		if (expression == null)
 			return Status.Restricted;
 
-		// TODO We possibly need more sophisticated expression parsing.
-
-		// This is a quick and dirty "for now" solution. I'm reasoning that
-		// an AND condition is weird and needs attention. Over time, we'll
-		// probably get a better sense of what more we can automate.
-		String spdx = expression.toUpperCase();
-		if (spdx.contains("AND"))
-			return Status.Restricted;
-
-		// FIXME This will have some odd results
-		// e.g., "GPL-2.0 OR EPL-2.0 or Apache-2.0" will work, but "GPL-2.0 OR (EPL-2.0
-		// or Apache-2.0)"
-		// will not.
-		for (String id : spdx.split("\\s+OR\\s+")) {
-			if (approvedLicenses.containsKey(id))
-				return Status.Approved;
+		if (new SpdxExpressionParser().parse(expression).matchesApproved(approvedLicenses.keySet())) {
+			return Status.Approved;
 		}
+
 		return Status.Restricted;
 	}
 }
