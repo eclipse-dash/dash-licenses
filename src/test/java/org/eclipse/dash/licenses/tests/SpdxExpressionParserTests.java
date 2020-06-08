@@ -62,6 +62,18 @@ class SpdxExpressionParserTests {
 		}
 
 		@Test
+		void testPrecedence3() {
+			assertEquals("((Apache-2.0 AND MIT) OR (EPL-1.0 AND BSD0))",
+					new SpdxExpressionParser().parse("Apache-2.0 AND MIT OR EPL-1.0 and BSD0").toString());
+		}
+
+		@Test
+		void testNestedPrecedence() {
+			assertEquals("(((Apache-2.0 AND MIT) OR BSD0) OR EPL-1.0)",
+					new SpdxExpressionParser().parse("(Apache-2.0 AND MIT OR BSD0) OR EPL-1.0").toString());
+		}
+
+		@Test
 		void testLeadingParentheses() {
 			assertEquals("((Apache-2.0 OR MIT) AND EPL-1.0)",
 					new SpdxExpressionParser().parse("(Apache-2.0 OR MIT) AND EPL-1.0").toString());
@@ -74,9 +86,15 @@ class SpdxExpressionParserTests {
 		}
 
 		@Test
-		void testNestedParentheses() {
+		void testNestedParentheses1() {
 			assertEquals("(EPL-1.0 OR (Apache-2.0 AND (BSD0 OR MIT)))",
 					new SpdxExpressionParser().parse("EPL-1.0 OR (Apache-2.0 AND (BSD0 OR MIT))").toString());
+		}
+
+		@Test
+		void testNestedParentheses2() {
+			assertEquals("(EPL-1.0 OR ((Apache-2.0 AND (BSD0 OR MIT)) OR EPL-2.0))", new SpdxExpressionParser()
+					.parse("EPL-1.0 OR (Apache-2.0 AND (BSD0 OR MIT) OR EPL-2.0)").toString());
 		}
 
 		@Test

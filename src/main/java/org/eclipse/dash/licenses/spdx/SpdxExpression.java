@@ -15,4 +15,8 @@ public abstract class SpdxExpression {
 
 	public abstract boolean matchesApproved(Collection<String> approved);
 
+	public boolean isBinary() {
+		return false;
+	}
+
 }

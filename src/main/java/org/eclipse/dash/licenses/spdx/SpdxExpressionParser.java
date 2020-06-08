@@ -39,18 +39,15 @@ public class SpdxExpressionParser {
 					switch (symbol) {
 					case "and": {
 						SpdxExpression right = parse(tokenizer);
-						expression = new SpdxConjunction(expression, right);
-						break;
+						return SpdxBinaryOperation.create(SpdxBinaryOperation.AND, expression, right);
 					}
 					case "or": {
 						SpdxExpression right = parse(tokenizer);
-						expression = new SpdxDisjunction(expression, right);
-						break;
+						return SpdxBinaryOperation.create(SpdxBinaryOperation.OR, expression, right);
 					}
 					case "with": {
 						SpdxExpression right = parse(tokenizer);
-						expression = new SpdxException(expression, right);
-						break;
+						return SpdxBinaryOperation.create(SpdxBinaryOperation.WITH, expression, right);
 					}
 					default:
 						// Assume that the token is an SPDX identifier
