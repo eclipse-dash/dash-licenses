@@ -21,7 +21,9 @@ public class SpdxGroup extends SpdxExpression {
 
 	@Override
 	public String toString() {
-		return "(" + expression.toString() + ")";
+		// Note that we don't print any parentheses, because they don't really add any
+		// information after parsing.
+		return expression.toString();
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class SpdxConjunction extends SpdxExpression {
 
 	@Override
 	public String toString() {
-		return operand2.toString() + " AND " + operand1.toString();
+		return "(" + operand1.toString() + " AND " + operand2.toString() + ")";
 	}
 
 	@Override

@@ -16,14 +16,14 @@ public class SpdxException extends SpdxExpression {
 	private SpdxExpression exception;
 	private SpdxExpression identifier;
 
-	public SpdxException(SpdxExpression exception, SpdxExpression identifier) {
+	public SpdxException(SpdxExpression identifier, SpdxExpression exception) {
 		this.exception = exception;
 		this.identifier = identifier;
 	}
 
 	@Override
 	public String toString() {
-		return identifier.toString() + " WITH " + exception.toString();
+		return "(" + identifier.toString() + " WITH " + exception.toString() + ")";
 	}
 
 	@Override

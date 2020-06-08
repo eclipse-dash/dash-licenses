@@ -23,7 +23,7 @@ public class SpdxDisjunction extends SpdxExpression {
 
 	@Override
 	public String toString() {
-		return operand2.toString() + " OR " + operand1.toString();
+		return "(" + operand1.toString() + " OR " + operand2.toString() + ")";
 	}
 
 	@Override

@@ -12,7 +12,6 @@ package org.eclipse.dash.licenses.spdx;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
-import java.util.Stack;
 
 /**
  * Simple SPDX License expression parser.
@@ -24,40 +23,33 @@ public class SpdxExpressionParser {
 		tokenizer.ordinaryChar('(');
 		tokenizer.ordinaryChar(')');
 
-		Stack<SpdxExpression> stack = new Stack<>();
-		parse(tokenizer, stack);
-		return stack.pop();
+		return parse(tokenizer);
 	}
 
-	private boolean parse(StreamTokenizer tokenizer, Stack<SpdxExpression> stack) {
+	private SpdxExpression parse(StreamTokenizer tokenizer) {
 		try {
+			SpdxExpression expression = null;
 			while (true) {
 				int token = tokenizer.nextToken();
 				switch (token) {
 				case StreamTokenizer.TT_EOF:
-					return false;
+					return expression;
 				case StreamTokenizer.TT_WORD:
 					String symbol = tokenizer.sval.toLowerCase();
 					switch (symbol) {
 					case "and": {
-						boolean endGroup = parse(tokenizer, stack);
-						stack.push(new SpdxConjunction(stack.pop(), stack.pop()));
-						if (endGroup)
-							return false;
+						SpdxExpression right = parse(tokenizer);
+						expression = new SpdxConjunction(expression, right);
 						break;
 					}
 					case "or": {
-						boolean endGroup = parse(tokenizer, stack);
-						stack.push(new SpdxDisjunction(stack.pop(), stack.pop()));
-						if (endGroup)
-							return false;
+						SpdxExpression right = parse(tokenizer);
+						expression = new SpdxDisjunction(expression, right);
 						break;
 					}
 					case "with": {
-						boolean endGroup = parse(tokenizer, stack);
-						stack.push(new SpdxException(stack.pop(), stack.pop()));
-						if (endGroup)
-							return false;
+						SpdxExpression right = parse(tokenizer);
+						expression = new SpdxException(expression, right);
 						break;
 					}
 					default:
@@ -65,21 +57,20 @@ public class SpdxExpressionParser {
 						// Note that we grab the original form from the tokenizer
 						// and note the converted (lowercase) version that we used
 						// in the switch.
-						stack.push(new SpdxIdentifier(tokenizer.sval));
+						expression = new SpdxIdentifier(tokenizer.sval);
 					}
 					break;
 				case '(':
-					parse(tokenizer, stack);
-					stack.push(new SpdxGroup(stack.pop()));
+					expression = new SpdxGroup(parse(tokenizer));
 					break;
 				case ')':
-					return true;
+					return expression;
 				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
+		return null;
 	}
 }

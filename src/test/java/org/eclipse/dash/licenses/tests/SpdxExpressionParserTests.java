@@ -33,55 +33,80 @@ class SpdxExpressionParserTests {
 
 		@Test
 		void testConjunction() {
-			assertEquals("EPL-1.0 AND Apache-2.0",
+			assertEquals("(EPL-1.0 AND Apache-2.0)",
 					new SpdxExpressionParser().parse("EPL-1.0 AND Apache-2.0").toString());
 		}
 
 		@Test
 		void testMultipleConjunction() {
-			assertEquals("EPL-1.0 AND Apache-2.0 AND MIT",
+			assertEquals("(EPL-1.0 AND (Apache-2.0 AND MIT))",
 					new SpdxExpressionParser().parse("EPL-1.0 AND Apache-2.0 AND MIT").toString());
 		}
 
 		@Test
 		void testDisjunction() {
-			assertEquals("EPL-1.0 OR Apache-2.0", new SpdxExpressionParser().parse("EPL-1.0 OR Apache-2.0").toString());
+			assertEquals("(EPL-1.0 OR Apache-2.0)",
+					new SpdxExpressionParser().parse("EPL-1.0 OR Apache-2.0").toString());
 		}
 
 		@Test
-		void testParentheses() {
-			assertEquals("EPL-1.0 OR (Apache-2.0 AND MIT)",
-					new SpdxExpressionParser().parse("EPL-1.0 OR (Apache-2.0 AND MIT)").toString());
+		void testPrecedence1() {
+			assertEquals("(EPL-1.0 OR (Apache-2.0 AND MIT))",
+					new SpdxExpressionParser().parse("EPL-1.0 OR Apache-2.0 AND MIT").toString());
+		}
+
+		@Test
+		void testPrecedence2() {
+			assertEquals("((Apache-2.0 AND MIT) OR EPL-1.0)",
+					new SpdxExpressionParser().parse("Apache-2.0 AND MIT OR EPL-1.0").toString());
 		}
 
 		@Test
 		void testLeadingParentheses() {
-			assertEquals("(Apache-2.0 AND MIT) OR EPL-1.0",
-					new SpdxExpressionParser().parse("(Apache-2.0 AND MIT) OR EPL-1.0").toString());
+			assertEquals("((Apache-2.0 OR MIT) AND EPL-1.0)",
+					new SpdxExpressionParser().parse("(Apache-2.0 OR MIT) AND EPL-1.0").toString());
+		}
+
+		@Test
+		void testFollowingParentheses() {
+			assertEquals("(MIT AND (EPL-1.0 OR Apache-2.0))",
+					new SpdxExpressionParser().parse("MIT AND (EPL-1.0 OR Apache-2.0)").toString());
 		}
 
 		@Test
 		void testNestedParentheses() {
-			assertEquals("EPL-1.0 OR (Apache-2.0 AND (BSD0 OR MIT))",
+			assertEquals("(EPL-1.0 OR (Apache-2.0 AND (BSD0 OR MIT)))",
 					new SpdxExpressionParser().parse("EPL-1.0 OR (Apache-2.0 AND (BSD0 OR MIT))").toString());
 		}
 
 		@Test
 		void testArbitraryParentheses() {
-			assertEquals("(EPL-1.0 AND MPL) OR (Apache-2.0 AND (BSD0 OR MIT))",
+			assertEquals("((EPL-1.0 AND MPL) OR (Apache-2.0 AND (BSD0 OR MIT)))",
 					new SpdxExpressionParser().parse("(EPL-1.0 AND MPL) OR (Apache-2.0 AND (BSD0 OR MIT))").toString());
 		}
 
 		@Test
 		void testArbitraryParentheses2() {
-			assertEquals("(EPL-1.0 AND (MPL)) OR ((Apache-2.0 AND BSD0) OR MIT)", new SpdxExpressionParser()
+			assertEquals("((EPL-1.0 AND MPL) OR ((Apache-2.0 AND BSD0) OR MIT))", new SpdxExpressionParser()
 					.parse("(EPL-1.0 AND (MPL)) OR ((Apache-2.0 AND BSD0) OR MIT)").toString());
 		}
 
 		@Test
 		void testException() {
-			assertEquals("EPL-1.0 WITH Exception",
+			assertEquals("(EPL-1.0 WITH Exception)",
 					new SpdxExpressionParser().parse("EPL-1.0 with Exception").toString());
+		}
+
+		@Test
+		void testExceptionPrecedence1() {
+			assertEquals("(MIT OR (EPL-1.0 WITH Exception))",
+					new SpdxExpressionParser().parse("MIT OR EPL-1.0 WITH Exception").toString());
+		}
+
+		@Test
+		void testExceptionPrecedence2() {
+			assertEquals("((EPL-1.0 WITH Exception) OR MIT)",
+					new SpdxExpressionParser().parse("EPL-1.0 WITH Exception OR MIT").toString());
 		}
 
 		@Test
@@ -95,7 +120,7 @@ class SpdxExpressionParserTests {
 
 		@Test
 		void testMatchConjunction() {
-			Set<String> approved = new HashSet<String>();
+			Set<String> approved = new HashSet<>();
 			approved.add("EPL-2.0");
 			approved.add("Apache-2.0");
 
@@ -104,7 +129,7 @@ class SpdxExpressionParserTests {
 
 		@Test
 		void testMatchConjunctionFail() {
-			Set<String> approved = new HashSet<String>();
+			Set<String> approved = new HashSet<>();
 			approved.add("EPL-2.0");
 			approved.add("Apache-2.0");
 
@@ -113,7 +138,7 @@ class SpdxExpressionParserTests {
 
 		@Test
 		void testMatchDisjunction() {
-			Set<String> approved = new HashSet<String>();
+			Set<String> approved = new HashSet<>();
 			approved.add("EPL-2.0");
 			approved.add("Apache-2.0");
 
@@ -122,7 +147,7 @@ class SpdxExpressionParserTests {
 
 		@Test
 		void testMatchArbitrary() {
-			Set<String> approved = new HashSet<String>();
+			Set<String> approved = new HashSet<>();
 			approved.add("EPL-2.0");
 			approved.add("Apache-2.0");
 
