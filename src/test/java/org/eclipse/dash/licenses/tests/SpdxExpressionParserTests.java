@@ -39,7 +39,7 @@ class SpdxExpressionParserTests {
 
 		@Test
 		void testMultipleConjunction() {
-			assertEquals("(EPL-1.0 AND (Apache-2.0 AND MIT))",
+			assertEquals("((EPL-1.0 AND Apache-2.0) AND MIT)",
 					new SpdxExpressionParser().parse("EPL-1.0 AND Apache-2.0 AND MIT").toString());
 		}
 
@@ -125,6 +125,18 @@ class SpdxExpressionParserTests {
 		void testExceptionPrecedence2() {
 			assertEquals("((EPL-1.0 WITH Exception) OR MIT)",
 					new SpdxExpressionParser().parse("EPL-1.0 WITH Exception OR MIT").toString());
+		}
+
+		@Test
+		void testExceptionPrecedence3() {
+			assertEquals("(((EPL-1.0 AND Apache-2.0) OR MIT) OR BSD0)",
+					new SpdxExpressionParser().parse("EPL-1.0 AND Apache-2.0 OR MIT OR BSD0").toString());
+		}
+
+		@Test
+		void testExceptionPrecedence4() {
+			assertEquals("(((EPL-1.0 AND Apache-2.0) OR (MIT WITH STUFF)) OR BSD0)",
+					new SpdxExpressionParser().parse("EPL-1.0 AND Apache-2.0 OR MIT WITH STUFF OR BSD0").toString());
 		}
 
 		@Test

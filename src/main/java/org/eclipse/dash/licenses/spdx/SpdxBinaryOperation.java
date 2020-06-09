@@ -66,6 +66,7 @@ public class SpdxBinaryOperation extends SpdxExpression {
 
 		@Override
 		public boolean matchesApproved(SpdxBinaryOperation operation, Collection<String> approved) {
+			// TODO Implement this.
 			return false;
 		}
 
@@ -115,9 +116,9 @@ public class SpdxBinaryOperation extends SpdxExpression {
 	}
 
 	public static SpdxBinaryOperation create(Operator operator, SpdxExpression left, SpdxBinaryOperation right) {
-		if (operator.getPrecedence() > right.operator.getPrecedence()) {
-			SpdxBinaryOperation primary = new SpdxBinaryOperation(operator, left, right.left);
-			return new SpdxBinaryOperation(right.operator, primary, right.right);
+		if (operator.getPrecedence() >= right.operator.getPrecedence()) {
+			SpdxBinaryOperation primary = create(operator, left, right.left);
+			return create(right.operator, primary, right.right);
 		}
 		return new SpdxBinaryOperation(operator, left, right);
 	}
