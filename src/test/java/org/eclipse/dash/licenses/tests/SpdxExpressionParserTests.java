@@ -140,13 +140,29 @@ class SpdxExpressionParserTests {
 		}
 
 		@Test
-		void testMatchSimple() {
-			assertTrue(new SpdxExpressionParser().parse("EPL-2.0").matchesApproved(Collections.singleton("EPL-2.0")));
+		void testPlus() {
+			assertEquals("(EPL-1.0)+", new SpdxExpressionParser().parse("EPL-1.0+").toString());
+		}
+
+		@Test
+		void testPlusInExpression1() {
+			assertEquals("(Apache-2.0 OR (EPL-1.0)+)",
+					new SpdxExpressionParser().parse("Apache-2.0 OR EPL-1.0+").toString());
+		}
+
+		@Test
+		void testPlusInExpression2() {
+			assertEquals("((BSD0 AND Apache-2.0) OR (EPL-1.0)+)",
+					new SpdxExpressionParser().parse("BSD0 AND Apache-2.0 OR EPL-1.0+").toString());
 		}
 	}
 
 	@Nested
 	class TestMatching {
+		@Test
+		void testMatchSimple() {
+			assertTrue(new SpdxExpressionParser().parse("EPL-2.0").matchesApproved(Collections.singleton("EPL-2.0")));
+		}
 
 		@Test
 		void testMatchConjunction() {
@@ -183,5 +199,22 @@ class SpdxExpressionParserTests {
 
 			assertTrue(new SpdxExpressionParser().parse("EPL-2.0 AND (Apache-2.0 OR BSD0)").matchesApproved(approved));
 		}
+
+		@Test
+		void testMatchPlus1() {
+			Set<String> approved = new HashSet<>();
+			approved.add("EPL-1.0");
+
+			assertTrue(new SpdxExpressionParser().parse("EPL-1.0+").matchesApproved(approved));
+		}
+
+//		@Ignore("Not implemented yet.")
+//		@Test
+//		void testMatchPlus2() {
+//			Set<String> approved = new HashSet<>();
+//			approved.add("EPL-2.0");
+//
+//			assertTrue(new SpdxExpressionParser().parse("EPL-1.0+").matchesApproved(approved));
+//		}
 	}
 }

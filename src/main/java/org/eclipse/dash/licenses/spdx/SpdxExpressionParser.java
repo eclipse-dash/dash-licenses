@@ -22,6 +22,7 @@ public class SpdxExpressionParser {
 		StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(expression));
 		tokenizer.ordinaryChar('(');
 		tokenizer.ordinaryChar(')');
+		tokenizer.ordinaryChar('+');
 
 		return parse(tokenizer);
 	}
@@ -62,6 +63,9 @@ public class SpdxExpressionParser {
 					break;
 				case ')':
 					return expression;
+				case '+':
+					expression = new SpdxPlus((SpdxIdentifier) expression);
+					break;
 				}
 			}
 		} catch (IOException e) {

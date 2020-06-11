@@ -148,8 +148,6 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	}
 
 	boolean isDiscoveredLicenseApproved(String license) {
-		if ("NOASSERTION".equals(license))
-			return true;
 		return licenseSupport.getStatus(license) == LicenseSupport.Status.Approved;
 	}
 
