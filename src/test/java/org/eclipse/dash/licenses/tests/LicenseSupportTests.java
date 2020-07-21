@@ -37,6 +37,11 @@ class LicenseSupportTests {
 		assertEquals(LicenseSupport.Status.Restricted, getLicenseSupport().getStatus("GPL-2.0"));
 	}
 
+	@Test
+	void testEmptyLicense() {
+		assertEquals(LicenseSupport.Status.Restricted, getLicenseSupport().getStatus(""));
+	}
+
 	/**
 	 * In SPDX, an "AND" condition indicates that the consumer must accept both
 	 * licenses. Generally, this sort of condition means that some of the content is
