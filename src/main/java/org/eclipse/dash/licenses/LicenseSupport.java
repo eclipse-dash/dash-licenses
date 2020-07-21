@@ -106,7 +106,7 @@ public class LicenseSupport {
 	 *         <code>Status.Restricted</code> otherwise
 	 */
 	public Status getStatus(String expression) {
-		if (expression == null)
+		if (expression == null || expression.trim().isEmpty())
 			return Status.Restricted;
 
 		if (new SpdxExpressionParser().parse(expression).matchesApproved(approvedLicenses.keySet())) {
