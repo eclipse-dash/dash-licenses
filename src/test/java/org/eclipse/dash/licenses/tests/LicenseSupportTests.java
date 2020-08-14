@@ -45,12 +45,16 @@ class LicenseSupportTests {
 	/**
 	 * In SPDX, an "AND" condition indicates that the consumer must accept both
 	 * licenses. Generally, this sort of condition means that some of the content is
-	 * under one license and some is under the other. This is complex and requires
-	 * further investigation, so we expect that the result should be "restricted".
+	 * under one license and some is under the other.
 	 */
 	@Test
-	void testConjunction() {
+	void testConjunctionRestricted() {
 		assertEquals(LicenseSupport.Status.Restricted, getLicenseSupport().getStatus("EPL-2.0 AND GPL-2.0"));
+	}
+
+	@Test
+	void testConjunctionApproved() {
+		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("EPL-2.0 AND Apache-2.0"));
 	}
 
 	/**
@@ -72,16 +76,18 @@ class LicenseSupportTests {
 
 	/**
 	 * SPDX supports arbitrary combinations. Technically, the tested combination,
-	 * "(EPL-2.0 AND MIT) OR GPL-2.0" should actually result in an "accepted"
-	 * result, but since these license expressions can be arbitrarily complex, at
-	 * this point-in-time, we want further investigation.
+	 * "(EPL-2.0 AND MIT) OR GPL-2.0" should answer an "accepted"result.
 	 */
 	@Test
-	void testComplex() {
+	void testComplexApproved() {
 		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 AND MIT) OR GPL-2.0"));
 		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 OR MIT) OR GPL-2.0"));
 		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 OR MIT) OR GPL-2.0"));
 		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 AND (MIT OR GPL-2.0)"));
+	}
+
+	@Test
+	void testComplexRestricted() {
 		assertEquals(LicenseSupport.Status.Restricted, getLicenseSupport().getStatus("(EPL-2.0 OR MIT) AND GPL-2.0"));
 	}
 
@@ -90,5 +96,4 @@ class LicenseSupportTests {
 		Reader reader = new InputStreamReader(in);
 		return LicenseSupport.getLicenseSupport(reader);
 	}
-
 }
