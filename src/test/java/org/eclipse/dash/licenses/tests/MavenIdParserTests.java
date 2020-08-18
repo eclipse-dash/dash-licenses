@@ -72,7 +72,7 @@ public class MavenIdParserTests {
 		assertEquals("orbit", value.getSource());
 		assertEquals("p2.eclipse-plugin", value.getNamespace());
 		assertEquals("org.eclipse.core.jobs", value.getName());
-		assertEquals("3.8.0", value.getVersion());
+		assertEquals("3.8.0.v20160509-0411", value.getVersion());
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class MavenIdParserTests {
 		assertEquals("orbit", value.getSource());
 		assertEquals("p2.eclipse-plugin", value.getNamespace());
 		assertEquals("org.eclipse.core.jobs", value.getName());
-		assertEquals("3.8.0", value.getVersion());
+		assertEquals("3.8.0.20160509", value.getVersion());
 	}
 
 	@Test
@@ -96,8 +96,7 @@ public class MavenIdParserTests {
 		assertEquals("mavencentral", value.getSource());
 		assertEquals("org.eclipse.acceleo.features", value.getNamespace());
 		assertEquals("org.eclipse.acceleo.doc", value.getName());
-		// TODO This should probably be "3.7.10-SNAPSHOT"
-		assertEquals("3.7.10", value.getVersion());
+		assertEquals("3.7.10-SNAPSHOT", value.getVersion());
 	}
 
 	@Test
@@ -128,8 +127,20 @@ public class MavenIdParserTests {
 		assertEquals("1.1.6", value.getVersion());
 		assertEquals("maven", value.getType());
 		assertEquals("mavencentral", value.getSource());
+	}
 
-		// assertEquals("201804090728", value.getQualifier());
+	@Test
+	public void testWithNonNumericVersionWithPhase() {
+		IContentId value = parser.parseId("com.google.javascript:closure-compiler-externs:jar:v20160315:compile").get();
+
+		assertEquals("v20160315", value.getVersion());
+	}
+
+	@Test
+	public void testWithNonNumericVersionWithoutPhase() {
+		IContentId value = parser.parseId("com.google.javascript:closure-compiler-externs:jar:v20160315").get();
+
+		assertEquals("v20160315", value.getVersion());
 	}
 
 }

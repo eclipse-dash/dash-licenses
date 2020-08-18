@@ -20,7 +20,7 @@ public class MavenIdParser implements ContentIdParser {
 			"(?<groupid>[^: ]+)" 
 			+ ":(?<artifactid>[^: ]+)"
 			+ "(:(?<ext>[^: ]*)(:(?<classifier>[^: ]+))?)?"
-			+ ":(?<version>\\d+(\\.\\d+){0,2})(?:\\.(?<qualifer>\\d{8,}))?[^: ]*" 
+			+ ":(?<version>v?\\d[^: ]*)" 
 			+ "(:(?<phase>[^:]*))?";
 	// @formatter:on
 
@@ -40,7 +40,6 @@ public class MavenIdParser implements ContentIdParser {
 		 * 
 		 * We originally implemented this using Aether, but Aether breaks when a phase
 		 * is included in the value. So, we brute force it with a regular expression.
-		 * While we're here we attempt to parse out qualifiers from the version.
 		 */
 		Matcher matcher = mavenPattern.matcher(value.trim());
 		if (!matcher.matches())
