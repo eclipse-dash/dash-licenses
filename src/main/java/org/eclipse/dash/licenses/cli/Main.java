@@ -47,7 +47,7 @@ public class Main {
 		CommandLineSettings settings = CommandLineSettings.getSettings(args);
 		if (!settings.isValid()) {
 			CommandLineSettings.printUsage(System.out);
-			System.exit(0);;
+			System.exit(0);
 		}
 
 		if (settings.isShowHelp()) {

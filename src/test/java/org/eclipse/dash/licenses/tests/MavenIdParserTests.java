@@ -114,7 +114,7 @@ public class MavenIdParserTests {
 
 	/**
 	 * "p2.eclipse-plugin:org.jaxen:jar:lib/jaxen-1.1.6.jar:1.1.6.201804090728:system"
-	 * maps to maven/mavencentral/org.jaxen/jaxen-1.1.6/1.1.6.201804090728
+	 * maps to maven/mavencentral/org.jaxen/jaxen/1.1.6
 	 */
 	@Disabled
 	@Test

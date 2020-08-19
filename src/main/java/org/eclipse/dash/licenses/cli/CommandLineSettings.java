@@ -51,8 +51,6 @@ public class CommandLineSettings implements ISettings {
 
 	@Override
 	public String getLicenseCheckUrl() {
-		// String url =
-		// "http://localhost/projects/services/license_check.php?XDEBUG_SESSION_START=ECLIPSE_DBGP&KEY=15743965682411";
 		return commandLine.getOptionValue(EF_URL_OPTION, EF_URL_DEFAULT);
 	}
 
