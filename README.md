@@ -110,7 +110,17 @@ npm/npmjs/-/typescript/3.6.4 (null)
 Please create contribution questionnaires for this content.
 ```
 
-### Example 4: Help
+### Example 4: SBT
+
+Find all of the potentially problematic third party libraries from an SBT build.
+
+```
+$ ./sbt dependencyTree \
+| grep -Poh "(?<=\+\-)[^:]+:[^:]+:[^:\s]+" | sort | uniq \
+| java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
+```
+
+### Example 5: Help
 
 The CLI tool does provide help.
 
