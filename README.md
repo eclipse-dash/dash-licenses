@@ -1,10 +1,9 @@
-# Extract License Information from Content
-
-This "License Tool" (which clearly needs a more interesting name) identifies the licenses of content.
 
 Each individual bit of content is identified by its ClearlyDefined id. This id uniquely defines, for example, a particular version of a JAR file, or a particular version of an NPM module. This tool knows how to read and convert Maven and pURL coordinates into ClearlyDefined ids. 
 
-The CLI accepts a flat file with each line containing a content identifier (ClearlyDefined id, Maven coordinates, or pUrl), or a node `package-lock.json` file. The current implementation generates a file named `DEPENDENCIES` in the current working directory that contains CSV content with one line for each line of input, mapping a package to a license along with whether that content is `approved` for use by an Eclipse project or `restricted`, meaning that the Eclipse IP Team needs to have a look at the Eclipse project's use of that content.
+The CLI accepts a flat file with each line containing a content identifier (ClearlyDefined id, Maven coordinates, or pUrl), or a node `package-lock.json` file. 
+
+Use the `-summary <file>` option to  generate a file that contains CSV content with one line for each line of input, mapping a package to a license along with whether that content is `approved` for use by an Eclipse project or `restricted`, meaning that the Eclipse IP Team needs to have a look at the Eclipse project's use of that content. This file is suitable for augmenting the IP Log of an Eclipse open source project.
 
 The current implementation uses two sources for license information. The first source is an Eclipse Foundation service that leverages data that the Eclipse Foundation's IP Team has collected over the years. When that source does not have information for a piece of content, [ClearlyDefined](https://clearlydefined.io/)'s service is used. 
 
@@ -46,7 +45,7 @@ The output (for now) is either a statement that the licenses for all of the cont
 been identified and verified, or a list of those dependencies that require further
 scrutiny.
 
-### Example 1: Maven
+### Example: Maven
 
 ```
 $ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)" | sort | uniq > maven.deps
@@ -59,7 +58,7 @@ org.apache.httpcomponents:httpclient:jar:4.5.10:compile
 org.apache.httpcomponents:httpcore:jar:4.4.12:compile
 org.glassfish:jakarta.json:jar:1.1.6:compile
 
-$ java -jar target/org.eclipse.dash.licenses-<version>.jar maven.deps
+$ java -jar target/org.eclipse.dash.licenses-<version>.jar -summary DEPENDENCIES maven.deps
 Vetted license information was found for all content. No further investigation is required.
 
 $ cat DEPENDENCIES
@@ -72,7 +71,7 @@ maven/mavencentral/org.apache.httpcomponents/httpclient/4.5.10, Apache-2.0, appr
 maven/mavencentral/org.apache.commons/commons-csv/1.6, Apache-2.0, approved, clearlydefined
 ```
 
-### Example 2: Gradle
+### Example: Gradle
 
 Find all of the potentially problematic third party libraries from a Gradle build.
 
@@ -85,7 +84,7 @@ $ ./gradlew dependencies | grep -Poh "[^:\s]+:[^:]+:[^:\s]+" | grep -v "^org\.ec
 Note that this example pre-filters content that comes from Eclipse projects (`grep -v "^org\.eclipse"`).
  
 
-### Example 3: Yarn
+### Example: Yarn
 
 We provide a tool to generate a dependency list for yarn-based builds.
 
@@ -110,7 +109,7 @@ npm/npmjs/-/typescript/3.6.4 (null)
 Please create contribution questionnaires for this content.
 ```
 
-### Example 4: SBT
+### Example: SBT
 
 Find all of the potentially problematic third party libraries from an SBT build.
 
@@ -120,12 +119,14 @@ $ ./sbt dependencyTree \
 | java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
 ```
 
+###
+
 ### Example 5: Help
 
 The CLI tool does provide help.
 
 ```
-$ java -jar target/org.eclipse.dash.licenses-<version>.jar -help df
+$ java -jar target/org.eclipse.dash.licenses-<version>.jar -help
 usage: org.eclipse.dash.licenses.cli.Main [options] <file> ...
 Sort out the licenses and approval of dependencies.
  -batch <int>                      Batch size (number of entries sent per
@@ -136,6 +137,7 @@ Sort out the licenses and approval of dependencies.
  -ef,--foundation-api <url>        Eclipse Foundation license check API
                                    URL.
  -help,--help                      Display help
+ -summary <file>                   Output a summary to a file
  -wl,--white-list <url>            License White List URL
 
 <file> is the path to a file, or "-" to indicate stdin. Multiple files may

@@ -28,6 +28,7 @@ public class CommandLineSettings implements ISettings {
 	private static final String WL_URL_OPTION = "wl";
 	private static final String BATCH_OPTION = "batch";
 	private static final String CONFIDENCE_OPTION = "confidence";
+	private static final String SUMMARY_OPTION = "summary";
 
 	private static final String CD_URL_DEFAULT = "https://api.clearlydefined.io/definitions";
 	private static final String EF_URL_DEFAULT = "https://www.eclipse.org/projects/services/license_check.php";
@@ -178,6 +179,14 @@ public class CommandLineSettings implements ISettings {
 			.desc("Confidence threshold expressed as integer percent (0-100)")
 			.build());
 
+		options.addOption(Option.builder(SUMMARY_OPTION)
+			.required(false)
+			.hasArg()
+			.argName("file")
+			.type(String.class)
+			.desc("Output a summary to a file")
+			.build());
+
 		options.addOption(Option.builder(HELP_OPTION)
 			.longOpt(HELP_OPTION)
 			.required(false)
@@ -210,4 +219,7 @@ public class CommandLineSettings implements ISettings {
 		formatter.printHelp(syntax, usageHeader, getOptions(), usageFooter);
 	}
 
+	public String getSummaryFilePath() {
+		return commandLine.getOptionValue(SUMMARY_OPTION, null);
+	}
 }

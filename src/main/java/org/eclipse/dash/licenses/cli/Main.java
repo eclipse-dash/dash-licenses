@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,7 +48,7 @@ public class Main {
 		CommandLineSettings settings = CommandLineSettings.getSettings(args);
 		if (!settings.isValid()) {
 			CommandLineSettings.printUsage(System.out);
-			System.exit(0);
+			System.exit(1);
 		}
 
 		if (settings.isShowHelp()) {
@@ -55,15 +56,20 @@ public class Main {
 			System.exit(0);
 		}
 
+		List<IResultsCollector> collectors = new ArrayList<>();
+
 		// TODO Set up collectors based on command line parameters
 		IResultsCollector primaryCollector = new NeedsReviewCollector(System.out);
-		List<IResultsCollector> collectors = new ArrayList<>();
 		collectors.add(primaryCollector);
-		try {
-			collectors.add(new CSVCollector(new FileOutputStream(new File("DEPENDENCIES"))));
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+
+		String summaryPath = settings.getSummaryFilePath();
+		if (summaryPath != null) {
+			try {
+				collectors.add(new CSVCollector(getWriter(summaryPath)));
+			} catch (FileNotFoundException e1) {
+				System.out.println("Can't write to " + summaryPath);
+				System.exit(1);
+			}
 		}
 
 		Arrays.stream(settings.getFileNames()).forEach(name -> {
@@ -73,7 +79,7 @@ public class Main {
 			} catch (FileNotFoundException e) {
 				System.out.println(String.format("The file \"%s\" does not exist.", name));
 				CommandLineSettings.printUsage(System.out);
-				System.exit(0);
+				System.exit(1);
 			}
 			if (reader != null) {
 				Collection<IContentId> dependencies = reader.getContentIds();
@@ -88,6 +94,12 @@ public class Main {
 		collectors.forEach(IResultsCollector::close);
 
 		System.exit(primaryCollector.getStatus());
+	}
+
+	private static OutputStream getWriter(String path) throws FileNotFoundException {
+		if ("-".equals(path))
+			return System.out;
+		return new FileOutputStream(new File(path));
 	}
 
 	@SuppressWarnings("resource")
