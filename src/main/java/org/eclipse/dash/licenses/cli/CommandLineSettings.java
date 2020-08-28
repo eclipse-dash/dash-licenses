@@ -25,7 +25,7 @@ public class CommandLineSettings implements ISettings {
 	private static final String HELP_OPTION = "help";
 	private static final String CD_URL_OPTION = "cd";
 	private static final String EF_URL_OPTION = "ef";
-	private static final String WL_URL_OPTION = "wl";
+	private static final String APPROVED_LICENSES_URL_OPTION = "lic";
 	private static final String BATCH_OPTION = "batch";
 	private static final String CONFIDENCE_OPTION = "confidence";
 	private static final String SUMMARY_OPTION = "summary";
@@ -62,7 +62,7 @@ public class CommandLineSettings implements ISettings {
 
 	@Override
 	public String getApprovedLicensesUrl() {
-		return commandLine.getOptionValue(WL_URL_OPTION, WL_URL_DEFAULT);
+		return commandLine.getOptionValue(APPROVED_LICENSES_URL_OPTION, WL_URL_DEFAULT);
 	}
 
 	@Override
@@ -155,12 +155,12 @@ public class CommandLineSettings implements ISettings {
 			.desc("Clearly Defined API URL")
 			.build());
 
-		options.addOption(Option.builder(WL_URL_OPTION)
-			.longOpt("white-list")
+		options.addOption(Option.builder(APPROVED_LICENSES_URL_OPTION)
+			.longOpt("licenses")
 			.required(false)
 			.hasArg()
 			.argName("url")
-			.desc("License White List URL")
+			.desc("Approved Licenses List URL")
 			.build());
 
 		options.addOption(Option.builder(BATCH_OPTION)

@@ -53,7 +53,7 @@ class CommandLineSettingsTest {
 	@Test
 	void testCustomApprovedLicensesUrl() {
 		String url = "http://localhost/license.php";
-		ISettings settings = CommandLineSettings.getSettings(new String[] { "-wl", url });
+		ISettings settings = CommandLineSettings.getSettings(new String[] { "-lic", url });
 		assertEquals(url, settings.getApprovedLicensesUrl());
 	}
 

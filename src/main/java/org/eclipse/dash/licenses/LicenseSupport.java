@@ -91,15 +91,15 @@ public class LicenseSupport {
 	}
 
 	/**
-	 * Answer the compatibility status of an SPDX expression with the license white
-	 * list. The expression could be the id of a single license (e.g., "epl-1.0" or
-	 * "apache-2.0"), or an expression (e.g., "epl-1.0 or apache-2.0"). Matches are
-	 * case insensitive.
+	 * Answer the compatibility status of an SPDX expression with the approved
+	 * licenses list. The expression could be the id of a single license (e.g.,
+	 * "epl-1.0" or "apache-2.0"), or an expression (e.g., "epl-1.0 or apache-2.0").
+	 * Matches are case insensitive.
 	 * <p>
 	 * The expression is considered "approved" if it is either a single license on
-	 * the white list, or if any of the license in a disjunctive expression. All
-	 * others, including more complex expressions, are considered "restricted" and
-	 * require review by the IP Team.
+	 * the approved licenses list, or--in the case of a license expression--the
+	 * expression matches entries in the approved licenses list in a valid
+	 * configuration.
 	 * 
 	 * @param expression an SPDX expression.
 	 * @return <code>Status.Approved</code> when the expression is approve, or

@@ -138,7 +138,7 @@ Sort out the licenses and approval of dependencies.
                                    URL.
  -help,--help                      Display help
  -summary <file>                   Output a summary to a file
- -wl,--white-list <url>            License White List URL
+ -lic,--licenses <url>             Approved Licenses List URL
 
 <file> is the path to a file, or "-" to indicate stdin. Multiple files may
 be provided
