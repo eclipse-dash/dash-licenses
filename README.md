@@ -27,7 +27,7 @@ Generate a dependency list from Maven and invoke the tool on the output:
 ```
 $ mvn clean install
 $ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)" | sort | uniq \
- | java -jar org.eclipse.dash.licenses-<version>.jar maven.deps
+ | java -jar org.eclipse.dash.licenses-<version>.jar -
 ```
 
 Note that Maven's `dependency:list` plugin has the ability to output directly to a file 
