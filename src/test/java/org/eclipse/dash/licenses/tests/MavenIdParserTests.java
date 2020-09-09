@@ -76,13 +76,20 @@ public class MavenIdParserTests {
 	}
 
 	@Test
-	public void testDropQualifier() {
+	public void testRetainQualifier1() {
 		IContentId value = parser.parseId("p2.eclipse-plugin:org.eclipse.core.jobs:jar:3.8.0.20160509").get();
 		assertEquals("p2", value.getType());
 		assertEquals("orbit", value.getSource());
 		assertEquals("p2.eclipse-plugin", value.getNamespace());
 		assertEquals("org.eclipse.core.jobs", value.getName());
 		assertEquals("3.8.0.20160509", value.getVersion());
+	}
+
+	@Test
+	public void testRetainQualifier2() {
+		IContentId value = parser.parseId("com.google.guava:guava:jar:28.0-jre:compile").get();
+
+		assertEquals("28.0-jre", value.getVersion());
 	}
 
 	@Test
@@ -142,5 +149,4 @@ public class MavenIdParserTests {
 
 		assertEquals("v20160315", value.getVersion());
 	}
-
 }
