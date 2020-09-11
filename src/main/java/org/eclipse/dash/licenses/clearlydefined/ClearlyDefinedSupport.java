@@ -30,7 +30,10 @@ import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.util.JsonUtils;
 
+import com.google.common.flogger.FluentLogger;
+
 public class ClearlyDefinedSupport implements ILicenseDataProvider {
+	private static final FluentLogger log = FluentLogger.forEnclosingClass();
 
 	private ISettings settings;
 	// TODO Obvious opportunity for dependency injection
@@ -81,8 +84,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		if (ids.size() == 0)
 			return;
 
-		// FIXME Use proper logging
-		System.out.println(String.format("Querying ClearlyDefined for license data for %1$d items.", ids.size()));
+		log.atInfo().log("Querying ClearlyDefined for license data for %1$d items.", ids.size());
 
 		try (CloseableHttpClient httpclient = getHttpClient()) {
 			HttpPost post = new HttpPost(settings.getClearlyDefinedDefinitionsUrl());
@@ -103,17 +105,14 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 								consumer.accept(data);
 								counter.incrementAndGet();
 							} else {
-								// FIXME Use proper logging
-								System.out.println(String.format("Rejected: %1$s", data.getUrl()));
+								log.atWarning().log("Rejected: %1$s", data.getUrl());
 							}
 						});
 					}
 
-					// FIXME Use proper logging
-					System.out.println(String.format("Found %1$d items.", counter.get()));
+					log.atInfo().log("Found %1$d items.", counter.get());
 				} else {
-					// FIXME Use proper logging
-					System.out.println("ClearlyDefined data search time out; maybe decrease batch size.");
+					log.atSevere().log("ClearlyDefined data search time out; maybe decrease batch size.");
 				}
 			}
 		} catch (IOException e) {
