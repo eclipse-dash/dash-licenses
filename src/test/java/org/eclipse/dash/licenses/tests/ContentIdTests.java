@@ -9,7 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
@@ -25,7 +26,7 @@ class ContentIdTests {
 
 	@Test
 	void testInvalid() {
-		assertThrows(IllegalArgumentException.class, () -> ContentId.getContentId("write/1.0.3"));
+		assertNull(ContentId.getContentId("write/1.0.3"));
 	}
 
 }
