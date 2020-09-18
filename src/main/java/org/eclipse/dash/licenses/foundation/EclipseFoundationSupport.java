@@ -37,7 +37,10 @@ import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
 import org.eclipse.dash.licenses.ISettings;
 
+import com.google.common.flogger.FluentLogger;
+
 public class EclipseFoundationSupport implements ILicenseDataProvider {
+	private static final FluentLogger log = FluentLogger.forEnclosingClass();
 
 	private ISettings settings;
 
@@ -50,8 +53,7 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 		if (ids.size() == 0)
 			return;
 
-		// FIXME Use proper logging
-		System.out.println(String.format("Querying Eclipse Foundation for license data for %1$d items.", ids.size()));
+		log.atInfo().log("Querying Eclipse Foundation for license data for %1$d items.", ids.size());
 
 		String url = settings.getLicenseCheckUrl();
 
@@ -90,11 +92,9 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 							});
 
 					}
-					// FIXME Use proper logging
-					System.out.println(String.format("Found %1$d items.", counter.get()));
+					log.atInfo().log("Found %1$d items.", counter.get());
 				} else {
-					// FIXME Use proper logging
-					System.out.println("Eclipse Foundation data search time out; maybe decrease batch size.");
+					log.atSevere().log("Eclipse Foundation data search time out; maybe decrease batch size.");
 				}
 			}
 		} catch (IOException e) {
