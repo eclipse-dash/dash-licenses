@@ -29,6 +29,11 @@ public class ClearlyDefinedIdParser implements ContentIdParser {
 		if (input == null || input.isEmpty()) {
 			return Optional.empty();
 		}
-		return Optional.of(ContentId.getContentId(input));
+		try {
+			ContentId id = ContentId.getContentId(input);
+			return Optional.of(id);
+		} catch (IllegalArgumentException e) {
+			return Optional.empty();
+		}
 	}
 }
