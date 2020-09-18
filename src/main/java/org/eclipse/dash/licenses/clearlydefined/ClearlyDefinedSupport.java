@@ -104,8 +104,6 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 								data.setStatus(LicenseSupport.Status.Approved);
 								consumer.accept(data);
 								counter.incrementAndGet();
-							} else {
-								log.atWarning().log("Rejected: %1$s", data.getUrl());
 							}
 						});
 					}
@@ -140,8 +138,8 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 				|| data.getLicenseScore() >= settings.getConfidenceThreshold()) {
 			if (licenseSupport.getStatus(data.getLicense()) != LicenseSupport.Status.Approved)
 				return false;
-			return !data.discoveredLicenses().filter(license -> !isDiscoveredLicenseApproved(license)).findAny()
-					.isPresent();
+			return !data.discoveredLicenses().filter(license -> !"NONE".equals(license))
+					.filter(license -> !isDiscoveredLicenseApproved(license)).findAny().isPresent();
 		}
 		return false;
 	}
