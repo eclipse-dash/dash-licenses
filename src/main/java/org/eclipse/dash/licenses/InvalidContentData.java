@@ -37,4 +37,9 @@ public class InvalidContentData implements IContentData {
 		return null;
 	}
 
+	@Override
+	public String getUrl() {
+		return null;
+	}
+
 }

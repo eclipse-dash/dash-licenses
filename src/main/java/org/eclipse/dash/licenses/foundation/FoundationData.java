@@ -9,6 +9,9 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.foundation;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.json.JsonObject;
 
 import org.eclipse.dash.licenses.ContentId;
@@ -18,6 +21,8 @@ import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 
 public class FoundationData implements IContentData {
+
+	private static final Pattern COMPILE = Pattern.compile("CQ(?<id>[0-9]+)");
 
 	/**
 	 * This field holds data that presents a single unit of content answered by a
@@ -67,5 +72,22 @@ public class FoundationData implements IContentData {
 	@Override
 	public String getAuthority() {
 		return data.getString("authority");
+	}
+
+	@Override
+	public String getUrl() {
+		String cq = getCqId();
+		if (cq == null)
+			return null;
+
+		return "https://dev.eclipse.org/ipzilla/show_bug.cgi?id=" + cq;
+	}
+
+	private String getCqId() {
+		Matcher matcher = COMPILE.matcher(getAuthority());
+		if (matcher.matches()) {
+			return matcher.group("id");
+		}
+		return null;
 	}
 }

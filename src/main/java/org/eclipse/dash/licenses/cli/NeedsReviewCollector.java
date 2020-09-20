@@ -46,7 +46,7 @@ public class NeedsReviewCollector implements IResultsCollector {
 		} else {
 			output.println("License information could not be automatically verified for the following content:");
 			output.println();
-			needsReview.forEach(data -> output.println("https://clearlydefined.io/definitions/" + data.getId()));
+			needsReview.stream().filter(each -> each.getUrl() != null).forEach(IContentData::getUrl);
 			output.println();
 			output.println("Please create contribution questionnaires for this content.");
 		}
