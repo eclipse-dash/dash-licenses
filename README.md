@@ -99,12 +99,12 @@ For example:
 ```
 $ node /dash-licenses/yarn/index.js \
 | java -jar /dash-licenses/target/org.eclipse.dash.licenses-<version>.jar -
-License information could not automatically verified for the following content:
+License information could not be automatically verified for the following content:
 
-npm/npmjs/-/typed-rest-client/1.2.0 (null)
-npm/npmjs/-/azure-devops-node-api/7.2.0 (null)
-npm/npmjs/-/boolbase/1.0.0 (null)
-npm/npmjs/-/typescript/3.6.4 (null)
+https://clearlydefined.io/definitions/npm/npmjs/-/typed-rest-client/1.2.0
+https://clearlydefined.io/definitions/npm/npmjs/-/azure-devops-node-api/7.2.0
+https://clearlydefined.io/definitions/npm/npmjs/-/boolbase/1.0.0
+https://clearlydefined.io/definitions/npm/npmjs/-/typescript/3.6.4
 
 Please create contribution questionnaires for this content.
 ```
