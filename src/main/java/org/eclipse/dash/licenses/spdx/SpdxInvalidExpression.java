@@ -11,27 +11,15 @@ package org.eclipse.dash.licenses.spdx;
 
 import java.util.Collection;
 
-public class SpdxPlus extends SpdxExpression {
-	private SpdxIdentifier identifier;
-
-	private SpdxPlus(SpdxIdentifier identifier) {
-		this.identifier = identifier;
-	}
-
-	public static SpdxExpression create(SpdxIdentifier identifier) {
-		return new SpdxPlus(identifier);
-	}
+public class SpdxInvalidExpression extends SpdxExpression {
 
 	@Override
 	public boolean matchesApproved(Collection<String> approved) {
-		// TODO Implement this
-		// We need some means of identifying one license as being a later version of
-		// another.
-		return identifier.matchesApproved(approved);
+		return false;
 	}
 
 	@Override
-	public String toString() {
-		return identifier.toString() + "+";
+	public boolean isValid() {
+		return false;
 	}
 }

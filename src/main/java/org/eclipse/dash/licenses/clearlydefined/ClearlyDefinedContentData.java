@@ -165,6 +165,7 @@ public class ClearlyDefinedContentData implements IContentData {
 		// @formatter:on
 	}
 
+	@Override
 	public String getUrl() {
 		return "https://clearlydefined.io/definitions/" + getId();
 	}

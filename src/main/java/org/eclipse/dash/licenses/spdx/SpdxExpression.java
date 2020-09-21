@@ -22,4 +22,8 @@ public abstract class SpdxExpression {
 	public boolean isValid() {
 		return true;
 	}
+
+	public boolean isIdentifier() {
+		return false;
+	}
 }

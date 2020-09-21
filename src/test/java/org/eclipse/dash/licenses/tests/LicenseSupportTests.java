@@ -83,7 +83,7 @@ class LicenseSupportTests {
 		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 AND MIT) OR GPL-2.0"));
 		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 OR MIT) OR GPL-2.0"));
 		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 OR MIT) OR GPL-2.0"));
-		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 AND (MIT OR GPL-2.0)"));
+		assertEquals(LicenseSupport.Status.Approved, getLicenseSupport().getStatus("(EPL-2.0 AND (MIT OR GPL-2.0))"));
 	}
 
 	@Test

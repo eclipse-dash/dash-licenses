@@ -28,4 +28,9 @@ public class SpdxIdentifier extends SpdxExpression {
 	public boolean matchesApproved(Collection<String> approved) {
 		return approved.stream().filter(value -> value.compareToIgnoreCase(code) == 0).findAny().isPresent();
 	}
+
+	@Override
+	public boolean isIdentifier() {
+		return true;
+	}
 }

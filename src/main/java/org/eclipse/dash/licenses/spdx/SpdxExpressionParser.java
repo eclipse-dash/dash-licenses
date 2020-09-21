@@ -14,12 +14,23 @@ import java.io.StreamTokenizer;
 import java.io.StringReader;
 
 /**
- * Simple SPDX License expression parser.
+ * Simple SPDX License expression parser. This is a very simple hand-written
+ * parser that supports the SPDX expression syntax.
  */
 public class SpdxExpressionParser {
-	// TODO Add rudimentary error recovery
 	public SpdxExpression parse(String expression) {
 		StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(expression));
+
+		tokenizer.resetSyntax();
+
+		tokenizer.wordChars('a', 'z');
+		tokenizer.wordChars('A', 'Z');
+		tokenizer.wordChars(128 + 32, 255);
+		tokenizer.wordChars('0', '9');
+		tokenizer.wordChars('-', '-');
+		tokenizer.wordChars('.', '.');
+		tokenizer.whitespaceChars(0, ' ');
+
 		tokenizer.ordinaryChar('(');
 		tokenizer.ordinaryChar(')');
 		tokenizer.ordinaryChar('+');
@@ -47,19 +58,42 @@ public class SpdxExpressionParser {
 					return parse(tokenizer, SpdxBinaryOperation.create(SpdxBinaryOperation.WITH, expression, right));
 				}
 				default:
-					// Assume that the token is an SPDX identifier
+					// Assume that the token is an SPDX identifier.
+
+					// The expression should be empty when we find an
+					// identifier; we should be at the beginning of either
+					// the entire expression, or of an operand for a binary
+					// expression. If we've previously read anything, then
+					// the expression is invalid.
+					if (expression != null)
+						return new SpdxInvalidExpression();
+
 					// Note that we grab the original form from the tokenizer
 					// and note the converted (lowercase) version that we used
 					// in the switch.
 					return parse(tokenizer, new SpdxIdentifier(tokenizer.sval));
 				}
 			case '+':
-				return parse(tokenizer, new SpdxPlus((SpdxIdentifier) expression));
+				// We must have previously read an identifier when we encounter
+				// a plus. If we've seen nothing or something other than an identifer,
+				// then the expression is invalid.
+				if (expression == null || !expression.isIdentifier())
+					return new SpdxInvalidExpression();
+
+				return parse(tokenizer, SpdxPlus.create((SpdxIdentifier) expression));
 			case '(':
 				SpdxGroup group = new SpdxGroup(parse(tokenizer, expression));
-				tokenizer.nextToken();
+
+				// If we do not encounter a closing parenthesis after
+				// unwinding the recursion, then the expression is invalid.
+				if (tokenizer.nextToken() != ')')
+					return new SpdxInvalidExpression();
+
 				return parse(tokenizer, group);
 			case ')':
+				// Put the token back as we collapse the recursion. When
+				// we get back to the frame that started this parenthetical,
+				// it will re-consume the the token.
 				tokenizer.pushBack();
 				return expression;
 			case StreamTokenizer.TT_EOF:

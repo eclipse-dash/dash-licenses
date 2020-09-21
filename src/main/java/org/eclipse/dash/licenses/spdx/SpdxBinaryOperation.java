@@ -108,16 +108,18 @@ public class SpdxBinaryOperation extends SpdxExpression {
 	 * @return an instance representing the left and right expressions joined with
 	 *         the operator, or some variant thereof based on precedence.
 	 */
-	public static SpdxBinaryOperation create(Operator operator, SpdxExpression left, SpdxExpression right) {
+	public static SpdxExpression create(Operator operator, SpdxExpression left, SpdxExpression right) {
+		if (left == null || right == null)
+			return new SpdxInvalidExpression();
 		if (right.isBinary()) {
 			return create(operator, left, (SpdxBinaryOperation) right);
 		}
 		return new SpdxBinaryOperation(operator, left, right);
 	}
 
-	public static SpdxBinaryOperation create(Operator operator, SpdxExpression left, SpdxBinaryOperation right) {
+	static SpdxExpression create(Operator operator, SpdxExpression left, SpdxBinaryOperation right) {
 		if (operator.getPrecedence() >= right.operator.getPrecedence()) {
-			SpdxBinaryOperation primary = create(operator, left, right.left);
+			SpdxExpression primary = create(operator, left, right.left);
 			return create(right.operator, primary, right.right);
 		}
 		return new SpdxBinaryOperation(operator, left, right);
