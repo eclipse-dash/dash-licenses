@@ -39,7 +39,9 @@ public class InvalidContentData implements IContentData {
 
 	@Override
 	public String getUrl() {
-		return null;
+		if (!getId().isValid())
+			return null;
+		return "https://clearlydefined.io/definitions/" + getId();
 	}
 
 }

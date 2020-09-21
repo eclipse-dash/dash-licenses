@@ -9,6 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.cli;
 
+import static java.util.Objects.nonNull;
+
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -46,7 +48,8 @@ public class NeedsReviewCollector implements IResultsCollector {
 		} else {
 			output.println("License information could not be automatically verified for the following content:");
 			output.println();
-			needsReview.stream().filter(each -> each.getUrl() != null).forEach(IContentData::getUrl);
+			needsReview.stream().map(IContentData::getUrl).filter(each -> nonNull(each))
+					.forEach(each -> output.println(each));
 			output.println();
 			output.println("Please create contribution questionnaires for this content.");
 		}
