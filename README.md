@@ -1,7 +1,10 @@
+# Eclipse Dash License Tool
 
-Each individual bit of content is identified by its ClearlyDefined id. This id uniquely defines, for example, a particular version of a JAR file, or a particular version of an NPM module. This tool knows how to read and convert Maven and pURL coordinates into ClearlyDefined ids. 
+The Eclipse Dash License Tool identifies the licenses of content.
 
-The CLI accepts a flat file with each line containing a content identifier (ClearlyDefined id, Maven coordinates, or pUrl), or a node `package-lock.json` file. 
+Each individual bit of content is identified by its ClearlyDefined id. This id uniquely defines, for example, a particular version of a JAR file, or a particular version of an NPM module. This tool knows how to read and convert Maven coordinates and NPM ids into ClearlyDefined ids. 
+
+The CLI accepts a flat file with each line containing a content identifier (ClearlyDefined id, Maven coordinates, or NPM identifier), or a node `package-lock.json` file. 
 
 Use the `-summary <file>` option to  generate a file that contains CSV content with one line for each line of input, mapping a package to a license along with whether that content is `approved` for use by an Eclipse project or `restricted`, meaning that the Eclipse IP Team needs to have a look at the Eclipse project's use of that content. This file is suitable for augmenting the IP Log of an Eclipse open source project.
 
