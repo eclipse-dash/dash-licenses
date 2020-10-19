@@ -87,6 +87,10 @@ public class LicenseSupport {
 		licenses.put("UNLICENSE", "Unlicense");
 		licenses.put("ARTISTIC-2.0", "Artistic-2.0");
 		licenses.put("BSD-2-Clause-FreeBSD", "BSD 2-Clause FreeBSD License");
+		// see https://dev.eclipse.org/ipzilla/show_bug.cgi?id=21894
+		// TODO it would probably be better to add this license to
+		// the official list at https://www.eclipse.org/legal/licenses.json
+		licenses.put("UPL-1.0", "Universal Permissive License v1.0");
 		return licenses;
 	}
 
