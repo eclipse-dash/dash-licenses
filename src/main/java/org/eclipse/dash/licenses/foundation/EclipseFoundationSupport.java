@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -24,14 +25,17 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.io.SocketConfig;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.hc.core5.util.Timeout;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
@@ -69,7 +73,7 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			post.setEntity(new UrlEncodedFormEntity(parameters, StandardCharsets.UTF_8));
 
 			try (CloseableHttpResponse response = httpclient.execute(post)) {
-				if (response.getStatusLine().getStatusCode() == 200) {
+				if (response.getCode() == 200) {
 					// FIXME Seems like overkill.
 					AtomicInteger counter = new AtomicInteger();
 
@@ -104,16 +108,19 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 	}
 
 	private CloseableHttpClient getHttpClient() {
-		int timeout = settings.getTimeout() * 1000;
+		Timeout timeout = Timeout.of(settings.getTimeout(), TimeUnit.SECONDS);
 
 		// @formatter:off
 		RequestConfig config = RequestConfig.custom()
 			.setConnectTimeout(timeout)
 			.setConnectionRequestTimeout(timeout)
-			.setSocketTimeout(timeout)
 			.build();
+		
 		// @formatter:on
+		SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(timeout).build();
+		BasicHttpClientConnectionManager connManager = new BasicHttpClientConnectionManager();
+		connManager.setSocketConfig(socketConfig);
 
-		return HttpClientBuilder.create().setDefaultRequestConfig(config).build();
+		return HttpClientBuilder.create().setDefaultRequestConfig(config).setConnectionManager(connManager).build();
 	}
 }
