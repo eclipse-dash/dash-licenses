@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2019,2020 The Eclipse Foundation and others.
  * 
  * This program and the accompanying materials are made available under 
  * the terms of the Eclipse Public License 2.0 which accompanies this 
@@ -10,10 +10,13 @@
 package org.eclipse.dash.licenses;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,10 +24,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.eclipse.dash.licenses.spdx.SpdxExpressionParser;
 
 public class LicenseSupport {
@@ -53,18 +52,14 @@ public class LicenseSupport {
 
 		String url = settings.getApprovedLicensesUrl();
 
-		try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-			HttpGet get = new HttpGet(url);
-
-			try (CloseableHttpResponse response = httpclient.execute(get)) {
-				if (response.getCode() == 200) {
-					try (InputStream content = response.getEntity().getContent();
-							InputStreamReader contentReader = new InputStreamReader(content, StandardCharsets.UTF_8)) {
-						return getApprovedLicenses(contentReader);
-					}
-				}
+		try {
+			HttpClient client = HttpClient.newHttpClient();
+			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+			HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+			if (response.statusCode() == 200) {
+				return getApprovedLicenses(new StringReader(response.body()));
 			}
-		} catch (IOException e) {
+		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 		return null;
