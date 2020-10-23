@@ -10,23 +10,19 @@
 package org.eclipse.dash.licenses.clearlydefined;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Collection;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
-import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.HttpStatus;
-import org.apache.hc.core5.http.io.SocketConfig;
-import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.apache.hc.core5.util.Timeout;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
@@ -90,34 +86,34 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 
 		log.atInfo().log("Querying ClearlyDefined for license data for %1$d items.", ids.size());
 
-		try (CloseableHttpClient httpclient = getHttpClient()) {
-			HttpPost post = new HttpPost(settings.getClearlyDefinedDefinitionsUrl());
-			post.setEntity(new StringEntity(JsonUtils.toJson(ids), ContentType.APPLICATION_JSON));
+		try {
+			Duration timeout = Duration.ofSeconds(settings.getTimeout());
+			HttpRequest request = HttpRequest.newBuilder(URI.create(settings.getClearlyDefinedDefinitionsUrl()))
+					.header("Content-Type", "application/json")
+					.POST(BodyPublishers.ofString(JsonUtils.toJson(ids), StandardCharsets.UTF_8)).timeout(timeout)
+					.build();
 
-			try (CloseableHttpResponse response = httpclient.execute(post)) {
-				if (response.getCode() == HttpStatus.SC_OK) {
-					// FIXME Seems like overkill.
-					AtomicInteger counter = new AtomicInteger();
+			HttpClient httpClient = HttpClient.newBuilder().connectTimeout(timeout).build();
+			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
+			if (response.statusCode() == 200) {
+				// FIXME Seems like overkill.
+				AtomicInteger counter = new AtomicInteger();
 
-					try (InputStream content = response.getEntity().getContent()) {
+				JsonUtils.readJson(new StringReader(response.body())).forEach((key, each) -> {
+					ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
 
-						JsonUtils.readJson(content).forEach((key, each) -> {
-							ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
-
-							if (isAccepted(data)) {
-								data.setStatus(LicenseSupport.Status.Approved);
-								consumer.accept(data);
-								counter.incrementAndGet();
-							}
-						});
+					if (isAccepted(data)) {
+						data.setStatus(LicenseSupport.Status.Approved);
+						consumer.accept(data);
+						counter.incrementAndGet();
 					}
+				});
 
-					log.atInfo().log("Found %1$d items.", counter.get());
-				} else {
-					log.atSevere().log("ClearlyDefined data search time out; maybe decrease batch size.");
-				}
+				log.atInfo().log("Found %1$d items.", counter.get());
+			} else {
+				log.atSevere().log("ClearlyDefined data search time out; maybe decrease batch size.");
 			}
-		} catch (IOException e) {
+		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -152,20 +148,4 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		return licenseSupport.getStatus(license) == LicenseSupport.Status.Approved;
 	}
 
-	CloseableHttpClient getHttpClient() {
-		Timeout timeout = Timeout.of(settings.getTimeout(), TimeUnit.SECONDS);
-
-		// @formatter:off
-		RequestConfig config = RequestConfig.custom()
-			.setConnectTimeout(timeout)
-			.setConnectionRequestTimeout(timeout)
-			.build();
-		// @formatter:on
-
-		SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(timeout).build();
-		BasicHttpClientConnectionManager connManager = new BasicHttpClientConnectionManager();
-		connManager.setSocketConfig(socketConfig);
-
-		return HttpClientBuilder.create().setDefaultRequestConfig(config).setConnectionManager(connManager).build();
-	}
 }
