@@ -12,17 +12,21 @@ package org.eclipse.dash.licenses.clearlydefined;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import org.apache.http.HttpStatus;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.io.SocketConfig;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.util.Timeout;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
@@ -91,7 +95,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 			post.setEntity(new StringEntity(JsonUtils.toJson(ids), ContentType.APPLICATION_JSON));
 
 			try (CloseableHttpResponse response = httpclient.execute(post)) {
-				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				if (response.getCode() == HttpStatus.SC_OK) {
 					// FIXME Seems like overkill.
 					AtomicInteger counter = new AtomicInteger();
 
@@ -149,16 +153,19 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	}
 
 	CloseableHttpClient getHttpClient() {
-		int timeout = settings.getTimeout() * 1000;
+		Timeout timeout = Timeout.of(settings.getTimeout(), TimeUnit.SECONDS);
 
 		// @formatter:off
 		RequestConfig config = RequestConfig.custom()
 			.setConnectTimeout(timeout)
 			.setConnectionRequestTimeout(timeout)
-			.setSocketTimeout(timeout)
 			.build();
 		// @formatter:on
 
-		return HttpClientBuilder.create().setDefaultRequestConfig(config).build();
+		SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(timeout).build();
+		BasicHttpClientConnectionManager connManager = new BasicHttpClientConnectionManager();
+		connManager.setSocketConfig(socketConfig);
+
+		return HttpClientBuilder.create().setDefaultRequestConfig(config).setConnectionManager(connManager).build();
 	}
 }

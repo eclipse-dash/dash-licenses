@@ -21,10 +21,10 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.eclipse.dash.licenses.spdx.SpdxExpressionParser;
 
 public class LicenseSupport {
@@ -57,7 +57,7 @@ public class LicenseSupport {
 			HttpGet get = new HttpGet(url);
 
 			try (CloseableHttpResponse response = httpclient.execute(get)) {
-				if (response.getStatusLine().getStatusCode() == 200) {
+				if (response.getCode() == 200) {
 					try (InputStream content = response.getEntity().getContent();
 							InputStreamReader contentReader = new InputStreamReader(content, StandardCharsets.UTF_8)) {
 						return getApprovedLicenses(contentReader);
