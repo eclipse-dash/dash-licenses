@@ -11,14 +11,14 @@ package org.eclipse.dash.licenses.clearlydefined;
 
 import java.util.stream.Stream;
 
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonString;
-import javax.json.JsonValue;
-
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
+
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.JsonValue;
 
 public class ClearlyDefinedContentData implements IContentData {
 

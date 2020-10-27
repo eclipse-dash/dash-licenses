@@ -6,11 +6,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import javax.json.JsonObject;
-
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.util.JsonUtils;
+
+import jakarta.json.JsonObject;
 
 public class PackageLockFileReader implements IDependencyListReader {
 

@@ -12,13 +12,13 @@ package org.eclipse.dash.licenses.foundation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.json.JsonObject;
-
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
+
+import jakarta.json.JsonObject;
 
 public class FoundationData implements IContentData {
 
