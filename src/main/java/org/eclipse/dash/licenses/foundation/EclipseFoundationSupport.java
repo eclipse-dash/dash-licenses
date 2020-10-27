@@ -1,8 +1,8 @@
 /*************************************************************************
  * Copyright (c) 2019, The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -24,17 +24,17 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
 import org.eclipse.dash.licenses.ISettings;
 
 import com.google.common.flogger.FluentLogger;
+
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
 
 public class EclipseFoundationSupport implements ILicenseDataProvider {
 	private static final FluentLogger log = FluentLogger.forEnclosingClass();

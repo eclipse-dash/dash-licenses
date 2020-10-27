@@ -1,8 +1,8 @@
 /*************************************************************************
  * Copyright (c) 2019, The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -27,16 +27,16 @@ public class LicenseChecker {
 	public LicenseChecker(ISettings settings) {
 		this.settings = settings;
 		// @formatter:off
-		this.dataProviders = new ILicenseDataProvider[] { 
+		this.dataProviders = new ILicenseDataProvider[] {
 			new EclipseFoundationSupport(settings),
-			new ClearlyDefinedSupport(settings) 
+			new ClearlyDefinedSupport(settings)
 		};
 		// @formatter:on
 	}
 
 	/**
 	 * Get the license data from the providers.
-	 * 
+	 *
 	 * @param ids
 	 * @param consumer
 	 */
@@ -55,7 +55,7 @@ public class LicenseChecker {
 						resolved.add(data.getId());
 					});
 				})
-				.batchify(unresolved.stream().filter(item -> item.isValid()).iterator());
+				.batchify(unresolved.stream().filter(IContentId::isValid).iterator());
 			// @formatter:on
 			unresolved.removeAll(resolved);
 		}

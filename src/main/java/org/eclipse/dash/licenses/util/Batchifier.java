@@ -1,8 +1,8 @@
 /*************************************************************************
  * Copyright (c) 2019, The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -31,7 +31,7 @@ public class Batchifier<T> {
 	/**
 	 * Set the maxium batch size. Batches will be no larger (but may be smaller)
 	 * than this number.
-	 * 
+	 *
 	 * @param batchSize the maximum size of batches sent to the consumer.
 	 * @return the receiver
 	 */
@@ -42,7 +42,7 @@ public class Batchifier<T> {
 
 	/**
 	 * Set the consumer that will received the batched data.
-	 * 
+	 *
 	 * @param consumer
 	 * @return the receiver
 	 */
@@ -55,13 +55,13 @@ public class Batchifier<T> {
 	 * Actually do the batching operation. Pull data from the provided input and
 	 * group it into batches. When the batch is the right size, hand it over to the
 	 * consumer.
-	 * 
+	 *
 	 * Yes, "batchify" isn't really a word. And, yes, we really could just use the
 	 * word "batch" here, but since a batch can be either noun or a verb, we decided
 	 * to be a bit playful with the name to make it more obvious that this method
 	 * does something. Yes, all method names are verbs... this way just feels more
 	 * understandable.
-	 * 
+	 *
 	 * @param input The data to process.
 	 * @return the receiver
 	 */

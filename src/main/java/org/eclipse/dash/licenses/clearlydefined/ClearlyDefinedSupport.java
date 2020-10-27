@@ -1,8 +1,8 @@
 /*************************************************************************
  * Copyright (c) 2019,2020 The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -47,7 +47,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	/**
 	 * The ClearlyDefined API expects a flat array of ids in JSON format in the
 	 * payload of the POST request.
-	 * 
+	 *
 	 * <pre>
 	 * {
 	 *	"maven/mavencentral/io.netty/netty-transport/4.1.42",
@@ -55,9 +55,9 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 * 	...
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * And answers an associative array in JSON format similar to the following.
-	 * 
+	 *
 	 * <pre>
 	 * {
 	 *	"maven/mavencentral/io.netty/netty-transport/4.1.42":{ ... },
@@ -65,15 +65,15 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 *	...
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * See the {@link ClearlyDefinedSupport} type for an example of the value.
-	 * 
+	 *
 	 * Note that the ClearlyDefined API will always return a value for every id that
 	 * is provided. In cases where the id is not in the ClearlyDefined database, the
 	 * score is reported as 0. This implementation will only pass those values that
 	 * have a score greater than the confidence threshold (as specified by the
 	 * settings); other values are ignored.
-	 * 
+	 *
 	 * @param ids      ids to search in five-part ClearlyDefined format.
 	 * @param consumer the closure to execute with a instance of
 	 *                 {@link ClearlyDefinedContentData} for each value included in
@@ -124,10 +124,10 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 * (as defined by the settings) and all of the discovered licenses are in the
 	 * Eclipse Foundation acceptable licenses list. Answers <code>false</code>
 	 * otherwise.
-	 * 
+	 *
 	 * @see LicenseSupport
 	 * @see ClearlyDefinedContentData
-	 * 
+	 *
 	 * @param data An instance of {@link ClearlyDefinedContentData} representing one
 	 *             row from the results.
 	 * @return <code>true</code> when the data is acceptable, <code>false</code>

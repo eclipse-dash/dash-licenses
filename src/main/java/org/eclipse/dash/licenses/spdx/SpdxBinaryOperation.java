@@ -1,8 +1,8 @@
 /*************************************************************************
  * Copyright (c) 2020, The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -101,7 +101,7 @@ public class SpdxBinaryOperation extends SpdxExpression {
 	 * <p>
 	 * The parser is depth first and greedy, so we only need to check the right
 	 * side.
-	 * 
+	 *
 	 * @param operator AND, OR, or WITH
 	 * @param left     the left side of the expression
 	 * @param right    the right side of the expression

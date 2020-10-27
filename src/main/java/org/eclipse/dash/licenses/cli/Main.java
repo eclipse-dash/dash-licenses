@@ -1,8 +1,8 @@
 /*************************************************************************
  * Copyright (c) 2019, The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -27,19 +27,19 @@ import org.eclipse.dash.licenses.LicenseChecker;
 /**
  * This class provides a CLI entrypoint to determine licenses for content. The
  * tool can be invoked in a few different ways, e.g.
- * 
+ *
  * <pre>
- * mvn dependency:list -DskipTests -Dmaven.javadoc.skip=true | 
+ * mvn dependency:list -DskipTests -Dmaven.javadoc.skip=true |
  * grep -Poh "\S+:(system|provided|compile) |
  * sort | uniq | java -jar licenses.jar -batch 100 -
  * </pre>
- * 
+ *
  * or
- * 
+ *
  * <pre>
  * java -jar licenses.jar -batch 100 package-lock.json
  * </pre>
- * 
+ *
  * @param args
  */
 public class Main {

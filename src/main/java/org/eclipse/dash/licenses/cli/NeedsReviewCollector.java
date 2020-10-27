@@ -1,20 +1,19 @@
 /*************************************************************************
  * Copyright (c) 2020, The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
 package org.eclipse.dash.licenses.cli;
 
-import static java.util.Objects.nonNull;
-
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
@@ -48,7 +47,7 @@ public class NeedsReviewCollector implements IResultsCollector {
 		} else {
 			output.println("License information could not be automatically verified for the following content:");
 			output.println();
-			needsReview.stream().map(IContentData::getUrl).filter(each -> nonNull(each))
+			needsReview.stream().map(IContentData::getUrl).filter(Objects::nonNull)
 					.forEach(each -> output.println(each));
 			output.println();
 			output.println("Please create contribution questionnaires for this content.");
