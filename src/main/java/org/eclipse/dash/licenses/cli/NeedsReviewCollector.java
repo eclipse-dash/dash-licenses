@@ -9,8 +9,6 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.cli;
 
-import static java.util.Objects.nonNull;
-
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
