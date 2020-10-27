@@ -1,8 +1,8 @@
 /*************************************************************************
  * Copyright (c) 2020, The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -26,15 +26,15 @@ class FoundationDataTests {
 	@BeforeEach
 	void setup() {
 		// @formatter:off
-		String json = 
-			"{\n" + 
-			"	\"authority\": \"CQ7766\", \n" + 
-			"	\"confidence\": \"100\", \n" + 
-			"	\"definitionUrl\": null, \n" + 
-			"	\"id\": \"maven/mavencentral/com.google.guava/guava/15.0\", \n" + 
-			"	\"license\": \"Apache-2.0\", \n" + 
-			"	\"sourceUrl\": null, \n" + 
-			"	\"status\": \"approved\"\n" + 
+		String json =
+			"{\n" +
+			"	\"authority\": \"CQ7766\", \n" +
+			"	\"confidence\": \"100\", \n" +
+			"	\"definitionUrl\": null, \n" +
+			"	\"id\": \"maven/mavencentral/com.google.guava/guava/15.0\", \n" +
+			"	\"license\": \"Apache-2.0\", \n" +
+			"	\"sourceUrl\": null, \n" +
+			"	\"status\": \"approved\"\n" +
 			"}\n";
 		// @formatter:on
 

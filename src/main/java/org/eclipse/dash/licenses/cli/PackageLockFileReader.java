@@ -31,7 +31,7 @@ public class PackageLockFileReader implements IDependencyListReader {
 	/**
 	 * Walk through the structure to identify the dependencies, and (recursively)
 	 * the dependencies of the dependencies.
-	 * 
+	 *
 	 * @param json     A "dependency" list from a package-lock.json file
 	 * @param consumer A single argument consumer of each listed item.
 	 */

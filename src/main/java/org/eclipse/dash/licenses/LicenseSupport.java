@@ -1,8 +1,8 @@
 /*************************************************************************
  * Copyright (c) 2019,2020 The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -32,7 +32,7 @@ public class LicenseSupport {
 
 	public enum Status {
 		Approved, Restricted
-	};
+	}
 
 	private LicenseSupport(Map<String, String> approvedLicenses) {
 		this.approvedLicenses = approvedLicenses;
@@ -95,7 +95,7 @@ public class LicenseSupport {
 	 * the approved licenses list, or--in the case of a license expression--the
 	 * expression matches entries in the approved licenses list in a valid
 	 * configuration.
-	 * 
+	 *
 	 * @param expression an SPDX expression.
 	 * @return <code>Status.Approved</code> when the expression is approve, or
 	 *         <code>Status.Restricted</code> otherwise

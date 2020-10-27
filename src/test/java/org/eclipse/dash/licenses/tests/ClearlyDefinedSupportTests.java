@@ -1,8 +1,8 @@
 /*************************************************************************
  * Copyright (c) 2019, The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -53,23 +53,23 @@ class ClearlyDefinedSupportTests {
 	@Test
 	void testAcceptable() {
 		// @formatter:off
-		String json = 
-				"{\n" + 
-				"    \"licensed\": {\n" + 
-				"        \"declared\": \"MIT\", \n" + 
-				"        \"facets\": {\n" + 
-				"            \"core\": {\n" + 
-				"                \"discovered\": {\n" + 
-				"                    \"expressions\": [\n" + 
-				"                        \"MIT\"\n" + 
-				"                    ] \n" + 
-				"                }, \n" + 
-				"                \"files\": 4\n" + 
-				"            }\n" + 
-				"        }, \n" + 
-				"        \"score\": {\n" + 
-				"            \"total\": 80\n" + 
-				"        }\n" + 
+		String json =
+				"{\n" +
+				"    \"licensed\": {\n" +
+				"        \"declared\": \"MIT\", \n" +
+				"        \"facets\": {\n" +
+				"            \"core\": {\n" +
+				"                \"discovered\": {\n" +
+				"                    \"expressions\": [\n" +
+				"                        \"MIT\"\n" +
+				"                    ] \n" +
+				"                }, \n" +
+				"                \"files\": 4\n" +
+				"            }\n" +
+				"        }, \n" +
+				"        \"score\": {\n" +
+				"            \"total\": 80\n" +
+				"        }\n" +
 				"    }\n" +
 				"}\n";
 		// @formatter:on
@@ -84,23 +84,23 @@ class ClearlyDefinedSupportTests {
 	@Test
 	void testUnacceptableByScore() {
 		// @formatter:off
-		String json = 
-				"{\n" + 
-				"    \"licensed\": {\n" + 
-				"        \"declared\": \"MIT\", \n" + 
-				"        \"facets\": {\n" + 
-				"            \"core\": {\n" + 
-				"                \"discovered\": {\n" + 
-				"                    \"expressions\": [\n" + 
-				"                        \"MIT\"\n" + 
-				"                    ] \n" + 
-				"                }, \n" + 
-				"                \"files\": 4\n" + 
-				"            }\n" + 
-				"        }, \n" + 
-				"        \"score\": {\n" + 
-				"            \"total\": 50\n" + 
-				"        }\n" + 
+		String json =
+				"{\n" +
+				"    \"licensed\": {\n" +
+				"        \"declared\": \"MIT\", \n" +
+				"        \"facets\": {\n" +
+				"            \"core\": {\n" +
+				"                \"discovered\": {\n" +
+				"                    \"expressions\": [\n" +
+				"                        \"MIT\"\n" +
+				"                    ] \n" +
+				"                }, \n" +
+				"                \"files\": 4\n" +
+				"            }\n" +
+				"        }, \n" +
+				"        \"score\": {\n" +
+				"            \"total\": 50\n" +
+				"        }\n" +
 				"    }\n" +
 				"}\n";
 		// @formatter:on
@@ -115,24 +115,24 @@ class ClearlyDefinedSupportTests {
 	@Test
 	void testUnacceptableByDiscoveredLicense() {
 		// @formatter:off
-		String json = 
-				"{\n" + 
-				"    \"licensed\": {\n" + 
-				"        \"declared\": \"MIT\", \n" + 
-				"        \"facets\": {\n" + 
-				"            \"core\": {\n" + 
-				"                \"discovered\": {\n" + 
-				"                    \"expressions\": [\n" + 
-				"                        \"MIT\",\n" + 
-				"                        \"GPL-2.0\"\n" + 
-				"                    ] \n" + 
-				"                }, \n" + 
-				"                \"files\": 4\n" + 
-				"            }\n" + 
-				"        }, \n" + 
-				"        \"score\": {\n" + 
-				"            \"total\": 80\n" + 
-				"        }\n" + 
+		String json =
+				"{\n" +
+				"    \"licensed\": {\n" +
+				"        \"declared\": \"MIT\", \n" +
+				"        \"facets\": {\n" +
+				"            \"core\": {\n" +
+				"                \"discovered\": {\n" +
+				"                    \"expressions\": [\n" +
+				"                        \"MIT\",\n" +
+				"                        \"GPL-2.0\"\n" +
+				"                    ] \n" +
+				"                }, \n" +
+				"                \"files\": 4\n" +
+				"            }\n" +
+				"        }, \n" +
+				"        \"score\": {\n" +
+				"            \"total\": 80\n" +
+				"        }\n" +
 				"    }\n" +
 				"}\n";
 		// @formatter:on

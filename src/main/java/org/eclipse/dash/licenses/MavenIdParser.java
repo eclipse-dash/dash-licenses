@@ -1,8 +1,8 @@
 /*************************************************************************
  * Copyright (c) 2019, The Eclipse Foundation and others.
- * 
- * This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License 2.0 which accompanies this 
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
  * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -16,11 +16,11 @@ import java.util.regex.Pattern;
 public class MavenIdParser implements ContentIdParser {
 
 	// @formatter:off
-	private static final String MAVEN_PATTERN = 
-			"(?<groupid>[^: ]+)" 
+	private static final String MAVEN_PATTERN =
+			"(?<groupid>[^: ]+)"
 			+ ":(?<artifactid>[^: ]+)"
 			+ "(:(?<ext>[^: ]*)(:(?<classifier>[^: ]+))?)?"
-			+ ":(?<version>v?\\d[^: ]*)" 
+			+ ":(?<version>v?\\d[^: ]*)"
 			+ "(:(?<phase>[^:]*))?";
 	// @formatter:on
 
@@ -37,7 +37,7 @@ public class MavenIdParser implements ContentIdParser {
 		 * actual valid Maven coordinates, but we may be able to map it to something
 		 * that we can match with EF data. We might, for example, try to do some sort of
 		 * bundle mapping with (for this particular example, CQ 11159).
-		 * 
+		 *
 		 * We originally implemented this using Aether, but Aether breaks when a phase
 		 * is included in the value. So, we brute force it with a regular expression.
 		 */
