@@ -107,6 +107,18 @@ public class MavenIdParserTests {
 	}
 
 	@Test
+	public void testMavenP2() {
+		IContentId value = parser
+				.parseId("p2.eclipse-plugin:org.apache.ant:jar:lib/ant-commons-net.jar:1.10.8.v20200515-1239:system")
+				.get();
+		assertEquals("maven", value.getType());
+		assertEquals("mavencentral", value.getSource());
+		assertEquals("org.apache.ant", value.getNamespace());
+		assertEquals("ant-commons-net", value.getName());
+		assertEquals("1.10.8", value.getVersion());
+	}
+
+	@Test
 	@Disabled
 	public void testWithVersionInNestedJar() {
 		IContentId value = parser.parseId(

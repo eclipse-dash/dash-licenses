@@ -25,6 +25,8 @@ public class MavenIdParser implements ContentIdParser {
 	// @formatter:on
 
 	private static Pattern mavenPattern = Pattern.compile(MAVEN_PATTERN);
+	private Pattern antBundleClassifierPattern = Pattern.compile("lib/(?<artifactid>.*)\\.jar");
+	private Pattern semanticVersionPattern = Pattern.compile("(?<version>\\d+(?:\\.\\d+){1,2}).*");
 
 	@Override
 	public Optional<IContentId> parseId(String value) {
@@ -51,6 +53,27 @@ public class MavenIdParser implements ContentIdParser {
 
 		String type = groupid.startsWith("p2.eclipse-") ? "p2" : "maven";
 		String source = groupid.startsWith("p2.eclipse-") ? "orbit" : "mavencentral";
+
+		/*
+		 * So this is a complete hack. If we're looking at the Apache Ant bundle, then
+		 * use the classifier to sort out the actual Maven GAV. This works for Ant, but
+		 * may not work in the general case.
+		 */
+		// FIXME Find a more general solution
+		if ("p2.eclipse-plugin".equals(groupid) && "org.apache.ant".equals(artifactid)) {
+			Matcher classifierMatcher = antBundleClassifierPattern.matcher(matcher.group("classifier"));
+			if (classifierMatcher.matches()) {
+				type = "maven";
+				source = "mavencentral";
+				groupid = artifactid;
+				artifactid = classifierMatcher.group("artifactid");
+
+				Matcher semanticVersionMatcher = semanticVersionPattern.matcher(version);
+				if (semanticVersionMatcher.matches()) {
+					version = semanticVersionMatcher.group("version");
+				}
+			}
+		}
 
 		return Optional.of(new ContentId(type, source, groupid, artifactid, version));
 	}
