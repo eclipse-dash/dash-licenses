@@ -20,8 +20,10 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
@@ -81,17 +83,23 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 */
 	@Override
 	public void queryLicenseData(Collection<IContentId> ids, Consumer<IContentData> consumer) {
-		if (ids.size() == 0)
+		/*
+		 * Only ask ClearlyDefined for information about content that we know that it
+		 * may actually have an answer for.
+		 */
+		List<IContentId> filteredIds = ids.stream().filter(id -> isSupported(id)).collect(Collectors.toList());
+
+		if (filteredIds.size() == 0)
 			return;
 
-		log.atInfo().log("Querying ClearlyDefined for license data for %1$d items.", ids.size());
+		log.atInfo().log("Querying ClearlyDefined for license data for %1$d items.", filteredIds.size());
 
 		try {
 			Duration timeout = Duration.ofSeconds(settings.getTimeout());
 			HttpRequest request = HttpRequest.newBuilder(URI.create(settings.getClearlyDefinedDefinitionsUrl()))
 					.header("Content-Type", "application/json")
-					.POST(BodyPublishers.ofString(JsonUtils.toJson(ids), StandardCharsets.UTF_8)).timeout(timeout)
-					.build();
+					.POST(BodyPublishers.ofString(JsonUtils.toJson(filteredIds), StandardCharsets.UTF_8))
+					.timeout(timeout).build();
 
 			HttpClient httpClient = HttpClient.newBuilder().connectTimeout(timeout).build();
 			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
@@ -116,6 +124,22 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * Answers whether or not this id is supported by ClearlyDefined.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private boolean isSupported(IContentId id) {
+		/*
+		 * HACK: ClearlyDefined throws an error when we send it types or sources that it
+		 * doesn't recognise. So let's avoid doing that. Since we don't have a means of
+		 * knowing what types and sources are supported, we take an approach of
+		 * identifying those items that we know aren't supported.
+		 */
+		return !"p2".equals(id.getType());
 	}
 
 	/**
