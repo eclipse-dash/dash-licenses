@@ -30,6 +30,7 @@ import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseSupport;
+import org.eclipse.dash.licenses.LicenseSupport.Status;
 import org.eclipse.dash.licenses.util.JsonUtils;
 
 import com.google.common.flogger.FluentLogger;
@@ -109,12 +110,9 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 
 				JsonUtils.readJson(new StringReader(response.body())).forEach((key, each) -> {
 					ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
-
-					if (isAccepted(data)) {
-						data.setStatus(LicenseSupport.Status.Approved);
-						consumer.accept(data);
-						counter.incrementAndGet();
-					}
+					data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
+					consumer.accept(data);
+					counter.incrementAndGet();
 				});
 
 				log.atInfo().log("Found %1$d items.", counter.get());

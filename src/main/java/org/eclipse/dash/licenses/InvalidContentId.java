@@ -19,7 +19,7 @@ public class InvalidContentId implements IContentId {
 
 	@Override
 	public String toString() {
-		return "# " + value;
+		return "Invalid: " + value;
 	}
 
 	@Override

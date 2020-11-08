@@ -9,11 +9,11 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.cli;
 
-import org.eclipse.dash.licenses.IContentData;
+import org.eclipse.dash.licenses.LicenseData;
 
 public interface IResultsCollector {
 
-	void accept(IContentData data);
+	void accept(LicenseData data);
 
 	default void close() {
 	}

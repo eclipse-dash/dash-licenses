@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Optional;
 
-import org.eclipse.dash.licenses.IContentData;
+import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 
 /**
@@ -29,7 +29,7 @@ public class CSVCollector implements IResultsCollector {
 	}
 
 	@Override
-	public void accept(IContentData data) {
+	public void accept(LicenseData data) {
 		// FIXME Use a proper CSV framework
 		// TODO Make column selection and order configurable
 		output.println(

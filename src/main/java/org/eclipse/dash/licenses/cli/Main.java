@@ -56,6 +56,8 @@ public class Main {
 			System.exit(0);
 		}
 
+		Project project = Project.getProject(settings.getProjectId());
+
 		List<IResultsCollector> collectors = new ArrayList<>();
 
 		// TODO Set up collectors based on command line parameters
@@ -68,6 +70,16 @@ public class Main {
 				collectors.add(new CSVCollector(getWriter(summaryPath)));
 			} catch (FileNotFoundException e1) {
 				System.out.println("Can't write to " + summaryPath);
+				System.exit(1);
+			}
+		}
+
+		String reviewPath = settings.getReviewFilePath();
+		if (reviewPath != null) {
+			try {
+				collectors.add(new CreateReviewRequestCollector(project, getWriter(reviewPath)));
+			} catch (FileNotFoundException e1) {
+				System.out.println("Can't write to " + reviewPath);
 				System.exit(1);
 			}
 		}
@@ -85,8 +97,8 @@ public class Main {
 				Collection<IContentId> dependencies = reader.getContentIds();
 
 				LicenseChecker checker = new LicenseChecker(settings);
-				checker.getLicenseData(dependencies, data -> {
-					collectors.forEach(collector -> collector.accept(data));
+				checker.getLicenseData(dependencies).forEach((id, licenseData) -> {
+					collectors.forEach(collector -> collector.accept(licenseData));
 				});
 			}
 		});

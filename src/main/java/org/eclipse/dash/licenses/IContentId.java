@@ -9,7 +9,7 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
-public interface IContentId {
+public interface IContentId extends Comparable<IContentId> {
 
 	String getNamespace();
 
@@ -22,5 +22,10 @@ public interface IContentId {
 	String getSource();
 
 	boolean isValid();
+
+	@Override
+	default int compareTo(IContentId o) {
+		return toString().compareTo(o.toString());
+	}
 
 }

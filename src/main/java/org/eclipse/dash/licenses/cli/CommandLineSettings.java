@@ -29,6 +29,8 @@ public class CommandLineSettings implements ISettings {
 	private static final String BATCH_OPTION = "batch";
 	private static final String CONFIDENCE_OPTION = "confidence";
 	private static final String SUMMARY_OPTION = "summary";
+	private static final String REVIEW_OPTION = "review";
+	private static final String PROJECT_OPTION = "project";
 
 	private static final String CD_URL_DEFAULT = "https://api.clearlydefined.io/definitions";
 	private static final String EF_URL_DEFAULT = "https://www.eclipse.org/projects/services/license_check.php";
@@ -187,6 +189,22 @@ public class CommandLineSettings implements ISettings {
 			.desc("Output a summary to a file")
 			.build());
 
+		options.addOption(Option.builder(REVIEW_OPTION)
+			.required(false)
+			.hasArg()
+			.argName("file")
+			.type(String.class)
+			.desc("Output a review request to a file")
+			.build());
+
+		options.addOption(Option.builder(PROJECT_OPTION)
+			.required(false)
+			.hasArg()
+			.argName("shortname")
+			.type(String.class)
+			.desc("Process the request in the context of an Eclipse project (e.g., technology.dash)")
+			.build());
+
 		options.addOption(Option.builder(HELP_OPTION)
 			.longOpt(HELP_OPTION)
 			.required(false)
@@ -221,5 +239,13 @@ public class CommandLineSettings implements ISettings {
 
 	public String getSummaryFilePath() {
 		return commandLine.getOptionValue(SUMMARY_OPTION, null);
+	}
+
+	public String getReviewFilePath() {
+		return commandLine.getOptionValue(REVIEW_OPTION, null);
+	}
+
+	public String getProjectId() {
+		return commandLine.getOptionValue(PROJECT_OPTION, null);
 	}
 }

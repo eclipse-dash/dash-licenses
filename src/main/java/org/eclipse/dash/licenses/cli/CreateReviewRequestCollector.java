@@ -18,16 +18,19 @@ import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 
 /**
- * The "Needs Review" collector tracks the results that likely require some
- * review from the IP Team. The current implementation gathers results and dumps
- * output to an {@link OutputStream} when the instance is closed.
+ * The "Create Review Request" collector tracks the results that likely require
+ * some review from the IP Team. The gathered information is output to an
+ * {@link OutputStream} in Markdown format, suitable for use as a description in
+ * a review request.
  */
-public class NeedsReviewCollector implements IResultsCollector {
+public class CreateReviewRequestCollector implements IResultsCollector {
 
 	private PrintWriter output;
 	private List<LicenseData> needsReview = new ArrayList<>();
+	private Project project;
 
-	public NeedsReviewCollector(OutputStream out) {
+	public CreateReviewRequestCollector(Project project, OutputStream out) {
+		this.project = project;
 		output = new PrintWriter(out);
 	}
 
@@ -44,14 +47,22 @@ public class NeedsReviewCollector implements IResultsCollector {
 			output.println(
 					"Vetted license information was found for all content. No further investigation is required.");
 		} else {
-			output.println("License information could not be automatically verified for the following content:");
+			if (project != null) {
+				output.println(String.format("Project: [%s](%s)", project.getName(), project.getUrl()));
+				output.println();
+			}
+			output.println("The following content requires review:");
 			output.println();
-			needsReview.stream().sorted((a, b) -> a.getId().compareTo(b.getId()))
-					.forEach(each -> output.println(each.getId()));
+			needsReview.stream().sorted((a, b) -> a.getId().compareTo(b.getId())).forEach(each -> describe(each));
 			output.println();
-			output.println("Please create contribution questionnaires for this content.");
 		}
 		output.flush();
+	}
+
+	private void describe(LicenseData licenseData) {
+		output.println(String.format("* %s", licenseData.getId()));
+		licenseData.contentData().forEach(data -> output
+				.println(String.format("  - [%s](%s) %s", data.getAuthority(), data.getUrl(), data.getLicense())));
 	}
 
 	@Override

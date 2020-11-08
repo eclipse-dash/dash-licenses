@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2019, 2020 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -10,10 +10,11 @@
 package org.eclipse.dash.licenses;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Consumer;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.eclipse.dash.licenses.LicenseSupport.Status;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
 import org.eclipse.dash.licenses.util.Batchifier;
@@ -39,27 +40,27 @@ public class LicenseChecker {
 	 *
 	 * @param ids
 	 * @param consumer
+	 * @return
 	 */
-	public void getLicenseData(Collection<IContentId> ids, Consumer<IContentData> consumer) {
-		Set<IContentId> unresolved = new HashSet<>();
-		unresolved.addAll(ids);
+	public Map<IContentId, LicenseData> getLicenseData(Collection<IContentId> ids) {
+		Map<IContentId, LicenseData> licenseData = ids.stream().map(id -> new LicenseData(id)).collect(
+				Collectors.toMap(LicenseData::getId, Function.identity(), (existing, replacement) -> existing));
 
 		for (ILicenseDataProvider provider : dataProviders) {
-			Set<IContentId> resolved = new HashSet<>();
 			// @formatter:off
 			new Batchifier<IContentId>()
 				.setBatchSize(settings.getBatchSize())
 				.setConsumer(batch -> {
 					provider.queryLicenseData(batch, data -> {
-						consumer.accept(data);
-						resolved.add(data.getId());
+						licenseData.get(data.getId()).addContentData(data);
 					});
 				})
-				.batchify(unresolved.stream().filter(IContentId::isValid).iterator());
+				.batchify(ids.stream()
+						.filter(IContentId::isValid)
+						.filter(id -> licenseData.get(id).getStatus() != Status.Approved)
+						.iterator());
 			// @formatter:on
-			unresolved.removeAll(resolved);
 		}
-
-		unresolved.forEach(id -> consumer.accept(new InvalidContentData(id)));
+		return licenseData;
 	}
 }
