@@ -48,6 +48,6 @@ public class NpmJsIdParser implements ContentIdParser {
 		String name = matcher.group("name");
 		String version = matcher.group("version");
 
-		return Optional.of(new ContentId("npm", "npmjs", namespace, name, version));
+		return Optional.ofNullable(ContentId.getContentId("npm", "npmjs", namespace, name, version));
 	}
 }

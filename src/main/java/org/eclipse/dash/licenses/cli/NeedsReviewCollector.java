@@ -49,7 +49,10 @@ public class NeedsReviewCollector implements IResultsCollector {
 			needsReview.stream().sorted((a, b) -> a.getId().compareTo(b.getId()))
 					.forEach(each -> output.println(each.getId()));
 			output.println();
-			output.println("Please create contribution questionnaires for this content.");
+			output.println("This content is either not correctly mapped by the system, or requires review.");
+
+			output.println();
+			output.println("");
 		}
 		output.flush();
 	}

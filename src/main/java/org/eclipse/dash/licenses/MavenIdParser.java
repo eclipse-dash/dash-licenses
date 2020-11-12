@@ -75,6 +75,6 @@ public class MavenIdParser implements ContentIdParser {
 			}
 		}
 
-		return Optional.of(new ContentId(type, source, groupid, artifactid, version));
+		return Optional.ofNullable(ContentId.getContentId(type, source, groupid, artifactid, version));
 	}
 }

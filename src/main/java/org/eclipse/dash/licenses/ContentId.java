@@ -9,6 +9,9 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
+import com.github.zafarkhaja.semver.ParseException;
+import com.github.zafarkhaja.semver.Version;
+
 public class ContentId implements IContentId {
 
 	private String type;
@@ -17,12 +20,23 @@ public class ContentId implements IContentId {
 	private String name;
 	private String version;
 
-	public ContentId(String type, String source, String namespace, String name, String version) {
+	private ContentId(String type, String source, String namespace, String name, String version) {
 		this.type = type;
 		this.source = source;
 		this.namespace = namespace;
 		this.name = name;
 		this.version = version;
+	}
+
+	public static ContentId getContentId(String type, String source, String namespace, String name, String version) {
+		// TODO Addition validation required.
+		// Make sure that the version is a valid value.
+		try {
+			Version.valueOf(version);
+		} catch (ParseException e) {
+			return null;
+		}
+		return new ContentId(type, source, namespace, name, version);
 	}
 
 	public static ContentId getContentId(String string) {
@@ -34,7 +48,7 @@ public class ContentId implements IContentId {
 		String namespace = parts[2];
 		String name = parts[3];
 		String version = parts[4];
-		return new ContentId(type, source, namespace, name, version);
+		return getContentId(type, source, namespace, name, version);
 	}
 
 	@Override

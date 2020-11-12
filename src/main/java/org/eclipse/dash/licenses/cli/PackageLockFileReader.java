@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.InvalidContentId;
 import org.eclipse.dash.licenses.util.JsonUtils;
 
 import jakarta.json.JsonObject;
@@ -35,7 +36,7 @@ public class PackageLockFileReader implements IDependencyListReader {
 	 * @param json     A "dependency" list from a package-lock.json file
 	 * @param consumer A single argument consumer of each listed item.
 	 */
-	private void dependenciesDo(JsonObject json, Consumer<ContentId> consumer) {
+	private void dependenciesDo(JsonObject json, Consumer<IContentId> consumer) {
 		if (json == null)
 			return;
 		json.forEach((key, value) -> {
@@ -50,7 +51,10 @@ public class PackageLockFileReader implements IDependencyListReader {
 				name = key;
 			}
 			String version = value.asJsonObject().getString("version");
-			consumer.accept(new ContentId("npm", "npmjs", namespace, name, version));
+			IContentId contentId = ContentId.getContentId("npm", "npmjs", namespace, name, version);
+			if (contentId == null)
+				contentId = new InvalidContentId("" + namespace + "/" + name + "@" + version);
+			consumer.accept(contentId);
 
 			dependenciesDo(json.getJsonObject("dependencies"), consumer);
 		});

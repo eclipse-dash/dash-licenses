@@ -14,8 +14,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
+import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedContentData;
 
 /**
  * The "Create Review Request" collector tracks the results that likely require
@@ -60,9 +62,18 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 	}
 
 	private void describe(LicenseData licenseData) {
-		output.println(String.format("* %s", licenseData.getId()));
-		licenseData.contentData().forEach(data -> output
-				.println(String.format("  - [%s](%s) %s", data.getAuthority(), data.getUrl(), data.getLicense())));
+		output.println(String.format("* [ ] %s", licenseData.getId()));
+		licenseData.contentData().forEach(data -> describeItem(data));
+	}
+
+	private void describeItem(IContentData data) {
+		output.println(String.format("  - [%s](%s) %s (%d)", data.getAuthority(), data.getUrl(), data.getLicense(),
+				data.getScore()));
+		switch (data.getAuthority()) {
+		case ClearlyDefinedContentData.CLEARLYDEFINED:
+			((ClearlyDefinedContentData) data).discoveredLicenses()
+					.forEach(license -> output.println("    - " + license));
+		};
 	}
 
 	@Override

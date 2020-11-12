@@ -29,4 +29,8 @@ class ContentIdTests {
 		assertNull(ContentId.getContentId("write/1.0.3"));
 	}
 
+	@Test
+	void testInvalidVersion() {
+		assertNull(ContentId.getContentId("npm/npmjs/-/stuff/blah"));
+	}
 }

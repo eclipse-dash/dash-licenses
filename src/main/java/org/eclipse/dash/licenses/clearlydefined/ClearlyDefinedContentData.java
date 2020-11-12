@@ -22,6 +22,8 @@ import jakarta.json.JsonValue;
 
 public class ClearlyDefinedContentData implements IContentData {
 
+	public static final String CLEARLYDEFINED = "clearlydefined";
+
 	/**
 	 * This field holds data that presents a single unit of content answered by a
 	 * query to the ClearlyDefined service. The value is in JSON format as in this
@@ -135,8 +137,7 @@ public class ClearlyDefinedContentData implements IContentData {
 
 	@Override
 	public String getAuthority() {
-		// Maybe return the Clearly Defined URL instead?
-		return "clearlydefined";
+		return CLEARLYDEFINED;
 	}
 
 	public void setStatus(Status status) {
