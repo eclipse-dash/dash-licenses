@@ -10,6 +10,7 @@
 package org.eclipse.dash.licenses.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.eclipse.dash.licenses.ContentId;
@@ -25,12 +26,17 @@ class ContentIdTests {
 	}
 
 	@Test
+	void testValid2() {
+		assertNotNull(ContentId.getContentId("maven", "mavencentral", "org.eclipse.stuff", "stuff", "1.3.0"));
+	}
+
+	@Test
 	void testInvalid() {
 		assertNull(ContentId.getContentId("write/1.0.3"));
 	}
 
 	@Test
 	void testInvalidVersion() {
-		assertNull(ContentId.getContentId("npm/npmjs/-/stuff/blah"));
+		assertNull(ContentId.getContentId("npm/npmjs/-/stuff/file:target/stuff"));
 	}
 }

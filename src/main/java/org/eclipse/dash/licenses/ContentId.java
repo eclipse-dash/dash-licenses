@@ -9,8 +9,7 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
-import com.github.zafarkhaja.semver.ParseException;
-import com.github.zafarkhaja.semver.Version;
+import java.util.regex.Pattern;
 
 public class ContentId implements IContentId {
 
@@ -29,13 +28,11 @@ public class ContentId implements IContentId {
 	}
 
 	public static ContentId getContentId(String type, String source, String namespace, String name, String version) {
-		// TODO Addition validation required.
-		// Make sure that the version is a valid value.
-		try {
-			Version.valueOf(version);
-		} catch (ParseException e) {
+
+		Pattern versionPattern = Pattern.compile("[\\w\\.\\-]+");
+		if (!versionPattern.matcher(version).matches())
 			return null;
-		}
+
 		return new ContentId(type, source, namespace, name, version);
 	}
 
