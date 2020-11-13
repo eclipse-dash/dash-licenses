@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2019, 2020 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -59,7 +59,21 @@ public class FoundationData implements IContentData {
 
 	@Override
 	public int getScore() {
-		return data.getInt("confidence");
+		/*
+		 * Sometimes the answer comes back as a string, not an integer. Handle both
+		 * cases. If we can't sort it out, assume that it's zero.
+		 */
+		switch (data.getValueType()) {
+		case NUMBER:
+			return data.getInt("confidence");
+		case STRING:
+			try {
+				return Integer.valueOf(data.getString("confidence"));
+			} catch (NumberFormatException e) {
+			}
+		default:
+			return 0;
+		}
 	}
 
 	@Override
