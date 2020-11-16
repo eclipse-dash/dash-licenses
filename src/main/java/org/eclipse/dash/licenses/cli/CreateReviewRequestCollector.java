@@ -67,8 +67,10 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 	}
 
 	private void describeItem(IContentData data) {
-		output.println(String.format("  - [%s](%s) %s (%d)", data.getAuthority(), data.getUrl(), data.getLicense(),
-				data.getScore()));
+		String authority = data.getAuthority();
+		if (data.getUrl() != null)
+			authority = String.format("[%s](%s)", authority, data.getUrl());
+		output.println(String.format("  - %s %s (%d)", authority, data.getLicense(), data.getScore()));
 		switch (data.getAuthority()) {
 		case ClearlyDefinedContentData.CLEARLYDEFINED:
 			((ClearlyDefinedContentData) data).discoveredLicenses()
