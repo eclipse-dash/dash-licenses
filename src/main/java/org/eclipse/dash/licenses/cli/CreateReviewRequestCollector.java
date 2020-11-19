@@ -12,6 +12,7 @@ package org.eclipse.dash.licenses.cli;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.dash.licenses.IContentData;
@@ -76,6 +77,36 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 			((ClearlyDefinedContentData) data).discoveredLicenses()
 					.forEach(license -> output.println("    - " + license));
 		};
+		output.println(String.format("  - [Search IPZilla](%s)", getIPZillaSearchUrl(data)));
+	}
+
+	private String getIPZillaSearchUrl(IContentData data) {
+		var terms = new HashSet<String>();
+
+		String namespace = data.getId().getNamespace();
+		String name = data.getId().getName();
+
+		// Assemble terms from the content data that might result
+		// in an interesting search.
+		terms.add(namespace);
+		terms.add(name);
+
+		// Add the last segment from the name to the search terms.
+		// We arbitrarily decide that terms that are "short" aren't interesting
+		// and skip them. The logic being that shorter words are more likely to
+		// be common, and common words will clutter up our search.
+		String lastSegment = name.substring(1 + name.lastIndexOf('.'));
+		if (lastSegment.length() >= 8)
+			terms.add(lastSegment);
+
+		var builder = new StringBuilder();
+		builder.append("https://dev.eclipse.org/ipzilla/buglist.cgi");
+		builder.append("?short_desc_type=anywords");
+		builder.append("&short_desc=");
+		builder.append(String.join("+", terms));
+		builder.append("&long_desc_type=substring");
+
+		return builder.toString();
 	}
 
 	@Override
