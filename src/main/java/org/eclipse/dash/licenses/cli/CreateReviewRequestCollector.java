@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.dash.licenses.IContentData;
+import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedContentData;
@@ -67,7 +68,15 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 		licenseData.contentData().forEach(data -> describeItem(data));
 	}
 
+	/**
+	 * THis method writes potentially helpful information to make the intellectual
+	 * review process as easy as possible to the output writer.
+	 * 
+	 * @param data
+	 */
 	private void describeItem(IContentData data) {
+		// FIXME This is clunky
+
 		String authority = data.getAuthority();
 		if (data.getUrl() != null)
 			authority = String.format("[%s](%s)", authority, data.getUrl());
@@ -78,6 +87,21 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 					.forEach(license -> output.println("    - " + license));
 		};
 		output.println(String.format("  - [Search IPZilla](%s)", getIPZillaSearchUrl(data)));
+		IContentId id = data.getId();
+		if ("maven".equals(id.getType()) && "mavencentral".equals(id.getSource())) {
+			output.println(String.format("  - [Maven Central](https://search.maven.org/artifact/%s/%s/%s/jar)",
+					id.getNamespace(), id.getName(), id.getVersion()));
+		}
+		if ("npm".equals(id.getType()) && "npmjs".equals(id.getSource())) {
+			var builder = new StringBuilder();
+			if (!"-".equals(id.getNamespace())) {
+				builder.append(id.getNamespace());
+				builder.append('/');
+			}
+			builder.append(id.getName());
+			output.println(String.format("  - [npmjs.com](https://www.npmjs.com/package/%s/v/%s)", builder.toString(),
+					id.getVersion()));
+		}
 	}
 
 	private String getIPZillaSearchUrl(IContentData data) {
