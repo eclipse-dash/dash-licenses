@@ -18,6 +18,15 @@ public interface IResultsCollector {
 	default void close() {
 	}
 
+	/**
+	 * Answers the status of the collector. In practical terms, this is the value
+	 * that is returned to the shell following execution of the programme. A zero
+	 * return value indicates that the script ran as expected; a non-zero value
+	 * indicates abnormal results. By convention, we return the number of
+	 * problematic items we encounter.
+	 * 
+	 * @return
+	 */
 	default int getStatus() {
 		return 0;
 	}
