@@ -66,6 +66,22 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 	private void describe(LicenseData licenseData) {
 		output.println(String.format("* [ ] %s", licenseData.getId()));
 		licenseData.contentData().forEach(data -> describeItem(data));
+		output.println(String.format("  - [Search IPZilla](%s)", getIPZillaSearchUrl(licenseData)));
+		IContentId id = licenseData.getId();
+		if ("maven".equals(id.getType()) && "mavencentral".equals(id.getSource())) {
+			output.println(String.format("  - [Maven Central](https://search.maven.org/artifact/%s/%s/%s/jar)",
+					id.getNamespace(), id.getName(), id.getVersion()));
+		}
+		if ("npm".equals(id.getType()) && "npmjs".equals(id.getSource())) {
+			var builder = new StringBuilder();
+			if (!"-".equals(id.getNamespace())) {
+				builder.append(id.getNamespace());
+				builder.append('/');
+			}
+			builder.append(id.getName());
+			output.println(String.format("  - [npmjs.com](https://www.npmjs.com/package/%s/v/%s)", builder.toString(),
+					id.getVersion()));
+		}
 	}
 
 	/**
@@ -86,29 +102,13 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 			((ClearlyDefinedContentData) data).discoveredLicenses()
 					.forEach(license -> output.println("    - " + license));
 		};
-		output.println(String.format("  - [Search IPZilla](%s)", getIPZillaSearchUrl(data)));
-		IContentId id = data.getId();
-		if ("maven".equals(id.getType()) && "mavencentral".equals(id.getSource())) {
-			output.println(String.format("  - [Maven Central](https://search.maven.org/artifact/%s/%s/%s/jar)",
-					id.getNamespace(), id.getName(), id.getVersion()));
-		}
-		if ("npm".equals(id.getType()) && "npmjs".equals(id.getSource())) {
-			var builder = new StringBuilder();
-			if (!"-".equals(id.getNamespace())) {
-				builder.append(id.getNamespace());
-				builder.append('/');
-			}
-			builder.append(id.getName());
-			output.println(String.format("  - [npmjs.com](https://www.npmjs.com/package/%s/v/%s)", builder.toString(),
-					id.getVersion()));
-		}
 	}
 
-	private String getIPZillaSearchUrl(IContentData data) {
+	private String getIPZillaSearchUrl(LicenseData licenseData) {
 		var terms = new HashSet<String>();
 
-		String namespace = data.getId().getNamespace();
-		String name = data.getId().getName();
+		String namespace = licenseData.getId().getNamespace();
+		String name = licenseData.getId().getName();
 
 		// Assemble terms from the content data that might result
 		// in an interesting search.
