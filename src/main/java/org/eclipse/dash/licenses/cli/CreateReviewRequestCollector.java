@@ -66,7 +66,10 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 	private void describe(LicenseData licenseData) {
 		output.println(String.format("* [ ] %s", licenseData.getId()));
 		licenseData.contentData().forEach(data -> describeItem(data));
-		output.println(String.format("  - [Search IPZilla](%s)", getIPZillaSearchUrl(licenseData)));
+		String searchUrl = getIPZillaSearchUrl(licenseData);
+		if (searchUrl != null) {
+			output.println(String.format("  - [Search IPZilla](%s)", searchUrl));
+		}
 		IContentId id = licenseData.getId();
 		if ("maven".equals(id.getType()) && "mavencentral".equals(id.getSource())) {
 			output.println(String.format("  - [Maven Central](https://search.maven.org/artifact/%s/%s/%s/jar)",
@@ -105,6 +108,9 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 	}
 
 	private String getIPZillaSearchUrl(LicenseData licenseData) {
+		if (!licenseData.getId().isValid())
+			return null;
+
 		var terms = new HashSet<String>();
 
 		String namespace = licenseData.getId().getNamespace();
