@@ -13,6 +13,7 @@
 
 	<modules>
 		<module>dash-core</module>
+		<module>dash-maven-plugin</module>
 	</modules>
 
 	<build>

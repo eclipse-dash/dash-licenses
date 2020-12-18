@@ -51,27 +51,29 @@ scrutiny.
 ### Example: Maven
 
 ```
-$ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)" | sort | uniq > maven.deps
-$ cat maven.deps
-commons-cli:commons-cli:jar:1.4:compile
-commons-codec:commons-codec:jar:1.11:compile
-commons-logging:commons-logging:jar:1.2:compile
-org.apache.commons:commons-csv:jar:1.6:compile
-org.apache.httpcomponents:httpclient:jar:4.5.10:compile
-org.apache.httpcomponents:httpcore:jar:4.4.12:compile
-org.glassfish:jakarta.json:jar:1.1.6:compile
+$ mvn org.eclipse.dash:dash-maven-plugin:license-check -Ddash.summary=DEPENDENCIES
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------< org.eclipse.dash:org.eclipse.dash.licenses >-------------
+[INFO] Building org.eclipse.dash.licenses 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dash-maven-plugin:0.0.1-SNAPSHOT:license-check (default-cli) @ org.eclipse.dash.licenses ---
+[INFO] Vetted license information was found for all content. No further investigation is required.
+[INFO] Summary file was written to: /home/mbooth/workspace-dash/dash-licenses/dash-core/DEPENDENCIES
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.434 s
+[INFO] Finished at: 2020-12-18T11:27:38Z
+[INFO] ------------------------------------------------------------------------
 
-$ java -jar target/org.eclipse.dash.licenses-<version>.jar -summary DEPENDENCIES maven.deps
-Vetted license information was found for all content. No further investigation is required.
-
-$ cat DEPENDENCIES
-maven/mavencentral/org.glassfish/jakarta.json/1.1.6, EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0, approved, emo_ip_team
-maven/mavencentral/commons-codec/commons-codec/1.11, Apache-2.0, approved, CQ15971
+$ cat DEPENDENCIES 
+maven/mavencentral/org.glassfish/jakarta.json/2.0.0, EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0, approved, emo_ip_team
+maven/mavencentral/org.checkerframework/checker-compat-qual/2.5.3, MIT, approved, clearlydefined
 maven/mavencentral/commons-cli/commons-cli/1.4, Apache-2.0, approved, CQ13132
-maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.12, Apache-2.0, approved, CQ18704
-maven/mavencentral/commons-logging/commons-logging/1.2, Apache-2.0, approved, CQ10162
-maven/mavencentral/org.apache.httpcomponents/httpclient/4.5.10, Apache-2.0, approved, CQ18703
-maven/mavencentral/org.apache.commons/commons-csv/1.6, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.apache.commons/commons-csv/1.8, Apache-2.0, approved, clearlydefined
+maven/mavencentral/com.google.flogger/flogger/0.5.1, Apache-2.0, approved, clearlydefined
 ```
 
 ### Example: Gradle
