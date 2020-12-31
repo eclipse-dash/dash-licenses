@@ -7,7 +7,7 @@
 		<artifactId>dash-licenses-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>dash-maven-plugin</artifactId>
+	<artifactId>license-tool-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 
 	<dependencies>

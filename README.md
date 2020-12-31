@@ -51,16 +51,16 @@ scrutiny.
 ### Example: Maven
 
 ```
-$ mvn org.eclipse.dash:dash-maven-plugin:license-check -Ddash.summary=DEPENDENCIES
+$ mvn org.eclipse.dash:license-tool-maven:license-check -Ddash.summary=DEPENDENCIES
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] -------------< org.eclipse.dash:org.eclipse.dash.licenses >-------------
 [INFO] Building org.eclipse.dash.licenses 0.0.1-SNAPSHOT
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
-[INFO] --- dash-maven-plugin:0.0.1-SNAPSHOT:license-check (default-cli) @ org.eclipse.dash.licenses ---
+[INFO] --- license-tool-plugin:0.0.1-SNAPSHOT:license-check (default-cli) @ org.eclipse.dash.licenses ---
 [INFO] Vetted license information was found for all content. No further investigation is required.
-[INFO] Summary file was written to: /home/mbooth/workspace-dash/dash-licenses/dash-core/DEPENDENCIES
+[INFO] Summary file was written to: ./dash-licenses/license-tool-core/DEPENDENCIES
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------

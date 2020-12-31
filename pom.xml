@@ -12,8 +12,8 @@
 	</properties>
 
 	<modules>
-		<module>dash-core</module>
-		<module>dash-maven-plugin</module>
+		<module>core</module>
+		<module>maven-plugin</module>
 	</modules>
 
 	<build>
