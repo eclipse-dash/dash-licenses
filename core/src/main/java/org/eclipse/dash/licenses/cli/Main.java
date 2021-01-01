@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseChecker;
+import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 
 /**
  * This class provides a CLI entrypoint to determine licenses for content. The
@@ -56,8 +57,6 @@ public class Main {
 			System.exit(0);
 		}
 
-		Project project = Project.getProject(settings.getProjectId());
-
 		List<IResultsCollector> collectors = new ArrayList<>();
 
 		// TODO Set up collectors based on command line parameters
@@ -74,14 +73,8 @@ public class Main {
 			}
 		}
 
-		String reviewPath = settings.getReviewFilePath();
-		if (reviewPath != null) {
-			try {
-				collectors.add(new CreateReviewRequestCollector(project, getWriter(reviewPath)));
-			} catch (FileNotFoundException e1) {
-				System.out.println("Can't write to " + reviewPath);
-				System.exit(1);
-			}
+		if (settings.canCreateReviews()) {
+			collectors.add(new CreateReviewRequestCollector(settings, System.out));
 		}
 
 		Arrays.stream(settings.getFileNames()).forEach(name -> {
