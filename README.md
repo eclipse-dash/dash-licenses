@@ -51,7 +51,7 @@ scrutiny.
 ### Example: Maven
 
 ```
-$ mvn org.eclipse.dash:license-tool-maven:license-check -Ddash.summary=DEPENDENCIES
+$ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDENCIES
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] -------------< org.eclipse.dash:org.eclipse.dash.licenses >-------------
@@ -156,7 +156,7 @@ npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -
 
 Stuff that we need to add:
 
-* Create a Maven plug-in (#7);
+* Publich Maven plug-in to repository (#45);
 * Links to make creating CQs semi-automatic (or even automatic);
 * Logging (#9);
 * Make the implementation more extensible by adding dependency injection (#8);
