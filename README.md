@@ -51,7 +51,7 @@ scrutiny.
 ### Example: Maven
 
 ```
-$ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDENCIES
+$ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDENCIES 
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] -------------< org.eclipse.dash:org.eclipse.dash.licenses >-------------
