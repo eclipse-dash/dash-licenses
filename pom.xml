@@ -28,6 +28,11 @@
 						<target>11</target>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>3.0.0-M1</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -53,4 +58,16 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+		<repository>
+			<id>repo.eclipse.org</id>
+			<name>Eclipse Dash Nexus Repository - Releases</name>
+			<url>https://repo.eclipse.org/content/repositories/dash-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>repo.eclipse.org</id>
+			<name>Eclipse Dash Nexus Repository - Snapshots</name>
+			<url>https://repo.eclipse.org/content/repositories/dash-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
