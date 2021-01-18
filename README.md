@@ -48,6 +48,15 @@ The output (for now) is either a statement that the licenses for all of the cont
 been identified and verified, or a list of those dependencies that require further
 scrutiny.
 
+**Note for Mac users:** `grep` command on Mac doesn't support parameter option `-P` hence `grep -Poh "\S+:(system|provided|compile)"` will fail.
+Use `-E` option instead i.e. `grep -ohE "\S+:(system|provided|compile)"` or install GNU grep on your Mac via the command:
+
+```
+$ brew install grep
+```
+
+Afterwards `grep` will be accessible via `ggrep` so `ggrep -Poh "\S+:(system|provided|compile)` will do the trick.
+
 ### Example: Maven
 
 ```
