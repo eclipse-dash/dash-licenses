@@ -73,7 +73,7 @@ public class Main {
 			}
 		}
 
-		if (settings.canCreateReviews()) {
+		if (settings.isReview()) {
 			collectors.add(new CreateReviewRequestCollector(settings, System.out));
 		}
 

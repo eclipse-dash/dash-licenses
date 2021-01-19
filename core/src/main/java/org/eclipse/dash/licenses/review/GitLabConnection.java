@@ -17,31 +17,27 @@ import org.gitlab4j.api.models.Issue;
 import org.gitlab4j.api.models.IssueFilter;
 
 public class GitLabConnection {
-	private GitLabSupport gitLab;
 	private GitLabApi gitLabApi;
+	private String path;
 
-	public GitLabConnection(GitLabSupport gitLabReviewsSupport, GitLabApi gitLabApi) {
-		this.gitLab = gitLabReviewsSupport;
+	public GitLabConnection(GitLabApi gitLabApi, String path) {
 		this.gitLabApi = gitLabApi;
+		this.path = path;
 	}
 
 	public Issue findIssue(GitLabReview review) throws GitLabApiException {
 		String title = review.getTitle();
 		IssueFilter filter = new IssueFilter().withSearch(title).withState(IssueState.OPENED);
-		return getIssuesApi().getIssuesStream(getRepositoryPath(), filter)
-				.filter(issue -> issue.getTitle().equals(title)).findAny().orElse(null);
+		return getIssuesApi().getIssuesStream(path, filter).filter(issue -> issue.getTitle().equals(title)).findAny()
+				.orElse(null);
 	}
 
 	public Issue createIssue(GitLabReview review) throws GitLabApiException {
-		return getIssuesApi().createIssue(getRepositoryPath(), review.getTitle(), review.getDescription(), false, null,
-				null, review.getLabels(), null, null, null, null);
+		return getIssuesApi().createIssue(path, review.getTitle(), review.getDescription(), false, null, null,
+				review.getLabels(), null, null, null, null);
 	}
 
 	private IssuesApi getIssuesApi() {
 		return gitLabApi.getIssuesApi();
-	}
-
-	private String getRepositoryPath() {
-		return gitLab.getPath();
 	}
 }

@@ -27,6 +27,10 @@ public interface ISettings {
 
 	int getConfidenceThreshold();
 
+	default String getProjectId() {
+		return System.getProperty("org.eclipse.dash.project");
+	}
+
 	/**
 	 * How long do we wait for a response from a license data provider?
 	 *
@@ -37,23 +41,12 @@ public interface ISettings {
 	}
 
 	/**
-	 * Answers whether or not we have the information that we required to create
-	 * requests for review by the EF IP Team.
-	 * 
-	 * @return
-	 */
-	default boolean canCreateReviews() {
-		return getIpLabToken() != null;
-	}
-
-	/**
 	 * The GitLab authentication token that we need to connect to GitLab to create
 	 * requests for review.
 	 * 
 	 * @return the token or <code>null</code> if no value is available.
 	 */
 	default String getIpLabToken() {
-		// TODO Started as a hack, but might be worth experimenting with
 		return System.getProperty("org.eclipse.dash.token");
 	}
 

@@ -13,33 +13,17 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Issue;
 
 public class GitLabSupport {
+	private ISettings settings;
 
-	private String host;
-	private String token;
-	private String path;
-
-	public GitLabSupport(String host, String token, String path) {
-		this.host = host;
-		this.token = token;
-		this.path = path;
-	}
-
-	private String getAccessToken() {
-		return token;
-	}
-
-	private String getHostUrl() {
-		return host;
-	}
-
-	protected String getPath() {
-		return path;
+	public GitLabSupport(ISettings settings) {
+		this.settings = settings;
 	}
 
 	public void createReviews(List<LicenseData> needsReview, PrintWriter output) {
@@ -63,7 +47,7 @@ public class GitLabSupport {
 				 * required to prevent rare duplication.
 				 */
 				try {
-					GitLabReview review = new GitLabReview(data);
+					GitLabReview review = new GitLabReview(settings, data);
 
 					Issue existing = connection.findIssue(review);
 					if (existing != null) {
@@ -88,8 +72,8 @@ public class GitLabSupport {
 	}
 
 	void execute(Consumer<GitLabConnection> callable) {
-		try (GitLabApi gitLabApi = new GitLabApi(getHostUrl(), getAccessToken())) {
-			callable.accept(new GitLabConnection(this, gitLabApi));
+		try (GitLabApi gitLabApi = new GitLabApi(settings.getIpLabHostUrl(), settings.getIpLabToken())) {
+			callable.accept(new GitLabConnection(gitLabApi, settings.getIpLabRepositoryPath()));
 		}
 	}
 }

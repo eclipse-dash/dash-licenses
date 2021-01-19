@@ -14,13 +14,16 @@ import java.net.URL;
 
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedContentData;
 
 public class GitLabReview {
+	private ISettings settings;
 	private LicenseData licenseData;
 
-	public GitLabReview(LicenseData licenseData) {
+	public GitLabReview(ISettings settings, LicenseData licenseData) {
+		this.settings = settings;
 		this.licenseData = licenseData;
 	}
 
@@ -35,6 +38,9 @@ public class GitLabReview {
 	public String getDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(String.format("%s\n", licenseData.getId()));
+
+		builder.append(String.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n",
+				settings.getProjectId(), settings.getProjectId()));
 
 		licenseData.contentData().forEach(data -> describeItem(data, builder));
 

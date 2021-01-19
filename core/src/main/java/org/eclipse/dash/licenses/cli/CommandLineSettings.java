@@ -30,6 +30,7 @@ public class CommandLineSettings implements ISettings {
 	private static final String CONFIDENCE_OPTION = "confidence";
 	private static final String SUMMARY_OPTION = "summary";
 	private static final String REVIEW_OPTION = "review";
+	private static final String TOKEN_OPTION = "token";
 	private static final String PROJECT_OPTION = "project";
 
 	private static final String CD_URL_DEFAULT = "https://api.clearlydefined.io/definitions";
@@ -79,6 +80,11 @@ public class CommandLineSettings implements ISettings {
 		}
 	}
 
+	@Override
+	public String getIpLabToken() {
+		return commandLine.getOptionValue(TOKEN_OPTION);
+	}
+
 	public boolean isValid() {
 		if (commandLine == null)
 			return false;
@@ -88,6 +94,13 @@ public class CommandLineSettings implements ISettings {
 
 		if (getFileNames().length == 0)
 			return false;
+
+		if (isReview()) {
+			if (getIpLabToken() == null || getIpLabToken().isEmpty())
+				return false;
+			if (getProjectId() == null)
+				return false;
+		}
 
 		// TODO validate URLs etc.
 		try {
@@ -115,6 +128,10 @@ public class CommandLineSettings implements ISettings {
 
 	public boolean isShowHelp() {
 		return commandLine.hasOption(HELP_OPTION);
+	}
+
+	public boolean isReview() {
+		return commandLine.hasOption(REVIEW_OPTION);
 	}
 
 	private CommandLineSettings(CommandLine commandLine) {
@@ -191,12 +208,18 @@ public class CommandLineSettings implements ISettings {
 
 		options.addOption(Option.builder(REVIEW_OPTION)
 			.required(false)
-			.hasArg()
-			.argName("file")
-			.type(String.class)
-			.desc("Output a review request to a file")
+			.hasArg(false)
+			.desc("Must also specify the project and token")
 			.build());
 
+		options.addOption(Option.builder(TOKEN_OPTION)
+			.required(false)
+			.hasArg()
+			.argName("token")
+			.type(String.class)
+			.desc("The GitLab authentication token")
+			.build());
+		
 		options.addOption(Option.builder(PROJECT_OPTION)
 			.required(false)
 			.hasArg()
@@ -245,6 +268,7 @@ public class CommandLineSettings implements ISettings {
 		return commandLine.getOptionValue(REVIEW_OPTION, null);
 	}
 
+	@Override
 	public String getProjectId() {
 		return commandLine.getOptionValue(PROJECT_OPTION, null);
 	}

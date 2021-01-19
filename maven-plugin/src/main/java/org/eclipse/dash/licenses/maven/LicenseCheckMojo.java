@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2020, Red Hat Inc. and others
+ * Copyright (c) 2020, 2021 Red Hat Inc. and others
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -113,7 +113,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	
 	@Parameter(property = "dash.iplab.token")
 	private String iplabToken;
-
+	
 	/**
 	 * Skip execution of the Dash License Check mojo.
 	 */
@@ -188,8 +188,10 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			throw new MojoExecutionException("Can't write dependency summary file", e);
 		}
 
-		if (settings.canCreateReviews()) {
+		if (iplabToken != null && projectId != null) {
 			collectors.add(new CreateReviewRequestCollector(settings, primaryOut));
+		} else if (iplabToken != null) {
+			getLog().info("Provide both an authentication token and a project id to automatically create review tickets.");
 		}
 
 		LicenseChecker checker = new LicenseChecker(settings);

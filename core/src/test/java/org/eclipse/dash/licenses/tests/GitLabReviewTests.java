@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.eclipse.dash.licenses.ContentId;
+import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.review.GitLabReview;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,40 @@ class GitLabReviewTests {
 
 		@BeforeEach
 		void setup() {
-			review = new GitLabReview(
+			var settings = new ISettings() {
+
+				@Override
+				public int getBatchSize() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+
+				@Override
+				public String getLicenseCheckUrl() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+
+				@Override
+				public String getClearlyDefinedDefinitionsUrl() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+
+				@Override
+				public String getApprovedLicensesUrl() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+
+				@Override
+				public int getConfidenceThreshold() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+
+			};
+			review = new GitLabReview(settings,
 					new LicenseData(ContentId.getContentId("maven/mavencentral/group.path/artifact/1.0")));
 		}
 
@@ -66,7 +100,41 @@ class GitLabReviewTests {
 
 		@BeforeEach
 		void setup() {
-			review = new GitLabReview(new LicenseData(ContentId.getContentId("npm/npmjs/group.path/artifact/1.0")));
+			var settings = new ISettings() {
+
+				@Override
+				public int getBatchSize() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+
+				@Override
+				public String getLicenseCheckUrl() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+
+				@Override
+				public String getClearlyDefinedDefinitionsUrl() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+
+				@Override
+				public String getApprovedLicensesUrl() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+
+				@Override
+				public int getConfidenceThreshold() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+
+			};
+			review = new GitLabReview(settings,
+					new LicenseData(ContentId.getContentId("npm/npmjs/group.path/artifact/1.0")));
 		}
 
 		@Test

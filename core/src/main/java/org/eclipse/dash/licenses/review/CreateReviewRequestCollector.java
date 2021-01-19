@@ -26,9 +26,9 @@ import org.eclipse.dash.licenses.cli.IResultsCollector;
  * a review request.
  */
 public class CreateReviewRequestCollector implements IResultsCollector {
+	private ISettings settings;
 	private PrintWriter output;
 	private List<LicenseData> needsReview = new ArrayList<>();
-	private ISettings settings;
 
 	public CreateReviewRequestCollector(ISettings settings, OutputStream out) {
 		this.settings = settings;
@@ -44,12 +44,8 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 
 	@Override
 	public void close() {
-		if (needsReview.isEmpty()) {
-			output.println(
-					"Vetted license information was found for all content. No further investigation is required.");
-		} else {
-			var gitlab = new GitLabSupport(settings.getIpLabHostUrl(), settings.getIpLabToken(),
-					settings.getIpLabRepositoryPath());
+		if (!needsReview.isEmpty()) {
+			var gitlab = new GitLabSupport(settings);
 			gitlab.createReviews(needsReview, output);
 		}
 		output.flush();
