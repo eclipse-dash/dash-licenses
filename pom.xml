@@ -62,12 +62,12 @@
 		<repository>
 			<id>repo.eclipse.org</id>
 			<name>Eclipse Dash Nexus Repository - Releases</name>
-			<url>https://repo.eclipse.org/content/repositories/dash-releases/</url>
+			<url>https://repo.eclipse.org/content/repositories/dash-licenses-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>repo.eclipse.org</id>
 			<name>Eclipse Dash Nexus Repository - Snapshots</name>
-			<url>https://repo.eclipse.org/content/repositories/dash-snapshots/</url>
+			<url>https://repo.eclipse.org/content/repositories/dash-licenses-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>
