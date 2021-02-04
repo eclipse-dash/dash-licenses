@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2020, The Eclipse Foundation and others.
+ * Copyright (c) 2020,2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -14,10 +14,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 import org.eclipse.dash.licenses.cli.IResultsCollector;
+import org.eclipse.dash.licenses.context.IContext;
 
 /**
  * The "Create Review Request" collector tracks the results that likely require
@@ -26,12 +26,12 @@ import org.eclipse.dash.licenses.cli.IResultsCollector;
  * a review request.
  */
 public class CreateReviewRequestCollector implements IResultsCollector {
-	private ISettings settings;
+	private IContext context;
 	private PrintWriter output;
 	private List<LicenseData> needsReview = new ArrayList<>();
 
-	public CreateReviewRequestCollector(ISettings settings, OutputStream out) {
-		this.settings = settings;
+	public CreateReviewRequestCollector(IContext context, OutputStream out) {
+		this.context = context;
 		output = new PrintWriter(out);
 	}
 
@@ -45,7 +45,7 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 	@Override
 	public void close() {
 		if (!needsReview.isEmpty()) {
-			var gitlab = new GitLabSupport(settings);
+			var gitlab = context.getGitLabService();
 			gitlab.createReviews(needsReview, output);
 		}
 		output.flush();

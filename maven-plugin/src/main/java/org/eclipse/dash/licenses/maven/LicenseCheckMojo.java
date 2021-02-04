@@ -35,10 +35,11 @@ import org.apache.maven.project.MavenProject;
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ISettings;
-import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.cli.CSVCollector;
 import org.eclipse.dash.licenses.cli.IResultsCollector;
 import org.eclipse.dash.licenses.cli.NeedsReviewCollector;
+import org.eclipse.dash.licenses.context.DefaultContext;
+import org.eclipse.dash.licenses.context.IContext;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 
 /**
@@ -188,13 +189,15 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			throw new MojoExecutionException("Can't write dependency summary file", e);
 		}
 
+		IContext context = new DefaultContext(settings);
+		
 		if (iplabToken != null && projectId != null) {
-			collectors.add(new CreateReviewRequestCollector(settings, primaryOut));
+			collectors.add(new CreateReviewRequestCollector(context, primaryOut));
 		} else if (iplabToken != null) {
 			getLog().info("Provide both an authentication token and a project id to automatically create review tickets.");
 		}
 
-		LicenseChecker checker = new LicenseChecker(settings);
+		var checker = context.getLicenseCheckerService();
 		checker.getLicenseData(deps).forEach((id, licenseData) -> {
 			collectors.forEach(collector -> collector.accept(licenseData));
 		});

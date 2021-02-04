@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2020, The Eclipse Foundation and others.
+ * Copyright (c) 2020,2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -14,16 +14,16 @@ import java.net.URL;
 
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
-import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedContentData;
+import org.eclipse.dash.licenses.context.IContext;
 
 public class GitLabReview {
-	private ISettings settings;
 	private LicenseData licenseData;
+	private IContext context;
 
-	public GitLabReview(ISettings settings, LicenseData licenseData) {
-		this.settings = settings;
+	public GitLabReview(IContext context, LicenseData licenseData) {
+		this.context = context;
 		this.licenseData = licenseData;
 	}
 
@@ -40,7 +40,7 @@ public class GitLabReview {
 		builder.append(String.format("%s\n", licenseData.getId()));
 
 		builder.append(String.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n",
-				settings.getProjectId(), settings.getProjectId()));
+				context.getSettings().getProjectId(), context.getSettings().getProjectId()));
 
 		licenseData.contentData().forEach(data -> describeItem(data, builder));
 

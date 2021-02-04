@@ -22,7 +22,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dash.licenses.IContentId;
-import org.eclipse.dash.licenses.LicenseChecker;
+import org.eclipse.dash.licenses.context.DefaultContext;
+import org.eclipse.dash.licenses.context.IContext;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 
 /**
@@ -57,6 +58,8 @@ public class Main {
 			System.exit(0);
 		}
 
+		IContext context = new DefaultContext(settings);
+
 		List<IResultsCollector> collectors = new ArrayList<>();
 
 		// TODO Set up collectors based on command line parameters
@@ -74,7 +77,7 @@ public class Main {
 		}
 
 		if (settings.isReview()) {
-			collectors.add(new CreateReviewRequestCollector(settings, System.out));
+			collectors.add(new CreateReviewRequestCollector(context, System.out));
 		}
 
 		Arrays.stream(settings.getFileNames()).forEach(name -> {
@@ -89,7 +92,7 @@ public class Main {
 			if (reader != null) {
 				Collection<IContentId> dependencies = reader.getContentIds();
 
-				LicenseChecker checker = new LicenseChecker(settings);
+				var checker = context.getLicenseCheckerService();
 				checker.getLicenseData(dependencies).forEach((id, licenseData) -> {
 					collectors.forEach(collector -> collector.accept(licenseData));
 				});

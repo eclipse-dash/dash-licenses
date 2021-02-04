@@ -15,22 +15,19 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.eclipse.dash.licenses.LicenseSupport.Status;
-import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
-import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
+import org.eclipse.dash.licenses.context.IContext;
 import org.eclipse.dash.licenses.util.Batchifier;
 
 public class LicenseChecker {
-	private ISettings settings;
-
-	// TODO Dependency injection opportunity. Order matters.
+	private IContext context;
 	private ILicenseDataProvider[] dataProviders;
 
-	public LicenseChecker(ISettings settings) {
-		this.settings = settings;
+	public LicenseChecker(IContext context) {
+		this.context = context;
 		// @formatter:off
 		this.dataProviders = new ILicenseDataProvider[] {
-			new EclipseFoundationSupport(settings),
-			new ClearlyDefinedSupport(settings)
+			context.getIPZillaService(),
+			context.getClearlyDefinedService()
 		};
 		// @formatter:on
 	}
@@ -49,7 +46,7 @@ public class LicenseChecker {
 		for (ILicenseDataProvider provider : dataProviders) {
 			// @formatter:off
 			new Batchifier<IContentId>()
-				.setBatchSize(settings.getBatchSize())
+				.setBatchSize(context.getSettings().getBatchSize())
 				.setConsumer(batch -> {
 					provider.queryLicenseData(batch, data -> {
 						licenseData.get(data.getId()).addContentData(data);

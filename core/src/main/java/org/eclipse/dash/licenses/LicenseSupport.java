@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019,2020 The Eclipse Foundation and others.
+ * Copyright (c) 2019,2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -20,6 +20,7 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.dash.licenses.context.IContext;
 import org.eclipse.dash.licenses.spdx.SpdxExpressionParser;
 
 import jakarta.json.Json;
@@ -38,8 +39,8 @@ public class LicenseSupport {
 		this.approvedLicenses = approvedLicenses;
 	}
 
-	public static LicenseSupport getLicenseSupport(ISettings settings) {
-		Map<String, String> approvedLicenses = getApprovedLicenses(settings);
+	public static LicenseSupport getLicenseSupport(IContext context) {
+		Map<String, String> approvedLicenses = getApprovedLicenses(context.getSettings().getApprovedLicensesUrl());
 		return new LicenseSupport(approvedLicenses);
 	}
 
@@ -48,10 +49,7 @@ public class LicenseSupport {
 		return new LicenseSupport(approvedLicenses);
 	}
 
-	private static Map<String, String> getApprovedLicenses(ISettings settings) {
-
-		String url = settings.getApprovedLicensesUrl();
-
+	private static Map<String, String> getApprovedLicenses(String url) {
 		try {
 			HttpClient client = HttpClient.newHttpClient();
 			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
@@ -70,7 +68,10 @@ public class LicenseSupport {
 		JsonObject read = (JsonObject) reader.read();
 
 		Map<String, String> licenses = new HashMap<>();
-		read.getJsonObject("approved").forEach((key, name) -> licenses.put(key.toUpperCase(), name.toString()));
+		JsonObject approved = read.getJsonObject("approved");
+		if (approved != null) {
+			approved.forEach((key, name) -> licenses.put(key.toUpperCase(), name.toString()));
+		}
 
 		// Augment the official list with licenses that are acceptable, but
 		// not explicitly included in our approved list.

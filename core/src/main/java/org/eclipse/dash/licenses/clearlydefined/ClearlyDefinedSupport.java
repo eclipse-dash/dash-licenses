@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019,2020 The Eclipse Foundation and others.
+ * Copyright (c) 2019,2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -9,16 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.clearlydefined;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpRequest.BodyPublishers;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,23 +20,19 @@ import java.util.stream.Collectors;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
-import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
+import org.eclipse.dash.licenses.context.IContext;
 import org.eclipse.dash.licenses.util.JsonUtils;
 
 import com.google.common.flogger.FluentLogger;
 
 public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	private static final FluentLogger log = FluentLogger.forEnclosingClass();
+	private IContext context;
 
-	private ISettings settings;
-	// TODO Obvious opportunity for dependency injection
-	private LicenseSupport licenseSupport;
-
-	public ClearlyDefinedSupport(ISettings settings) {
-		this.settings = settings;
-		licenseSupport = LicenseSupport.getLicenseSupport(settings);
+	public ClearlyDefinedSupport(IContext context) {
+		this.context = context;
 	}
 
 	/**
@@ -95,33 +83,24 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 
 		log.atInfo().log("Querying ClearlyDefined for license data for %1$d items.", filteredIds.size());
 
-		try {
-			Duration timeout = Duration.ofSeconds(settings.getTimeout());
-			HttpRequest request = HttpRequest.newBuilder(URI.create(settings.getClearlyDefinedDefinitionsUrl()))
-					.header("Content-Type", "application/json")
-					.POST(BodyPublishers.ofString(JsonUtils.toJson(filteredIds), StandardCharsets.UTF_8))
-					.timeout(timeout).build();
+		int code = context.getHttpClientService().request(
+				URI.create(context.getSettings().getClearlyDefinedDefinitionsUrl()), "application/json",
+				JsonUtils.toJson(filteredIds), response -> {
+					// FIXME Seems like overkill.
+					AtomicInteger counter = new AtomicInteger();
 
-			HttpClient httpClient = HttpClient.newBuilder().connectTimeout(timeout).build();
-			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
-			if (response.statusCode() == 200) {
-				// FIXME Seems like overkill.
-				AtomicInteger counter = new AtomicInteger();
+					JsonUtils.readJson(new StringReader(response)).forEach((key, each) -> {
+						ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
+						data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
+						consumer.accept(data);
+						counter.incrementAndGet();
+					});
 
-				JsonUtils.readJson(new StringReader(response.body())).forEach((key, each) -> {
-					ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
-					data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
-					consumer.accept(data);
-					counter.incrementAndGet();
+					log.atInfo().log("Found %1$d items.", counter.get());
 				});
 
-				log.atInfo().log("Found %1$d items.", counter.get());
-			} else {
-				log.atSevere().log("ClearlyDefined data search time out; maybe decrease batch size.");
-			}
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
-		}
+		if (code != 200)
+			log.atSevere().log("ClearlyDefined data search time out; maybe decrease batch size.");
 	}
 
 	/**
@@ -156,9 +135,9 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 *         otherwise.
 	 */
 	public boolean isAccepted(ClearlyDefinedContentData data) {
-		if (data.getEffectiveScore() >= settings.getConfidenceThreshold()
-				|| data.getLicenseScore() >= settings.getConfidenceThreshold()) {
-			if (licenseSupport.getStatus(data.getLicense()) != LicenseSupport.Status.Approved)
+		if (data.getEffectiveScore() >= context.getSettings().getConfidenceThreshold()
+				|| data.getLicenseScore() >= context.getSettings().getConfidenceThreshold()) {
+			if (context.getLicenseService().getStatus(data.getLicense()) != LicenseSupport.Status.Approved)
 				return false;
 			return !data.discoveredLicenses().filter(license -> !"NONE".equals(license))
 					.filter(license -> !isDiscoveredLicenseApproved(license)).findAny().isPresent();
@@ -167,7 +146,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	}
 
 	boolean isDiscoveredLicenseApproved(String license) {
-		return licenseSupport.getStatus(license) == LicenseSupport.Status.Approved;
+		return context.getLicenseService().getStatus(license) == LicenseSupport.Status.Approved;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021, The Eclipse Foundation and others.
+ * Copyright (c) 2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -13,17 +13,17 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
+import org.eclipse.dash.licenses.context.IContext;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Issue;
 
 public class GitLabSupport {
-	private ISettings settings;
+	private IContext context;
 
-	public GitLabSupport(ISettings settings) {
-		this.settings = settings;
+	public GitLabSupport(IContext context) {
+		this.context = context;
 	}
 
 	public void createReviews(List<LicenseData> needsReview, PrintWriter output) {
@@ -48,7 +48,7 @@ public class GitLabSupport {
 				 * required to prevent rare duplication.
 				 */
 				try {
-					GitLabReview review = new GitLabReview(settings, data);
+					GitLabReview review = new GitLabReview(context, data);
 
 					Issue existing = connection.findIssue(review);
 					if (existing != null) {
@@ -83,8 +83,9 @@ public class GitLabSupport {
 	}
 
 	void execute(Consumer<GitLabConnection> callable) {
-		try (GitLabApi gitLabApi = new GitLabApi(settings.getIpLabHostUrl(), settings.getIpLabToken())) {
-			callable.accept(new GitLabConnection(gitLabApi, settings.getIpLabRepositoryPath()));
+		try (GitLabApi gitLabApi = new GitLabApi(context.getSettings().getIpLabHostUrl(),
+				context.getSettings().getIpLabToken())) {
+			callable.accept(new GitLabConnection(gitLabApi, context.getSettings().getIpLabRepositoryPath()));
 		}
 	}
 }

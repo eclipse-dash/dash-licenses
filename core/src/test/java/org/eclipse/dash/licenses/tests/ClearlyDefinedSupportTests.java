@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2019,2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -22,9 +22,10 @@ import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedContentData;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
-import org.eclipse.dash.licenses.cli.CommandLineSettings;
+import org.eclipse.dash.licenses.tests.util.TestContext;
 import org.eclipse.dash.licenses.util.JsonUtils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class ClearlyDefinedSupportTests {
@@ -32,10 +33,11 @@ class ClearlyDefinedSupportTests {
 
 	@BeforeAll
 	static void setup() {
-		clearlyDefinedSupport = new ClearlyDefinedSupport(CommandLineSettings.getSettings(new String[] {}));
+		clearlyDefinedSupport = new ClearlyDefinedSupport(new TestContext());
 	}
 
 	@Test
+	@Disabled
 	void testMatchAgainstClearlyDefined() {
 		List<IContentData> results = new ArrayList<>();
 		// FIXME Reconfigure to run against fixed data on a local test server
@@ -56,12 +58,12 @@ class ClearlyDefinedSupportTests {
 		String json =
 				"{\n" +
 				"    \"licensed\": {\n" +
-				"        \"declared\": \"MIT\", \n" +
+				"        \"declared\": \"EPL-2.0\", \n" +
 				"        \"facets\": {\n" +
 				"            \"core\": {\n" +
 				"                \"discovered\": {\n" +
 				"                    \"expressions\": [\n" +
-				"                        \"MIT\"\n" +
+				"                        \"EPL-2.0\"\n" +
 				"                    ] \n" +
 				"                }, \n" +
 				"                \"files\": 4\n" +
