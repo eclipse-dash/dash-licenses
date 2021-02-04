@@ -29,9 +29,33 @@ class NpmJsIdParserTests {
 	}
 
 	@Test
-	void testWithComplexVersion() {
-		assertEquals("npm/npmjs/-/cheerio/1.0.0-rc.3",
-				new NpmJsIdParser().parseId("cheerio@1.0.0-rc.3").get().toString());
+	void testWithDashScope() {
+		assertEquals("npm/npmjs/-/highlight/7.5.0", new NpmJsIdParser().parseId("-/highlight@7.5.0").get().toString());
+	}
+
+	@Test
+	void testWithDashes() {
+		assertEquals("npm/npmjs/-/high-light/7.5.0",
+				new NpmJsIdParser().parseId("-/high-light@7.5.0").get().toString());
+	}
+
+	@Test
+	void testWithPartialVersion() {
+		assertFalse(new NpmJsIdParser().parseId("cheerio@1.0").isPresent());
+	}
+
+	@Test
+	void testWithInvalidVersion() {
+		assertFalse(new NpmJsIdParser().parseId("cheerio@1.0.").isPresent());
+		assertFalse(new NpmJsIdParser().parseId("cheerio@a.0.").isPresent());
+		assertFalse(new NpmJsIdParser().parseId("cheerio@.0.").isPresent());
+	}
+
+	@Test
+	void testWithValidVersion() {
+		assertEquals("1.0.0", new NpmJsIdParser().parseId("cheerio@1.0.0").get().getVersion());
+		assertEquals("12.34.56", new NpmJsIdParser().parseId("cheerio@12.34.56").get().getVersion());
+		assertEquals("1.0.0-rc.3", new NpmJsIdParser().parseId("cheerio@1.0.0-rc.3").get().getVersion());
 	}
 
 	@Test
@@ -42,5 +66,10 @@ class NpmJsIdParserTests {
 	@Test
 	void testMissingVersion() {
 		assertFalse(new NpmJsIdParser().parseId("cheerio@").isPresent());
+	}
+
+	@Test
+	void testExtraInformationFails() {
+		assertFalse(new NpmJsIdParser().parseId("blah/blah/blah@1.2.3").isPresent());
 	}
 }

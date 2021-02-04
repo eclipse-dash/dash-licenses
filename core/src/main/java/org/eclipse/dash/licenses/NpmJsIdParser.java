@@ -30,9 +30,9 @@ public class NpmJsIdParser implements ContentIdParser {
 
 	private static Pattern pattern = Pattern.compile(
 	// @formatter:off
-			"(?:(?<namespace>@\\S+)\\/)?"
-			+ "(?<name>\\S+)"
-			+ "@(?<version>[^@]+)"
+			"^(?:(?<namespace>@?[^\\/]+)\\/)?"
+			+ "(?<name>[^\\/]+)"
+			+ "@(?<version>\\d+(?:\\.\\d+){2}[^\\/]*)$"
 	// @formatter:on
 	);
 
