@@ -29,14 +29,22 @@ public class MavenSettings implements ISettings {
 
 	private final int confidence;
 
+	private final String iplabToken;
+
+	private String projectId;
+
 	/**
 	 * Creates a valid settings instance.
+	 * @param iplabToken 
+	 * @param projectId 
 	 * 
 	 * @throws IllegalArgumentException if the batch or confidence values are out of
 	 *                                  range, or if any of the strings cannot be
 	 *                                  parsed as a valid URI
 	 */
-	public MavenSettings(int batch, String foundationApi, String clearlyDefinedApi, String licenses, int confidence) {
+	public MavenSettings(int batch, String foundationApi, String clearlyDefinedApi, String licenses, int confidence, String projectId, String iplabToken) {
+		this.iplabToken = iplabToken;
+		this.projectId = projectId;
 		if (batch < 0) {
 			throw new IllegalArgumentException("batch must be a positive integer");
 		}
@@ -77,5 +85,15 @@ public class MavenSettings implements ISettings {
 	@Override
 	public int getConfidenceThreshold() {
 		return confidence;
+	}
+	
+	@Override
+	public String getProjectId() {
+		return projectId;
+	}
+	
+	@Override
+	public String getIpLabToken() {
+		return iplabToken;
 	}
 }

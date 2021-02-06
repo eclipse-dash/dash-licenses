@@ -143,7 +143,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		// Validate the user-given dash license tool settings
 		ISettings settings;
 		try {
-			settings = new MavenSettings(batch, foundationApi, clearlyDefinedApi, licenses, confidence);
+			settings = new MavenSettings(batch, foundationApi, clearlyDefinedApi, licenses, confidence, projectId, iplabToken);
 		} catch (IllegalArgumentException e) {
 			throw new MojoExecutionException("Invalid setting: " + e.getMessage());
 		}
