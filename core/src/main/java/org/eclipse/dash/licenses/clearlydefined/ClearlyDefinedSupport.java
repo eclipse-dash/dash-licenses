@@ -10,7 +10,6 @@
 package org.eclipse.dash.licenses.clearlydefined;
 
 import java.io.StringReader;
-import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -83,9 +82,8 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 
 		log.atInfo().log("Querying ClearlyDefined for license data for %1$d items.", filteredIds.size());
 
-		int code = context.getHttpClientService().request(
-				URI.create(context.getSettings().getClearlyDefinedDefinitionsUrl()), "application/json",
-				JsonUtils.toJson(filteredIds), response -> {
+		int code = context.getHttpClientService().post(context.getSettings().getClearlyDefinedDefinitionsUrl(),
+				"application/json", JsonUtils.toJson(filteredIds), response -> {
 					// FIXME Seems like overkill.
 					AtomicInteger counter = new AtomicInteger();
 

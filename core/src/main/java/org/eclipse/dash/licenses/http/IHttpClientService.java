@@ -9,11 +9,26 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.http;
 
-import java.net.URI;
 import java.util.function.Consumer;
 
+/**
+ * Implementers of this class provide an abstract means of making HTTP requests.
+ */
 public interface IHttpClientService {
 
-	int request(URI uri, String contentType, String payload, Consumer<String> handler);
+	/**
+	 * Make an HTTP POST Request. The handler is only invoked when the response is
+	 * 200.
+	 * 
+	 * @param url         The target URL.
+	 * @param contentType The MIME time expected in the response
+	 * @param payload     The HTTP Request content (i.e., what gets sent to the
+	 *                    server)
+	 * @param handler     A consumer for the response content.
+	 * @return the HTTP response code
+	 */
+	int post(String url, String contentType, String payload, Consumer<String> handler);
+
+	boolean remoteFileExists(String url);
 
 }

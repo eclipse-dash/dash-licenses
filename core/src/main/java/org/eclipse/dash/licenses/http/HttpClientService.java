@@ -10,7 +10,9 @@
 package org.eclipse.dash.licenses.http;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
@@ -31,10 +33,10 @@ public class HttpClientService implements IHttpClientService {
 	}
 
 	@Override
-	public int request(URI uri, String contentType, String payload, Consumer<String> handler) {
+	public int post(String url, String contentType, String payload, Consumer<String> handler) {
 		try {
 			Duration timeout = Duration.ofSeconds(context.getSettings().getTimeout());
-			HttpRequest request = HttpRequest.newBuilder(uri).header("Content-Type", contentType)
+			HttpRequest request = HttpRequest.newBuilder(URI.create(url)).header("Content-Type", contentType)
 					.POST(BodyPublishers.ofString(payload, StandardCharsets.UTF_8)).timeout(timeout).build();
 
 			HttpClient httpClient = HttpClient.newBuilder().connectTimeout(timeout).build();
@@ -45,6 +47,17 @@ public class HttpClientService implements IHttpClientService {
 			return response.statusCode();
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public boolean remoteFileExists(String url) {
+		try {
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			connection.setRequestMethod("HEAD");
+			return (connection.getResponseCode() == HttpURLConnection.HTTP_OK);
+		} catch (Exception e) {
+			return false;
 		}
 	}
 }

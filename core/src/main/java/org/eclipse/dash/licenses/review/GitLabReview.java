@@ -9,9 +9,6 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseData;
@@ -37,9 +34,9 @@ public class GitLabReview {
 
 	public String getDescription() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(String.format("%s\n", licenseData.getId()));
+		builder.append(String.format("%s\n\n", licenseData.getId()));
 
-		builder.append(String.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n",
+		builder.append(String.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n\n",
 				context.getSettings().getProjectId(), context.getSettings().getProjectId()));
 
 		licenseData.contentData().forEach(data -> describeItem(data, builder));
@@ -129,7 +126,7 @@ public class GitLabReview {
 			return null;
 		}
 
-		if (remoteFileExists(url)) {
+		if (context.getHttpClientService().remoteFileExists(url)) {
 			return url;
 		}
 
@@ -155,17 +152,5 @@ public class GitLabReview {
 
 	private IContentId getContentId() {
 		return licenseData.getId();
-	}
-
-	private static boolean remoteFileExists(String url) {
-		// FIXME This method doesn't belong here.
-		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-			connection.setRequestMethod("HEAD");
-			return (connection.getResponseCode() == HttpURLConnection.HTTP_OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
 	}
 }
