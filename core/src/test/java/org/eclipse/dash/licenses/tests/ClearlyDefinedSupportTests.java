@@ -34,7 +34,6 @@ import org.eclipse.dash.licenses.context.IContext;
 import org.eclipse.dash.licenses.http.IHttpClientService;
 import org.eclipse.dash.licenses.util.JsonUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class ClearlyDefinedSupportTests {
@@ -69,7 +68,18 @@ class ClearlyDefinedSupportTests {
 						String content = new BufferedReader(new InputStreamReader(
 								this.getClass().getResourceAsStream("/write-1.0.3.json"), StandardCharsets.UTF_8))
 										.lines().collect(Collectors.joining("\n"));
-						handler.accept(content);
+
+						// The file contains only the information for the one record; the
+						// ClearlyDefined service expects a Json collection as the response,
+						// so insert the file contents into an array and pass that value to
+						// the handler.
+						var builder = new StringBuilder();
+						builder.append("{");
+						builder.append("\"npm/npmjs/-/write/0.2.0\": ");
+						builder.append(content);
+						builder.append("}");
+
+						handler.accept(builder.toString());
 						return 200;
 					}
 				};
@@ -78,7 +88,6 @@ class ClearlyDefinedSupportTests {
 	}
 
 	@Test
-	@Disabled
 	void testMatchAgainstClearlyDefined() {
 		List<IContentData> results = new ArrayList<>();
 		context.getClearlyDefinedService().queryLicenseData(
