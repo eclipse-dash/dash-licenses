@@ -11,7 +11,9 @@ package org.eclipse.dash.licenses;
 
 public interface ISettings {
 
-	int getBatchSize();
+	default int getBatchSize() {
+		return 1000;
+	};
 
 	/**
 	 * The license check URL is the address of the Eclipse Foundation license data
@@ -19,13 +21,21 @@ public interface ISettings {
 	 *
 	 * @return the URL (String)
 	 */
-	String getLicenseCheckUrl();
+	default String getLicenseCheckUrl() {
+		return null;
+	};
 
-	String getClearlyDefinedDefinitionsUrl();
+	default String getClearlyDefinedDefinitionsUrl() {
+		return null;
+	};
 
-	String getApprovedLicensesUrl();
+	default String getApprovedLicensesUrl() {
+		return null;
+	};
 
-	int getConfidenceThreshold();
+	default int getConfidenceThreshold() {
+		return 60;
+	};
 
 	default String getProjectId() {
 		return System.getProperty("org.eclipse.dash.project");

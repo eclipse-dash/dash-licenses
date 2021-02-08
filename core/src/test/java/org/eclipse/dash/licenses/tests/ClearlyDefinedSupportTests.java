@@ -13,39 +13,76 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentData;
+import org.eclipse.dash.licenses.ILicenseDataProvider;
+import org.eclipse.dash.licenses.ISettings;
+import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedContentData;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
-import org.eclipse.dash.licenses.tests.util.TestContext;
+import org.eclipse.dash.licenses.context.IContext;
+import org.eclipse.dash.licenses.http.IHttpClientService;
 import org.eclipse.dash.licenses.util.JsonUtils;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class ClearlyDefinedSupportTests {
-	static ClearlyDefinedSupport clearlyDefinedSupport;
 
-	@BeforeAll
-	static void setup() {
-		clearlyDefinedSupport = new ClearlyDefinedSupport(new TestContext());
+	private IContext context;
+
+	@BeforeEach
+	void setup() {
+		context = new IContext() {
+			@Override
+			public ISettings getSettings() {
+				return new ISettings() {
+
+				};
+			}
+
+			@Override
+			public LicenseSupport getLicenseService() {
+				return LicenseSupport.getLicenseSupport(new StringReader("{}"));
+			}
+
+			@Override
+			public ILicenseDataProvider getClearlyDefinedService() {
+				return new ClearlyDefinedSupport(this);
+			}
+
+			@Override
+			public IHttpClientService getHttpClientService() {
+				return new IHttpClientService() {
+					@Override
+					public int post(String url, String contentType, String payload, Consumer<String> handler) {
+						String content = new BufferedReader(new InputStreamReader(
+								this.getClass().getResourceAsStream("/write-1.0.3.json"), StandardCharsets.UTF_8))
+										.lines().collect(Collectors.joining("\n"));
+						handler.accept(content);
+						return 200;
+					}
+				};
+			}
+		};
 	}
 
 	@Test
 	@Disabled
 	void testMatchAgainstClearlyDefined() {
 		List<IContentData> results = new ArrayList<>();
-		// FIXME Reconfigure to run against fixed data on a local test server
-		// This test is running against the live server. We should either (or both)
-		// refactor to allow testing against a local file, or spin up a server
-		// capable of (at least) faking the interaction in a consistent manner.
-		clearlyDefinedSupport.queryLicenseData(Collections.singleton(ContentId.getContentId("npm/npmjs/-/write/0.2.0")),
-				data -> results.add(data));
+		context.getClearlyDefinedService().queryLicenseData(
+				Collections.singleton(ContentId.getContentId("npm/npmjs/-/write/0.2.0")), data -> results.add(data));
 		assertEquals(1, results.size());
 		assertEquals("npm/npmjs/-/write/0.2.0", results.get(0).getId().toString());
 		assertEquals("clearlydefined", results.get(0).getAuthority());
@@ -79,7 +116,7 @@ class ClearlyDefinedSupportTests {
 		ClearlyDefinedContentData data = new ClearlyDefinedContentData("id",
 				JsonUtils.readJson(new StringReader(json)));
 
-		assertTrue(clearlyDefinedSupport.isAccepted(data));
+		assertTrue(((ClearlyDefinedSupport) context.getClearlyDefinedService()).isAccepted(data));
 
 	}
 
@@ -110,7 +147,7 @@ class ClearlyDefinedSupportTests {
 		ClearlyDefinedContentData data = new ClearlyDefinedContentData("id",
 				JsonUtils.readJson(new StringReader(json)));
 
-		assertFalse(clearlyDefinedSupport.isAccepted(data));
+		assertFalse(((ClearlyDefinedSupport) context.getClearlyDefinedService()).isAccepted(data));
 
 	}
 
@@ -142,6 +179,6 @@ class ClearlyDefinedSupportTests {
 		ClearlyDefinedContentData data = new ClearlyDefinedContentData("id",
 				JsonUtils.readJson(new StringReader(json)));
 
-		assertFalse(clearlyDefinedSupport.isAccepted(data));
+		assertFalse(((ClearlyDefinedSupport) context.getClearlyDefinedService()).isAccepted(data));
 	}
 }
