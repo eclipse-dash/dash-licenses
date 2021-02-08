@@ -10,6 +10,7 @@
 package org.eclipse.dash.licenses.http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -58,6 +59,24 @@ public class HttpClientService implements IHttpClientService {
 			return (connection.getResponseCode() == HttpURLConnection.HTTP_OK);
 		} catch (Exception e) {
 			return false;
+		}
+	}
+
+	@Override
+	public int get(String url, String contentType, Consumer<InputStream> handler) {
+		try {
+			Duration timeout = Duration.ofSeconds(context.getSettings().getTimeout());
+			HttpRequest request = HttpRequest.newBuilder(URI.create(url)).header("Content-Type", contentType).GET()
+					.timeout(timeout).build();
+
+			HttpClient httpClient = HttpClient.newBuilder().connectTimeout(timeout).build();
+			HttpResponse<InputStream> response = httpClient.send(request, BodyHandlers.ofInputStream());
+			if (response.statusCode() == 200) {
+				handler.accept(response.body());
+			}
+			return response.statusCode();
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

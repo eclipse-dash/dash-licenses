@@ -14,9 +14,10 @@ import org.junit.platform.suite.api.SelectClasses;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
-@SelectClasses({ BatchifierTests.class, ClearlyDefinedContentDataTests.class, ClearlyDefinedSupportTests.class,
+@SelectClasses(
+{ BatchifierTests.class, ClearlyDefinedContentDataTests.class, ClearlyDefinedSupportTests.class,
 		CommandLineSettingsTest.class, ContentIdTests.class, LicenseSupportTests.class, MavenIdParserTests.class,
 		NpmJsIdParserTests.class, PackageLockFileReaderTests.class, SpdxExpressionParserTests.class,
-		FoundationDataTests.class })
+		FoundationDataTests.class, NpmjsPackageTests.class })
 public class TestSuite {
 }

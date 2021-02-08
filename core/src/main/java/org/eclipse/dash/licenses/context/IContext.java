@@ -14,22 +14,41 @@ import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.http.IHttpClientService;
+import org.eclipse.dash.licenses.npmjs.INpmjsPackageService;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 
 public interface IContext {
 
-	LicenseChecker getLicenseCheckerService();
+	default LicenseChecker getLicenseCheckerService() {
+		return null;
+	};
 
-	GitLabSupport getGitLabService();
+	default GitLabSupport getGitLabService() {
+		return null;
+	};
 
-	ILicenseDataProvider getIPZillaService();
+	default ILicenseDataProvider getIPZillaService() {
+		return null;
+	};
 
-	ILicenseDataProvider getClearlyDefinedService();
+	default ILicenseDataProvider getClearlyDefinedService() {
+		return null;
+	};
 
-	LicenseSupport getLicenseService();
+	default LicenseSupport getLicenseService() {
+		return null;
+	};
 
-	ISettings getSettings();
+	default ISettings getSettings() {
+		return null;
+	};
 
-	IHttpClientService getHttpClientService();
+	default IHttpClientService getHttpClientService() {
+		return null;
+	}
+
+	default INpmjsPackageService getNpmjsService() {
+		return null;
+	}
 
 }

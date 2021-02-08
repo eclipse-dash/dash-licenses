@@ -9,6 +9,7 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.http;
 
+import java.io.InputStream;
 import java.util.function.Consumer;
 
 /**
@@ -27,8 +28,16 @@ public interface IHttpClientService {
 	 * @param handler     A consumer for the response content.
 	 * @return the HTTP response code
 	 */
-	int post(String url, String contentType, String payload, Consumer<String> handler);
+	default int post(String url, String contentType, String payload, Consumer<String> handler) {
+		return 500;
+	};
 
-	boolean remoteFileExists(String url);
+	default boolean remoteFileExists(String url) {
+		return false;
+	}
+
+	default int get(String url, String contentType, Consumer<InputStream> handler) {
+		return 500;
+	};
 
 }

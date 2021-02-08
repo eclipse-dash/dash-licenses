@@ -36,20 +36,22 @@ public class GitLabReview {
 		StringBuilder builder = new StringBuilder();
 		builder.append(String.format("%s\n\n", licenseData.getId()));
 
-		builder.append(String.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n\n",
+		builder.append(String.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n",
 				context.getSettings().getProjectId(), context.getSettings().getProjectId()));
 
 		licenseData.contentData().forEach(data -> describeItem(data, builder));
 
 		String searchUrl = IPZillaSearchBuilder.build(licenseData);
 		if (searchUrl != null) {
-			builder.append(String.format("  - [Search IPZilla](%s)\n", searchUrl));
+			builder.append("\n");
+			builder.append(String.format("[Search IPZilla](%s)\n", searchUrl));
 		}
 
 		// FIXME This is clunky
 		var mavenCentralUrl = getMavenCentralUrl();
 		if (mavenCentralUrl != null) {
-			builder.append(String.format("  - [Maven Central](%s)\n", mavenCentralUrl));
+			builder.append("\n");
+			builder.append(String.format("[Maven Central](%s)\n", mavenCentralUrl));
 
 			var source = getVerifiedMavenCentralSourceUrl();
 			if (source != null) {
@@ -57,9 +59,20 @@ public class GitLabReview {
 			}
 		}
 
-		var npmjsUrl = getNpmjsUrl();
-		if (npmjsUrl != null) {
-			builder.append(String.format("  - [npmjs.com](%s)\n", getNpmjsUrl()));
+		// If the id is recognised as a package in the npmjs.com repository, capture
+		// as much helpful information as we can.
+		var npmjsPackage = context.getNpmjsService().getPackage(licenseData.getId());
+		if (npmjsPackage != null) {
+			builder.append("\n");
+			builder.append(String.format("[npmjs.com](%s)\n", npmjsPackage.getUrl()));
+			if (npmjsPackage.getLicense() != null)
+				builder.append(String.format("  - License: %s\n", npmjsPackage.getLicense()));
+			if (npmjsPackage.getDistributionUrl() != null)
+				builder.append(String.format("  - [Distribution](%s)\n", npmjsPackage.getDistributionUrl()));
+			if (npmjsPackage.getRepositoryUrl() != null)
+				builder.append(String.format("  - [Repository](%s)\n", npmjsPackage.getRepositoryUrl()));
+			if (npmjsPackage.getSourceUrl() != null)
+				builder.append(String.format("  - [Source](%s)\n", npmjsPackage.getSourceUrl()));
 		}
 
 		return builder.toString();
@@ -74,14 +87,16 @@ public class GitLabReview {
 	private void describeItem(IContentData data, StringBuilder output) {
 		// FIXME This is clunky
 
+		output.append("\n");
 		String authority = data.getAuthority();
 		if (data.getUrl() != null)
-			authority = String.format("[%s](%s)\n", authority, data.getUrl());
-		output.append(String.format("  - %s %s (%d)\n", authority, data.getLicense(), data.getScore()));
+			authority = String.format("[%s](%s)", authority, data.getUrl());
+		output.append(String.format("%s\n", authority));
+		output.append(String.format("  - Declared: %s (%d)\n", data.getLicense(), data.getScore()));
 		switch (data.getAuthority()) {
 		case ClearlyDefinedContentData.CLEARLYDEFINED:
 			((ClearlyDefinedContentData) data).discoveredLicenses()
-					.forEach(license -> output.append("    - " + license).append('\n'));
+					.forEach(license -> output.append("  - Discovered: " + license).append('\n'));
 		};
 	}
 

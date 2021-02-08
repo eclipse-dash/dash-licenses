@@ -17,6 +17,8 @@ import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
 import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.http.IHttpClientService;
+import org.eclipse.dash.licenses.npmjs.INpmjsPackageService;
+import org.eclipse.dash.licenses.npmjs.NpmjsPackageService;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 
 public class DefaultContext implements IContext {
@@ -25,6 +27,7 @@ public class DefaultContext implements IContext {
 	private LicenseChecker licenseCheckerService;
 	private GitLabSupport gitlabService;
 	private LicenseSupport licenseService;
+	private NpmjsPackageService npmjsPackageService;
 
 	public DefaultContext(ISettings settings) {
 		this.settings = settings;
@@ -34,6 +37,7 @@ public class DefaultContext implements IContext {
 		licenseCheckerService = new LicenseChecker(this);
 		gitlabService = new GitLabSupport(this);
 		licenseService = LicenseSupport.getLicenseSupport(this);
+		npmjsPackageService = new NpmjsPackageService(this);
 	}
 
 	@Override
@@ -70,5 +74,10 @@ public class DefaultContext implements IContext {
 	@Override
 	public IHttpClientService getHttpClientService() {
 		return new HttpClientService(this);
+	}
+
+	@Override
+	public INpmjsPackageService getNpmjsService() {
+		return npmjsPackageService;
 	}
 }
