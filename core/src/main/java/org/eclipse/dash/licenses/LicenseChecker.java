@@ -20,16 +20,13 @@ import org.eclipse.dash.licenses.util.Batchifier;
 
 public class LicenseChecker {
 	private IContext context;
-	private ILicenseDataProvider[] dataProviders;
 
 	public LicenseChecker(IContext context) {
 		this.context = context;
-		// @formatter:off
-		this.dataProviders = new ILicenseDataProvider[] {
-			context.getIPZillaService(),
-			context.getClearlyDefinedService()
-		};
-		// @formatter:on
+	}
+
+	private ILicenseDataProvider[] getLicenseDataProviders() {
+		return new ILicenseDataProvider[] { context.getIPZillaService(), context.getClearlyDefinedService() };
 	}
 
 	/**
@@ -43,7 +40,7 @@ public class LicenseChecker {
 		Map<IContentId, LicenseData> licenseData = ids.stream().map(id -> new LicenseData(id)).collect(
 				Collectors.toMap(LicenseData::getId, Function.identity(), (existing, replacement) -> existing));
 
-		for (ILicenseDataProvider provider : dataProviders) {
+		for (ILicenseDataProvider provider : getLicenseDataProviders()) {
 			// @formatter:off
 			new Batchifier<IContentId>()
 				.setBatchSize(context.getSettings().getBatchSize())

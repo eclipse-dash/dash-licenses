@@ -9,14 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
-import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,32 +29,11 @@ public class LicenseSupport {
 		Approved, Restricted
 	}
 
-	private LicenseSupport(Map<String, String> approvedLicenses) {
-		this.approvedLicenses = approvedLicenses;
-	}
-
-	public static LicenseSupport getLicenseSupport(IContext context) {
-		Map<String, String> approvedLicenses = getApprovedLicenses(context.getSettings().getApprovedLicensesUrl());
-		return new LicenseSupport(approvedLicenses);
-	}
-
-	public static LicenseSupport getLicenseSupport(Reader reader) {
-		Map<String, String> approvedLicenses = getApprovedLicenses(reader);
-		return new LicenseSupport(approvedLicenses);
-	}
-
-	private static Map<String, String> getApprovedLicenses(String url) {
-		try {
-			HttpClient client = HttpClient.newHttpClient();
-			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
-			HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-			if (response.statusCode() == 200) {
-				return getApprovedLicenses(new StringReader(response.body()));
-			}
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-		return null;
+	public LicenseSupport(IContext context) {
+		context.getHttpClientService().get(context.getSettings().getApprovedLicensesUrl(), "application/json",
+				response -> {
+					approvedLicenses = getApprovedLicenses(new InputStreamReader(response));
+				});
 	}
 
 	private static Map<String, String> getApprovedLicenses(Reader contentReader) {

@@ -11,11 +11,8 @@ package org.eclipse.dash.licenses.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
 import org.eclipse.dash.licenses.LicenseSupport;
+import org.eclipse.dash.licenses.tests.util.TestContext;
 import org.junit.jupiter.api.Test;
 
 class LicenseSupportTests {
@@ -92,8 +89,6 @@ class LicenseSupportTests {
 	}
 
 	private LicenseSupport getLicenseSupport() {
-		InputStream in = getClass().getResourceAsStream("/licenses.json");
-		Reader reader = new InputStreamReader(in);
-		return LicenseSupport.getLicenseSupport(reader);
+		return new TestContext().getLicenseService();
 	}
 }

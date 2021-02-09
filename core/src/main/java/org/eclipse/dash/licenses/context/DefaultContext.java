@@ -28,15 +28,20 @@ public class DefaultContext implements IContext {
 	private GitLabSupport gitlabService;
 	private LicenseSupport licenseService;
 	private NpmjsPackageService npmjsPackageService;
+	private EclipseFoundationSupport eclipseFoundationSupport;
+	private ClearlyDefinedSupport clearlyDefinedSupport;
 
 	public DefaultContext(ISettings settings) {
 		this.settings = settings;
 
 		// Initialize basic services
 		// TODO we don't always need all of these; consider making initialization lazy.
+		eclipseFoundationSupport = new EclipseFoundationSupport(this);
+		clearlyDefinedSupport = new ClearlyDefinedSupport(this);
+
 		licenseCheckerService = new LicenseChecker(this);
 		gitlabService = new GitLabSupport(this);
-		licenseService = LicenseSupport.getLicenseSupport(this);
+		licenseService = new LicenseSupport(this);
 		npmjsPackageService = new NpmjsPackageService(this);
 	}
 
@@ -52,12 +57,12 @@ public class DefaultContext implements IContext {
 
 	@Override
 	public ILicenseDataProvider getIPZillaService() {
-		return new EclipseFoundationSupport(this);
+		return eclipseFoundationSupport;
 	}
 
 	@Override
 	public ILicenseDataProvider getClearlyDefinedService() {
-		return new ClearlyDefinedSupport(this);
+		return clearlyDefinedSupport;
 
 	}
 

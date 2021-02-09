@@ -22,15 +22,16 @@ public interface ISettings {
 	 * @return the URL (String)
 	 */
 	default String getLicenseCheckUrl() {
-		return null;
+		return System.getProperty("org.eclipse.dash.ipzilla",
+				"https://www.eclipse.org/projects/services/license_check.php");
 	};
 
 	default String getClearlyDefinedDefinitionsUrl() {
-		return null;
+		return System.getProperty("org.eclipse.dash.clearlydefined", "https://api.clearlydefined.io/definitions");
 	};
 
 	default String getApprovedLicensesUrl() {
-		return null;
+		return System.getProperty("org.eclipse.dash.licenses", "https://www.eclipse.org/legal/licenses.json");
 	};
 
 	default int getConfidenceThreshold() {

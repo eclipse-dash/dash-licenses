@@ -93,7 +93,7 @@
             },
             "discovered" : {
                "expressions" : [
-                  "BSD-2-Clause",
+                  "GPL-2.0",
                   "MIT"
                ],
                "unknown" : 1

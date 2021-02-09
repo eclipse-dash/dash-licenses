@@ -49,7 +49,7 @@ class ClearlyDefinedContentDataTests {
 		JsonObject data = ((JsonValue) reader.read()).asJsonObject();
 		ClearlyDefinedContentData info = new ClearlyDefinedContentData("npm/npmjs/-/lockfile/1.1.1", data);
 
-		assertArrayEquals(new String[] { "BSD-2-Clause", "MIT" }, info.discoveredLicenses().toArray(String[]::new));
+		assertArrayEquals(new String[] { "GPL-2.0", "MIT" }, info.discoveredLicenses().toArray(String[]::new));
 	}
 
 	@Test
