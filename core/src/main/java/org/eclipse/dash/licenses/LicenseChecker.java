@@ -46,7 +46,8 @@ public class LicenseChecker {
 				.setBatchSize(context.getSettings().getBatchSize())
 				.setConsumer(batch -> {
 					provider.queryLicenseData(batch, data -> {
-						licenseData.get(data.getId()).addContentData(data);
+						var item = licenseData.get(data.getId());
+						if (item != null) item.addContentData(data);
 					});
 				})
 				.batchify(ids.stream()

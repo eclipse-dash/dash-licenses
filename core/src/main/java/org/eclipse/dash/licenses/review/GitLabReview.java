@@ -41,7 +41,7 @@ public class GitLabReview {
 
 		licenseData.contentData().forEach(data -> describeItem(data, builder));
 
-		String searchUrl = IPZillaSearchBuilder.build(licenseData);
+		String searchUrl = IPZillaSearchBuilder.build(licenseData.getId());
 		if (searchUrl != null) {
 			builder.append("\n");
 			builder.append(String.format("[Search IPZilla](%s)\n", searchUrl));

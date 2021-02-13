@@ -30,6 +30,7 @@ public class DefaultContext implements IContext {
 	private NpmjsPackageService npmjsPackageService;
 	private EclipseFoundationSupport eclipseFoundationSupport;
 	private ClearlyDefinedSupport clearlyDefinedSupport;
+	private HttpClientService httpClientService;
 
 	public DefaultContext(ISettings settings) {
 		this.settings = settings;
@@ -43,6 +44,8 @@ public class DefaultContext implements IContext {
 		gitlabService = new GitLabSupport(this);
 		licenseService = new LicenseSupport(this);
 		npmjsPackageService = new NpmjsPackageService(this);
+
+		httpClientService = new HttpClientService(this);
 	}
 
 	@Override
@@ -78,7 +81,7 @@ public class DefaultContext implements IContext {
 
 	@Override
 	public IHttpClientService getHttpClientService() {
-		return new HttpClientService(this);
+		return httpClientService;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import org.eclipse.dash.licenses.review.GitLabSupport;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonReader;
+import jakarta.json.JsonString;
 
 /**
  * This class provides a context for testing that stubs out any behaviour that
@@ -80,8 +82,50 @@ public class TestContext extends DefaultContext {
 				}
 
 				if (url.equals(TestContext.this.getSettings().getLicenseCheckUrl())) {
-					handler.accept("{}");
-					return 200;
+
+					if (payload.startsWith("json=")) {
+						var json = URLDecoder.decode(payload.substring("json=".length()), StandardCharsets.UTF_8);
+
+						var approved = Json.createObjectBuilder();
+						var rejected = Json.createObjectBuilder();
+
+						var reader = Json.createReader(new StringReader(json));
+						reader.readArray().forEach(key -> {
+							var id = ((JsonString) key).getString();
+							var item = Json.createObjectBuilder();
+							switch (id) {
+							case "npm/npmjs/-/write/0.2.0":
+								item.add("authority", "CQ7766");
+								item.add("confidence", 100);
+								item.add("id", id);
+								item.add("license", "Apache-2.0");
+								item.addNull("sourceUrl");
+								item.add("status", "approved");
+
+								approved.add(id, item);
+								break;
+
+							case "npm/npmjs/@yarnpkg/lockfile/1.1.0":
+								item.add("authority", "CQ7722");
+								item.add("confidence", 100);
+								item.add("id", id);
+								item.add("license", "GPL-2.0");
+								item.addNull("sourceUrl");
+								item.add("status", "rejected");
+
+								rejected.add(id, item);
+								break;
+							}
+						});
+
+						var parent = Json.createObjectBuilder();
+						parent.add("approved", approved);
+						parent.add("rejected", rejected);
+
+						handler.accept(parent.build().toString());
+
+						return 200;
+					}
 				}
 				return 404;
 			}

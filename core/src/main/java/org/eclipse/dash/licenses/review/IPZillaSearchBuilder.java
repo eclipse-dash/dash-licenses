@@ -1,10 +1,19 @@
+/*************************************************************************
+ * Copyright (c) 2021 The Eclipse Foundation and others.
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
+ * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.dash.licenses.LicenseData;
+import org.eclipse.dash.licenses.IContentId;
 
 public class IPZillaSearchBuilder {
 	private static final String[] COMMON_TERMS = new String[] { "apache", "eclipse", "source", "platform", "plugin",
@@ -13,8 +22,8 @@ public class IPZillaSearchBuilder {
 
 	Set<String> terms = new LinkedHashSet<>();
 
-	public static String build(LicenseData licenseData) {
-		return new IPZillaSearchBuilder().get(licenseData);
+	public static String build(IContentId id) {
+		return new IPZillaSearchBuilder().get(id);
 	}
 
 	private void add(String term) {
@@ -28,17 +37,17 @@ public class IPZillaSearchBuilder {
 			terms.add(term);
 	}
 
-	private String get(LicenseData licenseData) {
-		if (!licenseData.getId().isValid())
+	private String get(IContentId id) {
+		if (!id.isValid())
 			return null;
 
-		String namespace = licenseData.getId().getNamespace();
-		String name = licenseData.getId().getName();
+		String namespace = id.getNamespace();
+		String name = id.getName();
 
 		// Assemble terms from the content data that might result
 		// in an interesting search.
-		terms.add(namespace);
-		terms.add(name);
+		add(namespace);
+		add(name);
 
 		// Break the name into segments (non-word characters) and add the segments from
 		// the name to the search terms.

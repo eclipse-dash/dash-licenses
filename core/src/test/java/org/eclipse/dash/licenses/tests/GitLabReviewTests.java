@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -12,12 +12,17 @@ package org.eclipse.dash.licenses.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.dash.licenses.ContentId;
-import org.eclipse.dash.licenses.ISettings;
+import org.eclipse.dash.licenses.InvalidContentId;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.review.GitLabReview;
+import org.eclipse.dash.licenses.review.IPZillaSearchBuilder;
 import org.eclipse.dash.licenses.tests.util.TestContext;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +31,7 @@ class GitLabReviewTests {
 	@Nested
 	class GitLabSupportTests {
 		@Test
+		@Disabled
 		void testCreateReview() {
 		}
 	}
@@ -68,39 +74,6 @@ class GitLabReviewTests {
 
 		@BeforeEach
 		void setup() {
-			var settings = new ISettings() {
-
-				@Override
-				public int getBatchSize() {
-					// TODO Auto-generated method stub
-					return 0;
-				}
-
-				@Override
-				public String getLicenseCheckUrl() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-
-				@Override
-				public String getClearlyDefinedDefinitionsUrl() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-
-				@Override
-				public String getApprovedLicensesUrl() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-
-				@Override
-				public int getConfidenceThreshold() {
-					// TODO Auto-generated method stub
-					return 0;
-				}
-
-			};
 			review = new GitLabReview(new TestContext(),
 					new LicenseData(ContentId.getContentId("npm/npmjs/group.path/artifact/1.0")));
 		}
@@ -123,6 +96,36 @@ class GitLabReviewTests {
 
 	@Nested
 	class IPZillaSearchBuilderTests {
+		@Test
+		void testBasic() throws Exception {
+			String url = IPZillaSearchBuilder.build(ContentId.getContentId("type/source/namespace/component/1.0"));
+			Matcher matcher = Pattern.compile("&short_desc=([^&]+)&").matcher(url);
+			matcher.find();
+			String group = matcher.group(1);
+			assertEquals("namespace+component", group);
+		}
+
+		@Test
+		void testExcludeCommon() throws Exception {
+			String url = IPZillaSearchBuilder
+					.build(ContentId.getContentId("type/source/namespace/eclipse.component/1.0"));
+			Matcher matcher = Pattern.compile("&short_desc=([^&]+)&").matcher(url);
+			matcher.find();
+			String group = matcher.group(1);
+			assertEquals("namespace+eclipse.component+component", group);
+		}
+
+		@Test
+		void testNoSearchableTerms() throws Exception {
+			String url = IPZillaSearchBuilder.build(ContentId.getContentId("type/source/x/y/1.0"));
+			assertNull(url);
+		}
+
+		@Test
+		void testInvalidId() throws Exception {
+			String url = IPZillaSearchBuilder.build(new InvalidContentId("invalid"));
+			assertNull(url);
+		}
 
 	}
 }
