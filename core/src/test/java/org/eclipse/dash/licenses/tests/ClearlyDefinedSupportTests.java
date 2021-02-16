@@ -34,15 +34,15 @@ class ClearlyDefinedSupportTests {
 	void testMatchApproved() {
 		List<IContentData> results = new ArrayList<>();
 		new TestContext().getClearlyDefinedService().queryLicenseData(
-				Collections.singleton(ContentId.getContentId("npm/npmjs/-/write/0.2.0")), data -> results.add(data));
+				Collections.singleton(ContentId.getContentId("npm/npmjs/-/write/1.0.3")), data -> results.add(data));
 
 		assertEquals(1, results.size());
 
 		IContentData write = results.get(0);
-		assertEquals("npm/npmjs/-/write/0.2.0", write.getId().toString());
+		assertEquals("npm/npmjs/-/write/1.0.3", write.getId().toString());
 		assertEquals("clearlydefined", write.getAuthority());
 		assertEquals("MIT", write.getLicense());
-		assertEquals("https://clearlydefined.io/definitions/npm/npmjs/-/write/0.2.0", write.getUrl());
+		assertEquals("https://clearlydefined.io/definitions/npm/npmjs/-/write/1.0.3", write.getUrl());
 		assertEquals(94, write.getScore());
 		assertEquals(LicenseSupport.Status.Approved, write.getStatus());
 	}

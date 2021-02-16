@@ -10,6 +10,7 @@
 package org.eclipse.dash.licenses.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -24,12 +25,35 @@ import org.junit.jupiter.api.Test;
 class LicenseCheckerTests {
 
 	@Test
-	void testApprovedLicense() {
+	void testSingleApprovedLicense() {
+		ContentId contentId = ContentId.getContentId("npm/npmjs/-/write/1.0.3");
 		Map<IContentId, LicenseData> licenseData = new TestContext().getLicenseCheckerService()
-				.getLicenseData(Collections.singleton(ContentId.getContentId("npm/npmjs/@yarnpkg/lockfile/1.1.0")));
+				.getLicenseData(Collections.singleton(contentId));
 
-		for (LicenseData data : licenseData.values()) {
-			assertEquals(LicenseSupport.Status.Restricted, data.getStatus());
-		}
+		LicenseData data = licenseData.get(contentId);
+		assertEquals("MIT", data.getLicense());
+		assertEquals(LicenseSupport.Status.Approved, data.getStatus());
+	}
+
+	@Test
+	void testSingleUnapprovedLicense() {
+		ContentId contentId = ContentId.getContentId("npm/npmjs/@yarnpkg/lockfile/1.1.0");
+		Map<IContentId, LicenseData> licenseData = new TestContext().getLicenseCheckerService()
+				.getLicenseData(Collections.singleton(contentId));
+
+		LicenseData data = licenseData.get(contentId);
+		assertEquals("BSD-2-Clause", data.getLicense());
+		assertEquals(LicenseSupport.Status.Restricted, data.getStatus());
+	}
+
+	@Test
+	void testWithUnsupported() {
+		ContentId contentId = ContentId.getContentId("p2/eclipseplugin/-/write/0.2.0");
+		Map<IContentId, LicenseData> licenseData = new TestContext().getLicenseCheckerService()
+				.getLicenseData(Collections.singleton(contentId));
+
+		LicenseData data = licenseData.get(contentId);
+		assertNull(data.getLicense());
+		assertEquals(LicenseSupport.Status.Restricted, data.getStatus());
 	}
 }

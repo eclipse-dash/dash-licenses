@@ -59,7 +59,7 @@ public class TestContext extends DefaultContext {
 						builder.append("\" :");
 
 						switch (id) {
-						case "npm/npmjs/-/write/0.2.0":
+						case "npm/npmjs/-/write/1.0.3":
 							builder.append(new BufferedReader(new InputStreamReader(
 									this.getClass().getResourceAsStream("/write-1.0.3.json"), StandardCharsets.UTF_8))
 											.lines().collect(Collectors.joining("\n")));
