@@ -42,10 +42,10 @@ public class DefaultContext implements IContext {
 
 		licenseCheckerService = new LicenseChecker(this);
 		gitlabService = new GitLabSupport(this);
+		httpClientService = new HttpClientService(this);
 		licenseService = new LicenseSupport(this);
 		npmjsPackageService = new NpmjsPackageService(this);
 
-		httpClientService = new HttpClientService(this);
 	}
 
 	@Override
