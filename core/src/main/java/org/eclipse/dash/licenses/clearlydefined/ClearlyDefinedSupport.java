@@ -77,7 +77,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		 */
 		List<IContentId> filteredIds = ids.stream().filter(id -> isSupported(id)).collect(Collectors.toList());
 
-		if (filteredIds.size() == 0)
+		if (filteredIds.isEmpty())
 			return;
 
 		log.atInfo().log("Querying ClearlyDefined for license data for %1$d items.", filteredIds.size());

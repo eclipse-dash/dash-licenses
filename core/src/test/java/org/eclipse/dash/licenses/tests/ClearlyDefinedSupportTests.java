@@ -71,7 +71,7 @@ class ClearlyDefinedSupportTests {
 		new TestContext().getClearlyDefinedService().queryLicenseData(Collections.emptySet(),
 				data -> results.add(data));
 
-		assertEquals(0, results.size());
+		assertTrue(results.isEmpty());
 	}
 
 	@Test
@@ -81,7 +81,7 @@ class ClearlyDefinedSupportTests {
 				Collections.singleton(ContentId.getContentId("p2/eclipseplugin/-/write/0.2.0")),
 				data -> results.add(data));
 
-		assertEquals(0, results.size());
+		assertTrue(results.isEmpty());
 	}
 
 	@Nested

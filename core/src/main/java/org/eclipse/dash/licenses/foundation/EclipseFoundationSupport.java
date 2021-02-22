@@ -38,7 +38,7 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 
 	@Override
 	public void queryLicenseData(Collection<IContentId> ids, Consumer<IContentData> consumer) {
-		if (ids.size() == 0)
+		if (ids.isEmpty())
 			return;
 
 		log.atInfo().log("Querying Eclipse Foundation for license data for %1$d items.", ids.size());
