@@ -45,7 +45,7 @@ import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 /**
  * Maven goal for running the Dash License Check tool.
  */
-@Mojo(name = "license-check", requiresProject = true, aggregator = true, requiresDependencyResolution = ResolutionScope.TEST)
+@Mojo(name = "license-check", requiresProject = true, aggregator = true, requiresDependencyResolution = ResolutionScope.TEST, inheritByDefault = false)
 public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 
 	/**
