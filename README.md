@@ -59,6 +59,8 @@ Afterwards `grep` will be accessible via `ggrep` so `ggrep -Poh "\S+:(system|pro
 
 ### Example: Maven
 
+To call it manually:
+
 ```
 $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDENCIES 
 [INFO] Scanning for projects...
@@ -84,6 +86,46 @@ maven/mavencentral/commons-cli/commons-cli/1.4, Apache-2.0, approved, CQ13132
 maven/mavencentral/org.apache.commons/commons-csv/1.8, Apache-2.0, approved, clearlydefined
 maven/mavencentral/com.google.flogger/flogger/0.5.1, Apache-2.0, approved, clearlydefined
 ```
+
+To integrate in your build system:
+
+* Configure license check to be auto executed in e.g. verify phase
+
+```
+<build>
+  <plugins>
+    <plugin>
+	 <groupId>org.eclipse.dash</groupId>
+	 <artifactId>license-tool-plugin</artifactId>
+	 <version>0.0.1-SNAPSHOT</version>
+	 <executions>
+	   <execution>
+	     <id>license-check</id>
+		<phase>verify</phase>
+		<goals>
+		  <goal>license-check</goal>
+		</goals>
+	   </execution>
+	 </executions>
+    </plugin>
+  </plugins>
+</build>
+```
+
+* Add plugin repository so license check plugin is discoverable as it's not available in maven central
+
+```
+<pluginRepositories>
+  <pluginRepository>
+  	<id>dash-licenses-snapshots</id>
+  	<url>https://repo.eclipse.org/content/repositories/dash-licenses-snapshots/</url>
+  	<snapshots>
+  	  <enabled>true</enabled>
+  	</snapshots>
+  </pluginRepository>
+</pluginRepositories>
+```
+
 
 ### Example: Gradle
 
