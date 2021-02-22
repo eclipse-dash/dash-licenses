@@ -165,7 +165,6 @@ npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -
 
 Stuff that we need to add:
 
-* Publish Maven plug-in to repository (#45);
 * Links to make creating CQs semi-automatic (or even automatic);
 * Logging (#9);
 * Make the implementation more extensible by adding dependency injection (#8);
