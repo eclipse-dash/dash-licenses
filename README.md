@@ -17,7 +17,7 @@ The idea was to have some code that can be used to check the licenses of content
 The project uses standard Maven to build. From the root:
 
 ```
-$ mvn clean package
+$ mvn clean install
 ```
 
 The build generates a shaded JAR, `./core/target/org.eclipse.dash.licenses-<version>.jar` that contains 
@@ -57,6 +57,56 @@ $ brew install grep
 
 Afterwards `grep` will be accessible via `ggrep` so `ggrep -Poh "\S+:(system|provided|compile)` will do the trick.
 
+### Automatic IP Team Review Requests (Experimental)
+
+When the tool identifies a library that requires further review, the obvious question is: now what?
+
+The traditional means of requsetion review is by creating a [contribution questionnaire](https://www.eclipse.org/projects/handbook/#ip-prereq-cq) to request assistance from the IP Team. This still works; Eclipse committers who are familiar with this process can continue to engage in this manner.
+
+The tool incorporates a new experimental feature that leverages some new technology. Instead of creating a CQ via IPZilla, the tool can create an issue against the Eclipse Foundation's GitLab instance (there is discussion [here](https://gitlab.eclipse.org/eclipsefdn/iplab/emo/-/issues/2)). Note that this feature is still under development and processing in the back end may take a day or two. It's still very experimental, so there will be changes. 
+
+To use this feature, you must have committer status on at least on Eclipse project:
+
+* Get an [authentication token](https://gitlab.eclipse.org/-/profile/personal_access_tokens) from `gitlab.eclipse.org`;
+* Include the `-review` option;
+* Pass the token via the `-token` option; and
+* Pass the project id via the `-project` option.
+
+The tool currently limits itself to five requests. **Do not share your access token.**
+
+Example:
+
+```
+$ java -jar org.eclipse.dash.licenses-<version>.jar yarn.lock -review -token <token> -project ecd.theia
+License information could not be automatically verified for the following content:
+
+npm/npmjs/-/babel-polyfill/6.26.0
+npm/npmjs/-/binaryextensions/2.3.0
+npm/npmjs/-/concurrently/3.6.1
+npm/npmjs/-/cssmin/0.3.2
+npm/npmjs/-/date-fns/1.30.1
+...
+
+This content is either not correctly mapped by the system, or requires review.
+
+Setting up a review for npm/npmjs/-/uglify-js/1.3.5.
+ - Created: https://gitlab.eclipse.org/eclipsefdn/iplab/iplab/-/issues/90
+Setting up a review for npm/npmjs/-/parse5/4.0.0.
+ - Created: https://gitlab.eclipse.org/eclipsefdn/iplab/iplab/-/issues/91
+Setting up a review for npm/npmjs/-/sanitize-html/1.27.5.
+ - Created: https://gitlab.eclipse.org/eclipsefdn/iplab/iplab/-/issues/92
+Setting up a review for npm/npmjs/-/jsdom/11.12.0.
+ - Created: https://gitlab.eclipse.org/eclipsefdn/iplab/iplab/-/issues/93
+Setting up a review for npm/npmjs/-/detect-node/2.0.4.
+ - Created: https://gitlab.eclipse.org/eclipsefdn/iplab/iplab/-/issues/94
+
+More content needs to be reviewed.
+For now, however, this experimental feature only submits the first five.
+
+```
+
+Please do not incorporate this feature into your automated builds at this time.  **Do not share your access token.**
+
 ### Example: Maven
 
 To call it manually:
@@ -87,9 +137,11 @@ maven/mavencentral/org.apache.commons/commons-csv/1.8, Apache-2.0, approved, cle
 maven/mavencentral/com.google.flogger/flogger/0.5.1, Apache-2.0, approved, clearlydefined
 ```
 
-To integrate in your build system:
+Note that the plugin automatically generates a summary file in the `target` directory; use the `-Ddash.summary=<location>` switch to override the default location.
 
-* Configure license check to be auto executed in e.g. verify phase
+#### Add to your Maven Build
+
+Configure the license check plugin to be auto executed (e.g. in the `verify` phase):
 
 ```
 <build>
@@ -112,7 +164,7 @@ To integrate in your build system:
 </build>
 ```
 
-* Add plugin repository so license check plugin is discoverable as it's not available in maven central
+Add the `repo.eclipse.org` plugin repository so that the license check plugin is discoverable (it's not available in Maven Central):
 
 ```
 <pluginRepositories>
@@ -125,7 +177,6 @@ To integrate in your build system:
   </pluginRepository>
 </pluginRepositories>
 ```
-
 
 ### Example: Gradle
 
@@ -189,8 +240,6 @@ $ ./sbt dependencyTree \
 | java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
 ```
 
-###
-
 ### Example 5: Help
 
 The CLI tool does provide help.
@@ -221,8 +270,6 @@ npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -
 
 Stuff that we need to add:
 
-* Links to make creating CQs semi-automatic (or even automatic);
-* Logging (#9);
 * Make the implementation more extensible by adding dependency injection (#8);
 * Support for other technologies (e.g., cmake, go, ...) (#10)
 
