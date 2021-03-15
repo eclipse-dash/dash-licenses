@@ -10,7 +10,7 @@ Use the `-summary <file>` option to  generate a file that contains CSV content w
 
 The current implementation uses two sources for license information. The first source is an Eclipse Foundation service that leverages data that the Eclipse Foundation's IP Team has collected over the years. When that source does not have information for a piece of content, [ClearlyDefined](https://clearlydefined.io/)'s service is used. 
 
-The idea was to have some code that can be used to check the licenses of content, but write it in a manner that would make it easy to generate, for example, a Maven plug-in. The main focus, however, has been making this work as a CLI so that it can be used to sort out licenses for Maven, `package-lock.json`, yarn, etc.
+The idea was to have some code that can be used to check the licenses of content, but write it in a manner that would make it easy to generate, for example, a Maven plug-in. The main focus, however, has been making this work as a CLI so that it can be used to sort out licenses for Maven, `package-lock.json`, `yarn.lock`, etc.
 
 ## Build
 
@@ -20,7 +20,7 @@ The project uses standard Maven to build. From the root:
 $ mvn clean package
 ```
 
-The build generates a shaded JAR, `org.eclipse.dash.licenses-<version>.jar` that contains 
+The build generates a shaded JAR, `./core/target/org.eclipse.dash.licenses-<version>.jar` that contains 
 everything that is required to run from the command line.
 
 ## Usage
@@ -139,8 +139,23 @@ $ ./gradlew dependencies | grep -Poh "[^:\s]+:[^:]+:[^:\s]+" | grep -v "^org\.ec
  
 Note that this example pre-filters content that comes from Eclipse projects (`grep -v "^org\.eclipse"`).
  
+### Example: Yarn via `yarn.lock` (Experimental)
 
-### Example: Yarn
+If you've generated a `yarn.lock` file, you can feed it directly to the license tool. This option leverages a hack to determine the very specific dependencies and versions identified by yarn using the `resolved` URL for each entry in the file. This functionality is experimental; results may vary.
+
+```
+$ java -jar org.eclipse.dash.licenses-<version>.jar yarn.lock
+License information could not be automatically verified for the following content:
+
+npm/npmjs/-/babel-polyfill/6.26.0
+npm/npmjs/-/binaryextensions/2.3.0
+npm/npmjs/-/concurrently/3.6.1
+
+This content is either not correctly mapped by the system, or requires review.
+
+```
+
+### Example: Yarn via yarn
 
 We provide a tool to generate a dependency list for yarn-based builds.
 
@@ -157,12 +172,11 @@ $ node /dash-licenses/yarn/index.js \
 | java -jar /dash-licenses/target/org.eclipse.dash.licenses-<version>.jar -
 License information could not be automatically verified for the following content:
 
-https://clearlydefined.io/definitions/npm/npmjs/-/typed-rest-client/1.2.0
-https://clearlydefined.io/definitions/npm/npmjs/-/azure-devops-node-api/7.2.0
-https://clearlydefined.io/definitions/npm/npmjs/-/boolbase/1.0.0
-https://clearlydefined.io/definitions/npm/npmjs/-/typescript/3.6.4
+npm/npmjs/-/babel-polyfill/6.26.0
+npm/npmjs/-/binaryextensions/2.3.0
+npm/npmjs/-/concurrently/3.6.1
 
-Please create contribution questionnaires for this content.
+This content is either not correctly mapped by the system, or requires review.
 ```
 
 ### Example: SBT

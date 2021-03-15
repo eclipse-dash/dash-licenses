@@ -120,6 +120,9 @@ public class Main {
 				if ("package-lock.json".equals(input.getName())) {
 					return new PackageLockFileReader(new FileInputStream(input));
 				}
+				if ("yarn.lock".equals(input.getName())) {
+					return new YarnLockFileReader(new FileReader(input));
+				}
 				return new FlatFileReader(new FileReader(input));
 			} else {
 				throw new FileNotFoundException(name);
