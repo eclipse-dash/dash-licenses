@@ -27,6 +27,8 @@ public class IPZillaSearchBuilder {
 	}
 
 	private void add(String term) {
+		if (term == null)
+			return;
 		// Break the name into segments (non-word characters) and add the segments from
 		// the name to the search terms. We arbitrarily decide that terms that are
 		// "short" aren't interesting and skip them. The logic being that shorter words
