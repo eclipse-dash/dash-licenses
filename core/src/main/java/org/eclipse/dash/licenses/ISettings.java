@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2019,2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -9,10 +9,28 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
+import java.io.File;
+
 public interface ISettings {
 
+	public static final String DEFAULT_GITLAB_URL = "https://gitlab.eclipse.org";
+	public static final String DEFAULT_IPLAB_PATH = "eclipsefdn/iplab/iplab";
+	public static final String DEFAULT_APPROVED_LICENSES_URL = "https://www.eclipse.org/legal/licenses.json";
+	public static final String DEFAULT_CLEARLYDEFINED_URL = "https://api.clearlydefined.io/definitions";
+	public static final String DEFAULT_IPZILLA_URL = "https://www.eclipse.org/projects/services/license_check.php";
+	public static final int DEFAULT_THRESHOLD = 60;
+	public static final int DEFAULT_BATCH = 1000;
+
 	default int getBatchSize() {
-		return 1000;
+		String value = System.getProperty("org.eclipse.dash.batch");
+		if (value == null)
+			return DEFAULT_BATCH;
+
+		int threshold = Integer.valueOf(value);
+		if (threshold < 1)
+			return 1;
+
+		return threshold;
 	};
 
 	/**
@@ -22,20 +40,29 @@ public interface ISettings {
 	 * @return the URL (String)
 	 */
 	default String getLicenseCheckUrl() {
-		return System.getProperty("org.eclipse.dash.ipzilla",
-				"https://www.eclipse.org/projects/services/license_check.php");
+		return System.getProperty("org.eclipse.dash.ipzilla", DEFAULT_IPZILLA_URL);
 	};
 
 	default String getClearlyDefinedDefinitionsUrl() {
-		return System.getProperty("org.eclipse.dash.clearlydefined", "https://api.clearlydefined.io/definitions");
+		return System.getProperty("org.eclipse.dash.clearlydefined", DEFAULT_CLEARLYDEFINED_URL);
 	};
 
 	default String getApprovedLicensesUrl() {
-		return System.getProperty("org.eclipse.dash.licenses", "https://www.eclipse.org/legal/licenses.json");
+		return System.getProperty("org.eclipse.dash.licenses", DEFAULT_APPROVED_LICENSES_URL);
 	};
 
 	default int getConfidenceThreshold() {
-		return 60;
+		String value = System.getProperty("org.eclipse.dash.threshold");
+		if (value == null)
+			return DEFAULT_THRESHOLD;
+
+		int threshold = Integer.valueOf(value);
+		if (threshold < 0)
+			return 0;
+		if (threshold > 100)
+			return 100;
+
+		return threshold;
 	};
 
 	default String getProjectId() {
@@ -67,7 +94,7 @@ public interface ISettings {
 	 * @return A valid URL.
 	 */
 	default String getIpLabHostUrl() {
-		return System.getProperty("org.eclipse.dash.repository-host", "https://gitlab.eclipse.org");
+		return System.getProperty("org.eclipse.dash.iplab-host", DEFAULT_GITLAB_URL);
 	}
 
 	/**
@@ -77,6 +104,14 @@ public interface ISettings {
 	 * @return A valid path.
 	 */
 	default String getIpLabRepositoryPath() {
-		return System.getProperty("org.eclipse.dash.repository-path", "eclipsefdn/iplab/iplab");
+		return System.getProperty("org.eclipse.dash.iplab-path", DEFAULT_IPLAB_PATH);
+	}
+
+	default String getSummaryFilePath() {
+		return System.getProperty("org.eclipse.dash.summary");
+	};
+
+	default File getSummaryFile() {
+		return new File(getSummaryFilePath());
 	}
 }

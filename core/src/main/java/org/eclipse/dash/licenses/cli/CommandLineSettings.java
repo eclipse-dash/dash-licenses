@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2019,2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -33,18 +33,12 @@ public class CommandLineSettings implements ISettings {
 	private static final String TOKEN_OPTION = "token";
 	private static final String PROJECT_OPTION = "project";
 
-	private static final String CD_URL_DEFAULT = "https://api.clearlydefined.io/definitions";
-	private static final String EF_URL_DEFAULT = "https://www.eclipse.org/projects/services/license_check.php";
-	private static final String WL_URL_DEFAULT = "https://www.eclipse.org/legal/licenses.json";
-	private static final int BATCH_DEFAULT = 1000;
-	private static final int CONFIDENCE_DEFAULT = 75;
-
 	private CommandLine commandLine;
 
 	@Override
 	public int getBatchSize() {
 		if (!commandLine.hasOption(BATCH_OPTION))
-			return BATCH_DEFAULT;
+			return ISettings.DEFAULT_BATCH;
 		try {
 			return ((Number) commandLine.getParsedOptionValue(BATCH_OPTION)).intValue();
 		} catch (ParseException e) {
@@ -55,23 +49,23 @@ public class CommandLineSettings implements ISettings {
 
 	@Override
 	public String getLicenseCheckUrl() {
-		return commandLine.getOptionValue(EF_URL_OPTION, EF_URL_DEFAULT);
+		return commandLine.getOptionValue(EF_URL_OPTION, ISettings.DEFAULT_IPZILLA_URL);
 	}
 
 	@Override
 	public String getClearlyDefinedDefinitionsUrl() {
-		return commandLine.getOptionValue(CD_URL_OPTION, CD_URL_DEFAULT);
+		return commandLine.getOptionValue(CD_URL_OPTION, ISettings.DEFAULT_CLEARLYDEFINED_URL);
 	}
 
 	@Override
 	public String getApprovedLicensesUrl() {
-		return commandLine.getOptionValue(APPROVED_LICENSES_URL_OPTION, WL_URL_DEFAULT);
+		return commandLine.getOptionValue(APPROVED_LICENSES_URL_OPTION, ISettings.DEFAULT_APPROVED_LICENSES_URL);
 	}
 
 	@Override
 	public int getConfidenceThreshold() {
 		if (!commandLine.hasOption(CONFIDENCE_OPTION))
-			return CONFIDENCE_DEFAULT;
+			return ISettings.DEFAULT_THRESHOLD;
 		try {
 			return ((Number) commandLine.getParsedOptionValue(CONFIDENCE_OPTION)).intValue();
 		} catch (ParseException e) {
@@ -260,12 +254,9 @@ public class CommandLineSettings implements ISettings {
 		formatter.printHelp(syntax, usageHeader, getOptions(), usageFooter);
 	}
 
+	@Override
 	public String getSummaryFilePath() {
 		return commandLine.getOptionValue(SUMMARY_OPTION, null);
-	}
-
-	public String getReviewFilePath() {
-		return commandLine.getOptionValue(REVIEW_OPTION, null);
 	}
 
 	@Override
