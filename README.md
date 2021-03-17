@@ -14,7 +14,11 @@ The idea was to have some code that can be used to check the licenses of content
 
 ## Build
 
-The project uses standard Maven to build. From the root:
+The project uses standard Maven to build. 
+
+The project uses Java 11 language features. **Java 11 or greater is required.**
+
+From the root:
 
 ```
 $ mvn clean install
@@ -24,6 +28,8 @@ The build generates a shaded JAR, `./core/target/org.eclipse.dash.licenses-<vers
 everything that is required to run from the command line.
 
 ## Usage
+
+The project uses Java 11 language features. **Java 11 or greater is required.**
 
 Generate a dependency list from Maven and invoke the tool on the output:
 
