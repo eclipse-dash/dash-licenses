@@ -31,7 +31,7 @@ everything that is required to run from the command line.
 
 The project uses Java 11 language features. **Java 11 or greater is required.**
 
-The Dash License Tool can read a flat file, a `package-lock.json` file, or a `yarn.lock` file. A [Maven plugin](.#maven-plugin) that works directly from the Maven Reactor is also provided.
+The Dash License Tool can read a flat file, a `package-lock.json` file, or a `yarn.lock` file. A [Maven plugin](README.md#maven-plugin) that works directly from the Maven Reactor is also provided.
 
 In a flat file, dependencies can be expressed one-on-a-line using ClearlyDefined ids (e.g., `maven/mavencentral/org.apache.commons/commons-csv/1.8`, Maven GAVs (e.g., `org.apache.commons:commons-csv:1.8`, or and NPM Id (e.g., `npm/npmjs/-/babel-polyfill/6.26.0`).
 
@@ -70,7 +70,7 @@ To use this feature, you must have committer status on at least one Eclipse proj
 * Pass the token via the `-token` option; and
 * Pass the project id via the `-project` option.
 
-Note that the options are slighly different for the [Maven plugin](.#example-maven-options).
+Note that the options are slighly different for the [Maven plugin](README.md#example-maven-options).
 
 The tool currently limits itself to five requests. **Do not share your access token.**
 
