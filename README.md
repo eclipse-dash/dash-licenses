@@ -31,37 +31,29 @@ everything that is required to run from the command line.
 
 The project uses Java 11 language features. **Java 11 or greater is required.**
 
-Generate a dependency list from Maven and invoke the tool on the output:
+The Dash License Tool can read a flat file, a `package-lock.json` file, or a `yarn.lock` file. A [Maven plugin](.#maven-plugin) that works directly from the Maven Reactor is also provided.
+
+In a flat file, dependencies can be expressed one-on-a-line using ClearlyDefined ids (e.g., `maven/mavencentral/org.apache.commons/commons-csv/1.8`, Maven GAVs (e.g., `org.apache.commons:commons-csv:1.8`, or and NPM Id (e.g., `npm/npmjs/-/babel-polyfill/6.26.0`).
+
+Basic invocation takes the following form:
 
 ```
-$ mvn clean install
-$ mvn dependency:list | grep -Poh "\S+:(system|provided|compile)" | sort | uniq \
- | java -jar org.eclipse.dash.licenses-<version>.jar -
+$ java -jar org.eclipse.dash.licenses-<version>.jar <dependency-list>
 ```
 
-Note that Maven's `dependency:list` plugin has the ability to output directly to a file 
-(rather than pulling this information from `stdout`); if you use this feature, be sure to 
-add the `append` switch or all you'll get in the output is the dependencies for the last 
-module in your build.
-
-or, if you already have a `package-lock.json` file:
+For example, to read a `package-lock.json`:
 
 ```
 $ java -jar org.eclipse.dash.licenses-<version>.jar package-lock.json
 ```
 
-The output (for now) is either a statement that the licenses for all of the content have
-been identified and verified, or a list of those dependencies that require further
-scrutiny.
-
-**Note for Mac users:** `grep` command on Mac doesn't support parameter option `-P` hence `grep -Poh "\S+:(system|provided|compile)"` will fail.
-Use `-E` option instead i.e. `grep -ohE "\S+:(system|provided|compile)"` or install GNU grep on your Mac via the command:
+In lieu of an actual file, generated content can be piped to the Dash License Tool via `stdin` (use a dash to indicate `stdin` as the source). For example:
 
 ```
-$ brew install grep
+$ echo "maven/mavencentral/org.apache.commons/commons-csv/1.8" | java -jar org.eclipse.dash.licenses-<version>.jar -
 ```
 
-Afterwards `grep` will be accessible via `ggrep` so `ggrep -Poh "\S+:(system|provided|compile)` will do the trick.
+The output is either a statement that the licenses for all of the content have been identified and verified, or a list of those dependencies that require further scrutiny.
 
 ### Automatic IP Team Review Requests (Experimental)
 
@@ -71,12 +63,14 @@ The traditional means of requsetion review is by creating a [contribution questi
 
 The tool incorporates a new experimental feature that leverages some new technology. Instead of creating a CQ via IPZilla, the tool can create an issue against the Eclipse Foundation's GitLab instance (there is discussion [here](https://gitlab.eclipse.org/eclipsefdn/iplab/emo/-/issues/2)). Note that this feature is still under development and processing in the back end may take a day or two. It's still very experimental, so there will be changes. 
 
-To use this feature, you must have committer status on at least on Eclipse project:
+To use this feature, you must have committer status on at least one Eclipse project.
 
 * Get an [authentication token](https://gitlab.eclipse.org/-/profile/personal_access_tokens) from `gitlab.eclipse.org`;
 * Include the `-review` option;
 * Pass the token via the `-token` option; and
 * Pass the project id via the `-project` option.
+
+Note that the options are slighly different for the [Maven plugin](.#example-maven-options).
 
 The tool currently limits itself to five requests. **Do not share your access token.**
 
@@ -115,7 +109,14 @@ Please do not incorporate this feature into your automated builds at this time. 
 
 ### Example: Maven
 
-To call it manually:
+```
+$ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
+$ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps
+```
+
+### Example: Maven Plugin
+
+To call the Dash License Tool plugin via `mvn` CLI:
 
 ```
 $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDENCIES 
@@ -184,6 +185,29 @@ Add the `repo.eclipse.org` plugin repository so that the license check plugin is
 </pluginRepositories>
 ```
 
+#### Maven Plugin Options
+
+The Maven Plugin has the following options:
+
+- `dash.skip` - Skip executing the plugin.
+- `dash.iplab.token` - The access token for automatically creating IP Team review requests.
+- `dash.projectId` - The project id
+- `dash.summary` - The location (where) to generate the summary file.
+
+Note that the Maven plugin always generates the summary file. The default location is `${project.build.directory}/dash/summary`.
+
+To generate a summary of dependencies named `DEPENDENCIES` in the working directory:
+
+```
+$ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDENCIES
+```
+
+To automatically create IP Team review requests for identified content:
+
+```
+$ mvn org.eclipse.dash:license-tool-plugin:license-check -dash.iplab.token=<token> -dash.projectId=technology.dash
+```
+
 ### Example: Gradle
 
 Find all of the potentially problematic third party libraries from a Gradle build.
@@ -195,6 +219,14 @@ $ ./gradlew dependencies | grep -Poh "[^:\s]+:[^:]+:[^:\s]+" | grep -v "^org\.ec
 ```
  
 Note that this example pre-filters content that comes from Eclipse projects (`grep -v "^org\.eclipse"`).
+
+**Note for Mac users:** `grep` command on Mac doesn't support parameter option `-P` hence `grep -Poh "\S+:(system|provided|compile)"` will fail. Use `-E` option instead i.e. `grep -ohE "\S+:(system|provided|compile)"` or install GNU grep on your Mac via the command:
+
+```
+$ brew install grep
+```
+
+Afterwards `grep` will be accessible via `ggrep` so `ggrep -Poh "\S+:(system|provided|compile)` will do the trick.
  
 ### Example: Yarn via `yarn.lock` (Experimental)
 
@@ -246,7 +278,7 @@ $ ./sbt dependencyTree \
 | java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
 ```
 
-### Example 5: Help
+### Example: Help
 
 The CLI tool does provide help.
 
@@ -270,8 +302,6 @@ be provided
 e.g.,
 npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -
 ```
-
-
 ## Help Wanted
 
 Stuff that we need to add:
