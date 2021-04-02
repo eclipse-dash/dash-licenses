@@ -116,25 +116,27 @@ The Dash License Tool CLI processes the information that you provide to it eithe
 To determine whether or an individual library needs further investigation, feed it directly to the tool:
 
 ```
-echo "tech.units:indriya:1.3" | java -jar org.eclipse.dash.licenses-<version>.jar -
+$ echo "tech.units:indriya:1.3" | java -jar org.eclipse.dash.licenses-<version>.jar -
 License information could not be automatically verified for the following content:
 
 maven/mavencentral/tech.units/indriya/1.3
 
 This content is either not correctly mapped by the system, or requires review.
+$ _
 ```
 
 To test multiple libraries simultaneously, you can separate them with a newline (note that you need to include the `-e` option to make `echo` understand the newline:
 
 ```
-echo -e "tech.units:indriya:1.3\norg.glassfish:jakarta.json:2.0.0" | java -jar org.eclipse.dash.licenses-<version>.jar -
+$ echo -e "tech.units:indriya:1.3\norg.glassfish:jakarta.json:2.0.0" | java -jar org.eclipse.dash.licenses-<version>.jar -
 ...
+$ _
 ```
 
 You can use the experimental [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
 
 ```
-echo "tech.units:indriya:1.3" | java -jar org.eclipse.dash.licenses-<version>.jar - -review -project <project> -token <token>
+$ echo "tech.units:indriya:1.3" | java -jar org.eclipse.dash.licenses-<version>.jar - -review -project <project> -token <token>
 License information could not be automatically verified for the following content:
 
 maven/mavencentral/tech.units/indriya/1.3
@@ -144,6 +146,7 @@ This content is either not correctly mapped by the system, or requires review.
 Setting up a review for maven/mavencentral/tech.units/indriya/1.3.
  - Created: https://gitlab.eclipse.org/eclipsefdn/iplab/iplab/-/issues/113
 
+$ _
 ```
 
 In the case where the license information for the library is not already known, this will create a review request.
