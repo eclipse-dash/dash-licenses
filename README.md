@@ -55,7 +55,9 @@ $ echo "maven/mavencentral/org.apache.commons/commons-csv/1.8" | java -jar org.e
 
 The output is either a statement that the licenses for all of the content have been identified and verified, or a list of those dependencies that require further scrutiny.
 
-### Automatic IP Team Review Requests (Experimental)
+### Automatic IP Team Review Requests 
+
+**EXPERIMENTAL**
 
 When the tool identifies a library that requires further review, the obvious question is: now what?
 
@@ -106,6 +108,45 @@ For now, however, this experimental feature only submits the first five.
 ```
 
 Please do not incorporate this feature into your automated builds at this time.  **Do not share your access token.**
+
+### Example: Single Library
+
+The Dash License Tool CLI processes the information that you provide to it either as a file, or via `stdin`. It doesn't have any interest in where the data comes from (all of the examples that generate a dependency list from build scripts generates the dependency list and then feeds it to the tool). You can use command-line tools to generate input and pipe it into the tool.
+
+To determine whether or an individual library needs further investigation, feed it directly to the tool:
+
+```
+echo "tech.units:indriya:1.3" | java -jar org.eclipse.dash.licenses-<version>.jar -
+License information could not be automatically verified for the following content:
+
+maven/mavencentral/tech.units/indriya/1.3
+
+This content is either not correctly mapped by the system, or requires review.
+```
+
+To test multiple libraries simultaneously, you can separate them with a newline (note that you need to include the `-e` option to make `echo` understand the newline:
+
+```
+echo -e "tech.units:indriya:1.3\norg.glassfish:jakarta.json:2.0.0" | java -jar org.eclipse.dash.licenses-<version>.jar -
+...
+```
+
+You can use the experimental [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
+
+```
+echo "tech.units:indriya:1.3" | java -jar org.eclipse.dash.licenses-<version>.jar - -review -project <project> -token <token>
+License information could not be automatically verified for the following content:
+
+maven/mavencentral/tech.units/indriya/1.3
+
+This content is either not correctly mapped by the system, or requires review.
+
+Setting up a review for maven/mavencentral/tech.units/indriya/1.3.
+ - Created: https://gitlab.eclipse.org/eclipsefdn/iplab/iplab/-/issues/113
+
+```
+
+In the case where the license information for the library is not already known, this will create a review request.
 
 ### Example: Maven
 
@@ -302,11 +343,3 @@ be provided
 e.g.,
 npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -
 ```
-## Help Wanted
-
-Stuff that we need to add:
-
-* Make the implementation more extensible by adding dependency injection (#8);
-* Support for other technologies (e.g., cmake, go, ...) (#10)
-
-For a more complete list, and status, see the open issues.
