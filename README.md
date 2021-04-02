@@ -107,7 +107,7 @@ For now, however, this experimental feature only submits the first five.
 
 ```
 
-Please do not incorporate this feature into your automated builds at this time.  **Do not share your access token.**
+Please do not incorporate this feature into your automated builds at this time. **Do not share your access token.**
 
 ### Example: Single Library
 
@@ -149,14 +149,27 @@ Setting up a review for maven/mavencentral/tech.units/indriya/1.3.
 $ _
 ```
 
-In the case where the license information for the library is not already known, this will create a review request.
+In the case where the license information for the library is not already known, this will create a review request. **Do not share your access token.**
 
 ### Example: Maven
 
 ```
 $ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
 $ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps
+...
+$ _
 ```
+
+You can use the experimental [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
+
+```
+$ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
+$ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps -review -project <project> -token <token>
+...
+$ _
+```
+
+In the case where the license information for content is not already known, this will create review requests (the current implementation will make five requests maximum). **Do not share your access token.**
 
 ### Example: Maven Plugin
 
