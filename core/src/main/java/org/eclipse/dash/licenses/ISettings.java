@@ -13,6 +13,7 @@ import java.io.File;
 
 public interface ISettings {
 
+	public static final int DEFAULT_TIMEOUT = 60;
 	public static final String DEFAULT_GITLAB_URL = "https://gitlab.eclipse.org";
 	public static final String DEFAULT_IPLAB_PATH = "eclipsefdn/iplab/iplab";
 	public static final String DEFAULT_APPROVED_LICENSES_URL = "https://www.eclipse.org/legal/licenses.json";
@@ -75,7 +76,17 @@ public interface ISettings {
 	 * @return the timeout in seconds (int).
 	 */
 	default int getTimeout() {
-		return 60;
+		var value = System.getProperty("org.eclipse.dash.timeout");
+		if (value != null) {
+			try {
+				var timeout = Integer.parseInt(value);
+				if (timeout > 0)
+					return timeout;
+			} catch (NumberFormatException e) {
+				return DEFAULT_TIMEOUT;
+			}
+		}
+		return DEFAULT_TIMEOUT;
 	}
 
 	/**

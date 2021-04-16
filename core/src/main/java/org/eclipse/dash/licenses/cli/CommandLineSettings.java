@@ -25,6 +25,7 @@ public class CommandLineSettings implements ISettings {
 	private static final String HELP_OPTION = "help";
 	private static final String CD_URL_OPTION = "cd";
 	private static final String EF_URL_OPTION = "ef";
+	private static final String TIMEOUT_OPTION = "timeout";
 	private static final String APPROVED_LICENSES_URL_OPTION = "lic";
 	private static final String BATCH_OPTION = "batch";
 	private static final String CONFIDENCE_OPTION = "confidence";
@@ -55,6 +56,20 @@ public class CommandLineSettings implements ISettings {
 	@Override
 	public String getClearlyDefinedDefinitionsUrl() {
 		return commandLine.getOptionValue(CD_URL_OPTION, ISettings.DEFAULT_CLEARLYDEFINED_URL);
+	}
+
+	@Override
+	public int getTimeout() {
+		// FIXME This gets called multiple times; consider caching.
+		if (!commandLine.hasOption(TIMEOUT_OPTION))
+			return ISettings.super.getTimeout();
+
+		try {
+			return ((Number) commandLine.getParsedOptionValue(TIMEOUT_OPTION)).intValue();
+		} catch (ParseException e) {
+			// TODO Deal with this
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -98,6 +113,9 @@ public class CommandLineSettings implements ISettings {
 
 		// TODO validate URLs etc.
 		try {
+			if (commandLine.hasOption(TIMEOUT_OPTION))
+				if (((Number) commandLine.getParsedOptionValue(TIMEOUT_OPTION)).intValue() < 1)
+					return false;
 			// TODO Extend to deal with valid ranges
 			if (commandLine.hasOption(BATCH_OPTION))
 				commandLine.getParsedOptionValue(BATCH_OPTION);
@@ -166,6 +184,14 @@ public class CommandLineSettings implements ISettings {
 			.hasArg()
 			.argName("url")
 			.desc("Clearly Defined API URL")
+			.build());
+		
+		options.addOption(Option.builder(TIMEOUT_OPTION)
+			.required(false)
+			.hasArg()
+			.argName("seconds")
+			.type(Number.class)
+			.desc("Timeout for HTTP calls (in seconds)")
 			.build());
 
 		options.addOption(Option.builder(APPROVED_LICENSES_URL_OPTION)
