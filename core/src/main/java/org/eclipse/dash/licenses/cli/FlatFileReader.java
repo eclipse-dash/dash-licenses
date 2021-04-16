@@ -39,7 +39,8 @@ public class FlatFileReader implements IDependencyListReader {
 
 	@Override
 	public List<IContentId> getContentIds() {
-		return reader.lines().filter(line -> !line.isBlank()).map(this::getContentId).collect(Collectors.toList());
+		return reader.lines().filter(line -> !line.isBlank()).map(this::getContentId).distinct()
+				.collect(Collectors.toList());
 	}
 
 	public IContentId getContentId(String value) {
