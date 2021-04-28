@@ -64,14 +64,6 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	private File summary;
 
 	/**
-	 * Output a review request to the given file. If not specified, then a
-	 * dependency review will be generated at the default location within
-	 * <code>${project.build.directory}</code>
-	 */
-	@Parameter(property = "dash.review", defaultValue = "${project.build.directory}/dash/review")
-	private File review;
-
-	/**
 	 * Batch size to use (number of entries sent per API call.)
 	 */
 	@Parameter(property = "dash.batch", defaultValue = "1000")
