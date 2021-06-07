@@ -154,7 +154,7 @@ In the case where the license information for the library is not already known, 
 ### Example: Maven
 
 ```
-$ verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
+$ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
 $ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps
 ...
 $ _
