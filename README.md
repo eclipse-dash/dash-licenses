@@ -154,7 +154,7 @@ In the case where the license information for the library is not already known, 
 ### Example: Maven
 
 ```
-$ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
+$ verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
 $ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps
 ...
 $ _
@@ -262,7 +262,7 @@ $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDEN
 To automatically create IP Team review requests for identified content:
 
 ```
-$ mvn org.eclipse.dash:license-tool-plugin:license-check -dash.iplab.token=<token> -dash.projectId=technology.dash
+$ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<token> -Ddash.projectId=technology.dash
 ```
 
 ### Example: Gradle
