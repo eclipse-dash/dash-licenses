@@ -76,6 +76,17 @@ public class ClearlyDefinedContentData implements IContentData {
 	 *	            "total": 94
 	 *	        }
 	 *	    },
+	 *		"described": {
+	 *			"releaseDate": "2017-07-11",
+	 *			"sourceLocation": {
+	 *				"type": "git",
+	 *				"provider": "github",
+	 *				"namespace": "jonschlinkert",
+	 *				"name": "write",
+	 *				"revision": "f5397515060bf42f75151fcc3c4722517e4e322a",
+	 *				"url": "https://github.com/jonschlinkert/write/tree/f5397515060bf42f75151fcc3c4722517e4e322a"
+	 *			}
+	 *		},
 	 *	    "scores": {
 	 *	        "effective": 97,
 	 *	        "tool": 97
@@ -170,5 +181,51 @@ public class ClearlyDefinedContentData implements IContentData {
 	@Override
 	public String getUrl() {
 		return "https://clearlydefined.io/definitions/" + getId();
+	}
+
+	public SourceLocation getSourceLocation() {
+		return new SourceLocation(data.getOrDefault("described", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
+				.getOrDefault("sourceLocation", JsonValue.EMPTY_JSON_OBJECT).asJsonObject());
+	}
+
+	public class SourceLocation {
+		private JsonObject data;
+
+		public SourceLocation(JsonObject data) {
+			this.data = data;
+		}
+
+		public String getUrl() {
+			return data.getString("url");
+		}
+
+		public String getDownloadUrl() {
+			if ("git".equals(getType()) && "github".equals(getProvider())) {
+				String namespace = getNamespace();
+				String name = data.getString("name");
+
+				return String.format("https://github.com/%s/%s/archive/refs/tags/%s.zip", namespace, name,
+						getRevision());
+			}
+			return null;
+		}
+
+		private String getType() {
+			return data.getString("type");
+		}
+
+		private String getProvider() {
+			return data.getString("provider");
+		}
+
+		private String getNamespace() {
+			return data.getString("namespace");
+		}
+	}
+
+	public String getRevision() {
+		var coordinates = data.getOrDefault("coordinates", JsonValue.EMPTY_JSON_OBJECT).asJsonObject();
+
+		return coordinates.getString("revision");
 	}
 }

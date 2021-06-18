@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2019,2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -35,10 +35,15 @@ class ClearlyDefinedContentDataTests {
 
 		assertEquals("npm/npmjs/-/write/1.0.3", info.getId().toString());
 		assertEquals("MIT", info.getLicense());
+		assertEquals("1.0.3", info.getRevision());
 		assertArrayEquals(new String[] { "MIT" }, info.discoveredLicenses().toArray(String[]::new));
 		assertEquals(94, info.getScore());
 		assertEquals(97, info.getEffectiveScore());
 		assertEquals("https://clearlydefined.io/definitions/npm/npmjs/-/write/1.0.3", info.getUrl());
+		assertEquals("https://github.com/jonschlinkert/write/tree/f5397515060bf42f75151fcc3c4722517e4e322a",
+				info.getSourceLocation().getUrl());
+		assertEquals("https://github.com/jonschlinkert/write/archive/refs/tags/1.0.3.zip",
+				info.getSourceLocation().getDownloadUrl());
 		assertNull(info.getStatus());
 	}
 
