@@ -23,8 +23,8 @@ import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.http.IHttpClientService;
-
-import com.google.common.flogger.FluentLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
@@ -37,14 +37,14 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 	@Inject
 	IHttpClientService httpClientService;
 
-	private static final FluentLogger log = FluentLogger.forEnclosingClass();
+	final Logger logger = LoggerFactory.getLogger(EclipseFoundationSupport.class);
 
 	@Override
 	public void queryLicenseData(Collection<IContentId> ids, Consumer<IContentData> consumer) {
 		if (ids.isEmpty())
 			return;
 
-		log.atInfo().log("Querying Eclipse Foundation for license data for %1$d items.", ids.size());
+		logger.info("Querying Eclipse Foundation for license data for {} items.", ids.size());
 
 		String url = settings.getLicenseCheckUrl();
 
@@ -74,10 +74,10 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 					counter.incrementAndGet();
 				});
 
-			log.atInfo().log("Found %1$d items.", counter.get());
+			logger.info("Found {} items.", counter.get());
 		});
 		if (code != 200) {
-			log.atSevere().log("Eclipse Foundation data search time out; maybe decrease batch size.");
+			logger.error("Eclipse Foundation data search time out; maybe decrease batch size.");
 		}
 	}
 

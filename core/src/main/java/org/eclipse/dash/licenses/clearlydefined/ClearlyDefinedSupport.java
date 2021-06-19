@@ -26,11 +26,11 @@ import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 import org.eclipse.dash.licenses.http.IHttpClientService;
 import org.eclipse.dash.licenses.util.JsonUtils;
-
-import com.google.common.flogger.FluentLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClearlyDefinedSupport implements ILicenseDataProvider {
-	private static final FluentLogger log = FluentLogger.forEnclosingClass();
+	final Logger logger = LoggerFactory.getLogger(ClearlyDefinedSupport.class);
 
 	@Inject
 	ISettings settings;
@@ -85,7 +85,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		if (filteredIds.isEmpty())
 			return;
 
-		log.atInfo().log("Querying ClearlyDefined for license data for %1$d items.", filteredIds.size());
+		logger.info("Querying ClearlyDefined for license data for {} items.", filteredIds.size());
 
 		int code = httpClientService.post(settings.getClearlyDefinedDefinitionsUrl(), "application/json",
 				JsonUtils.toJson(filteredIds), response -> {
@@ -99,11 +99,11 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 						counter.incrementAndGet();
 					});
 
-					log.atInfo().log("Found %1$d items.", counter.get());
+					logger.info("Found {} items.", counter.get());
 				});
 
 		if (code != 200)
-			log.atSevere().log("ClearlyDefined data search time out; maybe decrease batch size.");
+			logger.error("ClearlyDefined data search time out; maybe decrease batch size.");
 	}
 
 	/**

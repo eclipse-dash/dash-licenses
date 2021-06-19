@@ -36,15 +36,14 @@
 			<version>2.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.flogger</groupId>
-			<artifactId>flogger</artifactId>
-			<version>0.5.1</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.31</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.flogger</groupId>
-			<artifactId>flogger-system-backend</artifactId>
-			<scope>runtime</scope>
-			<version>0.5.1</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.31</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gitlab4j</groupId>
