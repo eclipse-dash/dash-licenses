@@ -1,3 +1,17 @@
+////
+ * Copyright (C) 2020 Eclipse Foundation and others. 
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * SPDX-FileType: DOCUMENTATION
+ * SPDX-FileCopyrightText: 2020 Eclipse Foundation
+ * SPDX-License-Identifier: EPL-2.0
+////
+ 
+image:https://api.reuse.software/badge/gitlab.eclipse.org/eclipse/dash/org.eclipse.dash.handbook[link=https://api.reuse.software/info/gitlab.eclipse.org/eclipse/dash/org.eclipse.dash.handbook]
+
 # Eclipse Dash License Tool
 
 The Eclipse Dash License Tool identifies the licenses of content.
@@ -24,8 +38,11 @@ From the root:
 $ mvn clean install
 ```
 
-The build generates a shaded JAR, `./core/target/org.eclipse.dash.licenses-<version>.jar` that contains 
-everything that is required to run from the command line.
+The build generates:
+
+- a shaded JAR, `./core/target/org.eclipse.dash.licenses-<version>.jar` that contains 
+everything that is required to run from the command line; and
+- a Maven plugin, `org.eclipse.dash:license-tool-plugin:license-check`.
 
 ## Usage
 
@@ -61,7 +78,7 @@ The output is either a statement that the licenses for all of the content have b
 
 When the tool identifies a library that requires further review, the obvious question is: now what?
 
-The traditional means of requsetion review is by creating a [contribution questionnaire](https://www.eclipse.org/projects/handbook/#ip-prereq-cq) to request assistance from the IP Team. This still works; Eclipse committers who are familiar with this process can continue to engage in this manner.
+The traditional means of requesting a review is by creating a [contribution questionnaire](https://www.eclipse.org/projects/handbook/#ip-prereq-cq) to request assistance from the IP Team. This still works; Eclipse committers who are familiar with this process can continue to engage in this manner (use the ClearlyDefined ID as the "Name and Version of the Library" when making the request).
 
 The tool incorporates a new experimental feature that leverages some new technology. Instead of creating a CQ via IPZilla, the tool can create an issue against the Eclipse Foundation's GitLab instance (there is discussion [here](https://gitlab.eclipse.org/eclipsefdn/iplab/emo/-/issues/2)). Note that this feature is still under development and processing in the back end may take a day or two. It's still very experimental, so there will be changes. 
 
@@ -72,7 +89,7 @@ To use this feature, you must have committer status on at least one Eclipse proj
 * Pass the token via the `-token` option; and
 * Pass the project id via the `-project` option.
 
-Note that the options are slighly different for the [Maven plugin](README.md#maven-plugin-options).
+Note that the options are slightly different for the [Maven plugin](README.md#maven-plugin-options).
 
 The tool currently limits itself to five requests. **Do not share your access token.**
 
@@ -152,6 +169,8 @@ $ _
 In the case where the license information for the library is not already known, this will create a review request. **Do not share your access token.**
 
 ### Example: Maven
+
+You can use the Maven `dependency` plugin to generate a list of dependencies and then feed that list into the tool.
 
 ```
 $ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
@@ -264,6 +283,37 @@ To automatically create IP Team review requests for identified content:
 ```
 $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<token> -Ddash.projectId=technology.dash
 ```
+
+### Troubleshooting Maven Dependencies
+
+There are cases where some transitive dependency with problematic licensing that is neither directly nor indirectly required by your content is dragged in by some other transitive dependency.
+
+The Dash License Tool really doesn't know anything about dependencies. It has no means of making any assessment of whether or not certain content actually winds up in the products that your producing. It only knows about the information that it is fed either directly by you or by the underlying dependency resolution system.
+
+In this case, you can provide Maven with a list of exclusions.
+
+```
+<project>
+  ...
+  <dependencies>
+    <dependency>
+      <groupId>org.linkedin</groupId>
+      <artifactId>org.linkedin.zookeeper-impl</artifactId>
+      <version>${linkedin-zookeeper-version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+   ...
+</project>
+```
+
+Maven will skip matching content when it resolves dependencies.
+
+Note that this "problem" is not a _Dash License Tool problem_, but rather is a dependency management problem. Try not to think in terms of making changes to satisfy quirks of this particular tool, but rather of making your project's dependency list as accurate as possible. Other tools, like the GitHub Dependabot and the [OSS Review Toolkit](https://github.com/oss-review-toolkit/ort), use this information as well.
 
 ### Example: Gradle
 
