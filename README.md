@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
 ////
  
-image:https://api.reuse.software/badge/gitlab.eclipse.org/eclipse/dash/org.eclipse.dash.handbook[link=https://api.reuse.software/info/gitlab.eclipse.org/eclipse/dash/org.eclipse.dash.handbook]
+[![REUSE status](https://api.reuse.software/badge/github.com/eclipse/dash-licenses)](https://api.reuse.software/info/github.com/eclipse/dash-licenses)
 
 # Eclipse Dash License Tool
 
