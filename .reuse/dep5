@@ -1,0 +1,56 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Eclipse Dash
+Upstream-Contact: Wayne Beaton <wayne.beaton@eclipse-foundation.org>
+Source: https://github.com/eclipse/dash-licenses
+
+Files: DEPENDENCIES
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: .project
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: .classpath
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: .gitignore
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: .settings/*
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: core/.project
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: core/.classpath
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: core/.settings/*
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: maven-plugin/.project
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: maven-plugin/.classpath
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: maven-plugin/.settings/*
+Copyright: 2019 The Eclipse Foundation
+License: EPL-2.0
+
+Files: yarn/package.json
+Copyright: 2020 Kichwa Coders Canada Inc.
+License: EPL-2.0
+
+Files: yarn/yarn.lock
+Copyright: 2020 Kichwa Coders Canada Inc.
+License: EPL-2.0
