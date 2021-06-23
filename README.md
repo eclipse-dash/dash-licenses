@@ -1,4 +1,4 @@
-////
+<!--
  * Copyright (C) 2020 Eclipse Foundation and others. 
  * 
  * This program and the accompanying materials are made available under the
@@ -8,7 +8,7 @@
  * SPDX-FileType: DOCUMENTATION
  * SPDX-FileCopyrightText: 2020 Eclipse Foundation
  * SPDX-License-Identifier: EPL-2.0
-////
+-->
  
 [![REUSE status](https://api.reuse.software/badge/github.com/eclipse/dash-licenses)](https://api.reuse.software/info/github.com/eclipse/dash-licenses)
 
