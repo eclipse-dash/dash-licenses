@@ -75,3 +75,14 @@ Files: core/src/test/java/chalk.json
 Copyright: 2013 Sindre Sorhus
 License: MIT
 
+Files: core/src/test/java/definitions.json
+Copyright: 2018 Contributors to ClearlyDefined
+License: CC0-1.0
+
+Files: core/src/test/java/lockfile-1.1.0.json
+Copyright: 2018 Contributors to ClearlyDefined
+License: CC0-1.0
+
+Files: core/src/test/java/write-1.0.3.json
+Copyright: 2018 Contributors to ClearlyDefined
+License: CC0-1.0
