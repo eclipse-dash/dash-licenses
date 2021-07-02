@@ -147,7 +147,7 @@ public class YarnLockFileReader implements IDependencyListReader {
 		 * a content ID from it.
 		 */
 		public IContentId getId() {
-			var pattern = Pattern.compile("(?:@(?<namespace>[\\w-]+)\\/)?(?<name>[\\w-]+)");
+			var pattern = Pattern.compile("(?:@(?<namespace>[\\w-]+)\\/)?(?<name>[\\w-\\.]+)");
 			var matcher = pattern.matcher(value);
 			if (matcher.find()) {
 				var namespace = matcher.group("namespace");
