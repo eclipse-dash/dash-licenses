@@ -58,6 +58,7 @@ public class LicenseSupport {
 		licenses.put("EPL-1.0", "Eclipse Public License, v1.0");
 		licenses.put("EPL-2.0", "Eclipse Public License, v2.0");
 		licenses.put("WTFPL", "WTFPL");
+		licenses.put("MIT-0", "MIT-0");
 		licenses.put("CC-BY-3.0", "CC-BY-3.0");
 		licenses.put("CC-BY-4.0", "CC-BY-4.0");
 		licenses.put("UNLICENSE", "Unlicense");
