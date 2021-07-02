@@ -97,6 +97,8 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 						data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
 						consumer.accept(data);
 						counter.incrementAndGet();
+						logger.debug("Clearly Defined {} score: {} {} {}", data.getId(), data.getLicenseScore(),
+								data.getLicense(), data.getStatus() == Status.Approved ? "approved" : "restricted");
 					});
 
 					logger.info("Found {} items.", counter.get());
@@ -138,8 +140,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 *         otherwise.
 	 */
 	public boolean isAccepted(ClearlyDefinedContentData data) {
-		if (data.getEffectiveScore() >= settings.getConfidenceThreshold()
-				|| data.getLicenseScore() >= settings.getConfidenceThreshold()) {
+		if (data.getLicenseScore() >= settings.getConfidenceThreshold()) {
 			if (licenseService.getStatus(data.getLicense()) != LicenseSupport.Status.Approved)
 				return false;
 			return !data.discoveredLicenses().filter(license -> !"NONE".equals(license))
