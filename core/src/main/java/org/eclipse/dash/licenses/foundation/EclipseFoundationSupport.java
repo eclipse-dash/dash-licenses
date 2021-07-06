@@ -63,14 +63,20 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			JsonObject approved = read.getJsonObject("approved");
 			if (approved != null)
 				approved.forEach((key, each) -> {
-					consumer.accept(new FoundationData(each.asJsonObject()));
+					FoundationData data = new FoundationData(each.asJsonObject());
+					logger.debug("EF approved: {} score: {} {} {}", data.getId(), data.getScore(), data.getLicense(),
+							data.getAuthority());
+					consumer.accept(data);
 					counter.incrementAndGet();
 				});
 
 			JsonObject restricted = read.getJsonObject("restricted");
 			if (restricted != null)
 				restricted.forEach((key, each) -> {
-					consumer.accept(new FoundationData(each.asJsonObject()));
+					FoundationData data = new FoundationData(each.asJsonObject());
+					logger.debug("EF restricted: {} score: {} {} {}", data.getId(), data.getScore(), data.getLicense(),
+							data.getAuthority());
+					consumer.accept(data);
 					counter.incrementAndGet();
 				});
 

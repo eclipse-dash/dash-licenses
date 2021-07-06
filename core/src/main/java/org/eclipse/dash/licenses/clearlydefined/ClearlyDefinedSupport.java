@@ -97,7 +97,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 						data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
 						consumer.accept(data);
 						counter.incrementAndGet();
-						logger.debug("Clearly Defined {} score: {} {} {}", data.getId(), data.getLicenseScore(),
+						logger.debug("ClearlyDefined {} score: {} {} {}", data.getId(), data.getScore(),
 								data.getLicense(), data.getStatus() == Status.Approved ? "approved" : "restricted");
 					});
 
