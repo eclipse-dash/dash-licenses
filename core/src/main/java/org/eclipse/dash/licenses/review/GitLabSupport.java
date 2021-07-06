@@ -26,6 +26,8 @@ import org.gitlab4j.api.models.Issue;
 
 public class GitLabSupport {
 
+	private static final int MAXIMUM_REVIEWS = 10;
+
 	@Inject
 	ISettings settings;
 
@@ -34,8 +36,12 @@ public class GitLabSupport {
 
 	public void createReviews(List<LicenseData> needsReview, PrintWriter output) {
 		execute(connection -> {
-			var count = 1;
+			var count = 0;
 			for (LicenseData licenseData : needsReview) {
+				if (count >= MAXIMUM_REVIEWS)
+					break;
+				count++;
+
 				output.println(String.format("Setting up a review for %s.", licenseData.getId().toString()));
 
 				if (!licenseData.getId().isValid()) {
@@ -77,14 +83,12 @@ public class GitLabSupport {
 					throw new RuntimeException(e);
 				}
 
-				if (count++ >= 5)
-					break;
 			}
 
 			if (count < needsReview.size()) {
 				output.println();
 				output.println("More content needs to be reviewed.");
-				output.println("For now, however, this experimental feature only submits the first five.");
+				output.printf("For now, however, this experimental feature only submits the first %d.\n", count);
 				output.println();
 			}
 		});
