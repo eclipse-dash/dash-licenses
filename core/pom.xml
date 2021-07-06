@@ -112,6 +112,14 @@
 					</additionalClasspathElements>
 				</configuration>
 			</plugin>
-		</plugins>
+		</plugins>		
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/java</directory>
+				<includes>
+					<include>simplelogger.properties</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 </project>
