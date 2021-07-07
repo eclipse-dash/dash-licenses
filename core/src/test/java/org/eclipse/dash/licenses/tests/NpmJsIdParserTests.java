@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2019 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -9,8 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.eclipse.dash.licenses.NpmJsIdParser;
 import org.junit.jupiter.api.Test;
@@ -40,20 +40,20 @@ class NpmJsIdParserTests {
 
 	@Test
 	void testWithFile() {
-		assertFalse(new NpmJsIdParser()
-				.parseId("vscode-css-languageserver@file:target/vscode-css-languageserver-1.0.0.tgz").isValid());
+		assertNull(new NpmJsIdParser()
+				.parseId("vscode-css-languageserver@file:target/vscode-css-languageserver-1.0.0.tgz"));
 	}
 
 	@Test
 	void testWithPartialVersion() {
-		assertFalse(new NpmJsIdParser().parseId("cheerio@1.0").isValid());
+		assertNull(new NpmJsIdParser().parseId("cheerio@1.0"));
 	}
 
 	@Test
 	void testWithInvalidVersion() {
-		assertFalse(new NpmJsIdParser().parseId("cheerio@1.0.").isValid());
-		assertFalse(new NpmJsIdParser().parseId("cheerio@a.0.").isValid());
-		assertFalse(new NpmJsIdParser().parseId("cheerio@.0.").isValid());
+		assertNull(new NpmJsIdParser().parseId("cheerio@1.0."));
+		assertNull(new NpmJsIdParser().parseId("cheerio@a.0."));
+		assertNull(new NpmJsIdParser().parseId("cheerio@.0."));
 	}
 
 	@Test
@@ -65,16 +65,16 @@ class NpmJsIdParserTests {
 
 	@Test
 	void testMissingName() {
-		assertFalse(new NpmJsIdParser().parseId("@1.0.0-rc.3").isValid());
+		assertNull(new NpmJsIdParser().parseId("@1.0.0-rc.3"));
 	}
 
 	@Test
 	void testMissingVersion() {
-		assertFalse(new NpmJsIdParser().parseId("cheerio@").isValid());
+		assertNull(new NpmJsIdParser().parseId("cheerio@"));
 	}
 
 	@Test
 	void testExtraInformationFails() {
-		assertFalse(new NpmJsIdParser().parseId("blah/blah/blah@1.2.3").isValid());
+		assertNull(new NpmJsIdParser().parseId("blah/blah/blah@1.2.3"));
 	}
 }

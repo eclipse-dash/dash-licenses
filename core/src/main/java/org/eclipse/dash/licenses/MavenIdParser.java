@@ -44,7 +44,7 @@ public class MavenIdParser implements ContentIdParser {
 		 */
 		Matcher matcher = mavenPattern.matcher(value.trim());
 		if (!matcher.matches())
-			return new InvalidContentId(value);
+			return null;
 
 		String groupid = matcher.group("groupid");
 		String artifactid = matcher.group("artifactid");

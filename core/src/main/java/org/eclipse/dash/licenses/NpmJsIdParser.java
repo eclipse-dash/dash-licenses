@@ -39,7 +39,7 @@ public class NpmJsIdParser implements ContentIdParser {
 	public IContentId parseId(String value) {
 		Matcher matcher = pattern.matcher(value.trim());
 		if (!matcher.matches())
-			return new InvalidContentId(value);
+			return null;
 
 		String namespace = matcher.group("namespace");
 		if (namespace == null)

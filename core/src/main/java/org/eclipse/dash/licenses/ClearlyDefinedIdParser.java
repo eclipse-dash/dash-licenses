@@ -25,7 +25,7 @@ public class ClearlyDefinedIdParser implements ContentIdParser {
 	@Override
 	public IContentId parseId(String input) {
 		if (input == null || input.isEmpty()) {
-			return new InvalidContentId(input);
+			return null;
 		}
 		return ContentId.getContentId(input);
 	}
