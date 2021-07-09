@@ -44,9 +44,13 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 		if (ids.isEmpty())
 			return;
 
-		logger.info("Querying Eclipse Foundation for license data for {} items.", ids.size());
-
 		String url = settings.getLicenseCheckUrl();
+		if (url.isBlank()) {
+			logger.debug("Bypassing Eclipse Foundation.");
+			return;
+		}
+
+		logger.info("Querying Eclipse Foundation for license data for {} items.", ids.size());
 
 		JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
 		ids.stream().forEach(id -> builder.add(id.toString()));
