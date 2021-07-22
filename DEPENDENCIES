@@ -1,4 +1,4 @@
-maven/mavencentral/aopalliance/aopalliance/1.0,  LicenseRef-Public-Domain, approved, emo_ip_team
+maven/mavencentral/aopalliance/aopalliance/1.0, LicenseRef-Public-Domain, approved, emo_ip_team
 maven/mavencentral/com.fasterxml.jackson.core/jackson-annotations/2.10.3, Apache-2.0, approved, CQ21280
 maven/mavencentral/com.fasterxml.jackson.core/jackson-core/2.10.3, Apache-2.0, approved, CQ21186
 maven/mavencentral/com.fasterxml.jackson.core/jackson-databind/2.10.3, Apache-2.0, approved, CQ21187
@@ -34,7 +34,7 @@ maven/mavencentral/org.apache.commons/commons-csv/1.8, Apache-2.0, approved, cle
 maven/mavencentral/org.apache.commons/commons-lang3/3.8.1, Apache-2.0, approved, #815
 maven/mavencentral/org.apache.httpcomponents/httpclient/4.5.9, Apache-2.0, approved, CQ22761
 maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.11, Apache-2.0, approved, CQ18704
-maven/mavencentral/org.apache.maven.plugin-tools/maven-plugin-annotations/3.6.0, Apache-2.0, approved, #808
+maven/mavencentral/org.apache.maven.plugin-tools/maven-plugin-annotations/3.6.1, Apache-2.0, approved, #808
 maven/mavencentral/org.apache.maven.resolver/maven-resolver-api/1.4.1, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.apache.maven.resolver/maven-resolver-impl/1.4.1, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.apache.maven.resolver/maven-resolver-spi/1.4.1, Apache-2.0, approved, clearlydefined
@@ -63,7 +63,7 @@ maven/mavencentral/org.eclipse.aether/aether-util/0.9.0.M2, EPL-1.0, approved, t
 maven/mavencentral/org.eclipse.dash/org.eclipse.dash.licenses/0.0.1-SNAPSHOT, EPL-2.0, approved, technology.dash
 maven/mavencentral/org.eclipse.sisu/org.eclipse.sisu.inject/0.3.4, EPL-1.0, approved, technology.sisu
 maven/mavencentral/org.eclipse.sisu/org.eclipse.sisu.plexus/0.3.4, EPL-1.0, approved, technology.sisu
-maven/mavencentral/org.gitlab4j/gitlab4j-api/4.15.7, MIT, approved, #814
+maven/mavencentral/org.gitlab4j/gitlab4j-api/4.17.0, MIT, approved, clearlydefined
 maven/mavencentral/org.glassfish.hk2.external/aopalliance-repackaged/2.6.1, EPL-2.0 OR GPL-2.0-with-classpath-exception, approved, ee4j.glassfish
 maven/mavencentral/org.glassfish.hk2.external/jakarta.inject/2.6.1, EPL-2.0 OR GPL-2.0-with-classpath-exception, approved, ee4j.glassfish
 maven/mavencentral/org.glassfish.hk2/hk2-api/2.6.1, EPL-2.0 OR GPL-2.0-with-classpath-exception, approved, ee4j.glassfish
@@ -75,7 +75,7 @@ maven/mavencentral/org.glassfish.jersey.core/jersey-client/2.30.1, EPL-2.0 OR GP
 maven/mavencentral/org.glassfish.jersey.core/jersey-common/2.30.1, EPL-2.0 OR GPL-2.0-with-classpath-exception, approved, ee4j.jersey
 maven/mavencentral/org.glassfish.jersey.inject/jersey-hk2/2.30.1, EPL-2.0 OR GPL-2.0-with-classpath-exception, approved, ee4j.jersey
 maven/mavencentral/org.glassfish.jersey.media/jersey-media-multipart/2.30.1, EPL-2.0 OR GPL-2.0-with-classpath-exception, approved, ee4j.jersey
-maven/mavencentral/org.glassfish/jakarta.json/2.0.0, EPL-2.0 OR GPL-2.0-with-classpath-exception, approved, ee4j.jsonp
+maven/mavencentral/org.glassfish/jakarta.json/2.0.1, EPL-2.0 OR GPL-2.0-with-classpath-exception, approved, ee4j.jsonp
 maven/mavencentral/org.javassist/javassist/3.25.0-GA, MPL-1.1 OR LGPL -2.1+ OR Apache-2.0, approved, CQ19885
 maven/mavencentral/org.jvnet.mimepull/mimepull/1.9.11, CDDL-1.1 OR GPL-2.0-with-classpath-exception, approved, CQ21484
 maven/mavencentral/org.slf4j/slf4j-api/1.7.31, MIT, approved, CQ23467
