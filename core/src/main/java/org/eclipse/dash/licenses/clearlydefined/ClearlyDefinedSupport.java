@@ -87,6 +87,10 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 
 		logger.info("Querying ClearlyDefined for license data for {} items.", filteredIds.size());
 
+		if (logger.isDebugEnabled()) {
+			filteredIds.forEach(each -> logger.debug("Sending: {}", each));
+		}
+
 		int code = httpClientService.post(settings.getClearlyDefinedDefinitionsUrl(), "application/json",
 				JsonUtils.toJson(filteredIds), response -> {
 					// FIXME Seems like overkill.
