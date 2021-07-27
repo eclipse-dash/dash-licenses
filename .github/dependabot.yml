@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2021 Eclipse Foundation, Inc.
+# SPDX-License-Identifier: EPL-2.0
+
+version: 2
+updates:
+
+  # Maintain dependencies for Maven
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "daily"
