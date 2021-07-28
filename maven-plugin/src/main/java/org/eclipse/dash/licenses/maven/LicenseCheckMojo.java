@@ -118,6 +118,12 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	private boolean skip;
 
 	/**
+	 * Skip execution of the Dash License Check mojo.
+	 */
+	@Parameter(property = "dash.fail", defaultValue = "false")
+	private boolean failWhenReviewNeeded;
+	
+	/**
 	 * The Maven session.
 	 */
 	@Parameter(defaultValue = "${session}", readonly = true, required = true)
@@ -211,5 +217,10 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		}
 
 		getLog().info("Summary file was written to: " + summary);
+		
+		if (failWhenReviewNeeded && needsReviewCollector.getStatus() > 0) {
+			getLog().error("Dependency license check failed. Some dependencies need to be vetted.");
+			throw new MojoFailureException("Some dependencies must be vetted.");
+		}
 	}
 }

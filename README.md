@@ -263,9 +263,10 @@ Add the `repo.eclipse.org` plugin repository so that the license check plugin is
 
 #### Maven Plugin Options
 
-The Maven Plugin has the following options:
+The Maven Plugin has the following "-D" options:
 
-- `dash.skip` - Skip executing the plugin.
+- `dash.skip` - Skip executing the plugin. Default: `false`.
+- `dash.fail` - Force the build to fail when license issues are found. Default: `false`. 
 - `dash.iplab.token` - The access token for automatically creating IP Team review requests.
 - `dash.projectId` - The project id
 - `dash.summary` - The location (where) to generate the summary file.
