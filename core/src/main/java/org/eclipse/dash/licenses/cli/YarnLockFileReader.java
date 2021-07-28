@@ -156,7 +156,9 @@ public class YarnLockFileReader implements IDependencyListReader {
 				var name = matcher.group("name");
 				var version = getVersion();
 
-				return ContentId.getContentId("npm", "npmjs", namespace, name, version);
+				if (version != null) {
+					return ContentId.getContentId("npm", "npmjs", namespace, name, version);
+				}
 			}
 			return new InvalidContentId(value);
 		}
@@ -179,11 +181,6 @@ public class YarnLockFileReader implements IDependencyListReader {
 				}
 			}
 			return null;
-		}
-
-		@Override
-		public String toString() {
-			return "Record: " + value;
 		}
 
 		public Stream<Record> stream() {
