@@ -91,7 +91,7 @@ To use this feature, you must have committer status on at least one Eclipse proj
 
 Note that the options are slightly different for the [Maven plugin](README.md#maven-plugin-options).
 
-The tool currently limits itself to five requests. **Do not share your access token.**
+The tool currently limits the number of libraries that it will send for review (while we are experimenting with this feature, we want to avoid deluging our vetting system with requests). **Do not share your access token.**
 
 Example:
 
@@ -267,7 +267,7 @@ The Maven Plugin has the following "-D" options:
 
 - `dash.skip` - Skip executing the plugin. Default: `false`.
 - `dash.fail` - Force the build to fail when license issues are found. Default: `false`. 
-- `dash.iplab.token` - The access token for automatically creating IP Team review requests.
+- `dash.iplab.token` - The access token for automatically creating IP Team review requests. **Do not share your access token.**
 - `dash.projectId` - The project id
 - `dash.summary` - The location (where) to generate the summary file.
 
@@ -284,6 +284,8 @@ To automatically create IP Team review requests for identified content:
 ```
 $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<token> -Ddash.projectId=technology.dash
 ```
+
+**Do not share your access token.**
 
 ### Troubleshooting Maven Dependencies
 
@@ -336,9 +338,9 @@ $ brew install grep
 
 Afterwards `grep` will be accessible via `ggrep` so `ggrep -Poh "\S+:(system|provided|compile)` will do the trick.
  
-### Example: Yarn via `yarn.lock` (Experimental)
+### Example: Yarn via `yarn.lock`
 
-If you've generated a `yarn.lock` file, you can feed it directly to the license tool. This option leverages a hack to determine the very specific dependencies and versions identified by yarn using the `resolved` URL for each entry in the file. This functionality is experimental; results may vary.
+If you've generated a `yarn.lock` file, you can feed it directly to the license tool. 
 
 ```
 $ java -jar org.eclipse.dash.licenses-<version>.jar yarn.lock
