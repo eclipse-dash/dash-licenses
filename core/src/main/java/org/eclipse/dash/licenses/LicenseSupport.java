@@ -64,6 +64,7 @@ public class LicenseSupport {
 		licenses.put("UNLICENSE", "Unlicense");
 		licenses.put("ARTISTIC-2.0", "Artistic-2.0");
 		licenses.put("BSD-2-Clause-FreeBSD", "BSD 2-Clause FreeBSD License");
+		licenses.put("0BSD", "BSD Zero Clause License");
 		return licenses;
 	}
 
