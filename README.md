@@ -359,7 +359,7 @@ This content is either not correctly mapped by the system, or requires review.
 We provide a tool to generate a dependency list for yarn-based builds.
 
 ```
-$ (cd <path-to-this-repo>yarn && yarn install)
+$ (cd <path-to-this-repo>/yarn && yarn install)
 $ (cd <path-to-project> && node <path-to-this-repo>/yarn/index.js) \
  | java -jar org.eclipse.dash.licenses-<version>.jar -
 ```
