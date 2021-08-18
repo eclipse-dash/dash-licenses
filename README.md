@@ -84,7 +84,7 @@ The tool incorporates a new experimental feature that leverages some new technol
 
 To use this feature, you must have committer status on at least one Eclipse project.
 
-* Get an [authentication token](https://gitlab.eclipse.org/-/profile/personal_access_tokens) from `gitlab.eclipse.org`;
+* Get an [authentication token](https://gitlab.eclipse.org/-/profile/personal_access_tokens) (scope: `api`) from `gitlab.eclipse.org`;
 * Include the `-review` option;
 * Pass the token via the `-token` option; and
 * Pass the project id via the `-project` option.
