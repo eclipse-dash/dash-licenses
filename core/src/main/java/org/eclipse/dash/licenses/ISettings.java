@@ -13,7 +13,10 @@ import java.io.File;
 
 public interface ISettings {
 
-	public static final int DEFAULT_TIMEOUT = 60;
+	/**
+	 * Default timeout in seconds. We're patient.
+	 */
+	public static final int DEFAULT_TIMEOUT = 60 * 2;
 	public static final String DEFAULT_GITLAB_URL = "https://gitlab.eclipse.org";
 	public static final String DEFAULT_IPLAB_PATH = "eclipsefdn/emo-team/iplab";
 	public static final String DEFAULT_APPROVED_LICENSES_URL = "https://www.eclipse.org/legal/licenses.json";
