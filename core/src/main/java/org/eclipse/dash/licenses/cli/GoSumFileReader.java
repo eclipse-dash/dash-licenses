@@ -5,7 +5,6 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
-import org.eclipse.dash.licenses.context.IContext;
 import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.util.JsonUtils;
 import org.jsoup.Jsoup;
@@ -25,12 +24,12 @@ import java.util.stream.Collectors;
 public class GoSumFileReader implements IDependencyListReader {
 
   private final BufferedReader reader;
-  private final IContext iContext;
+  private final HttpClientService clientService;
 
-  public GoSumFileReader(InputStream input, IContext context) {
+  public GoSumFileReader(InputStream input, HttpClientService clientService) {
       InputStreamReader inStreamReader = new InputStreamReader(input);
-      reader = new BufferedReader(inStreamReader);
-      iContext = context;
+      this.reader = new BufferedReader(inStreamReader);
+      this.clientService = clientService;
   }
 
   @Override
@@ -89,9 +88,7 @@ public class GoSumFileReader implements IDependencyListReader {
   }
 
   private void getFullSHA(String org, String repoName, String shortSHA, Consumer<String> consumer) {
-    HttpClientService client = new HttpClientService(iContext);
-
-    client.get(String.format("https://api.github.com/repos/%s/%s/commits/%s", org, repoName, shortSHA), "application/json",
+    this.clientService.get(String.format("https://api.github.com/repos/%s/%s/commits/%s", org, repoName, shortSHA), "application/json",
       (inputStream) -> {
         JsonObject commit = JsonUtils.readJson(inputStream);
         consumer.accept(commit.get("sha").toString().replace("\"", ""));
@@ -99,9 +96,7 @@ public class GoSumFileReader implements IDependencyListReader {
   }
 
   private void findTagSHA(String org, String repoName, String tag, Consumer<String> consumer) {
-    HttpClientService client = new HttpClientService(iContext);
-
-    client.get(String.format("https://api.github.com/repos/%s/%s/tags", org, repoName), "application/json",
+    this.clientService.get(String.format("https://api.github.com/repos/%s/%s/tags", org, repoName), "application/json",
       (inputStream) -> {
         JsonArray tagArray = JsonUtils.readJson(inputStream);
         for (JsonValue jsonTag: tagArray) {

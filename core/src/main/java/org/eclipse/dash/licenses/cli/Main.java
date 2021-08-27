@@ -24,6 +24,7 @@ import java.util.List;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
+import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 
@@ -49,8 +50,6 @@ import com.google.inject.Injector;
  * @param args
  */
 public class Main {
-
-  private static IContext context;
 
 	public static void main(String[] args) {
 		CommandLineSettings settings = CommandLineSettings.getSettings(args);
@@ -90,7 +89,7 @@ public class Main {
 		Arrays.stream(settings.getFileNames()).forEach(name -> {
 			IDependencyListReader reader = null;
 			try {
-				reader = getReader(name);
+				reader = getReader(name, injector);
 			} catch (FileNotFoundException e) {
 				System.out.println(String.format("The file \"%s\" does not exist.", name));
 				CommandLineSettings.printUsage(System.out);
@@ -117,7 +116,7 @@ public class Main {
 	}
 
 	@SuppressWarnings("resource")
-	private static IDependencyListReader getReader(String name) throws FileNotFoundException {
+	private static IDependencyListReader getReader(String name, Injector injector) throws FileNotFoundException {
 		if ("-".equals(name)) {
 			return new FlatFileReader(new InputStreamReader(System.in));
 		} else {
@@ -130,7 +129,7 @@ public class Main {
 					return new YarnLockFileReader(new FileReader(input));
 				}
 				if ("go.sum".equals(input.getName())) {
-					return new GoSumFileReader(new FileInputStream(input), context);
+					return new GoSumFileReader(new FileInputStream(input), injector.getInstance(HttpClientService.class));
 				}
 				return new FlatFileReader(new FileReader(input));
 			} else {
