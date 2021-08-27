@@ -1,8 +1,11 @@
 package org.eclipse.dash.licenses.tests.cli;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.eclipse.dash.licenses.cli.CommandLineSettings;
 import org.eclipse.dash.licenses.cli.GoSumFileReader;
-import org.eclipse.dash.licenses.context.DefaultContext;
+import org.eclipse.dash.licenses.context.LicenseToolModule;
+import org.eclipse.dash.licenses.http.HttpClientService;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -17,8 +20,14 @@ public class GoSumFileReaderTests {
 
     @Test
     public void testShouldParseGoSumFile() {
-      InputStream in = new ByteArrayInputStream(GO_SUM_FILE_CONTENT.getBytes());
-      GoSumFileReader goSumFileReader = new GoSumFileReader(in, new DefaultContext(CommandLineSettings.getSettings(new String[]{})));
-      goSumFileReader.getContentIds();
+        InputStream in = new ByteArrayInputStream(GO_SUM_FILE_CONTENT.getBytes());
+
+        CommandLineSettings settings = CommandLineSettings.getSettings(new String[]{});
+
+        Injector injector = Guice.createInjector(new LicenseToolModule(settings));
+        HttpClientService httpClientService = injector.getInstance(HttpClientService.class);
+
+        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService);
+        goSumFileReader.getContentIds();
     }
 }
