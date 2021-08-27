@@ -84,14 +84,14 @@ The tool incorporates a new experimental feature that leverages some new technol
 
 To use this feature, you must have committer status on at least one Eclipse project.
 
-* Get an [authentication token](https://gitlab.eclipse.org/-/profile/personal_access_tokens) from `gitlab.eclipse.org`;
+* Get an [authentication token](https://gitlab.eclipse.org/-/profile/personal_access_tokens) (scope: `api`) from `gitlab.eclipse.org`;
 * Include the `-review` option;
 * Pass the token via the `-token` option; and
 * Pass the project id via the `-project` option.
 
 Note that the options are slightly different for the [Maven plugin](README.md#maven-plugin-options).
 
-The tool currently limits itself to five requests. **Do not share your access token.**
+The tool currently limits the number of libraries that it will send for review (while we are experimenting with this feature, we want to avoid deluging our vetting system with requests). **Do not share your access token.**
 
 Example:
 
@@ -263,10 +263,11 @@ Add the `repo.eclipse.org` plugin repository so that the license check plugin is
 
 #### Maven Plugin Options
 
-The Maven Plugin has the following options:
+The Maven Plugin has the following "-D" options:
 
-- `dash.skip` - Skip executing the plugin.
-- `dash.iplab.token` - The access token for automatically creating IP Team review requests.
+- `dash.skip` - Skip executing the plugin. Default: `false`.
+- `dash.fail` - Force the build to fail when license issues are found. Default: `false`. 
+- `dash.iplab.token` - The access token for automatically creating IP Team review requests. **Do not share your access token.**
 - `dash.projectId` - The project id
 - `dash.summary` - The location (where) to generate the summary file.
 
@@ -283,6 +284,8 @@ To automatically create IP Team review requests for identified content:
 ```
 $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<token> -Ddash.projectId=technology.dash
 ```
+
+**Do not share your access token.**
 
 ### Troubleshooting Maven Dependencies
 
@@ -335,9 +338,9 @@ $ brew install grep
 
 Afterwards `grep` will be accessible via `ggrep` so `ggrep -Poh "\S+:(system|provided|compile)` will do the trick.
  
-### Example: Yarn via `yarn.lock` (Experimental)
+### Example: Yarn via `yarn.lock`
 
-If you've generated a `yarn.lock` file, you can feed it directly to the license tool. This option leverages a hack to determine the very specific dependencies and versions identified by yarn using the `resolved` URL for each entry in the file. This functionality is experimental; results may vary.
+If you've generated a `yarn.lock` file, you can feed it directly to the license tool. 
 
 ```
 $ java -jar org.eclipse.dash.licenses-<version>.jar yarn.lock
@@ -356,7 +359,7 @@ This content is either not correctly mapped by the system, or requires review.
 We provide a tool to generate a dependency list for yarn-based builds.
 
 ```
-$ (cd <path-to-this-repo>yarn && yarn install)
+$ (cd <path-to-this-repo>/yarn && yarn install)
 $ (cd <path-to-project> && node <path-to-this-repo>/yarn/index.js) \
  | java -jar org.eclipse.dash.licenses-<version>.jar -
 ```

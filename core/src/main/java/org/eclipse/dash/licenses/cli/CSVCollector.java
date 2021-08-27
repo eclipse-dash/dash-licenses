@@ -11,6 +11,8 @@ package org.eclipse.dash.licenses.cli;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.dash.licenses.LicenseData;
@@ -23,6 +25,7 @@ import org.eclipse.dash.licenses.LicenseSupport.Status;
  */
 public class CSVCollector implements IResultsCollector {
 	private PrintWriter output;
+	private List<LicenseData> content = new ArrayList<>();
 
 	public CSVCollector(OutputStream output) {
 		this.output = new PrintWriter(output);
@@ -30,16 +33,18 @@ public class CSVCollector implements IResultsCollector {
 
 	@Override
 	public void accept(LicenseData data) {
-		// FIXME Use a proper CSV framework
-		// TODO Make column selection and order configurable
-		output.println(
-				String.format("%s, %s, %s, %s", data.getId(), Optional.ofNullable(data.getLicense()).orElse("unknown"),
-						data.getStatus() == Status.Approved ? "approved" : "restricted",
-						Optional.ofNullable(data.getAuthority()).orElse("none")));
+		content.add(data);
 	}
 
 	@Override
 	public void close() {
+		// FIXME Use a proper CSV framework
+		// TODO Make column selection and order configurable
+		content.stream().sorted((a, b) -> a.getId().compareTo(b.getId()))
+				.forEach(data -> output.println(String.format("%s, %s, %s, %s", data.getId(),
+						Optional.ofNullable(data.getLicense()).orElse("unknown"),
+						data.getStatus() == Status.Approved ? "approved" : "restricted",
+						Optional.ofNullable(data.getAuthority()).orElse("none"))));
 		output.flush();
 	}
 }

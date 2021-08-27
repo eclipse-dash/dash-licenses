@@ -40,11 +40,16 @@ public class ContentId implements IContentId {
 		String[] parts = string.split("\\/");
 		if (parts.length != 5)
 			return null;
+		for (String part : parts) {
+			if (part.isBlank())
+				return null;
+		}
 		String type = parts[0];
 		String source = parts[1];
 		String namespace = parts[2];
 		String name = parts[3];
 		String version = parts[4];
+
 		return getContentId(type, source, namespace, name, version);
 	}
 

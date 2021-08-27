@@ -22,7 +22,8 @@ import jakarta.json.JsonObject;
 
 public class FoundationData implements IContentData {
 
-	private static final Pattern COMPILE = Pattern.compile("CQ(?<id>[0-9]+)");
+	private static final Pattern CQ_PATTERN = Pattern.compile("CQ(?<id>[0-9]+)");
+	private static final Pattern IPLab_PATTERN = Pattern.compile("#(?<id>[0-9]+)");
 
 	/**
 	 * This field holds data that presents a single unit of content answered by a
@@ -63,7 +64,7 @@ public class FoundationData implements IContentData {
 		 * Sometimes the answer comes back as a string, not an integer. Handle both
 		 * cases. If we can't sort it out, assume that it's zero.
 		 */
-		switch (data.getValueType()) {
+		switch (data.get("confidence").getValueType()) {
 		case NUMBER:
 			return data.getInt("confidence");
 		case STRING:
@@ -90,18 +91,19 @@ public class FoundationData implements IContentData {
 
 	@Override
 	public String getUrl() {
-		String cq = getCqId();
-		if (cq == null)
-			return null;
-
-		return "https://dev.eclipse.org/ipzilla/show_bug.cgi?id=" + cq;
-	}
-
-	private String getCqId() {
-		Matcher matcher = COMPILE.matcher(getAuthority());
+		Matcher matcher = CQ_PATTERN.matcher(getAuthority());
 		if (matcher.matches()) {
-			return matcher.group("id");
+			String cq = matcher.group("id");
+			return "https://dev.eclipse.org/ipzilla/show_bug.cgi?id=" + cq;
 		}
+
+		matcher = IPLab_PATTERN.matcher(getAuthority());
+		if (matcher.matches()) {
+			String issue = matcher.group("id");
+			return "https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab/-/issues/" + issue;
+		}
+
 		return null;
+
 	}
 }

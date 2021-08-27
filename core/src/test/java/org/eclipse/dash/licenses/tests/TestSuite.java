@@ -17,7 +17,8 @@ import org.junit.runner.RunWith;
 @SelectClasses(
 { BatchifierTests.class, ClearlyDefinedContentDataTests.class, ClearlyDefinedSupportTests.class,
 		CommandLineSettingsTest.class, ContentIdTests.class, LicenseCheckerTests.class, LicenseSupportTests.class,
-		MavenIdParserTests.class, NpmJsIdParserTests.class, PackageLockFileReaderTests.class,
-		SpdxExpressionParserTests.class, FoundationDataTests.class, YarnLockFileReaderTests.class })
+		MavenIdParserTests.class, NpmJsIdParserTests.class, ClearlyDefinedIdParserTests.class,
+		PackageLockFileReaderTests.class, SpdxExpressionParserTests.class, FoundationDataTests.class,
+		YarnLockFileReaderTests.class })
 public class TestSuite {
 }

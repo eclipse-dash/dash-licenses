@@ -91,8 +91,15 @@ public class NpmjsExtendedContentDataProvider implements IExtendedContentDataPro
 		}
 
 		String getRepositoryUrl() {
-			return getVersionMetadata().getOrDefault("repository", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
-					.getString("url", null);
+			JsonValue repository = getVersionMetadata().getOrDefault("repository", JsonValue.EMPTY_JSON_OBJECT);
+			switch (repository.getValueType()) {
+			case STRING:
+				return repository.toString();
+			case OBJECT:
+				return repository.asJsonObject().getString("url", null);
+			default:
+				return null;
+			}
 		}
 
 		String getTarballUrl() {

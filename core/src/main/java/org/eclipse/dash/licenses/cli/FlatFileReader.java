@@ -72,6 +72,9 @@ public class FlatFileReader implements IDependencyListReader {
 	 * @return
 	 */
 	private static boolean isLineThatWeShouldBotherLookingAt(String line) {
+		if (line.startsWith("#"))
+			return false;
+
 		switch (line.trim()) {
 		// Maven's dependency plugin prints "none" when there are no dependencies
 		case "none":

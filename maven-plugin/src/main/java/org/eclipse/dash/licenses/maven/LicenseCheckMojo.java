@@ -70,19 +70,19 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	/**
 	 * Batch size to use (number of entries sent per API call.)
 	 */
-	@Parameter(property = "dash.batch", defaultValue = "1000")
+	@Parameter(property = "dash.batch", defaultValue = "" + ISettings.DEFAULT_BATCH)
 	private int batch;
 
 	/**
 	 * URL for the Eclipse Foundations's license check API.
 	 */
-	@Parameter(property = "dash.foundationApi", defaultValue = "https://www.eclipse.org/projects/services/license_check.php")
+	@Parameter(property = "dash.foundationApi", defaultValue = ISettings.DEFAULT_IPZILLA_URL)
 	private String foundationApi;
 
 	/**
 	 * URL for Clearly Defined's license definitions API.
 	 */
-	@Parameter(property = "dash.clearlyDefinedApi", defaultValue = "https://api.clearlydefined.io/definitions")
+	@Parameter(property = "dash.clearlyDefinedApi", defaultValue = ISettings.DEFAULT_CLEARLYDEFINED_URL)
 	private String clearlyDefinedApi;
 
 	/**
@@ -99,13 +99,13 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 * }
 	 * </pre>
 	 */
-	@Parameter(property = "dash.licenses", defaultValue = "https://www.eclipse.org/legal/licenses.json")
+	@Parameter(property = "dash.licenses", defaultValue = ISettings.DEFAULT_APPROVED_LICENSES_URL)
 	private String licenses;
 
 	/**
 	 * Confidence threshold expressed as integer percentage. (0-100)
 	 */
-	@Parameter(property = "dash.confidence", defaultValue = "75")
+	@Parameter(property = "dash.confidence", defaultValue = "" + ISettings.DEFAULT_THRESHOLD)
 	private int confidence;
 	
 	@Parameter(property = "dash.iplab.token")
@@ -117,6 +117,12 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	@Parameter(property = "dash.skip", defaultValue = "false")
 	private boolean skip;
 
+	/**
+	 * Skip execution of the Dash License Check mojo.
+	 */
+	@Parameter(property = "dash.fail", defaultValue = "false")
+	private boolean failWhenReviewNeeded;
+	
 	/**
 	 * The Maven session.
 	 */
@@ -211,5 +217,10 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		}
 
 		getLog().info("Summary file was written to: " + summary);
+		
+		if (failWhenReviewNeeded && needsReviewCollector.getStatus() > 0) {
+			getLog().error("Dependency license check failed. Some dependencies need to be vetted.");
+			throw new MojoFailureException("Some dependencies must be vetted.");
+		}
 	}
 }

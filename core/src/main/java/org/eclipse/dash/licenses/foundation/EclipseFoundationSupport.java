@@ -44,9 +44,13 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 		if (ids.isEmpty())
 			return;
 
-		logger.info("Querying Eclipse Foundation for license data for {} items.", ids.size());
-
 		String url = settings.getLicenseCheckUrl();
+		if (url.isBlank()) {
+			logger.debug("Bypassing Eclipse Foundation.");
+			return;
+		}
+
+		logger.info("Querying Eclipse Foundation for license data for {} items.", ids.size());
 
 		JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
 		ids.stream().forEach(id -> builder.add(id.toString()));
@@ -63,14 +67,20 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			JsonObject approved = read.getJsonObject("approved");
 			if (approved != null)
 				approved.forEach((key, each) -> {
-					consumer.accept(new FoundationData(each.asJsonObject()));
+					FoundationData data = new FoundationData(each.asJsonObject());
+					logger.debug("EF approved: {} score: {} {} {}", data.getId(), data.getScore(), data.getLicense(),
+							data.getAuthority());
+					consumer.accept(data);
 					counter.incrementAndGet();
 				});
 
 			JsonObject restricted = read.getJsonObject("restricted");
 			if (restricted != null)
 				restricted.forEach((key, each) -> {
-					consumer.accept(new FoundationData(each.asJsonObject()));
+					FoundationData data = new FoundationData(each.asJsonObject());
+					logger.debug("EF restricted: {} score: {} {} {}", data.getId(), data.getScore(), data.getLicense(),
+							data.getAuthority());
+					consumer.accept(data);
 					counter.incrementAndGet();
 				});
 
