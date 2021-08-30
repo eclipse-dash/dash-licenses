@@ -5,9 +5,9 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.cli.html_parser.JsoupProvider;
 import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.util.JsonUtils;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,6 +16,7 @@ import org.jsoup.select.Elements;
 import java.io.*;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,11 +26,13 @@ public class GoSumFileReader implements IDependencyListReader {
 
   private final BufferedReader reader;
   private final HttpClientService clientService;
+  private final JsoupProvider jsoupProvider;
 
-  public GoSumFileReader(InputStream input, HttpClientService clientService) {
+  public GoSumFileReader(InputStream input, HttpClientService clientService, JsoupProvider jsoupProvider) {
       InputStreamReader inStreamReader = new InputStreamReader(input);
       this.reader = new BufferedReader(inStreamReader);
       this.clientService = clientService;
+      this.jsoupProvider = jsoupProvider;
   }
 
   @Override
@@ -113,7 +116,8 @@ public class GoSumFileReader implements IDependencyListReader {
   private GoLangPackage setUpSourceInfo(GoLangPackage packageOrModule) {
     try {
       // We can apply http support, but it looks dangerously to use such dependencies...
-      Document doc = Jsoup.connect("https://" + packageOrModule.getPackageName() + "?go-get=1").get();
+      String goModuleInfoUrl = "https://" + packageOrModule.getPackageName() + "?go-get=1";
+      Document doc = this.jsoupProvider.getDocument(goModuleInfoUrl);
       retrieveSourceInfoFromMetaTag(packageOrModule, doc, "go-import");
       if (!packageOrModule.getSourceLocation().startsWith("https://github.com")) {
         retrieveSourceInfoFromMetaTag(packageOrModule, doc, "go-source");
@@ -128,9 +132,9 @@ public class GoSumFileReader implements IDependencyListReader {
   private GoLangPackage retrieveSourceInfoFromMetaTag(GoLangPackage packageOrModule, Document doc, String metaTagName) {
     Elements newsHeadlines = doc.select("meta[name='" + metaTagName + "']");
     for (Element headline : newsHeadlines) {
-      Attribute attribute = headline.attributes().asList().get(1);
-      if (attribute != null) {
-        String content = attribute.getValue()
+      Optional<Attribute> attribute = headline.attributes().asList().stream().filter(attr -> attr.getKey().equals("content")).findFirst();
+      if (attribute.isPresent()) {
+        String content = attribute.get().getValue()
           .replace("\n", "")
           .replace("\r", "");
 //          System.out.println(content);

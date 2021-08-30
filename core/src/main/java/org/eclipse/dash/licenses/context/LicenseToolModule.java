@@ -13,6 +13,8 @@ import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
+import org.eclipse.dash.licenses.cli.html_parser.JsoupProvider;
+import org.eclipse.dash.licenses.cli.html_parser.JsoupProviderImpl;
 import org.eclipse.dash.licenses.extended.ExtendedContentDataService;
 import org.eclipse.dash.licenses.extended.GitHubExtendedContentDataProvider;
 import org.eclipse.dash.licenses.extended.IExtendedContentDataProvider;
@@ -45,6 +47,7 @@ public class LicenseToolModule extends AbstractModule {
 		bind(GitLabSupport.class).toInstance(new GitLabSupport());
 		bind(IHttpClientService.class).toInstance(new HttpClientService());
 		bind(ExtendedContentDataService.class).toInstance(new ExtendedContentDataService());
+		bind(JsoupProvider.class).to(JsoupProviderImpl.class);
 
 		Multibinder<IExtendedContentDataProvider> extendedContentDataProviders = Multibinder.newSetBinder(binder(),
 				IExtendedContentDataProvider.class);
