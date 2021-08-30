@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseChecker;
+import org.eclipse.dash.licenses.cli.html_parser.JsoupProvider;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
 import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
@@ -129,7 +130,9 @@ public class Main {
 					return new YarnLockFileReader(new FileReader(input));
 				}
 				if ("go.sum".equals(input.getName())) {
-					return new GoSumFileReader(new FileInputStream(input), injector.getInstance(HttpClientService.class));
+					HttpClientService httpClient = injector.getInstance(HttpClientService.class);
+					JsoupProvider jsoupProvider = injector.getInstance(JsoupProvider.class);
+					return new GoSumFileReader(new FileInputStream(input), httpClient, jsoupProvider);
 				}
 				return new FlatFileReader(new FileReader(input));
 			} else {
