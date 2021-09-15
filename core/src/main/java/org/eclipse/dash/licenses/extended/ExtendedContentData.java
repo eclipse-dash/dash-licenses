@@ -18,8 +18,6 @@ public class ExtendedContentData {
 	private String url;
 	private List<ExtendedContentDataItem> items = new ArrayList<>();
 
-	private static ExtendedContentDataItem EMPTY = new ExtendedContentDataItem(null, null);
-
 	public ExtendedContentData(String title, String url) {
 		this.title = title;
 		this.url = url;
@@ -43,7 +41,9 @@ public class ExtendedContentData {
 		items.add(new ExtendedContentDataItem(key, value));
 	}
 
-	public String get(String key) {
-		return getItems().filter(each -> each.getLabel().equals(key)).findAny().orElse(EMPTY).getValue();
+	public void addLink(String key, String value) {
+		if (value == null)
+			return;
+		items.add(new ExtendedContentDataLink(key, value));
 	}
 }

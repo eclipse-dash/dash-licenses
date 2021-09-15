@@ -25,4 +25,8 @@ public class ExtendedContentDataItem {
 	public String getValue() {
 		return value;
 	}
+
+	public String asMarkdown() {
+		return String.format("%s: %s", getLabel(), getValue());
+	}
 }

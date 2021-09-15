@@ -40,7 +40,7 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 
 		public ExtendedContentData build() {
 			var thing = new ExtendedContentData("Maven Central", getUrl());
-			thing.addItem("Source", getSourceUrl());
+			thing.addLink("Source", getSourceUrl());
 
 			return thing;
 		}
