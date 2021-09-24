@@ -29,6 +29,8 @@ import org.eclipse.dash.licenses.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.json.stream.JsonParsingException;
+
 public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	final Logger logger = LoggerFactory.getLogger(ClearlyDefinedSupport.class);
 
@@ -96,16 +98,22 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 					// FIXME Seems like overkill.
 					AtomicInteger counter = new AtomicInteger();
 
-					JsonUtils.readJson(new StringReader(response)).forEach((key, each) -> {
-						ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
-						data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
-						consumer.accept(data);
-						counter.incrementAndGet();
-						logger.debug("ClearlyDefined {} score: {} {} {}", data.getId(), data.getScore(),
-								data.getLicense(), data.getStatus() == Status.Approved ? "approved" : "restricted");
-					});
+					try {
+						JsonUtils.readJson(new StringReader(response)).forEach((key, each) -> {
+							ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
+							data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
+							consumer.accept(data);
+							counter.incrementAndGet();
+							logger.debug("ClearlyDefined {} score: {} {} {}", data.getId(), data.getScore(),
+									data.getLicense(), data.getStatus() == Status.Approved ? "approved" : "restricted");
+						});
 
-					logger.info("Found {} items.", counter.get());
+						logger.info("Found {} items.", counter.get());
+					} catch (JsonParsingException e) {
+						logger.error("Could not parse the response from ClearlyDefined: {}.", response);
+						logger.debug(e.getMessage(), e);
+						throw new RuntimeException("Could not parse the response from ClearlyDefined.");
+					}
 				});
 
 		if (code != 200)
