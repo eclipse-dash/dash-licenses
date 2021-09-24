@@ -9,8 +9,6 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
-import java.util.regex.Pattern;
-
 public class ContentId implements IContentId {
 
 	private String type;
@@ -28,11 +26,6 @@ public class ContentId implements IContentId {
 	}
 
 	public static IContentId getContentId(String type, String source, String namespace, String name, String version) {
-
-		Pattern versionPattern = Pattern.compile("[\\w\\.\\-]+");
-		if (!versionPattern.matcher(version).matches())
-			return null;
-
 		return new ContentId(type, source, namespace, name, version);
 	}
 
