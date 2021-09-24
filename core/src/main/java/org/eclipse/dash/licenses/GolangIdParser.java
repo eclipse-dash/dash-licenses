@@ -19,7 +19,9 @@ import java.util.regex.Pattern;
  *
  * <p>
  * See the <a href="https://golang.org/ref/mod#go-sum-files">go.sum file
- * format</a> for more information.
+ * format</a> for more information. See discussion regarding the
+ * <a href="https://github.com/clearlydefined/service/pull/871">form of the
+ * ClearlyDefined IDs</a>.
  */
 public class GolangIdParser implements ContentIdParser {
 

@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019 The Eclipse Foundation and others.
+ * Copyright (c) 2021 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -28,6 +28,9 @@ class GolangIdParserTests {
 				new GolangIdParser().parseId(
 						"gopkg.in/alecthomas/kingpin.v2 v2.2.6/go.mod h1:FMv+mEhP44yOT+4EoQTLFTRgOQ1FBLkstjWtayDeSgw=")
 						.toString());
+		assertEquals("go/golang/github.com%2Fcoreos/etcd/v3.3.10+incompatible", new GolangIdParser().parseId(
+				"github.com/coreos/etcd v3.3.10+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=")
+				.toString());
 	}
 
 	@Test
