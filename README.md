@@ -323,7 +323,7 @@ Note that this "problem" is not a _Dash License Tool problem_, but rather is a d
 Find all of the potentially problematic third party libraries from a Gradle build.
 
 ```
-$ ./gradlew dependencies | grep -Poh "[^:\s]+:[^:]+:[^:\s]+" | grep -v "^org\.eclipse" | sort | uniq \
+$ ./gradlew dependencies | grep -Poh "(?<=\s)[\w\.-]+:[\w\.-]+:[^:\s]+" | grep -v "^org\.eclipse" | sort | uniq \
  | java -jar org.eclipse.dash.licenses-<version>.jar - \
  | grep restricted
 ```
