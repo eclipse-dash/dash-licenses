@@ -21,11 +21,14 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
 import org.eclipse.dash.licenses.ISettings;
+
+import static java.util.Collections.emptyMap;
 
 public class HttpClientService implements IHttpClientService {
 
@@ -63,10 +66,26 @@ public class HttpClientService implements IHttpClientService {
 
 	@Override
 	public int get(String url, String contentType, Consumer<InputStream> handler) {
+		return this.get(url, contentType, emptyMap(), handler);
+	}
+
+	@Override
+	public int get(String url, String contentType, Map<String, String> headers, Consumer<InputStream> handler) {
+		String[] headersKeyValueArray = new String[headers.size() * 2];
+		int i = 0;
+		for (Map.Entry<String, String> header: headers.entrySet()) {
+			headersKeyValueArray[i] = header.getKey();
+			headersKeyValueArray[i + 1] = header.getValue();
+			i += 2;
+		}
 		try {
+			HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(URI.create(url))
+					.header("Content-Type", contentType).GET();
+			if (!headers.isEmpty()) {
+				reqBuilder = reqBuilder.headers(headersKeyValueArray);
+			}
 			Duration timeout = Duration.ofSeconds(settings.getTimeout());
-			HttpRequest request = HttpRequest.newBuilder(URI.create(url)).header("Content-Type", contentType).GET()
-					.timeout(timeout).build();
+			HttpRequest request = reqBuilder.timeout(timeout).build();
 
 			HttpClient httpClient = HttpClient.newBuilder().connectTimeout(timeout).build();
 			HttpResponse<InputStream> response = httpClient.send(request, BodyHandlers.ofInputStream());

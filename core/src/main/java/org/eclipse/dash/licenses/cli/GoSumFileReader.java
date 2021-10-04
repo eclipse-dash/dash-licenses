@@ -14,9 +14,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.*;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,12 +25,20 @@ public class GoSumFileReader implements IDependencyListReader {
   private final BufferedReader reader;
   private final HttpClientService clientService;
   private final JsoupProvider jsoupProvider;
+  private final String githubToken;
+  private final Map<String, String> commonHeaders = new HashMap<>();
+
+  private final int requestPageSize = 100;
 
   public GoSumFileReader(InputStream input, HttpClientService clientService, JsoupProvider jsoupProvider) {
       InputStreamReader inStreamReader = new InputStreamReader(input);
       this.reader = new BufferedReader(inStreamReader);
       this.clientService = clientService;
       this.jsoupProvider = jsoupProvider;
+
+       // todo notify user, we need to have token to make a lot of GET request to the github api
+      githubToken = System.getenv("GITHUB_TOKEN");
+      commonHeaders.put("Authorization", "bearer " + githubToken);
   }
 
   @Override
@@ -71,17 +77,20 @@ public class GoSumFileReader implements IDependencyListReader {
 
     packageIdentifier = packageIdentifier.replace("https://", "");
 
-    boolean isValid = true; // isSupported...
-    if (!packageIdentifier.startsWith("github.com")) {
-      isValid = false;
-    }
+    // boolean isValid = true; // Todo isSupported? We need to mark dependencies somehow about clearly defined doesn't support them...
+    // if (!packageIdentifier.startsWith("github.com")) {
+    //   isValid = false;
+    // }
 
     String[] identifierSegments = packageIdentifier.split("/");
     String namespace = identifierSegments[1];
     String name = identifierSegments[2];
 
     if (packageOrModule.getRevision().matches("v[0-9]+.[0-9]+.[0-9]+")) {
-      findTagSHA(namespace, name, packageOrModule.getRevision(), packageOrModule::setFullSHA);
+      String tag = packageOrModule.subPackage != null && !packageOrModule.subPackage.matches("v[0-9]+") ?
+              packageOrModule.subPackage + "/" + packageOrModule.revision :
+              packageOrModule.revision;
+      findTagSHA(namespace, name, tag, packageOrModule::setFullSHA, 0);
     } else {
       String shortSHA = packageOrModule.getRevision().split("-")[2];
       getFullSHA(namespace, name, shortSHA, packageOrModule::setFullSHA);
@@ -91,26 +100,31 @@ public class GoSumFileReader implements IDependencyListReader {
   }
 
   private void getFullSHA(String org, String repoName, String shortSHA, Consumer<String> consumer) {
-    this.clientService.get(String.format("https://api.github.com/repos/%s/%s/commits/%s", org, repoName, shortSHA), "application/json",
+    this.clientService.get(String.format("https://api.github.com/repos/%s/%s/commits/%s", org, repoName, shortSHA), "application/json", commonHeaders,
       (inputStream) -> {
         JsonObject commit = JsonUtils.readJson(inputStream);
         consumer.accept(commit.get("sha").toString().replace("\"", ""));
     }); // handle error
   }
 
-  private void findTagSHA(String org, String repoName, String tag, Consumer<String> consumer) {
-    this.clientService.get(String.format("https://api.github.com/repos/%s/%s/tags", org, repoName), "application/json",
+  private void findTagSHA(String org, String repoName, String tag, Consumer<String> consumer, final int page) {
+    this.clientService.get(String.format("https://api.github.com/repos/%s/%s/tags?per_page=%d&page=%d", org, repoName, requestPageSize, page), "application/json", commonHeaders,
       (inputStream) -> {
         JsonArray tagArray = JsonUtils.readJson(inputStream);
+        if (tagArray.isEmpty()) {
+          return;
+        }
         for (JsonValue jsonTag: tagArray) {
           JsonObject jsoTag = jsonTag.asJsonObject();
           String tagName = jsoTag.get("name").toString().replace("\"", "");
           if (tag.equals(tagName)) {
             consumer.accept(jsoTag.get("commit").asJsonObject().get("sha").toString().replace("\"", ""));
-            break;
+            return;
           }
         }
-      }); // handle error
+        // search tag on the next page
+        findTagSHA(org, repoName, tag, consumer, page + 1);
+      }); // Todo handle error with try/catch. Error can be 404, 503 or something like that.
   }
 
   private GoLangPackage setUpSourceInfo(GoLangPackage packageOrModule) {
@@ -137,25 +151,21 @@ public class GoSumFileReader implements IDependencyListReader {
         String content = attribute.get().getValue()
           .replace("\n", "")
           .replace("\r", "");
-//          System.out.println(content);
-        String[] segments = content.split(" ");
+
+        String[] segments = content.split("\\s+");
         String moduleOrPackageName = segments[0];
         String sourceURL = segments[2];
-        String packageRoot = "";
+
         if (packageOrModule.packageName.startsWith(moduleOrPackageName) || packageOrModule.packageName.startsWith("github.com")) {
           packageOrModule.setSourceLocation(sourceURL);
 
-          if (!packageOrModule.packageName.equals(moduleOrPackageName)) {
+          String packageRoot = moduleOrPackageName.replaceFirst("(http://)|(https://)", "");
+          if (!packageOrModule.packageName.equals(packageRoot)) {
+            // todo rename to subPackageORModule
             String subPackage = packageOrModule.packageName.replaceFirst(moduleOrPackageName + "/", "");
             packageOrModule.setSubPackage(subPackage);
           }
         }
-
-        // Todo handle module version for some deps.
-//        if (!packageOrModule.packageName.equals(packageRoot) && packageOrModule.packageName.startsWith(packageRoot)) {
-//          String subPackage = packageOrModule.packageName.replaceFirst(packageRoot + "/", "");
-//          packageOrModule.setSubPackage(subPackage);
-//        }
       }
       System.out.println(headline);
     }
