@@ -10,6 +10,7 @@
 package org.eclipse.dash.licenses.http;
 
 import java.io.InputStream;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -40,4 +41,7 @@ public interface IHttpClientService {
 		return 500;
 	};
 
+	default int get(String url, String contentType, Map<String, String> headers, Consumer<InputStream> handler) {
+		return 500;
+	}
 }
