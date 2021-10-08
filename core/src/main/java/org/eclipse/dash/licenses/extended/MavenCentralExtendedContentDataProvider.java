@@ -21,6 +21,10 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 	@Inject
 	IHttpClientService httpClientService;
 
+	static String[] sourcePathPatterns = new String[] {
+			"https://search.maven.org/remotecontent?filepath={groupPath}/{artifactid}/{version}/{artifactid}-{version}-sources.jar",
+			"https://search.maven.org/remotecontent?filepath={groupPath}/{artifactid}/{version}/{artifactid}-{version}-src.zip" };
+
 	@Override
 	public ExtendedContentData getExtendedContentData(IContentId id) {
 		if (!"maven".equals(id.getType()))
@@ -51,28 +55,18 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 		}
 
 		public String getSourceUrl() {
-			var url = getMavenCentralSourceUrl();
-			if (url == null) {
-				return null;
-			}
+			for (String pattern : sourcePathPatterns) {
+				var url = pattern;
+				url = url.replace("{groupPath}", id.getNamespace().replace('.', '/'));
+				url = url.replace("{artifactid}", id.getName());
+				url = url.replace("{version}", id.getVersion());
 
-			if (httpClientService.remoteFileExists(url)) {
-				return url;
+				if (httpClientService.remoteFileExists(url)) {
+					return url;
+				}
 			}
-
 			return null;
 		}
 
-		public String getMavenCentralSourceUrl() {
-
-			// FIXME Validate that this file pattern is correct.
-			// This pattern was observed and appears to be accurate.
-			var url = "https://search.maven.org/remotecontent?filepath={groupPath}/{artifactid}/{version}/{artifactid}-{version}-sources.jar";
-			url = url.replace("{groupPath}", id.getNamespace().replace('.', '/'));
-			url = url.replace("{artifactid}", id.getName());
-			url = url.replace("{version}", id.getVersion());
-
-			return url;
-		}
 	}
 }
