@@ -179,6 +179,8 @@ $ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps
 $ _
 ```
 
+> :warning: If your project is a multi-module maven project, you should provide an absolute path to `-DoutpuFile` to append all dependencies in the same file. (see [MDEP-542](https://issues.apache.org/jira/browse/MDEP-542))
+
 You can use the experimental [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
 
 ```
