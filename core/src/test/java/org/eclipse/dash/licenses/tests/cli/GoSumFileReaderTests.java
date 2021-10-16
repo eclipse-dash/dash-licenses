@@ -44,7 +44,60 @@ public class GoSumFileReaderTests {
     @Spy
     private HttpClientService httpClientService;
 
-    @Test // Todo remove this test, when all mock tests will be completed. All real logic should be replaced with mocks.
+    @Test // Todo remove this test, when all mock tests will be completed.
+    public void testShouldParseGoSumFileWithIncompatibleSuffix0() {
+        String GO_SUM_FILE_CONTENT = "gotest.tools/v3 v3.0.2/go.mod h1:3SzNCllyD9/Y+b5r9JIKQ474KzkZyqLqEfYqMsX94Bk=\n" +
+                "gotest.tools/v3 v3.0.3/go.mod h1:Z7Lb0S5l+klDB31fvDQX8ss/FlKDxtlFlw3Oa8Ymbl8=";
+        InputStream in = new ByteArrayInputStream(GO_SUM_FILE_CONTENT.getBytes());
+        CommandLineSettings settings = CommandLineSettings.getSettings(new String[]{});
+
+        Injector injector = Guice.createInjector(new LicenseToolModule(settings));
+        HttpClientService httpClientService = injector.getInstance(HttpClientService.class);
+        JsoupProvider jsoupProvider = injector.getInstance(JsoupProvider.class);
+
+        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        Collection<IContentId> contentIds = goSumFileReader.getContentIds();
+
+        assertEquals(1, contentIds.size());
+        assertTrue(contentIds.stream().allMatch(id -> id.getName().equals("gotest.tools")));
+        assertTrue(contentIds.stream().allMatch(id -> id.getSource().equals("github")));
+        assertTrue(contentIds.stream().allMatch(id -> id.getNamespace().equals("gotestyourself")));
+        assertTrue(contentIds.stream().allMatch(id -> id.getVersion().equals("568bc57cc5c19a2ef85e5749870b49a4cc2ab54d")));
+    }
+
+    @Test
+    public void testShouldParseGoSumFileWithIncompatibleSuffix() throws IOException {
+        String GO_SUM_FILE_CONTENT = "gotest.tools v2.2.0+incompatible h1:VsBPFP1AI068pPrMxtb/S8Zkgf9xEmTLJjfM+P5UIEo=";
+        InputStream in = new ByteArrayInputStream(GO_SUM_FILE_CONTENT.getBytes());
+
+        String githubContent = "[{\"name\": \"v2.2.0\", \"commit\": {\"sha\":\"7c797b5133e5460410dbb22ba779bf35e6975dea\"}}]";
+
+        doAnswer(ans -> {
+            Consumer<InputStream> callback = (Consumer<InputStream>) ans.getArguments()[3];
+            InputStream stream = new ByteArrayInputStream(githubContent.getBytes(StandardCharsets.UTF_8.name()));
+            callback.accept(stream);
+            return null;
+        }).when(httpClientService).get(anyString(), anyString(), any(Map.class), any(Consumer.class));
+
+        Elements elements = new Elements();
+        Attributes attributes = new Attributes();
+        attributes.add("content", "gotest.tools git https://github.com/gotestyourself/gotest.tools.git");
+        Element element = new Element(Tag.valueOf("meta"), "", attributes);
+        elements.add(element);
+        when(jsoupProvider.getDocument(anyString())).thenReturn(document);
+        when(document.select("meta[name='go-import']")).thenReturn(elements);
+
+        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        Collection<IContentId> contentIds = goSumFileReader.getContentIds();
+
+        assertEquals(1, contentIds.size());
+        assertTrue(contentIds.stream().allMatch(id -> id.getName().equals("gotest.tools")));
+        assertTrue(contentIds.stream().allMatch(id -> id.getSource().equals("github")));
+        assertTrue(contentIds.stream().allMatch(id -> id.getNamespace().equals("gotestyourself")));
+        assertTrue(contentIds.stream().allMatch(id -> id.getVersion().equals("7c797b5133e5460410dbb22ba779bf35e6975dea")));
+    }
+
+    @Test // Todo remove this test, when all mock tests will be completed.
     public void testShouldParseGoSumFileWithTaggedVersion0() {
         String GO_SUM_FILE_CONTENT = "github.com/BurntSushi/toml v0.3.0 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=\n" +
                 "github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=\n";
@@ -98,7 +151,7 @@ public class GoSumFileReaderTests {
         assertTrue(contentIds.stream().allMatch(id -> id.getVersion().equals("3012a1dbe2e4bd1391d42b32f0577cb7bbc7f005")));
     }
 
-    // Todo remove this test, when all mock tests will be completed. All real logic should be replaced with mocks.
+    // Todo remove this test, when all mock tests will be completed.
     @Test
     public void shouldParseGoSumFileWithGithubHashRevision0() {
         String GO_SUM_FILE_CONTENT = "github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=";
@@ -151,7 +204,7 @@ public class GoSumFileReaderTests {
         assertTrue(contentIds.stream().allMatch(id -> id.getVersion().equals("27f122750802c950b2c869a5b63dafcf590ced95")));
     }
   
-    // Todo remove this test, when all mock tests will be completed. All real logic should be replaced with mocks.
+    // Todo remove this test, when all mock tests will be completed.
     @Test
     public void shouldParseGoSumFileWithVersionSuffixInTheDeps0() {
         String GO_SUM_FILE_CONTENT = "gomodules.xyz/jsonpatch/v2 v2.0.1/go.mod h1:IhYNNY4jnS53ZnfE4PAmpKtDpTCj1JFXc+3mwe7XcUU=";
@@ -217,7 +270,7 @@ public class GoSumFileReaderTests {
         // todo
     }
 
-    // Todo remove this test, when all mock tests will be completed. All real logic should be replaced with mocks.
+    // Todo remove this test, when all mock tests will be completed.
     @Test
     public void shouldHandleDependencyFromMultiPackageGithubRepo0() {
         // We have dependency - golang sub-module "api"
