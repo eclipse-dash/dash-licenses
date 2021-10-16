@@ -43,7 +43,7 @@ public class GoSumFileReader implements IDependencyListReader {
 
   @Override
   public Collection<IContentId> getContentIds() {
-    Collection<String> deps = reader.lines().collect(Collectors.toSet());
+    Collection<String> deps = reader.lines().collect(Collectors.toList());
     Collection<GoLangPackage> modulesOrPackages = deps.stream().map(this::parsePackage)
       .filter(Objects::nonNull)
       .collect(Collectors.toMap(
@@ -59,11 +59,12 @@ public class GoSumFileReader implements IDependencyListReader {
         .collect(Collectors.toList());
 
     return packagesOrModules.stream()
-      .map(this::convertGoPackageOrModuleToContentId)
-      .collect(Collectors.toList());
+            .map(this::convertGoPackageOrModuleToContentId)
+            .collect(Collectors.toList());
   }
 
   private IContentId convertGoPackageOrModuleToContentId(GoLangPackage packageOrModule) {
+    System.out.println("Converting " + packageOrModule.packageName);
     String packageIdentifier = packageOrModule.getSourceLocation();
 
     if (packageIdentifier.endsWith(".git")) {
@@ -77,16 +78,12 @@ public class GoSumFileReader implements IDependencyListReader {
 
     packageIdentifier = packageIdentifier.replace("https://", "");
 
-    // boolean isValid = true; // Todo isSupported? We need to mark dependencies somehow about clearly defined doesn't support them...
-    // if (!packageIdentifier.startsWith("github.com")) {
-    //   isValid = false;
-    // }
-
     String[] identifierSegments = packageIdentifier.split("/");
     String namespace = identifierSegments[1];
     String name = identifierSegments[2];
 
-    if (packageOrModule.getRevision().matches("v[0-9]+.[0-9]+.[0-9]+")) {
+    if (packageOrModule.getRevision().matches("v[0-9]+.[0-9]+.[0-9]+(\\+incompatible)?")) {
+      packageOrModule.revision = packageOrModule.revision.replace("+incompatible", "");
       String tag = packageOrModule.subPackage != null && !packageOrModule.subPackage.matches("v[0-9]+") ?
               packageOrModule.subPackage + "/" + packageOrModule.revision :
               packageOrModule.revision;
@@ -96,7 +93,8 @@ public class GoSumFileReader implements IDependencyListReader {
       getFullSHA(namespace, name, shortSHA, packageOrModule::setFullSHA);
     }
 
-    return ContentId.getContentId("git", "github", namespace, name, packageOrModule.getFullSHA());
+    String version = packageOrModule.getFullSHA() != null ? packageOrModule.getFullSHA() : packageOrModule.getRevision();
+    return ContentId.getContentId("git", "github", namespace, name, version);
   }
 
   private void getFullSHA(String org, String repoName, String shortSHA, Consumer<String> consumer) {
@@ -108,37 +106,47 @@ public class GoSumFileReader implements IDependencyListReader {
   }
 
   private void findTagSHA(String org, String repoName, String tag, Consumer<String> consumer, final int page) {
-    this.clientService.get(String.format("https://api.github.com/repos/%s/%s/tags?per_page=%d&page=%d", org, repoName, requestPageSize, page), "application/json", commonHeaders,
-      (inputStream) -> {
-        JsonArray tagArray = JsonUtils.readJson(inputStream);
-        if (tagArray.isEmpty()) {
-          return;
-        }
-        for (JsonValue jsonTag: tagArray) {
-          JsonObject jsoTag = jsonTag.asJsonObject();
-          String tagName = jsoTag.get("name").toString().replace("\"", "");
-          if (tag.equals(tagName)) {
-            consumer.accept(jsoTag.get("commit").asJsonObject().get("sha").toString().replace("\"", ""));
-            return;
-          }
-        }
-        // search tag on the next page
-        findTagSHA(org, repoName, tag, consumer, page + 1);
-      }); // Todo handle error with try/catch. Error can be 404, 503 or something like that.
+    try {
+      this.clientService.get(String.format("https://api.github.com/repos/%s/%s/tags?per_page=%d&page=%d", org, repoName, requestPageSize, page), "application/json", commonHeaders,
+              (inputStream) -> {
+                JsonArray tagArray = JsonUtils.readJson(inputStream);
+                if (tagArray.isEmpty()) {
+                  return;
+                }
+                for (JsonValue jsonTag: tagArray) {
+                  JsonObject jsoTag = jsonTag.asJsonObject();
+                  String tagName = jsoTag.get("name").toString().replace("\"", "");
+                  if (tag.equals(tagName)) {
+                    consumer.accept(jsoTag.get("commit").asJsonObject().get("sha").toString().replace("\"", ""));
+                    return;
+                  }
+                }
+                // search tag on the next page
+                findTagSHA(org, repoName, tag, consumer, page + 1);
+              }); // Todo handle error with try/catch. Error can be 404, 503 or something like that.
+    } catch (Exception e) {
+      System.out.println(e);
+    }
   }
 
   private GoLangPackage setUpSourceInfo(GoLangPackage packageOrModule) {
     try {
+      String packageName = packageOrModule.getPackageName();
+      System.out.println("====" + packageName);
+      if (packageOrModule.getPackageName().startsWith("github.com")) {
+        String[] repoSegments = packageName.split("/");
+        packageName = repoSegments[0] + "/" + repoSegments[1] + "/" + repoSegments[2];
+      }
       // We can apply http support, but it looks dangerously to use such dependencies...
-      String goModuleInfoUrl = "https://" + packageOrModule.getPackageName() + "?go-get=1";
+      String goModuleInfoUrl = "https://" + packageName + "?go-get=1";
       Document doc = this.jsoupProvider.getDocument(goModuleInfoUrl);
       retrieveSourceInfoFromMetaTag(packageOrModule, doc, "go-import");
-      if (!packageOrModule.getSourceLocation().startsWith("https://github.com")) {
+      if (packageOrModule.getSourceLocation() != null && !packageOrModule.getSourceLocation().startsWith("https://github.com")) {
         retrieveSourceInfoFromMetaTag(packageOrModule, doc, "go-source");
       }
     } catch (Exception e) {
-      System.out.println(e.getMessage());
-      // handle error...
+      // Todo handle error...
+      System.out.println(e);
     }
     return packageOrModule;
   }
@@ -160,14 +168,17 @@ public class GoSumFileReader implements IDependencyListReader {
           packageOrModule.setSourceLocation(sourceURL);
 
           String packageRoot = moduleOrPackageName.replaceFirst("(http://)|(https://)", "");
-          if (!packageOrModule.packageName.equals(packageRoot)) {
-            // todo rename to subPackageORModule
-            String subPackage = packageOrModule.packageName.replaceFirst(moduleOrPackageName + "/", "");
+          String[] sourceURLPath = packageRoot.split("/");
+          String[] packageURLPath = packageOrModule.packageName.split("/");
+
+          if (sourceURLPath[0].equals(packageURLPath[0]) // If domain is the same
+              && packageURLPath.length > sourceURLPath.length) {
+            String[] subPackagePath = Arrays.copyOfRange(packageURLPath, sourceURLPath.length, packageURLPath.length);
+            String subPackage = String.join("/", subPackagePath);
             packageOrModule.setSubPackage(subPackage);
           }
         }
       }
-      System.out.println(headline);
     }
     return packageOrModule;
   }
@@ -185,7 +196,7 @@ public class GoSumFileReader implements IDependencyListReader {
 
   static class GoLangPackage {
     private final String packageName;
-    private final String revision;
+    private String revision;
     private String sourceLocation;
     private String subPackage;
     private String fullSHA; // rename to fullCommitSHA...
