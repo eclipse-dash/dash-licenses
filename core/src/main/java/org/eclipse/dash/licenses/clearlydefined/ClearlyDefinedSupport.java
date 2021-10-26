@@ -11,6 +11,7 @@ package org.eclipse.dash.licenses.clearlydefined;
 
 import java.io.StringReader;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -40,6 +41,9 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	IHttpClientService httpClientService;
 	@Inject
 	LicenseSupport licenseService;
+
+	private HashSet<String> validTypes;
+	private HashSet<String> validProviders;
 
 	/**
 	 * The ClearlyDefined API expects a flat array of ids in JSON format in the
@@ -127,13 +131,11 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 * @return
 	 */
 	private boolean isSupported(IContentId id) {
-		/*
-		 * HACK: ClearlyDefined throws an error when we send it types or sources that it
-		 * doesn't recognise. So let's avoid doing that. Since we don't have a means of
-		 * knowing what types and sources are supported, we take an approach of
-		 * identifying those items that we know aren't supported.
-		 */
-		return !"p2".equals(id.getType());
+		if (!validTypes.contains(id.getType()))
+			return false;
+		if (!validProviders.contains(id.getSource()))
+			return false;
+		return true;
 	}
 
 	/**
@@ -163,6 +165,44 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 
 	boolean isDiscoveredLicenseApproved(String license) {
 		return licenseService.getStatus(license) == LicenseSupport.Status.Approved;
+	}
+
+	@Inject
+	void bootstrap() {
+		/*
+		 * FIXME This is a hack. AFAICT, there is no API that answers the list of valid
+		 * types and providers, so we grab them directly from a schema file in the
+		 * GitHub repository. This is not an official API and so is subject to change.
+		 */
+		var validTypes = new HashSet<String>();
+		var validProviders = new HashSet<String>();
+
+		var code = httpClientService.get(
+				"https://raw.githubusercontent.com/clearlydefined/service/HEAD/schemas/curation-1.0.json",
+				"application/json", response -> {
+					try {
+						var data = JsonUtils.readJson(response);
+						var definitions = data.asJsonObject().getJsonObject("definitions");
+
+						var types = definitions.getJsonObject("type").getJsonArray("enum");
+						for (int index = 0; index < types.size(); index++) {
+							validTypes.add(types.getString(index));
+						}
+
+						var providers = definitions.getJsonObject("provider").getJsonArray("enum");
+						for (int index = 0; index < providers.size(); index++) {
+							validProviders.add(providers.getString(index));
+						}
+					} catch (RuntimeException e) {
+						throw new RuntimeException(
+								"Invalid data received while bootstrapping the ClearlyDefined Service.", e);
+					}
+				});
+		if (code != 200) {
+			throw new RuntimeException("Cannot acquire data required to bootstrap the ClearlyDefined Service");
+		}
+		this.validTypes = validTypes;
+		this.validProviders = validProviders;
 	}
 
 }
