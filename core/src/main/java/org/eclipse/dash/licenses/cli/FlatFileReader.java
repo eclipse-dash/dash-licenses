@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.dash.licenses.ClearlyDefinedIdParser;
 import org.eclipse.dash.licenses.ContentIdParser;
+import org.eclipse.dash.licenses.GolangIdParser;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.InvalidContentId;
 import org.eclipse.dash.licenses.MavenIdParser;
@@ -34,6 +35,7 @@ public class FlatFileReader implements IDependencyListReader {
 		reader = new BufferedReader(input);
 		parsers.add(new MavenIdParser());
 		parsers.add(new NpmJsIdParser());
+		parsers.add(new GolangIdParser());
 		parsers.add(new ClearlyDefinedIdParser());
 	}
 
