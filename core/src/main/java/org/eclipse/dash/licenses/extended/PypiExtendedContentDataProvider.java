@@ -74,6 +74,7 @@ public class PypiExtendedContentDataProvider implements IExtendedContentDataProv
 
 		public ExtendedContentData build() {
 			var thing = new ExtendedContentData("pypi", getUrl());
+			thing.addItem("License", getLicense());
 			for (JsonValue each : getVersionMetadata()) {
 				switch (each.asJsonObject().getString("packagetype")) {
 				case "sdist":
@@ -100,6 +101,10 @@ public class PypiExtendedContentDataProvider implements IExtendedContentDataProv
 		JsonArray getVersionMetadata() {
 			return metadata.getOrDefault("releases", JsonValue.EMPTY_JSON_OBJECT).asJsonObject()
 					.getOrDefault(id.getVersion(), JsonValue.EMPTY_JSON_ARRAY).asJsonArray();
+		}
+
+		String getLicense() {
+			return metadata.getOrDefault("info", JsonValue.EMPTY_JSON_OBJECT).asJsonObject().getString("license");
 		}
 	}
 }
