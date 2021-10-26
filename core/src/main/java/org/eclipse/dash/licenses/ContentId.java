@@ -11,6 +11,8 @@ package org.eclipse.dash.licenses;
 
 public class ContentId implements IContentId {
 
+	private static final ClearlyDefinedIdParser IdParser = new ClearlyDefinedIdParser();
+
 	private String type;
 	private String source;
 	private String namespace;
@@ -30,20 +32,7 @@ public class ContentId implements IContentId {
 	}
 
 	public static IContentId getContentId(String string) {
-		String[] parts = string.split("\\/");
-		if (parts.length != 5)
-			return null;
-		for (String part : parts) {
-			if (part.isBlank())
-				return null;
-		}
-		String type = parts[0];
-		String source = parts[1];
-		String namespace = parts[2];
-		String name = parts[3];
-		String version = parts[4];
-
-		return getContentId(type, source, namespace, name, version);
+		return IdParser.parseId(string);
 	}
 
 	@Override

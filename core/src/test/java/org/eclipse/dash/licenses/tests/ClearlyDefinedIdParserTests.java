@@ -34,6 +34,11 @@ class ClearlyDefinedIdParserTests {
 	}
 
 	@Test
+	void testInvalid3() {
+		assertNull(new ClearlyDefinedIdParser().parseId("npm /npmjs/stuff/shortid/2.2.8"));
+	}
+
+	@Test
 	void testNamespace() {
 		assertEquals("stuff", new ClearlyDefinedIdParser().parseId("npm/npmjs/stuff/shortid/2.2.8").getNamespace());
 	}
