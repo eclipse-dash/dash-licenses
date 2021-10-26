@@ -26,6 +26,7 @@ import org.eclipse.dash.licenses.extended.ExtendedContentDataService;
 import org.eclipse.dash.licenses.extended.IExtendedContentDataProvider;
 import org.eclipse.dash.licenses.extended.MavenCentralExtendedContentDataProvider;
 import org.eclipse.dash.licenses.extended.NpmjsExtendedContentDataProvider;
+import org.eclipse.dash.licenses.extended.PypiExtendedContentDataProvider;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
 import org.eclipse.dash.licenses.http.IHttpClientService;
 
@@ -60,6 +61,7 @@ public class TestLicenseToolModule extends AbstractModule {
 				IExtendedContentDataProvider.class);
 		classifierBinder.addBinding().to(NpmjsExtendedContentDataProvider.class);
 		classifierBinder.addBinding().to(MavenCentralExtendedContentDataProvider.class);
+		classifierBinder.addBinding().to(PypiExtendedContentDataProvider.class);
 		// classifierBinder.addBinding().to(GithubDataProvider.class);
 	}
 
@@ -96,7 +98,6 @@ public class TestLicenseToolModule extends AbstractModule {
 									new InputStreamReader(this.getClass().getResourceAsStream("/lockfile-1.1.0.json"),
 											StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")));
 							break;
-
 						default:
 							builder.append("{}");
 						}
@@ -167,6 +168,12 @@ public class TestLicenseToolModule extends AbstractModule {
 				switch (url) {
 				case "https://registry.npmjs.org/chalk":
 					handler.accept(this.getClass().getResourceAsStream("/chalk.json"));
+					return 200;
+				case "https://pypi.org/pypi/asn1crypto/json":
+					handler.accept(this.getClass().getResourceAsStream("/test_data_asn1crypto.json"));
+					return 200;
+				case "https://raw.githubusercontent.com/clearlydefined/service/HEAD/schemas/curation-1.0.json":
+					handler.accept(this.getClass().getResourceAsStream("/test_data_curation-1.0.json"));
 					return 200;
 				}
 

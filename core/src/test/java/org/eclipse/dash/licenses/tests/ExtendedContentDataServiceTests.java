@@ -94,6 +94,31 @@ public class ExtendedContentDataServiceTests {
 	}
 
 	@Nested
+	class PypiExtendedContentDataTests {
+		private ExtendedContentData thing;
+
+		@BeforeEach
+		void setup() {
+			thing = dataService.findFor(ContentId.getContentId("pypi/pypi/-/asn1crypto/0.13.0")).findAny().get();
+		}
+
+		ExtendedContentDataItem getItem(String key) {
+			return thing.getItems().filter(each -> key.equals(each.getLabel())).findAny().get();
+		}
+
+		@Test
+		void testValid() {
+
+			assertEquals("pypi", thing.getTitle());
+			assertEquals(
+					"https://files.pythonhosted.org/packages/3d/9f/21f96992cfbf637eab930676a48228ef385a78351d1deae04f4a6af1510e/asn1crypto-0.13.0.tar.gz",
+					getItem("Source").getValue());
+
+			assertEquals("MIT", getItem("License").getValue());
+		}
+	}
+
+	@Nested
 	class IPZillaSearchBuilderTests {
 		@Test
 		void testBasic() throws Exception {

@@ -1,0 +1,258 @@
+{
+  "$id": "https://api.clearlydefined.io/schemas/curation-1.0.json#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "curation",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "described": {
+      "$ref": "#/definitions/described"
+    },
+    "licensed": {
+      "$ref": "#/definitions/licensed"
+    },
+    "files": {
+      "$ref": "#/definitions/files"
+    }
+  },
+  "errorMessage": {
+    "type": "An individual curation must be an object",
+    "additionalProperties": "A curation object can only contain described, licensed, and files"
+  },
+  "definitions": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "npm",
+        "crate",
+        "git",
+        "maven",
+        "nuget",
+        "gem",
+        "composer",
+        "pod",
+        "pypi",
+        "sourcearchive",
+        "deb",
+        "debsrc"
+      ],
+      "errorMessage": {
+        "enum": "Package type must be supported by ClearlyDefined",
+        "type": "Package type must be a string"
+      }
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "npmjs",
+        "cocoapods",
+        "cratesio",
+        "github",
+        "gitlab",
+        "mavencentral",
+        "mavengoogle",
+        "packagist",
+        "nuget",
+        "rubygems",
+        "pypi",
+        "debian"
+      ],
+      "errorMessage": {
+        "enum": "Provider type must be supported by ClearlyDefined",
+        "type": "Provider type must be a string"
+      }
+    },
+    "described": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "facets": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "$ref": "#/definitions/globList"
+            },
+            "dev": {
+              "$ref": "#/definitions/globList"
+            },
+            "doc": {
+              "$ref": "#/definitions/globList"
+            },
+            "examples": {
+              "$ref": "#/definitions/globList"
+            },
+            "tests": {
+              "$ref": "#/definitions/globList"
+            }
+          },
+          "errorMessage": {
+            "type": "Facets must be an object",
+            "additionalProperties": "Facets object can only contain data, dev, doc, examples, and tests"
+          }
+        },
+        "sourceLocation": {
+          "$ref": "#/definitions/sourceLocation"
+        },
+        "projectWebsite": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Project website must be a string"
+          }
+        },
+        "issueTracker": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Issue tracker must be a string"
+          }
+        },
+        "releaseDate": {
+          "type": "string",
+          "format": "date",
+          "errorMessage": {
+            "type": "Release date must be a string",
+            "format": "Release date must be formatted as a YYYY-MM-DD"
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "Described must be an object",
+        "additionalProperties": "Described object can only contain facets, sourceLocation, projectWebsite, issueTracker, and releaseDate"
+      }
+    },
+    "globList": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "errorMessage": {
+          "type": "Glob list elements must be strings"
+        }
+      },
+      "errorMessage": {
+        "type": "Glob list must be an array"
+      }
+    },
+    "sourceLocation": {
+      "type": "object",
+      "required": [
+        "type",
+        "provider",
+        "name",
+        "revision"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/type"
+        },
+        "provider": {
+          "$ref": "#/definitions/provider"
+        },
+        "namespace": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Namespace must be a string"
+          }
+        },
+        "name": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Name must be a string"
+          }
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL for the repo",
+          "errorMessage": {
+            "type": "URL must be a string",
+            "format": "URL must be formatted as a URI"
+          }
+        },
+        "revision": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Revision must be a string"
+          }
+        },
+        "path": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Path must be a string"
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "Source location must be an object",
+        "required": "Source location object requires type, provider, revision, and url",
+        "additionalProperties": "Source location object can only contain type, provider, revision, and url"
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "The absolute path of the file as found in the component.",
+            "errorMessage": {
+              "type": "Path must be a string"
+            }
+          },
+          "license": {
+            "type": "string",
+            "description": "The SPDX license expression, if any, as found in the file.",
+            "errorMessage": {
+              "type": "License must be a string"
+            }
+          },
+          "attributions": {
+            "type": "array",
+            "description": "The list of attributions (e.g., copyright statements) discovered in the file.",
+            "items": {
+              "type": "string",
+              "errorMessage": {
+                "type": "Attributions elements must be a string"
+              }
+            },
+            "errorMessage": {
+              "type": "Attributions must be an array"
+            }
+          }
+        },
+        "errorMessage": {
+          "type": "Files elements must be an object",
+          "required": "Files elements object requires path",
+          "additionalProperties": "Files elements object can only contain path, license, and attributions"
+        }
+      },
+      "errorMessage": {
+        "type": "Files must be an array"
+      }
+    },
+    "licensed": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "declared": {
+          "$ref": "#/definitions/declared"
+        }
+      },
+      "errorMessage": {
+        "type": "Licensed must be an object",
+        "additionalProperties": "Licensed object can only contain declared"
+      }
+    },
+    "declared": {
+      "type": "string",
+      "errorMessage": {
+        "type": "Declared must be a string"
+      }
+    }
+  }
+}
