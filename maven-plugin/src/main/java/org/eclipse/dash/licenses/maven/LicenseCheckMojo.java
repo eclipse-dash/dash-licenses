@@ -118,7 +118,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	private boolean skip;
 
 	/**
-	 * Make the build failed if some dependencies are not known as trusted by Eclipse Foundation.
+	 * Make the build fail when any dependency is identified as requiring review by Eclipse Foundation.
 	 */
 	@Parameter(property = "dash.fail", defaultValue = "false")
 	private boolean failWhenReviewNeeded;
