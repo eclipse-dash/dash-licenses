@@ -24,9 +24,11 @@ import org.junit.jupiter.api.Test;
 
 class YarnLockFileReaderTests {
 
+	private static final String YARN_LOCK = "/test_data_yarn.lock";
+
 	@Test
 	void test() throws IOException {
-		try (InputStream input = this.getClass().getResourceAsStream("/yarn.lock")) {
+		try (InputStream input = this.getClass().getResourceAsStream(YARN_LOCK)) {
 			var ids = new YarnLockFileReader(new InputStreamReader(input)).getContentIds();
 			assertEquals("npm/npmjs/@babel/code-frame/7.12.11", ids.get(0).toString());
 			assertEquals("npm/npmjs/@babel/code-frame/7.12.13", ids.get(1).toString());
@@ -36,7 +38,7 @@ class YarnLockFileReaderTests {
 
 	@Test
 	void testAllValidIds() throws IOException {
-		try (InputStream input = this.getClass().getResourceAsStream("/yarn.lock")) {
+		try (InputStream input = this.getClass().getResourceAsStream(YARN_LOCK)) {
 			var ids = new YarnLockFileReader(new InputStreamReader(input)).getContentIds();
 			assertTrue(ids.stream().allMatch(each -> each.isValid()));
 		}

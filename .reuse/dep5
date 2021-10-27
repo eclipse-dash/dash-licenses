@@ -55,17 +55,25 @@ Files: yarn/yarn.lock
 Copyright: 2020 Kichwa Coders Canada Inc.
 License: EPL-2.0
 
-Files: core/src/test/java/yarn.lock
+Files: core/src/test/java/test_data_yarn.lock
 Copyright: 2017 Contributors to the Eclipse Theia Project
 License: EPL-2.0
 
-Files: core/src/test/java/package-lock.json
+Files: core/src/test/java/test_data_package-lock.json
 Copyright: 2019 Contributors to the Eclipse Vorto Project
 License: EPL-2.0
 
-Files: core/src/test/java/package-lock-v2.json
+Files: core/src/test/java/test_data_package-lock-v2.json
 Copyright: 2019 Contributors to the Eclipse Ditto Project
 License: EPL-2.0
+
+Files: core/src/test/java/test_data_asn1crypto.json
+Copyright: 2021 Contributors to pypi.org
+License: MIT
+
+Files: core/src/test/java/test_data_curation-1.0.json
+Copyright: 2018,2021 Contributors to ClearlyDefined
+License: MIT
 
 Files: core/src/test/java/licenses.json
 Copyright: 2017 The Eclipse Foundation

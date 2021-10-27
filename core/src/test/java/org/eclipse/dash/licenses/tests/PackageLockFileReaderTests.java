@@ -20,9 +20,12 @@ import org.junit.jupiter.api.Test;
 
 class PackageLockFileReaderTests {
 
+	private static final String PACKAGE_LOCK_JSON = "/test_data_package-lock.json";
+	private static final String PACKAGE_LOCK_V2_JSON = "/test_data_package-lock-v2.json";
+
 	@Test
 	void testV1Format() throws IOException {
-		try (InputStream input = this.getClass().getResourceAsStream("/package-lock.json")) {
+		try (InputStream input = this.getClass().getResourceAsStream(PACKAGE_LOCK_JSON)) {
 			PackageLockFileReader reader = new PackageLockFileReader(input);
 			String[] expected = { "npm/npmjs/-/loglevel/1.6.1", "npm/npmjs/-/sax/1.2.4", "npm/npmjs/-/saxes/3.1.9",
 					"npm/npmjs/-/slimdom-sax-parser/1.1.3", "npm/npmjs/-/slimdom/2.2.1", "npm/npmjs/-/xml-js/1.6.11",
@@ -34,7 +37,7 @@ class PackageLockFileReaderTests {
 
 	@Test
 	void testV2Format() throws IOException {
-		try (InputStream input = this.getClass().getResourceAsStream("/package-lock-v2.json")) {
+		try (InputStream input = this.getClass().getResourceAsStream(PACKAGE_LOCK_V2_JSON)) {
 			PackageLockFileReader reader = new PackageLockFileReader(input);
 			// This "test" is a little... abridged. At least this test proves
 			// that we're getting something in the right format from the reader
