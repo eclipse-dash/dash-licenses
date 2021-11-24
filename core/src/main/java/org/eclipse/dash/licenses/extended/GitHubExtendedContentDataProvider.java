@@ -19,15 +19,30 @@ public class GitHubExtendedContentDataProvider implements IExtendedContentDataPr
 	@Inject
 	IHttpClientService httpClientService;
 
+	static String[] sourcePathPatterns = new String[] {
+			"https://github.com/{namespace}/{name}/archive/refs/tags/release/{revision}.zip",
+			"https://github.com/{namespace}/{name}/archive/refs/tags/{revision}.zip",
+			"https://github.com/{namespace}/{name}/archive/refs/tags/v{revision}.zip" };
+
 	@Override
 	public ExtendedContentData getExtendedContentData(IContentId id) {
-
-		if (!"git".equals(id.getType()))
-			return null;
-		if (!"github".equals(id.getSource()))
+		if (!appliesTo(id))
 			return null;
 
 		return new GitHubPackageBuilder(id).build();
+	}
+
+	@Override
+	public String getSourceUrl(IContentId id) {
+		return new GitHubPackageBuilder(id).getSourceUrl();
+	}
+
+	private boolean appliesTo(IContentId id) {
+		if (!"git".equals(id.getType()))
+			return false;
+		if (!"github".equals(id.getSource()))
+			return false;
+		return true;
 	}
 
 	class GitHubPackageBuilder {
@@ -49,13 +64,16 @@ public class GitHubExtendedContentDataProvider implements IExtendedContentDataPr
 		}
 
 		public String getSourceUrl() {
-			var url = String.format("https://github.com/%s/%s/archive/refs/tags/%s.zip", id.getNamespace(),
-					id.getName(), id.getVersion());
+			for (String pattern : sourcePathPatterns) {
+				var url = pattern;
+				url = url.replace("{namespace}", id.getNamespace().replace('.', '/'));
+				url = url.replace("{name}", id.getName());
+				url = url.replace("{revision}", id.getVersion());
 
-			if (httpClientService.remoteFileExists(url)) {
-				return url;
+				if (httpClientService.remoteFileExists(url)) {
+					return url;
+				}
 			}
-
 			return null;
 		}
 	}

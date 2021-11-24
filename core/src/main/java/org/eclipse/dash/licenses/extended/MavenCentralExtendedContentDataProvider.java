@@ -35,6 +35,11 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 		return new MavenCentralPackageBuilder(id).build();
 	}
 
+	@Override
+	public String getSourceUrl(IContentId id) {
+		return new MavenCentralPackageBuilder(id).getSourceUrl();
+	}
+
 	class MavenCentralPackageBuilder {
 		private IContentId id;
 

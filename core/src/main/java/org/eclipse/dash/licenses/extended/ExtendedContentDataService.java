@@ -28,4 +28,9 @@ public class ExtendedContentDataService {
 	public Stream<ExtendedContentData> findFor(IContentId contentId) {
 		return providers.stream().map(provider -> provider.getExtendedContentData(contentId)).filter(Objects::nonNull);
 	}
+
+	public String findSourceUrl(IContentId contentId) {
+		return providers.stream().map(provider -> provider.getSourceUrl(contentId)).filter(Objects::nonNull).findFirst()
+				.orElse(null);
+	}
 }

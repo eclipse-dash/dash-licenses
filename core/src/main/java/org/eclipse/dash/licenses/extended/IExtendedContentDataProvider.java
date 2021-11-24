@@ -15,4 +15,8 @@ public interface IExtendedContentDataProvider {
 
 	ExtendedContentData getExtendedContentData(IContentId id);
 
+	default String getSourceUrl(IContentId contentId) {
+		return null;
+	};
+
 }
