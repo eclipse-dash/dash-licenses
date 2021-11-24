@@ -39,6 +39,12 @@ class ClearlyDefinedIdParserTests {
 	}
 
 	@Test
+	void testInvalid4() {
+		assertNull(new ClearlyDefinedIdParser().parseId(
+				"p2/orbit/p2.eclipse-plugin/org.junit.jupiter.params/5.7.1.v20210222-1948, unknown, restricted, none"));
+	}
+
+	@Test
 	void testNamespace() {
 		assertEquals("stuff", new ClearlyDefinedIdParser().parseId("npm/npmjs/stuff/shortid/2.2.8").getNamespace());
 	}

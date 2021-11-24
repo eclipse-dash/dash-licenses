@@ -55,5 +55,7 @@ class GolangIdParserTests {
 	void testFails() {
 		assertNull(new GolangIdParser().parseId("groupid:artifactid:v1.0"));
 		assertNull(new GolangIdParser().parseId("groupid:artifactid 1.0"));
+		assertNull(new GolangIdParser().parseId(
+				"p2/orbit/p2.eclipse-plugin/org.junit.jupiter.params/5.7.1.v20210222-1948, unknown, restricted, none"));
 	}
 }
