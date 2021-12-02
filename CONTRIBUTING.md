@@ -45,6 +45,25 @@ Contributor Agreement (ECA) on file.
 For more information, please see the Eclipse Committer Handbook:
 https://www.eclipse.org/projects/handbook/#resources-commit
 
+## Build
+
+The project uses standard Maven to build. 
+
+The project uses Java 11 language features. **Java 11 or greater is required.**
+
+From the root:
+
+```
+$ mvn clean install
+```
+
+The build generates:
+
+- a shaded JAR, `./core/target/org.eclipse.dash.licenses-<version>.jar` that contains 
+everything that is required to run from the command line; and
+- a Maven plugin, `org.eclipse.dash:license-tool-plugin:license-check`.
+
+
 ## Contact
 
 Contact the project developers via the project's "dev" list.

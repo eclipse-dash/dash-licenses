@@ -28,23 +28,13 @@ The current implementation uses two sources for license information. The first s
 
 The idea was to have some code that can be used to check the licenses of content, but write it in a manner that would make it easy to generate, for example, a Maven plug-in. The main focus, however, has been making this work as a CLI so that it can be used to sort out licenses for Maven, `package-lock.json`, `yarn.lock`, etc.
 
-## Build
+## Get it
 
-The project uses standard Maven to build. 
+Dash License Tool executable jar is published to Eclipse's Maven repo and available at https://repo.eclipse.org/content/repositories/dash-licenses/org/eclipse/dash/org.eclipse.dash.licenses/ . Latest version can be directly downloaded from https://repo.eclipse.org/service/local/artifact/maven/redirect?r=dash-licenses&g=org.eclipse.dash&a=org.eclipse.dash.licenses&v=LATEST
 
-The project uses Java 11 language features. **Java 11 or greater is required.**
+It's also available as a [Maven plugin](#example-maven-plugin).
 
-From the root:
-
-```
-$ mvn clean install
-```
-
-The build generates:
-
-- a shaded JAR, `./core/target/org.eclipse.dash.licenses-<version>.jar` that contains 
-everything that is required to run from the command line; and
-- a Maven plugin, `org.eclipse.dash:license-tool-plugin:license-check`.
+Alternatively, you can get the source code and build it yourself. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Usage
 
