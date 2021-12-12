@@ -61,21 +61,60 @@ public class ExtendedContentDataServiceTests {
 			assertEquals(
 					"https://search.maven.org/remotecontent?filepath=group/path/artifact/1.0/artifact-1.0-sources.jar",
 					item.getValue());
+			assertEquals(
+					"[Source](https://search.maven.org/remotecontent?filepath=group/path/artifact/1.0/artifact-1.0-sources.jar)",
+					item.asMarkdown());
 		}
 	}
 
 	@Nested
 	class NpmjsExtendedContentDataTests {
+		private ExtendedContentData thing;
+
+		@BeforeEach
+		void setup() {
+			thing = dataService.findFor(ContentId.getContentId("npm/npmjs/-/chalk/0.1.0")).findAny().get();
+		}
+
+		ExtendedContentDataItem getItem(String key) {
+			return thing.getItems().filter(each -> key.equals(each.getLabel())).findAny().get();
+		}
+
 		@Test
 		void testValid() {
 
-			ExtendedContentData thing = dataService.findFor(ContentId.getContentId("npm/npmjs/-/chalk/0.1.0")).findAny()
-					.get();
 			assertEquals("npmjs", thing.getTitle());
-			assertEquals("git://github.com/sindresorhus/chalk.git", thing.get("Repository"));
-			assertEquals("MIT", thing.get("License"));
-			assertEquals("https://github.com/sindresorhus/chalk/archive/v0.1.0.zip", thing.get("Source"));
-			assertEquals("https://registry.npmjs.org/chalk/-/chalk-0.1.0.tgz", thing.get("Distribution"));
+			assertEquals("git://github.com/sindresorhus/chalk.git", getItem("Repository").getValue());
+			assertEquals("https://github.com/sindresorhus/chalk/archive/v0.1.0.zip", getItem("Source").getValue());
+			assertEquals("https://registry.npmjs.org/chalk/-/chalk-0.1.0.tgz", getItem("Distribution").getValue());
+
+			assertEquals("MIT", getItem("License").getValue());
+			assertEquals("License: MIT", getItem("License").asMarkdown());
+		}
+	}
+
+	@Nested
+	class PypiExtendedContentDataTests {
+		private ExtendedContentData thing;
+
+		@BeforeEach
+		void setup() {
+			thing = dataService.findFor(ContentId.getContentId("pypi/pypi/-/asn1crypto/0.13.0")).findAny().get();
+		}
+
+		ExtendedContentDataItem getItem(String key) {
+			return thing.getItems().filter(each -> key.equals(each.getLabel())).findAny().get();
+		}
+
+		@Test
+		void testValid() {
+
+			assertEquals("pypi", thing.getTitle());
+			assertEquals(
+					"https://files.pythonhosted.org/packages/3d/9f/21f96992cfbf637eab930676a48228ef385a78351d1deae04f4a6af1510e/asn1crypto-0.13.0.tar.gz",
+					getItem("Source").getValue());
+
+			assertEquals("MIT", getItem("License").getValue());
 		}
 	}
 

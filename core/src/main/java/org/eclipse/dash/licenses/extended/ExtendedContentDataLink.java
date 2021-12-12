@@ -9,24 +9,14 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.extended;
 
-public class ExtendedContentDataItem {
-	private String label;
-	private String value;
+public class ExtendedContentDataLink extends ExtendedContentDataItem {
 
-	public ExtendedContentDataItem(String label, String value) {
-		this.label = label;
-		this.value = value;
+	public ExtendedContentDataLink(String label, String value) {
+		super(label, value);
 	}
 
-	public String getLabel() {
-		return label;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
+	@Override
 	public String asMarkdown() {
-		return String.format("%s: %s", getLabel(), getValue());
+		return String.format("[%s](%s)", getLabel(), getValue());
 	}
 }

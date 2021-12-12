@@ -1,5 +1,6 @@
 /*************************************************************************
  * Copyright (c) 2020, Red Hat Inc.
+ * Copyright (c) 2021, The Eclipse Foundation
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -42,69 +43,69 @@ public abstract class AbstractArtifactFilteringMojo extends AbstractMojo {
 	 * If no scope is specified, then the default value of <code>compile</code> is
 	 * used, including compile, provided, and system dependencies only.
 	 */
-	@Parameter(defaultValue = "compile")
+	@Parameter(property = "includeScope", defaultValue = "compile")
 	protected String includeScope;
 
 	/**
 	 * Scope to exclude. An empty string indicates no scopes (default).
 	 */
-	@Parameter(defaultValue = "")
+	@Parameter(property = "excludeScope", defaultValue = "")
 	protected String excludeScope;
 
 	/**
 	 * Comma separated list of types to include. Empty string indicates include
 	 * everything (default).
 	 */
-	@Parameter(defaultValue = "")
+	@Parameter(property = "includeTypes", defaultValue = "")
 	protected String includeTypes;
 
 	/**
 	 * Comma separated list of types to exclude. Empty string indicates don't
 	 * exclude anything (default).
 	 */
-	@Parameter(defaultValue = "")
+	@Parameter(property = "excludeTypes", defaultValue = "")
 	protected String excludeTypes;
 
 	/**
 	 * Comma separated list of classifiers to include. Empty string indicates
 	 * include everything (default).
 	 */
-	@Parameter(defaultValue = "")
+	@Parameter(property = "includeClassifiers", defaultValue = "")
 	protected String includeClassifiers;
 
 	/**
 	 * Comma separated list of classifiers to exclude. Empty string indicates don't
 	 * exclude anything (default).
 	 */
-	@Parameter(defaultValue = "")
+	@Parameter(property = "excludeClassifiers", defaultValue = "")
 	protected String excludeClassifiers;
 
 	/**
 	 * Comma separated list of group IDs to include. Empty string indicates include
 	 * everything (default).
 	 */
-	@Parameter(defaultValue = "")
+	@Parameter(property = "includeGroupIds", defaultValue = "")
 	protected String includeGroupIds;
 
 	/**
 	 * Comma separated list of group IDs to exclude. Empty string indicates don't
 	 * exclude anything (default).
 	 */
-	@Parameter(defaultValue = "")
+	@Parameter(property = "excludeGroupIds", defaultValue = "")
 	protected String excludeGroupIds;
 
 	/**
 	 * Comma separated list of artifact IDs to include. Empty string indicates
 	 * include everything (default).
 	 */
-	@Parameter(defaultValue = "")
+	@Parameter(property = "includeArtifactIds", defaultValue = "")
 	protected String includeArtifactIds;
 
 	/**
 	 * Comma separated list of artifact IDs to exclude. Empty string indicates don't
 	 * exclude anything (default).
 	 */
-	@Parameter(defaultValue = "")
+	@Parameter(property = "excludeArtifactIds", defaultValue = "")
 	protected String excludeArtifactIds;
 
 	/**

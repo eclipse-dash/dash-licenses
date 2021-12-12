@@ -16,9 +16,11 @@ import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 import org.eclipse.dash.licenses.cli.html_parser.JsoupProvider;
 import org.eclipse.dash.licenses.cli.html_parser.JsoupProviderImpl;
 import org.eclipse.dash.licenses.extended.ExtendedContentDataService;
+import org.eclipse.dash.licenses.extended.GitHubExtendedContentDataProvider;
 import org.eclipse.dash.licenses.extended.IExtendedContentDataProvider;
 import org.eclipse.dash.licenses.extended.MavenCentralExtendedContentDataProvider;
 import org.eclipse.dash.licenses.extended.NpmjsExtendedContentDataProvider;
+import org.eclipse.dash.licenses.extended.PypiExtendedContentDataProvider;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
 import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.http.IHttpClientService;
@@ -51,6 +53,8 @@ public class LicenseToolModule extends AbstractModule {
 				IExtendedContentDataProvider.class);
 		extendedContentDataProviders.addBinding().to(NpmjsExtendedContentDataProvider.class);
 		extendedContentDataProviders.addBinding().to(MavenCentralExtendedContentDataProvider.class);
+		extendedContentDataProviders.addBinding().to(PypiExtendedContentDataProvider.class);
+		extendedContentDataProviders.addBinding().to(GitHubExtendedContentDataProvider.class);
 		// classifierBinder.addBinding().to(GithubDataProvider.class);
 	}
 }

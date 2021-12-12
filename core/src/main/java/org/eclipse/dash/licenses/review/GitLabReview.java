@@ -51,7 +51,7 @@ public class GitLabReview {
 			builder.append(String.format("[%s](%s)", each.getTitle(), each.getUrl()));
 			builder.append("\n");
 			each.getItems().forEach(item -> {
-				builder.append(String.format("  - [%s](%s)", item.getLabel(), item.getValue()));
+				builder.append(String.format("  - %s", item.asMarkdown()));
 				builder.append("\n");
 			});
 		});

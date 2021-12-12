@@ -72,9 +72,9 @@ public class NpmjsExtendedContentDataProvider implements IExtendedContentDataPro
 		public ExtendedContentData build() {
 			var thing = new ExtendedContentData("npmjs", getUrl());
 			thing.addItem("License", getLicense());
-			thing.addItem("Distribution", getTarballUrl());
-			thing.addItem("Repository", getRepositoryUrl());
-			thing.addItem("Source", getSourceUrl());
+			thing.addLink("Distribution", getTarballUrl());
+			thing.addLink("Repository", getRepositoryUrl());
+			thing.addLink("Source", getSourceUrl());
 
 			return thing;
 		}

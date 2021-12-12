@@ -179,6 +179,8 @@ $ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps
 $ _
 ```
 
+> :warning: If your project is a multi-module Maven project, you should provide an absolute path to `-DoutputFile` to append all dependencies in the same file (see [MDEP-542](https://issues.apache.org/jira/browse/MDEP-542)).
+
 You can use the experimental [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
 
 ```
@@ -323,7 +325,7 @@ Note that this "problem" is not a _Dash License Tool problem_, but rather is a d
 Find all of the potentially problematic third party libraries from a Gradle build.
 
 ```
-$ ./gradlew dependencies | grep -Poh "[^:\s]+:[^:]+:[^:\s]+" | grep -v "^org\.eclipse" | sort | uniq \
+$ ./gradlew dependencies | grep -Poh "(?<=\s)[\w\.-]+:[\w\.-]+:[^:\s]+" | grep -v "^org\.eclipse" | sort | uniq \
  | java -jar org.eclipse.dash.licenses-<version>.jar - \
  | grep restricted
 ```

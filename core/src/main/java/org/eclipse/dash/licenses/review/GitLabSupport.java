@@ -26,7 +26,7 @@ import org.gitlab4j.api.models.Issue;
 
 public class GitLabSupport {
 
-	private static final int MAXIMUM_REVIEWS = 10;
+	private static final int MAXIMUM_REVIEWS = 100;
 
 	@Inject
 	ISettings settings;
@@ -78,7 +78,7 @@ public class GitLabSupport {
 					}
 
 					output.println(String.format(" - Created: %s", created.getWebUrl()));
-
+					output.flush();
 				} catch (GitLabApiException e) {
 					throw new RuntimeException(e);
 				}

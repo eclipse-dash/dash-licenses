@@ -12,59 +12,63 @@ package org.eclipse.dash.licenses.extended;
 import javax.inject.Inject;
 
 import org.eclipse.dash.licenses.IContentId;
-import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.http.IHttpClientService;
 
-public class MavenCentralExtendedContentDataProvider implements IExtendedContentDataProvider {
-	@Inject
-	ISettings settings;
+public class GitHubExtendedContentDataProvider implements IExtendedContentDataProvider {
+
 	@Inject
 	IHttpClientService httpClientService;
 
 	static String[] sourcePathPatterns = new String[] {
-			"https://search.maven.org/remotecontent?filepath={groupPath}/{artifactid}/{version}/{artifactid}-{version}-sources.jar",
-			"https://search.maven.org/remotecontent?filepath={groupPath}/{artifactid}/{version}/{artifactid}-{version}-src.zip" };
+			"https://github.com/{namespace}/{name}/archive/refs/tags/release/{revision}.zip",
+			"https://github.com/{namespace}/{name}/archive/refs/tags/{revision}.zip",
+			"https://github.com/{namespace}/{name}/archive/refs/tags/v{revision}.zip" };
 
 	@Override
 	public ExtendedContentData getExtendedContentData(IContentId id) {
-		if (!"maven".equals(id.getType()))
-			return null;
-		if (!"mavencentral".equals(id.getSource()))
+		if (!appliesTo(id))
 			return null;
 
-		return new MavenCentralPackageBuilder(id).build();
+		return new GitHubPackageBuilder(id).build();
 	}
 
 	@Override
 	public String getSourceUrl(IContentId id) {
-		return new MavenCentralPackageBuilder(id).getSourceUrl();
+		return new GitHubPackageBuilder(id).getSourceUrl();
 	}
 
-	class MavenCentralPackageBuilder {
+	private boolean appliesTo(IContentId id) {
+		if (!"git".equals(id.getType()))
+			return false;
+		if (!"github".equals(id.getSource()))
+			return false;
+		return true;
+	}
+
+	class GitHubPackageBuilder {
 		private IContentId id;
 
-		public MavenCentralPackageBuilder(IContentId id) {
+		public GitHubPackageBuilder(IContentId id) {
 			this.id = id;
 		}
 
 		public ExtendedContentData build() {
-			var thing = new ExtendedContentData("Maven Central", getUrl());
+			var thing = new ExtendedContentData("GitHub", getUrl());
 			thing.addLink("Source", getSourceUrl());
 
 			return thing;
 		}
 
 		public String getUrl() {
-			return String.format("https://search.maven.org/artifact/%s/%s/%s/jar", id.getNamespace(), id.getName(),
-					id.getVersion());
+			return String.format("https://github.com/%s/%s", id.getNamespace(), id.getName(), id.getVersion());
 		}
 
 		public String getSourceUrl() {
 			for (String pattern : sourcePathPatterns) {
 				var url = pattern;
-				url = url.replace("{groupPath}", id.getNamespace().replace('.', '/'));
-				url = url.replace("{artifactid}", id.getName());
-				url = url.replace("{version}", id.getVersion());
+				url = url.replace("{namespace}", id.getNamespace().replace('.', '/'));
+				url = url.replace("{name}", id.getName());
+				url = url.replace("{revision}", id.getVersion());
 
 				if (httpClientService.remoteFileExists(url)) {
 					return url;
@@ -72,6 +76,5 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 			}
 			return null;
 		}
-
 	}
 }
