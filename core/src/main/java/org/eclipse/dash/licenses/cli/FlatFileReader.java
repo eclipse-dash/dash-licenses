@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.dash.licenses.ClearlyDefinedIdParser;
 import org.eclipse.dash.licenses.ContentIdParser;
 import org.eclipse.dash.licenses.GolangIdParser;
@@ -24,6 +25,8 @@ import org.eclipse.dash.licenses.InvalidContentId;
 import org.eclipse.dash.licenses.MavenIdParser;
 import org.eclipse.dash.licenses.NpmJsIdParser;
 
+import javax.inject.Inject;
+
 public class FlatFileReader implements IDependencyListReader {
 
 	// TODO Dependency injection opportunity
@@ -31,7 +34,8 @@ public class FlatFileReader implements IDependencyListReader {
 
 	private BufferedReader reader;
 
-	public FlatFileReader(Reader input) {
+	@Inject
+	public FlatFileReader(@Assisted Reader input) {
 		reader = new BufferedReader(input);
 		parsers.add(new MavenIdParser());
 		parsers.add(new NpmJsIdParser());

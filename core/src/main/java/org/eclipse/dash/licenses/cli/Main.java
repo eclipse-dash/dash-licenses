@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,9 +24,7 @@ import java.util.List;
 
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseChecker;
-import org.eclipse.dash.licenses.cli.html_parser.JsoupProvider;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
-import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 
@@ -66,6 +65,7 @@ public class Main {
 
 		Injector injector = Guice.createInjector(new LicenseToolModule(settings));
 		LicenseChecker checker = injector.getInstance(LicenseChecker.class);
+		DependencyListReaderFactory readerFactory = injector.getInstance(DependencyListReaderFactory.class);
 
 		List<IResultsCollector> collectors = new ArrayList<>();
 
@@ -90,8 +90,8 @@ public class Main {
 		Arrays.stream(settings.getFileNames()).forEach(name -> {
 			IDependencyListReader reader = null;
 			try {
-				reader = getReader(name, injector);
-			} catch (FileNotFoundException e) {
+				reader = getReader(name, readerFactory);
+			} catch (IOException e) {
 				System.out.println(String.format("The file \"%s\" does not exist.", name));
 				CommandLineSettings.printUsage(System.out);
 				System.exit(1);
@@ -117,24 +117,22 @@ public class Main {
 	}
 
 	@SuppressWarnings("resource")
-	private static IDependencyListReader getReader(String name, Injector injector) throws FileNotFoundException {
+	private static IDependencyListReader getReader(String name, DependencyListReaderFactory readerFactory) throws IOException {
 		if ("-".equals(name)) {
-			return new FlatFileReader(new InputStreamReader(System.in));
+			return readerFactory.createFlatFileReader(new InputStreamReader(System.in));
 		} else {
 			File input = new File(name);
 			if (input.exists()) {
 				if ("package-lock.json".equals(input.getName())) {
-					return new PackageLockFileReader(new FileInputStream(input));
+					return readerFactory.createNpmLockFileReader(new FileInputStream(input));
 				}
 				if ("yarn.lock".equals(input.getName())) {
-					return new YarnLockFileReader(new FileReader(input));
+					return readerFactory.createYarnLockFileReader(new FileReader(input));
 				}
 				if ("go.sum".equals(input.getName())) {
-					HttpClientService httpClient = injector.getInstance(HttpClientService.class);
-					JsoupProvider jsoupProvider = injector.getInstance(JsoupProvider.class);
-					return new GoSumFileReader(new FileInputStream(input), httpClient, jsoupProvider);
+					return readerFactory.createGoSumFileReader(new FileReader(input));
 				}
-				return new FlatFileReader(new FileReader(input));
+				return readerFactory.createFlatFileReader(new FileReader(input));
 			} else {
 				throw new FileNotFoundException(name);
 			}

@@ -18,9 +18,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.InvalidContentId;
+
+import javax.inject.Inject;
 
 /**
  * This is a very rudimentary <code>yarn.lock</code> file reader. The format
@@ -56,7 +59,8 @@ public class YarnLockFileReader implements IDependencyListReader {
 
 	private BufferedReader reader;
 
-	public YarnLockFileReader(Reader input) {
+	@Inject
+	public YarnLockFileReader(@Assisted Reader input) {
 		reader = new BufferedReader(input);
 	}
 

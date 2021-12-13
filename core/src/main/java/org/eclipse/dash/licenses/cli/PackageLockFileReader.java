@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.InvalidContentId;
@@ -23,11 +24,14 @@ import org.eclipse.dash.licenses.util.JsonUtils;
 
 import jakarta.json.JsonObject;
 
+import javax.inject.Inject;
+
 public class PackageLockFileReader implements IDependencyListReader {
 
 	private final InputStream input;
 
-	public PackageLockFileReader(InputStream input) {
+	@Inject
+	public PackageLockFileReader(@Assisted InputStream input) {
 		this.input = input;
 	}
 
