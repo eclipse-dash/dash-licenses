@@ -9,10 +9,18 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.context;
 
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.name.Names;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
+import org.eclipse.dash.licenses.cli.IDependencyListReader;
+import org.eclipse.dash.licenses.cli.DependencyListReaderFactory;
+import org.eclipse.dash.licenses.cli.PackageLockFileReader;
+import org.eclipse.dash.licenses.cli.YarnLockFileReader;
+import org.eclipse.dash.licenses.cli.FlatFileReader;
+import org.eclipse.dash.licenses.cli.GoSumFileReader;
 import org.eclipse.dash.licenses.cli.html_parser.JsoupProvider;
 import org.eclipse.dash.licenses.cli.html_parser.JsoupProviderImpl;
 import org.eclipse.dash.licenses.extended.ExtendedContentDataService;
@@ -48,6 +56,13 @@ public class LicenseToolModule extends AbstractModule {
 		bind(IHttpClientService.class).toInstance(new HttpClientService());
 		bind(ExtendedContentDataService.class).toInstance(new ExtendedContentDataService());
 		bind(JsoupProvider.class).to(JsoupProviderImpl.class);
+
+		install(new FactoryModuleBuilder()
+				.implement(IDependencyListReader.class, Names.named("npm"), PackageLockFileReader.class)
+				.implement(IDependencyListReader.class, Names.named("npm-yarn"), YarnLockFileReader.class)
+				.implement(IDependencyListReader.class, Names.named("flat-file"), FlatFileReader.class)
+				.implement(IDependencyListReader.class, Names.named("golang"), GoSumFileReader.class)
+				.build(DependencyListReaderFactory.class));
 
 		Multibinder<IExtendedContentDataProvider> extendedContentDataProviders = Multibinder.newSetBinder(binder(),
 				IExtendedContentDataProvider.class);

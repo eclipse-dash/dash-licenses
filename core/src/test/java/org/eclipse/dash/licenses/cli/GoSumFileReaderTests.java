@@ -1,10 +1,8 @@
-package org.eclipse.dash.licenses.tests.cli;
+package org.eclipse.dash.licenses.cli;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.eclipse.dash.licenses.IContentId;
-import org.eclipse.dash.licenses.cli.CommandLineSettings;
-import org.eclipse.dash.licenses.cli.GoSumFileReader;
 import org.eclipse.dash.licenses.cli.html_parser.JsoupProvider;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
 import org.eclipse.dash.licenses.http.HttpClientService;
@@ -22,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class GoSumFileReaderTests {
     private HttpClientService httpClientService;
 
     @Test // Todo remove this test, when all mock tests will be completed.
-    public void testShouldParseGoSumFileWithIncompatibleSuffix0() {
+    public void testShouldParseGoSumFileWithIncompatibleSuffix0() throws IOException {
         String GO_SUM_FILE_CONTENT = "gotest.tools/v3 v3.0.2/go.mod h1:3SzNCllyD9/Y+b5r9JIKQ474KzkZyqLqEfYqMsX94Bk=\n" +
                 "gotest.tools/v3 v3.0.3/go.mod h1:Z7Lb0S5l+klDB31fvDQX8ss/FlKDxtlFlw3Oa8Ymbl8=";
         InputStream in = new ByteArrayInputStream(GO_SUM_FILE_CONTENT.getBytes());
@@ -55,7 +54,9 @@ public class GoSumFileReaderTests {
         HttpClientService httpClientService = injector.getInstance(HttpClientService.class);
         JsoupProvider jsoupProvider = injector.getInstance(JsoupProvider.class);
 
-        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        GoSumFileReader goSumFileReader = new GoSumFileReader(new InputStreamReader(in));
+        goSumFileReader.clientService = httpClientService;
+        goSumFileReader.jsoupProvider = jsoupProvider;
         Collection<IContentId> contentIds = goSumFileReader.getContentIds();
 
         assertEquals(1, contentIds.size());
@@ -87,7 +88,9 @@ public class GoSumFileReaderTests {
         when(jsoupProvider.getDocument(anyString())).thenReturn(document);
         when(document.select("meta[name='go-import']")).thenReturn(elements);
 
-        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        GoSumFileReader goSumFileReader = new GoSumFileReader(new InputStreamReader(in));
+        goSumFileReader.clientService = httpClientService;
+        goSumFileReader.jsoupProvider = jsoupProvider;
         Collection<IContentId> contentIds = goSumFileReader.getContentIds();
 
         assertEquals(1, contentIds.size());
@@ -98,7 +101,7 @@ public class GoSumFileReaderTests {
     }
 
     @Test // Todo remove this test, when all mock tests will be completed.
-    public void testShouldParseGoSumFileWithTaggedVersion0() {
+    public void testShouldParseGoSumFileWithTaggedVersion0() throws IOException {
         String GO_SUM_FILE_CONTENT = "github.com/BurntSushi/toml v0.3.0 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=\n" +
                 "github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=\n";
         InputStream in = new ByteArrayInputStream(GO_SUM_FILE_CONTENT.getBytes());
@@ -108,7 +111,9 @@ public class GoSumFileReaderTests {
         HttpClientService httpClientService = injector.getInstance(HttpClientService.class);
         JsoupProvider jsoupProvider = injector.getInstance(JsoupProvider.class);
 
-        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        GoSumFileReader goSumFileReader = new GoSumFileReader(new InputStreamReader(in));
+        goSumFileReader.clientService = httpClientService;
+        goSumFileReader.jsoupProvider = jsoupProvider;
         Collection<IContentId> contentIds = goSumFileReader.getContentIds();
 
         assertEquals(1, contentIds.size());
@@ -141,7 +146,9 @@ public class GoSumFileReaderTests {
         when(jsoupProvider.getDocument(anyString())).thenReturn(document);
         when(document.select("meta[name='go-import']")).thenReturn(elements);
 
-        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        GoSumFileReader goSumFileReader = new GoSumFileReader(new InputStreamReader(in));
+        goSumFileReader.clientService = httpClientService;
+        goSumFileReader.jsoupProvider = jsoupProvider;
         Collection<IContentId> contentIds = goSumFileReader.getContentIds();
 
         assertEquals(1, contentIds.size());
@@ -153,7 +160,7 @@ public class GoSumFileReaderTests {
 
     // Todo remove this test, when all mock tests will be completed.
     @Test
-    public void shouldParseGoSumFileWithGithubHashRevision0() {
+    public void shouldParseGoSumFileWithGithubHashRevision0() throws IOException {
         String GO_SUM_FILE_CONTENT = "github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=";
         InputStream in = new ByteArrayInputStream(GO_SUM_FILE_CONTENT.getBytes());
         CommandLineSettings settings = CommandLineSettings.getSettings(new String[]{});
@@ -162,7 +169,9 @@ public class GoSumFileReaderTests {
         HttpClientService httpClientService = injector.getInstance(HttpClientService.class);
         JsoupProvider jsoupProvider = injector.getInstance(JsoupProvider.class);
 
-        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        GoSumFileReader goSumFileReader = new GoSumFileReader(new InputStreamReader(in));
+        goSumFileReader.clientService = httpClientService;
+        goSumFileReader.jsoupProvider = jsoupProvider;
         Collection<IContentId> contentIds = goSumFileReader.getContentIds();
 
         assertEquals(1, contentIds.size());
@@ -194,7 +203,9 @@ public class GoSumFileReaderTests {
         when(jsoupProvider.getDocument(anyString())).thenReturn(document);
         when(document.select("meta[name='go-import']")).thenReturn(elements);
 
-        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        GoSumFileReader goSumFileReader = new GoSumFileReader(new InputStreamReader(in));
+        goSumFileReader.clientService = httpClientService;
+        goSumFileReader.jsoupProvider = jsoupProvider;
         Collection<IContentId> contentIds = goSumFileReader.getContentIds();
 
         assertEquals(1, contentIds.size());
@@ -203,10 +214,10 @@ public class GoSumFileReaderTests {
         assertTrue(contentIds.stream().allMatch(id -> id.getNamespace().equals("BurntSushi")));
         assertTrue(contentIds.stream().allMatch(id -> id.getVersion().equals("27f122750802c950b2c869a5b63dafcf590ced95")));
     }
-  
+
     // Todo remove this test, when all mock tests will be completed.
     @Test
-    public void shouldParseGoSumFileWithVersionSuffixInTheDeps0() {
+    public void shouldParseGoSumFileWithVersionSuffixInTheDeps0() throws IOException {
         String GO_SUM_FILE_CONTENT = "gomodules.xyz/jsonpatch/v2 v2.0.1/go.mod h1:IhYNNY4jnS53ZnfE4PAmpKtDpTCj1JFXc+3mwe7XcUU=";
         InputStream in = new ByteArrayInputStream(GO_SUM_FILE_CONTENT.getBytes());
         CommandLineSettings settings = CommandLineSettings.getSettings(new String[]{});
@@ -215,7 +226,9 @@ public class GoSumFileReaderTests {
         HttpClientService httpClientService = injector.getInstance(HttpClientService.class);
         JsoupProvider jsoupProvider = injector.getInstance(JsoupProvider.class);
 
-        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        GoSumFileReader goSumFileReader = new GoSumFileReader(new InputStreamReader(in));
+        goSumFileReader.clientService = httpClientService;
+        goSumFileReader.jsoupProvider = jsoupProvider;
         Collection<IContentId> contentIds = goSumFileReader.getContentIds();
 
         assertEquals(1, contentIds.size());
@@ -250,7 +263,9 @@ public class GoSumFileReaderTests {
         when(jsoupProvider.getDocument(anyString())).thenReturn(document);
         when(document.select("meta[name='go-import']")).thenReturn(elements);
 
-        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        GoSumFileReader goSumFileReader = new GoSumFileReader(new InputStreamReader(in));
+        goSumFileReader.clientService = httpClientService;
+        goSumFileReader.jsoupProvider = jsoupProvider;
         Collection<IContentId> contentIds = goSumFileReader.getContentIds();
 
         assertEquals(1, contentIds.size());
@@ -260,19 +275,9 @@ public class GoSumFileReaderTests {
         assertTrue(contentIds.stream().allMatch(id -> id.getVersion().equals("e8422f09d27ee2c8cfb2c7f8089eb9eeb0764849")));
     }
 
-    @Test
-    public void shouldFindGithubSHAEvenForDependencyWithALotOfTags() throws IOException {
-        // todo
-    }
-
-    @Test
-    public void shouldHandleUnsupportedGitProviderDependency() {
-        // todo
-    }
-
     // Todo remove this test, when all mock tests will be completed.
     @Test
-    public void shouldHandleDependencyFromMultiPackageGithubRepo0() {
+    public void shouldHandleDependencyFromMultiPackageGithubRepo0() throws IOException {
         // We have dependency - golang sub-module "api"
         String goSumFileWithSubModuleReference = "sigs.k8s.io/kustomize/api v0.8.8/go.mod h1:He1zoK0nk43Pc6NlV085xDXDXTNprtcyKZVm3swsdNY=";
         InputStream in = new ByteArrayInputStream(goSumFileWithSubModuleReference.getBytes());
@@ -282,7 +287,9 @@ public class GoSumFileReaderTests {
         HttpClientService httpClientService = injector.getInstance(HttpClientService.class);
         JsoupProvider jsoupProvider = injector.getInstance(JsoupProvider.class);
 
-        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        GoSumFileReader goSumFileReader = new GoSumFileReader(new InputStreamReader(in));
+        goSumFileReader.clientService = httpClientService;
+        goSumFileReader.jsoupProvider = jsoupProvider;
         Collection<IContentId> contentIds = goSumFileReader.getContentIds();
 
         assertEquals(1, contentIds.size());
@@ -338,7 +345,9 @@ public class GoSumFileReaderTests {
         when(jsoupProvider.getDocument(anyString())).thenReturn(document);
         when(document.select("meta[name='go-import']")).thenReturn(elements);
 
-        GoSumFileReader goSumFileReader = new GoSumFileReader(in, httpClientService, jsoupProvider);
+        GoSumFileReader goSumFileReader = new GoSumFileReader(new InputStreamReader(in));
+        goSumFileReader.clientService = httpClientService;
+        goSumFileReader.jsoupProvider = jsoupProvider;
         Collection<IContentId> contentIds = goSumFileReader.getContentIds();
 
         assertEquals(1, contentIds.size());

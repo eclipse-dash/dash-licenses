@@ -1,5 +1,6 @@
 package org.eclipse.dash.licenses.cli;
 
+import com.google.inject.assistedinject.Assisted;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
@@ -13,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.inject.Inject;
 import java.io.*;
 import java.util.*;
 import java.util.function.Consumer;
@@ -23,18 +25,20 @@ import java.util.stream.Collectors;
 public class GoSumFileReader implements IDependencyListReader {
 
   private final BufferedReader reader;
-  private final HttpClientService clientService;
-  private final JsoupProvider jsoupProvider;
   private final String githubToken;
   private final Map<String, String> commonHeaders = new HashMap<>();
 
   private final int requestPageSize = 100;
 
-  public GoSumFileReader(InputStream input, HttpClientService clientService, JsoupProvider jsoupProvider) {
-      InputStreamReader inStreamReader = new InputStreamReader(input);
-      this.reader = new BufferedReader(inStreamReader);
-      this.clientService = clientService;
-      this.jsoupProvider = jsoupProvider;
+  @Inject
+  protected HttpClientService clientService;
+
+  @Inject
+  protected JsoupProvider jsoupProvider;
+
+  @Inject
+  public GoSumFileReader(@Assisted Reader reader) throws IOException {
+      this.reader = new BufferedReader(reader);
 
        // todo notify user, we need to have token to make a lot of GET request to the github api
       githubToken = System.getenv("GITHUB_TOKEN");
