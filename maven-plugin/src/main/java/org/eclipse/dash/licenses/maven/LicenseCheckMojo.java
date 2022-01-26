@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2020, 2021 Red Hat Inc. and others
+ * Copyright (c) 2020, 2022 Red Hat Inc. and others
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -49,7 +49,7 @@ import com.google.inject.Injector;
 /**
  * Maven goal for running the Dash License Check tool.
  */
-@Mojo(name = "license-check", requiresProject = true, aggregator = true, requiresDependencyResolution = ResolutionScope.TEST, inheritByDefault = false)
+@Mojo(name = "license-check", requiresProject = true, aggregator = true, requiresDependencyResolution = ResolutionScope.TEST)
 public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 
 	/**
@@ -137,6 +137,13 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		// We are aggregating the deps for all projects in the reactor, so we only need
+		// to execute once. This check ensures we run only during the build of the
+		// top-level reactor project and avoids duplicate invokations
+		if (!mavenSession.getCurrentProject().equals(mavenSession.getTopLevelProject())) {
+			return;
+		}
+
 		if (skip) {
 			getLog().info("Skipping dependency license check");
 			return;
