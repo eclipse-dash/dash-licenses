@@ -1,0 +1,48 @@
+/*************************************************************************
+ * Copyright (c) 2022 Mat Booth and others
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which accompanies this
+ * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *************************************************************************/
+
+import java.io.*;
+import java.util.*;
+import java.util.jar.*;
+import java.util.regex.*;
+
+try
+{
+    File summary = new File( basedir, "DEPS" );
+    System.out.println( "Checking for existence of " + summary );
+    if ( !summary.isFile() )
+    {
+        System.out.println( "FAILURE!" );
+        return false;
+    }
+
+    File summaryA = new File( basedir, "moduleA/DEPS" );
+    System.out.println( "Checking for non-existence of " + summaryA );
+    if ( summaryA.isFile() )
+    {
+        System.out.println( "FAILURE!" );
+        return false;
+    }
+
+    File summaryB = new File( basedir, "moduleB/DEPS" );
+    System.out.println( "Checking for non-existence of " + summaryB );
+    if ( summaryB.isFile() )
+    {
+        System.out.println( "FAILURE!" );
+        return false;
+    }
+}
+catch( Throwable t )
+{
+    t.printStackTrace();
+    return false;
+}
+
+return true;

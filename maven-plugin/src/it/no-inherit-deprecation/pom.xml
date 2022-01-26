@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.eclipse.dash.its</groupId>
+	<artifactId>non-inheritance-parent</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Test for license-check goal non-inheritance</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<modules>
+		<module>moduleA</module>
+		<module>moduleB</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.dash</groupId>
+				<artifactId>license-tool-plugin</artifactId>
+				<version>@project.version@</version>
+				<configuration>
+					<summary>DEPS</summary>
+				</configuration>
+				<executions>
+					<execution>
+						<id>license-check</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>license-check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
