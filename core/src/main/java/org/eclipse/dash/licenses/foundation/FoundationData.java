@@ -106,4 +106,8 @@ public class FoundationData implements IContentData {
 		return null;
 
 	}
+
+	public String getRule() {
+		return data.getString("rule", "prerequisite");
+	}
 }

@@ -27,8 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonReader;
 
 public class EclipseFoundationSupport implements ILicenseDataProvider {
@@ -52,11 +54,7 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 
 		logger.info("Querying Eclipse Foundation for license data for {} items.", ids.size());
 
-		JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
-		ids.stream().forEach(id -> builder.add(id.toString()));
-		String json = builder.build().toString();
-		String form = URLEncoder.encode("json", StandardCharsets.UTF_8) + "="
-				+ URLEncoder.encode(json, StandardCharsets.UTF_8);
+		String form = encodeRequestPayload(ids);
 
 		int code = httpClientService.post(url, "application/x-www-form-urlencoded", form, response -> {
 			AtomicInteger counter = new AtomicInteger();
@@ -68,8 +66,8 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			if (approved != null)
 				approved.forEach((key, each) -> {
 					FoundationData data = new FoundationData(each.asJsonObject());
-					logger.debug("EF approved: {} score: {} {} {}", data.getId(), data.getScore(), data.getLicense(),
-							data.getAuthority());
+					logger.debug("EF approved: {} ({}) score: {} {} {}", data.getId(), data.getRule(), data.getScore(),
+							data.getLicense(), data.getAuthority());
 					consumer.accept(data);
 					counter.incrementAndGet();
 				});
@@ -89,6 +87,46 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 		if (code != 200) {
 			logger.error("Eclipse Foundation data search time out; maybe decrease batch size.");
 		}
+	}
+
+	private String encodeRequestPayload(Collection<IContentId> ids) {
+		JsonObject build = buildRequestPayload(ids);
+		String json = build.toString();
+		String form = URLEncoder.encode("request", StandardCharsets.UTF_8) + "="
+				+ URLEncoder.encode(json, StandardCharsets.UTF_8);
+		return form;
+	}
+
+	private JsonObject buildRequestPayload(Collection<IContentId> ids) {
+		JsonObjectBuilder request = Json.createObjectBuilder();
+
+		var projectId = settings.getProjectId();
+		if (projectId != null) {
+			logger.debug("Querying for project {}.", projectId);
+			request.add("project", projectId);
+		}
+
+		JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
+		ids.stream().forEach(id -> builder.add(id.toString()));
+
+		request.add("dependencies", builder);
+
+		return request.build();
+	}
+
+	private String encodeJsonPayload(Collection<IContentId> ids) {
+		JsonArray build = buildJsonPayload(ids);
+		String json = build.toString();
+		String form = URLEncoder.encode("json", StandardCharsets.UTF_8) + "="
+				+ URLEncoder.encode(json, StandardCharsets.UTF_8);
+		return form;
+	}
+
+	private JsonArray buildJsonPayload(Collection<IContentId> ids) {
+		JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
+		ids.stream().forEach(id -> builder.add(id.toString()));
+
+		return builder.build();
 	}
 
 }
