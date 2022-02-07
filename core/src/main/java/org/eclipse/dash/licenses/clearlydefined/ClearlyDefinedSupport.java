@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-import jakarta.json.JsonObject;
+
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
@@ -102,9 +102,8 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 					// FIXME Seems like overkill.
 					AtomicInteger counter = new AtomicInteger();
 
-<<<<<<< Upstream, based on origin/master
 					try {
-						JsonUtils.readJson(new StringReader(response)).forEach((key, each) -> {
+						JsonUtils.readJson(new StringReader(response)).asJsonObject().forEach((key, each) -> {
 							ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
 							data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
 							consumer.accept(data);
@@ -112,15 +111,6 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 							logger.debug("ClearlyDefined {} score: {} {} {}", data.getId(), data.getScore(),
 									data.getLicense(), data.getStatus() == Status.Approved ? "approved" : "restricted");
 						});
-=======
-        JsonObject defJson = JsonUtils.readJson(new StringReader(response));
-        defJson.forEach((key, each) -> {
-						ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
-						data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
-						consumer.accept(data);
-						counter.incrementAndGet();
-					});
->>>>>>> e17f154 Initial golang support Add simple go.sum file parser. Add code to find source code for golang module or package. Add code to retrive full github HASH for clearlydefined id. Let's start for now only from HASH.
 
 						logger.info("Found {} items.", counter.get());
 					} catch (JsonParsingException e) {
