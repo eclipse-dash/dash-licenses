@@ -111,14 +111,15 @@ public class TestLicenseToolModule extends AbstractModule {
 
 				if (url.equals(settings.getLicenseCheckUrl())) {
 
-					if (payload.startsWith("json=")) {
-						var json = URLDecoder.decode(payload.substring("json=".length()), StandardCharsets.UTF_8);
+					if (payload.startsWith("request=")) {
+						var json = URLDecoder.decode(payload.substring("request=".length()), StandardCharsets.UTF_8);
 
 						var approved = Json.createObjectBuilder();
 						var rejected = Json.createObjectBuilder();
 
 						var reader = Json.createReader(new StringReader(json));
-						reader.readArray().forEach(key -> {
+						var root = reader.readObject().asJsonObject();
+						root.getJsonArray("dependencies").forEach(key -> {
 							var id = ((JsonString) key).getString();
 							var item = Json.createObjectBuilder();
 							switch (id) {

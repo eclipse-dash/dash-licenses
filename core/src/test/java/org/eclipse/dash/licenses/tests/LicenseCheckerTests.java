@@ -22,7 +22,6 @@ import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.tests.util.TestLicenseToolModule;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.google.inject.Guice;
@@ -39,7 +38,6 @@ class LicenseCheckerTests {
 	}
 
 	@Test
-	@Disabled
 	void testSingleApprovedLicense() {
 		IContentId contentId = ContentId.getContentId("npm/npmjs/-/write/1.0.3");
 		Map<IContentId, LicenseData> licenseData = licenseChecker.getLicenseData(Collections.singleton(contentId));
@@ -50,7 +48,6 @@ class LicenseCheckerTests {
 	}
 
 	@Test
-	@Disabled
 	void testSingleUnapprovedLicense() {
 		IContentId contentId = ContentId.getContentId("npm/npmjs/@yarnpkg/lockfile/1.1.0");
 		Map<IContentId, LicenseData> licenseData = licenseChecker.getLicenseData(Collections.singleton(contentId));
@@ -61,7 +58,6 @@ class LicenseCheckerTests {
 	}
 
 	@Test
-	@Disabled
 	void testWithUnsupported() {
 		IContentId contentId = ContentId.getContentId("p2/eclipseplugin/-/write/0.2.0");
 		Map<IContentId, LicenseData> licenseData = licenseChecker.getLicenseData(Collections.singleton(contentId));
