@@ -85,7 +85,8 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			logger.info("Found {} items.", counter.get());
 		});
 		if (code != 200) {
-			logger.error("Eclipse Foundation data search time out; maybe decrease batch size.");
+			logger.error("Error response from the Eclipse Foundation {}", code);
+			throw new RuntimeException("Received an error response from the Eclipse Foundation.");
 		}
 	}
 

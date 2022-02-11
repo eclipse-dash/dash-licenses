@@ -120,8 +120,10 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 					}
 				});
 
-		if (code != 200)
-			logger.error("ClearlyDefined data search time out; maybe decrease batch size.");
+		if (code != 200) {
+			logger.error("Error response from ClearlyDefined {}", code);
+			throw new RuntimeException("Received an error response from ClearlyDefined.");
+		}
 	}
 
 	/**
