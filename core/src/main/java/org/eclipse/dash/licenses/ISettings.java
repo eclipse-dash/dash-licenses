@@ -23,7 +23,7 @@ public interface ISettings {
 	public static final String DEFAULT_CLEARLYDEFINED_URL = "https://api.clearlydefined.io/definitions";
 	public static final String DEFAULT_IPZILLA_URL = "https://www.eclipse.org/projects/services/license_check.php";
 	public static final int DEFAULT_THRESHOLD = 60;
-	public static final int DEFAULT_BATCH = 1000;
+	public static final int DEFAULT_BATCH = 500;
 
 	default int getBatchSize() {
 		String value = System.getProperty("org.eclipse.dash.batch");

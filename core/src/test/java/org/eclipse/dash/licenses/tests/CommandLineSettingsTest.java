@@ -27,7 +27,7 @@ class CommandLineSettingsTest {
 	@Test
 	void testDefaultBatchSize() {
 		ISettings settings = CommandLineSettings.getSettings(new String[] {});
-		assertEquals(1000, settings.getBatchSize());
+		assertEquals(ISettings.DEFAULT_BATCH, settings.getBatchSize());
 	}
 
 	@Test
@@ -66,7 +66,7 @@ class CommandLineSettingsTest {
 	@Test
 	void testDefaultConfidence() {
 		ISettings settings = CommandLineSettings.getSettings(new String[] {});
-		assertEquals(60, settings.getConfidenceThreshold());
+		assertEquals(ISettings.DEFAULT_THRESHOLD, settings.getConfidenceThreshold());
 	}
 
 }
