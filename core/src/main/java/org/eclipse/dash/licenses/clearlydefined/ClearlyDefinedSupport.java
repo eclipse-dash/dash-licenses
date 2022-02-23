@@ -10,9 +10,11 @@
 package org.eclipse.dash.licenses.clearlydefined;
 
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -42,8 +44,8 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	@Inject
 	LicenseSupport licenseService;
 
-	private HashSet<String> validTypes;
-	private HashSet<String> validProviders;
+	private Set<String> validTypes;
+	private Set<String> validProviders;
 
 	/**
 	 * The ClearlyDefined API expects a flat array of ids in JSON format in the
@@ -213,36 +215,24 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		 * FIXME This is a hack. AFAICT, there is no API that answers the list of valid
 		 * types and providers, so we grab them directly from a schema file in the
 		 * GitHub repository. This is not an official API and so is subject to change.
+		 * 
+		 * FIXME A hack on top of a hack. I suspect that we're hitting a rate limit on
+		 * raw.githubusercontent.com. We need a better solution that what we have and
+		 * the hack to grab the information from the project's GitHub repository doesn't
+		 * appear to cut it. In the meantime, I'm just hardcoding the acceptable values.
 		 */
-		var validTypes = new HashSet<String>();
-		var validProviders = new HashSet<String>();
+		validTypes = new HashSet<>();
+		validProviders = new HashSet<>();
 
-		var code = httpClientService.get(
-				"https://raw.githubusercontent.com/clearlydefined/service/HEAD/schemas/curation-1.0.json",
-				"application/json", response -> {
-					try {
-						var data = JsonUtils.readJson(response);
-						var definitions = data.asJsonObject().getJsonObject("definitions");
+		validTypes
+				.addAll(Arrays.asList(new String[]
+				{ "npm", "crate", "git", "maven", "nuget", "gem", "go", "composer", "pod", "pypi", "sourcearchive",
+						"deb", "debsrc" }));
 
-						var types = definitions.getJsonObject("type").getJsonArray("enum");
-						for (int index = 0; index < types.size(); index++) {
-							validTypes.add(types.getString(index));
-						}
-
-						var providers = definitions.getJsonObject("provider").getJsonArray("enum");
-						for (int index = 0; index < providers.size(); index++) {
-							validProviders.add(providers.getString(index));
-						}
-					} catch (RuntimeException e) {
-						throw new RuntimeException(
-								"Invalid data received while bootstrapping the ClearlyDefined Service.", e);
-					}
-				});
-		if (code != 200) {
-			throw new RuntimeException("Cannot acquire data required to bootstrap the ClearlyDefined Service");
-		}
-		this.validTypes = validTypes;
-		this.validProviders = validProviders;
+		validProviders
+				.addAll(Arrays.asList(new String[]
+				{ "npmjs", "cocoapods", "cratesio", "github", "gitlab", "mavencentral", "mavengoogle", "gradleplugin",
+						"packagist", "golang", "nuget", "rubygems", "pypi", "debian" }));
 	}
 
 	class ClearlyDefinedResponseException extends RuntimeException {
