@@ -15,8 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentData;
@@ -93,6 +95,55 @@ class ClearlyDefinedSupportTests {
 				data -> results.add(data));
 
 		assertTrue(results.isEmpty());
+	}
+
+	@Test
+	void testMultiple() {
+		List<IContentData> results = new ArrayList<>();
+
+		// @formatter:off
+		var packages = new String[] { 
+				"npm/npmjs/@yarnpkg/lockfile/1.1.0", 
+				"npm/npmjs/@yarnpkg/lockfile/1.1.1",
+				"npm/npmjs/@yarnpkg/lockfile/1.1.2", 
+				"npm/npmjs/@yarnpkg/lockfile/1.1.3", 
+				"npm/npmjs/-/write/1.0.3", 
+				"npm/npmjs/-/write/1.0.4",
+				"npm/npmjs/-/write/1.0.5", 
+				"npm/npmjs/-/write/1.0.6", 
+			};
+		// @formatter:on
+
+		clearlyDefined.queryLicenseData(
+				Arrays.stream(packages).map(each -> ContentId.getContentId(each)).collect(Collectors.toList()),
+				data -> results.add(data));
+
+		assertEquals(8, results.size());
+	}
+
+	@Test
+	void testMultipleWithFailure() {
+		List<IContentData> results = new ArrayList<>();
+
+		// @formatter:off
+		var packages = new String[] { 
+				"npm/npmjs/@yarnpkg/lockfile/1.1.0", 
+				"npm/npmjs/@yarnpkg/lockfile/1.1.1",
+				"npm/npmjs/@yarnpkg/lockfile/1.1.2", 
+				"npm/npmjs/-/write/1.0.3", 
+				"npm/npmjs/-/write/1.0.4",
+				"npm/npmjs/breaky/mcbreakyface/1.0.0",
+				"npm/npmjs/-/write/1.0.5", 
+				"npm/npmjs/-/write/1.0.6", 
+				"npm/npmjs/breaky/mcbreakyface/1.0.1" 
+			};
+		// @formatter:on
+
+		clearlyDefined.queryLicenseData(
+				Arrays.stream(packages).map(each -> ContentId.getContentId(each)).collect(Collectors.toList()),
+				data -> results.add(data));
+
+		assertEquals(7, results.size());
 	}
 
 	@Nested

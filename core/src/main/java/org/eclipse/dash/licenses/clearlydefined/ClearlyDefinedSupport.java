@@ -97,8 +97,46 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 			filteredIds.forEach(each -> logger.debug("Sending: {}", each));
 		}
 
+		queryClearlyDefined(filteredIds, 0, filteredIds.size(), consumer);
+	}
+
+	/**
+	 * This method coordinates calling ClearlyDefined.
+	 * 
+	 * We've run into cases where the ClearlyDefined API throws an error because of
+	 * one apparently well-formed and otherwise correct ID. When this situation is
+	 * encountered, an error message and nothing else is returned, regardless of how
+	 * many IDs were included in the request. Effectively, this throws away all of
+	 * the potentially useful results because of one (or more) problematic IDs.
+	 * 
+	 * When this happens, we split the content and attempt to invoke the API with
+	 * each half. This happens recursively, so eventually we end up sending just the
+	 * problematic IDs. We log the problematic IDs, but don't take any further
+	 * action. IDs with problematic results are effectively be treated as IDs for
+	 * which no information is found.
+	 */
+	private void queryClearlyDefined(List<IContentId> filteredIds, int start, int end,
+			Consumer<IContentData> consumer) {
+		try {
+			doQueryClearlyDefined(filteredIds, start, end, consumer);
+		} catch (ClearlyDefinedResponseException e) {
+			if (start + 1 == end) {
+				logger.info("Error querying ClearlyDefined for {}", filteredIds.get(start));
+			} else {
+				int middle = start + (end - start) / 2;
+				queryClearlyDefined(filteredIds, start, middle, consumer);
+				queryClearlyDefined(filteredIds, middle, end, consumer);
+			}
+		}
+	}
+
+	private void doQueryClearlyDefined(List<IContentId> ids, int start, int end, Consumer<IContentData> consumer) {
+		// If there's nothing to do, bail out.
+		if (start == end)
+			return;
+
 		int code = httpClientService.post(settings.getClearlyDefinedDefinitionsUrl(), "application/json",
-				JsonUtils.toJson(filteredIds), response -> {
+				JsonUtils.toJson(ids.subList(start, end)), response -> {
 					// FIXME Seems like overkill.
 					AtomicInteger counter = new AtomicInteger();
 
@@ -116,7 +154,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 					} catch (JsonParsingException e) {
 						logger.error("Could not parse the response from ClearlyDefined: {}.", response);
 						logger.debug(e.getMessage(), e);
-						throw new RuntimeException("Could not parse the response from ClearlyDefined.");
+						throw new ClearlyDefinedResponseException(e);
 					}
 				});
 
@@ -207,4 +245,11 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		this.validProviders = validProviders;
 	}
 
+	class ClearlyDefinedResponseException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+
+		public ClearlyDefinedResponseException(Exception e) {
+			super(e);
+		}
+	}
 }
