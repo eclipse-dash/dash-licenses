@@ -1,5 +1,5 @@
 <!--
- * Copyright (C) 2020 Eclipse Foundation and others. 
+ * Copyright (C) 2020,2022 Eclipse Foundation and others. 
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -222,21 +222,23 @@ Configure the license check plugin to be auto executed (e.g. in the `verify` pha
 
 ```
 <build>
-  <plugins>
-    <plugin>
-	 <groupId>org.eclipse.dash</groupId>
-	 <artifactId>license-tool-plugin</artifactId>
-	 <version>0.0.1-SNAPSHOT</version>
-	 <executions>
-	   <execution>
-	     <id>license-check</id>
-		<goals>
-		  <goal>license-check</goal>
-		</goals>
-	   </execution>
-	 </executions>
-    </plugin>
-  </plugins>
+	<plugins>
+		<plugin>
+			<groupId>org.eclipse.dash</groupId>
+			<artifactId>license-tool-plugin</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<executions>
+				<execution>
+					<id>license-check</id>
+					<goals>
+						<goal>license-check</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+		...
+	</plugins>
+	...
 </build>
 ```
 
@@ -244,13 +246,14 @@ Add the `repo.eclipse.org` plugin repository so that the license check plugin is
 
 ```
 <pluginRepositories>
-  <pluginRepository>
-  	<id>dash-licenses-snapshots</id>
-  	<url>https://repo.eclipse.org/content/repositories/dash-licenses-snapshots/</url>
-  	<snapshots>
-  	  <enabled>true</enabled>
-  	</snapshots>
-  </pluginRepository>
+	<pluginRepository>
+		<id>dash-licenses-snapshots</id>
+		<url>https://repo.eclipse.org/content/repositories/dash-licenses-snapshots/</url>
+		<snapshots>
+			<enabled>true</enabled>
+		</snapshots>
+	</pluginRepository>
+	...
 </pluginRepositories>
 ```
 
@@ -290,20 +293,22 @@ In this case, you can provide Maven with a list of exclusions.
 
 ```
 <project>
-  ...
-  <dependencies>
-    <dependency>
-      <groupId>org.linkedin</groupId>
-      <artifactId>org.linkedin.zookeeper-impl</artifactId>
-      <version>${linkedin-zookeeper-version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.json</groupId>
-          <artifactId>json</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-   ...
+	...
+	<dependencies>
+		<dependency>
+			<groupId>org.linkedin</groupId>
+			<artifactId>org.linkedin.zookeeper-impl</artifactId>
+			<version>${linkedin-zookeeper-version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.json</groupId>
+					<artifactId>json</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		...
+	</dependencies>
+	...
 </project>
 ```
 
