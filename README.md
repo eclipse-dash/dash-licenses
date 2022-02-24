@@ -230,7 +230,6 @@ Configure the license check plugin to be auto executed (e.g. in the `verify` pha
 	 <executions>
 	   <execution>
 	     <id>license-check</id>
-		<phase>verify</phase>
 		<goals>
 		  <goal>license-check</goal>
 		</goals>
