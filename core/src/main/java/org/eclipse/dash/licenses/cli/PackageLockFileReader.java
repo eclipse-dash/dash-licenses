@@ -77,12 +77,24 @@ public class PackageLockFileReader implements IDependencyListReader {
 				if (namespace == null)
 					namespace = "-";
 				var name = matcher.group("name");
-				var version = value.asJsonObject().getString("version");
+				var version = value.asJsonObject().getString("version", null);
 
-				IContentId contentId = ContentId.getContentId("npm", "npmjs", namespace, name, version);
-				return contentId == null ? new InvalidContentId(key + "@" + version) : contentId;
+				if (version != null) {
+					IContentId contentId = ContentId.getContentId("npm", "npmjs", namespace, name, version);
+					return contentId == null ? new InvalidContentId(key + "@" + version) : contentId;
+				}
 			}
 			return new InvalidContentId(key);
+		}
+
+		public boolean isResolvedLocally() {
+			if (key.startsWith("packages/"))
+				return true;
+			if (value.asJsonObject().getBoolean("link", false))
+				return true;
+			if (value.asJsonObject().getString("version", "").startsWith("file:"))
+				return true;
+			return false;
 		}
 	}
 
@@ -124,9 +136,14 @@ public class PackageLockFileReader implements IDependencyListReader {
 					.map(dependency -> dependency.getContentId()).collect(Collectors.toList());
 		case 2:
 		case 3:
-			return json.getJsonObject("packages").entrySet().stream().filter(entry -> !entry.getKey().isEmpty())
+			// @formatter:off
+			return json.getJsonObject("packages").entrySet().stream()
+					.filter(entry -> !entry.getKey().isEmpty())
 					.map(entry -> new Package(entry.getKey(), entry.getValue().asJsonObject()))
-					.map(dependency -> dependency.getContentId()).distinct().collect(Collectors.toList());
+					.filter(dependency -> !dependency.isResolvedLocally())
+					.map(dependency -> dependency.getContentId())
+					.distinct().collect(Collectors.toList());
+			// @formatter:on
 		}
 
 		return null;
