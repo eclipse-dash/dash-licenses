@@ -43,6 +43,7 @@ import org.eclipse.dash.licenses.cli.NeedsReviewCollector;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 import org.eclipse.dash.licenses.review.GitLabSupport;
+import org.eclipse.tycho.TychoConstants;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -174,9 +175,9 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		// Adapt dependency artifacts to dash content IDs
 		List<IContentId> deps = new ArrayList<>();
 		filteredArtifacts.stream().sorted().forEach(a -> {
-			String type = a.getGroupId().startsWith("p2.eclipse-") ? "p2" : "maven";
+			String type = a.getGroupId().startsWith(TychoConstants.P2_GROUPID_PREFIX) ? "p2" : "maven";
 			// TODO deps are not necessarily from orbit or maven central
-			String source = a.getGroupId().startsWith("p2.eclipse-") ? "orbit" : "mavencentral";
+			String source = a.getGroupId().startsWith(TychoConstants.P2_GROUPID_PREFIX) ? "orbit" : "mavencentral";
 			// TODO could get duplicates here if two artifact coords differ only by
 			// classifier
 			deps.add(ContentId.getContentId(type, source, a.getGroupId(), a.getArtifactId(), a.getVersion()));

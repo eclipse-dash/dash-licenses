@@ -12,6 +12,8 @@ package org.eclipse.dash.licenses;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.tycho.TychoConstants;
+
 public class MavenIdParser implements ContentIdParser {
 
 	// @formatter:off
@@ -50,8 +52,8 @@ public class MavenIdParser implements ContentIdParser {
 		String artifactid = matcher.group("artifactid");
 		String version = matcher.group("version");
 
-		String type = groupid.startsWith("p2.eclipse-") ? "p2" : "maven";
-		String source = groupid.startsWith("p2.eclipse-") ? "orbit" : "mavencentral";
+		String type = groupid.startsWith(TychoConstants.P2_GROUPID_PREFIX) ? "p2" : "maven";
+		String source = groupid.startsWith(TychoConstants.P2_GROUPID_PREFIX) ? "orbit" : "mavencentral";
 
 		/*
 		 * So this is a complete hack. If we're looking at the Apache Ant bundle, then
@@ -59,7 +61,7 @@ public class MavenIdParser implements ContentIdParser {
 		 * may not work in the general case.
 		 */
 		// FIXME Find a more general solution
-		if ("p2.eclipse-plugin".equals(groupid) && "org.apache.ant".equals(artifactid)) {
+		if ("p2".equals(type) && "org.apache.ant".equals(artifactid)) {
 			Matcher classifierMatcher = antBundleClassifierPattern.matcher(matcher.group("classifier"));
 			if (classifierMatcher.matches()) {
 				type = "maven";
