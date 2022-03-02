@@ -214,12 +214,22 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		});
 		collectors.forEach(IResultsCollector::close);
 
+		boolean reviewNeeded = needsReviewCollector.getStatus() > 0;
+
 		// Pass the output from the first collector to the maven log
 		try (BufferedReader primaryReader = new BufferedReader(
 				new InputStreamReader(new ByteArrayInputStream(primaryOut.toByteArray()), StandardCharsets.UTF_8))) {
 			String line = null;
 			while ((line = primaryReader.readLine()) != null) {
-				getLog().info(line);
+				if (reviewNeeded) {
+					if (failWhenReviewNeeded) {
+						getLog().error(line);
+					} else {
+						getLog().warn(line);
+					}
+				} else {
+					getLog().info(line);
+				}
 			}
 		} catch (IOException e) {
 			throw new MojoExecutionException(e.getMessage(), e);
@@ -227,7 +237,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 
 		getLog().info("Summary file was written to: " + summary);
 		
-		if (failWhenReviewNeeded && needsReviewCollector.getStatus() > 0) {
+		if (reviewNeeded && failWhenReviewNeeded) {
 			getLog().error("Dependency license check failed. Some dependencies need to be vetted.");
 			throw new MojoFailureException("Some dependencies must be vetted.");
 		}
