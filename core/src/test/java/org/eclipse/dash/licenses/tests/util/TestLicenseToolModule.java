@@ -89,15 +89,32 @@ public class TestLicenseToolModule extends AbstractModule {
 
 						switch (id) {
 						case "npm/npmjs/-/write/1.0.3":
+						case "npm/npmjs/-/write/1.0.4":
+						case "npm/npmjs/-/write/1.0.5":
+						case "npm/npmjs/-/write/1.0.6":
 							builder.append(new BufferedReader(new InputStreamReader(
 									this.getClass().getResourceAsStream("/write-1.0.3.json"), StandardCharsets.UTF_8))
 											.lines().collect(Collectors.joining("\n")));
 							break;
 						case "npm/npmjs/@yarnpkg/lockfile/1.1.0":
+						case "npm/npmjs/@yarnpkg/lockfile/1.1.1":
+						case "npm/npmjs/@yarnpkg/lockfile/1.1.2":
+						case "npm/npmjs/@yarnpkg/lockfile/1.1.3":
 							builder.append(new BufferedReader(
 									new InputStreamReader(this.getClass().getResourceAsStream("/lockfile-1.1.0.json"),
 											StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")));
 							break;
+						/*
+						 * I've run into cases where the ClearlyDefined API throws an error because of
+						 * one apparently well-formed and otherwise correct ID. When this situation is
+						 * encountered, an error message and nothing else is returned, regardless of how
+						 * many IDs were included in the request.
+						 */
+						case "npm/npmjs/breaky/mcbreakyface/1.0.0":
+						case "npm/npmjs/breaky/mcbreakyface/1.0.1":
+							handler.accept(
+									"An error occurred when trying to fetch coordinates for one of the components");
+							return 200;
 						default:
 							builder.append("{}");
 						}
