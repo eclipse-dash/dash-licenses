@@ -56,14 +56,9 @@ public class ExtendedContentDataServiceTests {
 					.findFor(ContentId.getContentId("maven/mavencentral/group.path/artifact/1.0")).findAny().get();
 			assertEquals("Maven Central", data.getTitle());
 			assertEquals("https://search.maven.org/artifact/group.path/artifact/1.0/jar", data.getUrl());
-			ExtendedContentDataItem item = data.getItems().findFirst().get();
-			assertEquals("Source", item.getLabel());
 			assertEquals(
 					"https://search.maven.org/remotecontent?filepath=group/path/artifact/1.0/artifact-1.0-sources.jar",
-					item.getValue());
-			assertEquals(
-					"[Source](https://search.maven.org/remotecontent?filepath=group/path/artifact/1.0/artifact-1.0-sources.jar)",
-					item.asMarkdown());
+					data.getSourceUrl());
 		}
 	}
 

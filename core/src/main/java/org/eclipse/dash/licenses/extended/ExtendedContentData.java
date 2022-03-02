@@ -46,4 +46,14 @@ public class ExtendedContentData {
 			return;
 		items.add(new ExtendedContentDataLink(key, value));
 	}
+
+	public String getId() {
+		return getItems().filter(each -> "ID".equals(each.getLabel())).map(each -> each.getValue()).findAny()
+				.orElse(null);
+	}
+
+	public String getSourceUrl() {
+		return getItems().filter(each -> "Source".equals(each.getLabel())).map(each -> each.getValue()).findAny()
+				.orElse(null);
+	}
 }

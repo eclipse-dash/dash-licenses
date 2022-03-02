@@ -40,7 +40,7 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 		return new MavenCentralPackageBuilder(id).getSourceUrl();
 	}
 
-	class MavenCentralPackageBuilder {
+	public class MavenCentralPackageBuilder {
 		private IContentId id;
 
 		public MavenCentralPackageBuilder(IContentId id) {
@@ -49,6 +49,7 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 
 		public ExtendedContentData build() {
 			var thing = new ExtendedContentData("Maven Central", getUrl());
+			thing.addItem("ID", id.toString());
 			thing.addLink("Source", getSourceUrl());
 
 			return thing;
