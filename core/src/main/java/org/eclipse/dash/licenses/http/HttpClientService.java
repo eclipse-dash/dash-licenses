@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021 The Eclipse Foundation and others.
+ * Copyright (c) 2021, 2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -21,16 +21,23 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
+import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 
 public class HttpClientService implements IHttpClientService {
 
 	@Inject
 	ISettings settings;
+
+	/** Optional HTTP proxy settings. */
+	@Inject
+	Provider<IProxySettings> proxySettings;
 
 	@Override
 	public int post(String url, String contentType, String payload, Consumer<String> handler) {
@@ -39,7 +46,7 @@ public class HttpClientService implements IHttpClientService {
 			HttpRequest request = HttpRequest.newBuilder(URI.create(url)).header("Content-Type", contentType)
 					.POST(BodyPublishers.ofString(payload, StandardCharsets.UTF_8)).timeout(timeout).build();
 
-			HttpClient httpClient = HttpClient.newBuilder().connectTimeout(timeout).build();
+			HttpClient httpClient = getHttpClient(timeout);
 			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
 			if (response.statusCode() == 200) {
 				handler.accept(response.body());
@@ -68,7 +75,7 @@ public class HttpClientService implements IHttpClientService {
 			HttpRequest request = HttpRequest.newBuilder(URI.create(url)).header("Content-Type", contentType).GET()
 					.timeout(timeout).build();
 
-			HttpClient httpClient = HttpClient.newBuilder().connectTimeout(timeout).build();
+			HttpClient httpClient = getHttpClient(timeout);
 			HttpResponse<InputStream> response = httpClient.send(request, BodyHandlers.ofInputStream());
 			if (response.statusCode() == 200) {
 				handler.accept(response.body());
@@ -77,5 +84,14 @@ public class HttpClientService implements IHttpClientService {
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	protected HttpClient getHttpClient(Duration timeout) {
+		HttpClient.Builder result = HttpClient.newBuilder().connectTimeout(timeout);
+
+		// Configure proxy, if any
+		Optional.ofNullable(this.proxySettings.get()).ifPresent(proxySettings -> proxySettings.configure(result));
+
+		return result.build();
 	}
 }

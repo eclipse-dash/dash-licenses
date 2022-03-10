@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,13 +29,16 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.settings.Proxy;
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.cli.CSVCollector;
@@ -44,6 +48,7 @@ import org.eclipse.dash.licenses.context.LicenseToolModule;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 import org.eclipse.tycho.TychoConstants;
+import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -124,6 +129,12 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 */
 	@Parameter(property = "dash.fail", defaultValue = "false")
 	private boolean failWhenReviewNeeded;
+
+	/**
+	 * Optional <tt>&lt;proxy&gt;</tt> ID configuration.
+	 */
+	@Parameter(property = "dash.proxy")
+	private String proxy;
 	
 	/**
 	 * The Maven session.
@@ -137,6 +148,12 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	@Parameter(defaultValue = "${reactorProjects}", readonly = true, required = true)
 	private List<MavenProject> reactorProjects;
 
+	/**
+	 * Maven Security Dispatcher
+	 */
+	@Component
+	private SecDispatcher securityDispatcher;
+    
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		// We are aggregating the deps for all projects in the reactor, so we only need
@@ -200,7 +217,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			throw new MojoExecutionException("Can't write dependency summary file", e);
 		}
 		
-		Injector injector = Guice.createInjector(new LicenseToolModule(settings));
+		Injector injector = Guice.createInjector(new LicenseToolModule(settings, createProxySettings()));
 		LicenseChecker checker = injector.getInstance(LicenseChecker.class);
 		
 		if (iplabToken != null && projectId != null) {
@@ -232,4 +249,25 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			throw new MojoFailureException("Some dependencies must be vetted.");
 		}
 	}
+
+	protected IProxySettings createProxySettings() {
+		Proxy proxyServer = mavenSession.getSettings().getActiveProxy();
+		if (proxy != null) {
+			proxyServer = mavenSession.getSettings().getProxies().stream().filter(p -> proxy.equals(p.getId()))
+					.findFirst().orElse(null);
+			if (proxyServer == null) {
+				getLog().warn(MessageFormat.format("No such proxy server is activated in settings.xml: {0}", proxy));
+				return null;
+			}
+		}
+
+		if (proxyServer == null) {
+			// No proxy configuration
+			return null;
+		}
+
+		return new MavenProxySettings(proxyServer.getHost(), proxyServer.getPort(), proxyServer.getUsername(),
+				proxyServer.getPassword(), securityDispatcher, getLog());
+	}
+
 }

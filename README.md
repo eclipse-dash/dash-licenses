@@ -410,3 +410,71 @@ be provided
 e.g.,
 npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -
 ```
+
+## Advanced Scenarios
+
+Support for some advanced usage may vary between Maven and stand-alone execution.
+
+### Authenticated Proxies
+
+For Maven builds that need to access web resources through a proxy server, the Maven
+settings file (`$M2_HOME/settings.xml`) provides for configuration of the host, port,
+and authorization credentials of one or more proxy servers. The Dash License plug-in
+also can use these proxy settings to route its requests for web resources through the
+proxy.
+
+By default, the first active proxy in the settings is used by Maven plug-ins, including
+the Dash License plug-in. To select a different active proxy configuration, simply
+configure its ID in your project:
+
+```xml
+<build>
+	<plugins>
+		<plugin>
+			<groupId>org.eclipse.dash</groupId>
+			<artifactId>license-tool-plugin</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<configuration>
+				<proxy>my-proxy</proxy>
+			</configuration>
+			<executions>
+				<execution>
+					<id>license-check</id>
+					<goals>
+						<goal>license-check</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+	</plugins>
+</build>
+```
+
+This may also be overridden on the command-line if necessary:
+
+```console
+$ mvn -Ddash.proxy=my-proxy clean verify
+```
+
+A best practice for storage of the proxy user's password in the `$M2_HOME/settings.xml`
+file is to encrypt it using the master password stored in the
+`$HOME/.settings-security.xml` file:
+
+```xml
+<proxies>
+	<proxy>
+		<id>my-proxy</id>
+		<active>true</active>
+		<protocol>http</protocol>
+		<host>localhost</host>
+		<port>3128</port>
+		<username>johndoe</username>
+		<password>{GgKsMHh3F80Hr8=}</password>
+	</proxy>
+</proxies>
+```
+
+See the [Maven Encryption Guide][mvncrypt]
+for details of configuring servers such as proxies with encrypted credentials.
+
+[mvncrypt]: https://maven.apache.org/guides/mini/guide-encryption.html

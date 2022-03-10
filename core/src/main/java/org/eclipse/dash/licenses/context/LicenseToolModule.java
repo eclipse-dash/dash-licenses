@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021 The Eclipse Foundation and others.
+ * Copyright (c) 2021, 2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -9,6 +9,7 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.context;
 
+import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport;
@@ -26,13 +27,20 @@ import org.eclipse.dash.licenses.review.GitLabSupport;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
+import com.google.inject.util.Providers;
 
 public class LicenseToolModule extends AbstractModule {
 
 	private ISettings settings;
+	private IProxySettings proxySettings;
 
 	public LicenseToolModule(ISettings settings) {
+		this(settings, null);
+	}
+
+	public LicenseToolModule(ISettings settings, IProxySettings proxySettings) {
 		this.settings = settings;
+		this.proxySettings = proxySettings;
 	}
 
 	@Override
@@ -45,6 +53,7 @@ public class LicenseToolModule extends AbstractModule {
 		bind(GitLabSupport.class).toInstance(new GitLabSupport());
 		bind(IHttpClientService.class).toInstance(new HttpClientService());
 		bind(ExtendedContentDataService.class).toInstance(new ExtendedContentDataService());
+		bind(IProxySettings.class).toProvider(Providers.of(proxySettings));
 
 		Multibinder<IExtendedContentDataProvider> extendedContentDataProviders = Multibinder.newSetBinder(binder(),
 				IExtendedContentDataProvider.class);
