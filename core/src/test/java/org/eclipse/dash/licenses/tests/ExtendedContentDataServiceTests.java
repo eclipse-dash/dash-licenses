@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.InvalidContentId;
 import org.eclipse.dash.licenses.extended.ExtendedContentData;
-import org.eclipse.dash.licenses.extended.ExtendedContentDataItem;
 import org.eclipse.dash.licenses.extended.ExtendedContentDataService;
 import org.eclipse.dash.licenses.review.IPZillaSearchBuilder;
 import org.eclipse.dash.licenses.tests.util.TestLicenseToolModule;
@@ -71,20 +70,15 @@ public class ExtendedContentDataServiceTests {
 			thing = dataService.findFor(ContentId.getContentId("npm/npmjs/-/chalk/0.1.0")).findAny().get();
 		}
 
-		ExtendedContentDataItem getItem(String key) {
-			return thing.getItems().filter(each -> key.equals(each.getLabel())).findAny().get();
-		}
-
 		@Test
 		void testValid() {
 
 			assertEquals("npmjs", thing.getTitle());
-			assertEquals("git://github.com/sindresorhus/chalk.git", getItem("Repository").getValue());
-			assertEquals("https://github.com/sindresorhus/chalk/archive/v0.1.0.zip", getItem("Source").getValue());
-			assertEquals("https://registry.npmjs.org/chalk/-/chalk-0.1.0.tgz", getItem("Distribution").getValue());
+			assertEquals("git://github.com/sindresorhus/chalk.git", thing.getRepository());
+			assertEquals("https://github.com/sindresorhus/chalk/archive/v0.1.0.zip", thing.getSourceUrl());
+			assertEquals("https://registry.npmjs.org/chalk/-/chalk-0.1.0.tgz", thing.getDistribution());
 
-			assertEquals("MIT", getItem("License").getValue());
-			assertEquals("License: MIT", getItem("License").asMarkdown());
+			assertEquals("MIT", thing.getLicense());
 		}
 	}
 
@@ -97,19 +91,15 @@ public class ExtendedContentDataServiceTests {
 			thing = dataService.findFor(ContentId.getContentId("pypi/pypi/-/asn1crypto/0.13.0")).findAny().get();
 		}
 
-		ExtendedContentDataItem getItem(String key) {
-			return thing.getItems().filter(each -> key.equals(each.getLabel())).findAny().get();
-		}
-
 		@Test
 		void testValid() {
 
 			assertEquals("pypi", thing.getTitle());
 			assertEquals(
 					"https://files.pythonhosted.org/packages/3d/9f/21f96992cfbf637eab930676a48228ef385a78351d1deae04f4a6af1510e/asn1crypto-0.13.0.tar.gz",
-					getItem("Source").getValue());
+					thing.getSourceUrl());
 
-			assertEquals("MIT", getItem("License").getValue());
+			assertEquals("MIT", thing.getLicense());
 		}
 	}
 

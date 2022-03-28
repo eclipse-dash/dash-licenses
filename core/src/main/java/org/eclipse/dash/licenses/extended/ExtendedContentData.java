@@ -56,4 +56,19 @@ public class ExtendedContentData {
 		return getItems().filter(each -> "Source".equals(each.getLabel())).map(each -> each.getValue()).findAny()
 				.orElse(null);
 	}
+
+	public String getRepository() {
+		return getItems().filter(each -> "Repository".equals(each.getLabel())).map(each -> each.getValue()).findAny()
+				.orElse(null);
+	}
+
+	public String getDistribution() {
+		return getItems().filter(each -> "Distribution".equals(each.getLabel())).map(each -> each.getValue()).findAny()
+				.orElse(null);
+	}
+
+	public String getLicense() {
+		return getItems().filter(each -> "License".equals(each.getLabel())).map(each -> each.getValue()).findAny()
+				.orElse(null);
+	}
 }
