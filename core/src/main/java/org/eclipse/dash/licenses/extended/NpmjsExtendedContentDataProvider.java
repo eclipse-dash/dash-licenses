@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021 The Eclipse Foundation and others.
+ * Copyright (c) 2021,2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -122,7 +122,11 @@ public class NpmjsExtendedContentDataProvider implements IExtendedContentDataPro
 
 		String getSourceUrl() {
 			try {
-				var uri = URI.create(getRepositoryUrl());
+				String repositoryUrl = getRepositoryUrl();
+				if (repositoryUrl == null)
+					return null;
+
+				var uri = URI.create(repositoryUrl);
 				if (!"github.com".equals(uri.getHost()))
 					return null;
 
