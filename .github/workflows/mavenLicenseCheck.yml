@@ -1,0 +1,110 @@
+# *************************************************************************
+# * Copyright (c) 2022 Hannes Wellmann and others.
+# *
+# * This program and the accompanying materials are made available under
+# * the terms of the Eclipse Public License 2.0 which accompanies this
+# * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
+# *
+# * SPDX-License-Identifier: EPL-2.0
+# *************************************************************************
+
+# This workflow will check for Maven projects if the licenses of all (transitive) dependencies are vetted.
+
+name: License vetting status check
+
+on:
+  workflow_call:
+    inputs:
+      projectId:
+        description: 'The "projectId" used when license vetting is requested'
+        type: string
+        required: false
+        default: ''
+      setupScript:
+        description: 'Optional bash script that is executed before the license check and is intended to prepare the checked out project if necessary'
+        type: string
+        required: false
+        default: ''
+    secrets:
+      gitlabAPIToken:
+        description: 'The authentication token (scope: api) from gitlab.eclipse.org of the calling repository. Only required if license vetting is requested'
+        required: false
+
+jobs:
+  check-licenses:
+    if: github.event_name == 'pull_request' || (github.event.issue.pull_request != '' && (github.event.comment.body == '/request-license-review'))
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set review request
+      run: echo "request-review=1" >> $GITHUB_ENV
+      if: github.event.issue.pull_request != '' && (github.event.comment.body == '/request-license-review')
+
+    - name: Process license-vetting request
+      if: ${{ env.request-review }}
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const payload = await github.rest.repos.getCollaboratorPermissionLevel({
+            ...context.repo, username: context.actor
+          });
+          const userPermission = payload?.data?.permission;
+          let reaction = 'rocket'
+          if (!(userPermission == 'write' || userPermission == 'admin')) { // not a committer
+            //Not a commiter -> abort workflow
+            core.setFailed("Only committers are permitted to request license vetting and ${context.actor} isn't one.")
+            reaction = '-1'
+          }
+          // react on comment to give early feedback that the request was understood
+          await github.rest.reactions.createForIssueComment({
+            ...context.repo, comment_id: context.payload?.comment?.id, content: reaction
+          });
+
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    - name: Prepare for license check
+      run: ${{ inputs.setupScript }}
+      if: ${{ inputs.setupScript !='' }}
+
+    - name: Check license vetting status (and ask for review if requested)
+      id: check-license-vetting
+      uses: eclipse/dash-licenses/.github/actions/maven-license-check-action@master
+      with:
+        request-review: ${{ env.request-review }}
+        project-id: ${{ inputs.projectId }}
+      env:
+        GITLAB_API_TOKEN: ${{ secrets.gitlabAPIToken }}
+
+    - name: Process license check results
+      if: ${{ env.request-review }}
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs')
+          let commentBody = '> /request-license-review\n\n'
+          const licenesVetted = ${{ steps.check-license-vetting.outputs.licenses-vetted }}
+          if( licenesVetted ) {
+            commentBody += 'All licenses already successfully vetted.'
+          } else {
+            process.env.GITHUB_WORKSPACE
+            const reviewSummaryFile = process.env.GITHUB_WORKSPACE + '/target/dash/review-summary'
+            core.info("Read review summary at " + reviewSummaryFile)
+            if (fs.existsSync( reviewSummaryFile )) {
+              commentBody += 'License review request summary:\n```'
+              commentBody += fs.readFileSync(reviewSummaryFile, 'utf8').trim();
+              commentBody += '\n```\n'
+              commentBody += 'Re-run the license-vetting check from the Github Actions web-interface after the review concluded to update its status.'
+            } else {
+              core.setFailed("License vetting build failed, but no review summary file was written")
+              commentBody += 'Failed to request review of not vetted licenses:\n'
+              commentBody += context.serverUrl + "/" + process.env.GITHUB_REPOSITORY + "/actions/runs/" + context.runId
+            }
+          }
+          github.rest.issues.createComment({
+            issue_number: context.issue.number, ...context.repo, body: commentBody
+          })
