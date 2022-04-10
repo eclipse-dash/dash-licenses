@@ -11,6 +11,7 @@ package org.eclipse.dash.licenses.review;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +26,14 @@ import org.eclipse.dash.licenses.cli.IResultsCollector;
  * a review request.
  */
 public class CreateReviewRequestCollector implements IResultsCollector {
-	GitLabSupport gitLab;
 
+	private GitLabSupport gitLab;
 	private PrintWriter output;
 	private List<LicenseData> needsReview = new ArrayList<>();
 
 	public CreateReviewRequestCollector(GitLabSupport gitLab, OutputStream out) {
 		this.gitLab = gitLab;
-		output = new PrintWriter(out);
+		output = new PrintWriter(out, false, StandardCharsets.UTF_8);
 	}
 
 	@Override
