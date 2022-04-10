@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -65,6 +66,14 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 */
 	@Parameter(property = "dash.summary", defaultValue = "${project.build.directory}/dash/summary")
 	private File summary;
+
+	/**
+	 * Output a summary of created reviews to the given file. If not specified, then
+	 * a review-summary will be generated at the default location within
+	 * <code>${project.build.directory}</code>
+	 */
+	@Parameter(property = "dash.review.summary", defaultValue = "${project.build.directory}/dash/review-summary")
+	private File reviewSummary;
 
 	/**
 	 * Batch size to use (number of entries sent per API call.)
@@ -192,12 +201,15 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		LicenseChecker checker = injector.getInstance(LicenseChecker.class);
 
 		summary.getParentFile().mkdirs();
-		try (OutputStream summaryOut = new FileOutputStream(summary);) {
+		reviewSummary.getParentFile().mkdirs();
+		try (OutputStream summaryOut = new FileOutputStream(summary);
+				OutputStream reviewSummaryOut = new FileOutputStream(reviewSummary);) {
 
 			collectors.add(new CSVCollector(summaryOut));
 
 			if (iplabToken != null && projectId != null) {
-				collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class), primaryOut));
+				TeeOutputStream out = new TeeOutputStream(primaryOut, reviewSummaryOut);
+				collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class), out));
 			} else if (iplabToken != null) {
 				getLog().info(
 						"Provide both an authentication token and a project id to automatically create review tickets.");
