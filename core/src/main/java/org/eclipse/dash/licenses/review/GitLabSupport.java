@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021 The Eclipse Foundation and others.
+ * Copyright (c) 2021, 2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -11,11 +11,14 @@ package org.eclipse.dash.licenses.review;
 
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
+import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.extended.ExtendedContentData;
@@ -23,6 +26,8 @@ import org.eclipse.dash.licenses.extended.ExtendedContentDataService;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Issue;
+
+import com.google.common.collect.Maps;
 
 public class GitLabSupport {
 
@@ -33,6 +38,10 @@ public class GitLabSupport {
 
 	@Inject
 	ExtendedContentDataService dataService;
+
+	/** Optional HTTP proxy settings. */
+	@Inject
+	Provider<IProxySettings> proxySettings;
 
 	public void createReviews(List<LicenseData> needsReview, PrintWriter output) {
 		execute(connection -> {
@@ -95,7 +104,15 @@ public class GitLabSupport {
 	}
 
 	void execute(Consumer<GitLabConnection> callable) {
-		try (GitLabApi gitLabApi = new GitLabApi(settings.getIpLabHostUrl(), settings.getIpLabToken())) {
+		Map<String, Object> clientConfig = null;
+		IProxySettings proxySettings = this.proxySettings.get();
+		if (proxySettings != null) {
+			// Configure GitLab API for the proxy server
+			clientConfig = Maps.newHashMap();
+			proxySettings.configureJerseyClient(clientConfig);
+		}
+
+		try (GitLabApi gitLabApi = new GitLabApi(settings.getIpLabHostUrl(), settings.getIpLabToken(), clientConfig)) {
 			callable.accept(new GitLabConnection(gitLabApi, settings.getIpLabRepositoryPath()));
 		}
 	}

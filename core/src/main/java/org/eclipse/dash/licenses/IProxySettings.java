@@ -10,6 +10,7 @@
 package org.eclipse.dash.licenses;
 
 import java.net.http.HttpClient;
+import java.util.Map;
 
 /**
  * Injectable HTTP proxy settings.
@@ -26,4 +27,11 @@ public interface IProxySettings {
 	 */
 	void configure(HttpClient.Builder httpClientBuilder);
 
+	/**
+	 * Set up a Jersey client configuration map to user the proxy server.
+	 * 
+	 * @param clientConfig the Jersey client configuration, such as might be used
+	 *                     with the GitLab API
+	 */
+	void configureJerseyClient(Map<String, Object> clientConfig);
 }

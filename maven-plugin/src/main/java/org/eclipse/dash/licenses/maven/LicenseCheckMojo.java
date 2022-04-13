@@ -266,7 +266,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			return null;
 		}
 
-		return new MavenProxySettings(proxyServer.getHost(), proxyServer.getPort(), proxyServer.getUsername(),
+		return new MavenProxySettings(proxyServer.getProtocol(), proxyServer.getHost(), proxyServer.getPort(), proxyServer.getUsername(),
 				proxyServer.getPassword(), securityDispatcher, getLog());
 	}
 
