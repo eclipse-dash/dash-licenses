@@ -11,6 +11,7 @@ package org.eclipse.dash.licenses.cli;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class NeedsReviewCollector implements IResultsCollector {
 	private List<LicenseData> needsReview = new ArrayList<>();
 
 	public NeedsReviewCollector(OutputStream out) {
-		output = new PrintWriter(out);
+		output = new PrintWriter(out, false, StandardCharsets.UTF_8);
 	}
 
 	@Override
@@ -46,8 +47,7 @@ public class NeedsReviewCollector implements IResultsCollector {
 		} else {
 			output.println("License information could not be automatically verified for the following content:");
 			output.println();
-			needsReview.stream().sorted((a, b) -> a.getId().compareTo(b.getId()))
-					.forEach(each -> output.println(each.getId()));
+			needsReview.stream().map(LicenseData::getId).sorted().forEach(output::println);
 			output.println();
 			output.println("This content is either not correctly mapped by the system, or requires review.");
 
