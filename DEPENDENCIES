@@ -40,16 +40,16 @@ maven/mavencentral/org.apache.maven.resolver/maven-resolver-spi/1.6.3, Apache-2.
 maven/mavencentral/org.apache.maven.resolver/maven-resolver-util/1.6.3, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.apache.maven.shared/maven-common-artifact-filters/3.2.0, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.apache.maven.shared/maven-shared-utils/3.3.4, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.apache.maven/maven-artifact/3.8.4, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.apache.maven/maven-builder-support/3.8.4, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.apache.maven/maven-core/3.8.4, Apache-2.0, approved, #1663
-maven/mavencentral/org.apache.maven/maven-model-builder/3.8.4, Apache-2.0, approved, #2110
-maven/mavencentral/org.apache.maven/maven-model/3.8.4, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.apache.maven/maven-plugin-api/3.8.4, Apache-2.0, approved, #1662
-maven/mavencentral/org.apache.maven/maven-repository-metadata/3.8.4, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.apache.maven/maven-resolver-provider/3.8.4, Apache-2.0, approved, #2111
-maven/mavencentral/org.apache.maven/maven-settings-builder/3.8.4, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.apache.maven/maven-settings/3.8.4, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.apache.maven/maven-artifact/3.8.5, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.apache.maven/maven-builder-support/3.8.5, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.apache.maven/maven-core/3.8.5, Apache-2.0, approved, #1663
+maven/mavencentral/org.apache.maven/maven-model-builder/3.8.5, Apache-2.0, approved, #2110
+maven/mavencentral/org.apache.maven/maven-model/3.8.5, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.apache.maven/maven-plugin-api/3.8.5, Apache-2.0, approved, #1662
+maven/mavencentral/org.apache.maven/maven-repository-metadata/3.8.5, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.apache.maven/maven-resolver-provider/3.8.5, Apache-2.0, approved, #2111
+maven/mavencentral/org.apache.maven/maven-settings-builder/3.8.5, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.apache.maven/maven-settings/3.8.5, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.checkerframework/checker-compat-qual/2.0.0, CC-BY-2.5, approved, #804
 maven/mavencentral/org.checkerframework/checker-qual/3.5.0, MIT, approved, clearlydefined
 maven/mavencentral/org.codehaus.mojo/animal-sniffer-annotations/1.14, Apache-2.0 AND MIT, approved, CQ19603
