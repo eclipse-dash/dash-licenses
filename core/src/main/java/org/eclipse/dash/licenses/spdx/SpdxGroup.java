@@ -21,13 +21,25 @@ public class SpdxGroup extends SpdxExpression {
 
 	@Override
 	public String toString() {
-		// Note that we don't print any parentheses, because they don't really add any
-		// information after parsing.
-		return expression.toString();
+		return "(" + expression.toString() + ")";
 	}
 
 	@Override
 	public boolean matchesApproved(Collection<String> approved) {
 		return expression.matchesApproved(approved);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof SpdxGroup) {
+			var group = (SpdxGroup) object;
+			return this.expression.equals(group.expression);
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return this.expression.hashCode();
 	}
 }

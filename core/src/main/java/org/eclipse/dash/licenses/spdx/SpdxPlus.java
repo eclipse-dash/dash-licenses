@@ -34,4 +34,18 @@ public class SpdxPlus extends SpdxExpression {
 	public String toString() {
 		return identifier.toString() + "+";
 	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof SpdxPlus) {
+			var plus = (SpdxPlus) object;
+			return this.identifier.equals(plus.identifier);
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return this.identifier.hashCode() & "+".hashCode();
+	}
 }

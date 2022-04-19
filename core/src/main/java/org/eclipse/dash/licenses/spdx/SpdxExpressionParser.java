@@ -71,7 +71,7 @@ public class SpdxExpressionParser {
 					// Note that we grab the original form from the tokenizer
 					// and note the converted (lowercase) version that we used
 					// in the switch.
-					return parse(tokenizer, new SpdxIdentifier(tokenizer.sval));
+					return parse(tokenizer, SpdxIdentifier.code(tokenizer.sval));
 				}
 			case '+':
 				// We must have previously read an identifier when we encounter
