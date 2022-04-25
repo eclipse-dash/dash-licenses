@@ -17,9 +17,6 @@ import java.util.Map;
  */
 public interface IProxySettings {
 
-	/** The default port number ({@value}) for HTTP proxy. */
-	int DEFAULT_PROXY_PORT = 8080;
-
 	/**
 	 * Configure an HTTP client for a proxy server.
 	 * 
