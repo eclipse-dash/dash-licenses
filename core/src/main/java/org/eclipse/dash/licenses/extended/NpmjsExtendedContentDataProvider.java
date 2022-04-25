@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021 The Eclipse Foundation and others.
+ * Copyright (c) 2021,2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -10,7 +10,8 @@
 package org.eclipse.dash.licenses.extended;
 
 import java.net.URI;
-import java.util.function.Consumer;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -33,19 +34,19 @@ public class NpmjsExtendedContentDataProvider implements IExtendedContentDataPro
 		if (!"npmjs".equals(id.getSource()))
 			return null;
 
-		var builder = new NpmjsPackageBuilder(id);
-
-		getMetadata(id, data -> {
-			builder.setMetadata(data);
-		});
+		var builder = new NpmjsPackageBuilder(id, getMetadata(id));
 
 		return builder.build();
 	}
 
-	private void getMetadata(IContentId id, Consumer<JsonObject> consumer) {
+	private JsonObject getMetadata(IContentId id) {
+		Set<JsonObject> metadata = new HashSet<>();
+
 		httpClientService.get(getMetadataUrl(id), "application/json", inputStream -> {
-			consumer.accept(JsonUtils.readJson(inputStream));
+			metadata.add(JsonUtils.readJson(inputStream));
 		});
+
+		return metadata.stream().findAny().orElse(JsonValue.EMPTY_JSON_OBJECT);
 	}
 
 	private String getMetadataUrl(IContentId id) {
@@ -63,10 +64,11 @@ public class NpmjsExtendedContentDataProvider implements IExtendedContentDataPro
 	class NpmjsPackageBuilder {
 
 		private IContentId id;
-		private JsonObject metadata = JsonValue.EMPTY_JSON_OBJECT;
+		private JsonObject metadata;
 
-		public NpmjsPackageBuilder(IContentId id) {
+		public NpmjsPackageBuilder(IContentId id, JsonObject metadata) {
 			this.id = id;
+			this.metadata = metadata;
 		}
 
 		public ExtendedContentData build() {
@@ -122,7 +124,11 @@ public class NpmjsExtendedContentDataProvider implements IExtendedContentDataPro
 
 		String getSourceUrl() {
 			try {
-				var uri = URI.create(getRepositoryUrl());
+				String repositoryUrl = getRepositoryUrl();
+				if (repositoryUrl == null)
+					return null;
+
+				var uri = URI.create(repositoryUrl);
 				if (!"github.com".equals(uri.getHost()))
 					return null;
 

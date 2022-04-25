@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2020, The Eclipse Foundation and others.
+ * Copyright (c) 2020,2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -25,5 +25,27 @@ public abstract class SpdxExpression {
 
 	public boolean isIdentifier() {
 		return false;
+	}
+
+	public SpdxExpression and(SpdxExpression expression) {
+		if (this.equals(expression))
+			return this;
+		return SpdxBinaryOperation.create(SpdxBinaryOperation.AND, this, expression.asGroup());
+	}
+
+	/**
+	 * Express the receiver as a group. We do this when joining two expressions to
+	 * retain the meaning and integrity of the individual statements. The default
+	 * case is that the receiver is a group. Subclasses that require actual grouping
+	 * override.
+	 * 
+	 * @return
+	 */
+	protected SpdxExpression asGroup() {
+		return this;
+	}
+
+	public String toPrecedenceString() {
+		return toString();
 	}
 }

@@ -19,6 +19,8 @@ public class SpdxBinaryOperation extends SpdxExpression {
 
 		boolean matchesApproved(SpdxBinaryOperation spdxBinaryOperation, Collection<String> approved);
 
+		boolean checkEqual(SpdxBinaryOperation left, SpdxBinaryOperation right);
+
 	}
 
 	public static Operator AND = new Operator() {
@@ -37,6 +39,20 @@ public class SpdxBinaryOperation extends SpdxExpression {
 		public String toString() {
 			return "AND";
 		}
+
+		@Override
+		public boolean checkEqual(SpdxBinaryOperation left, SpdxBinaryOperation right) {
+			if (left.operator != right.operator)
+				return false;
+
+			// Order is not important.
+			if (left.left.equals(right.left) && left.right.equals(right.right))
+				return true;
+			if (left.left.equals(right.right) && left.right.equals(right.left))
+				return true;
+
+			return false;
+		};
 	};
 
 	public static Operator OR = new Operator() {
@@ -55,6 +71,20 @@ public class SpdxBinaryOperation extends SpdxExpression {
 		public String toString() {
 			return "OR";
 		}
+
+		@Override
+		public boolean checkEqual(SpdxBinaryOperation left, SpdxBinaryOperation right) {
+			if (left.operator != right.operator)
+				return false;
+
+			// Order is not important.
+			if (left.left.equals(right.left) && left.right.equals(right.right))
+				return true;
+			if (left.left.equals(right.right) && left.right.equals(right.left))
+				return true;
+
+			return false;
+		};
 	};
 
 	public static Operator WITH = new Operator() {
@@ -74,6 +104,18 @@ public class SpdxBinaryOperation extends SpdxExpression {
 		public String toString() {
 			return "WITH";
 		}
+
+		@Override
+		public boolean checkEqual(SpdxBinaryOperation left, SpdxBinaryOperation right) {
+			if (left.operator != right.operator)
+				return false;
+
+			// Order is important for a WITH expression.
+			if (left.left.equals(right.left) && left.right.equals(right.right))
+				return true;
+
+			return false;
+		};
 	};
 
 	private Operator operator;
@@ -111,6 +153,12 @@ public class SpdxBinaryOperation extends SpdxExpression {
 	public static SpdxExpression create(Operator operator, SpdxExpression left, SpdxExpression right) {
 		if (left == null || right == null)
 			return new SpdxInvalidExpression();
+
+		if (left == SpdxNone.INSTANCE)
+			return right;
+		if (right == SpdxNone.INSTANCE)
+			return left;
+
 		if (right.isBinary()) {
 			return create(operator, left, (SpdxBinaryOperation) right);
 		}
@@ -137,11 +185,34 @@ public class SpdxBinaryOperation extends SpdxExpression {
 
 	@Override
 	public String toString() {
-		return "(" + left.toString() + " " + operator.toString() + " " + right.toString() + ")";
+		return left.toString() + " " + operator.toString() + " " + right.toString();
+	}
+
+	@Override
+	public String toPrecedenceString() {
+		return "(" + left.toPrecedenceString() + " " + operator.toString() + " " + right.toPrecedenceString() + ")";
 	}
 
 	@Override
 	public boolean matchesApproved(Collection<String> approved) {
 		return operator.matchesApproved(this, approved);
+	}
+
+	@Override
+	protected SpdxExpression asGroup() {
+		return new SpdxGroup(this);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof SpdxBinaryOperation) {
+			return this.operator.checkEqual(this, (SpdxBinaryOperation) object);
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return this.operator.hashCode() & this.left.hashCode() & this.right.hashCode();
 	}
 }

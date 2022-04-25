@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.eclipse.dash.licenses.http.IHttpClientService;
+import org.eclipse.dash.licenses.spdx.SpdxExpression;
 import org.eclipse.dash.licenses.spdx.SpdxExpressionParser;
 
 import jakarta.json.Json;
@@ -87,7 +88,14 @@ public class LicenseSupport {
 		if (expression == null || expression.trim().isEmpty())
 			return Status.Restricted;
 
-		if (new SpdxExpressionParser().parse(expression).matchesApproved(approvedLicenses.keySet())) {
+		return getStatus(new SpdxExpressionParser().parse(expression));
+	}
+
+	public Status getStatus(SpdxExpression expression) {
+		if (expression == null)
+			return Status.Restricted;
+
+		if (expression.matchesApproved(approvedLicenses.keySet())) {
 			return Status.Approved;
 		}
 

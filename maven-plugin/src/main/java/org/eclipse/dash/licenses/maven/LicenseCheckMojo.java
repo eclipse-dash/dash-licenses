@@ -9,14 +9,10 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.maven;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
@@ -41,6 +37,7 @@ import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
+import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.cli.CSVCollector;
 import org.eclipse.dash.licenses.cli.IResultsCollector;
 import org.eclipse.dash.licenses.cli.NeedsReviewCollector;
@@ -114,10 +111,10 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 */
 	@Parameter(property = "dash.confidence", defaultValue = "" + ISettings.DEFAULT_THRESHOLD)
 	private int confidence;
-	
+
 	@Parameter(property = "dash.iplab.token")
 	private String iplabToken;
-	
+
 	/**
 	 * Skip execution of the Dash License Check mojo.
 	 */
@@ -125,7 +122,8 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	private boolean skip;
 
 	/**
-	 * Make the build fail when any dependency is identified as requiring review by Eclipse Foundation.
+	 * Make the build fail when any dependency is identified as requiring review by
+	 * Eclipse Foundation.
 	 */
 	@Parameter(property = "dash.fail", defaultValue = "false")
 	private boolean failWhenReviewNeeded;
@@ -184,9 +182,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 
 		if (getLog().isDebugEnabled()) {
 			getLog().debug("Filtered dependency artifact list:");
-			filteredArtifacts.stream().sorted().forEach(a -> {
-				getLog().debug("  " + a.toString());
-			});
+			filteredArtifacts.stream().sorted().map(a -> "  " + a).forEach(getLog()::debug);
 		}
 
 		// Adapt dependency artifacts to dash content IDs
@@ -209,41 +205,35 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		NeedsReviewCollector needsReviewCollector = new NeedsReviewCollector(primaryOut);
 		collectors.add(needsReviewCollector);
 
-		try {
-			summary.getParentFile().mkdirs();
-			OutputStream summaryOut = new FileOutputStream(summary);
-			collectors.add(new CSVCollector(summaryOut));
-		} catch (FileNotFoundException e) {
-			throw new MojoExecutionException("Can't write dependency summary file", e);
-		}
-		
 		Injector injector = Guice.createInjector(new LicenseToolModule(settings, createProxySettings()));
 		LicenseChecker checker = injector.getInstance(LicenseChecker.class);
-		
-		if (iplabToken != null && projectId != null) {
-			collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class), primaryOut));
-		} else if (iplabToken != null) {
-			getLog().info("Provide both an authentication token and a project id to automatically create review tickets.");
-		}
 
-		checker.getLicenseData(deps).forEach((id, licenseData) -> {
-			collectors.forEach(collector -> collector.accept(licenseData));
-		});
-		collectors.forEach(IResultsCollector::close);
+		summary.getParentFile().mkdirs();
+		try (OutputStream summaryOut = new FileOutputStream(summary);) {
 
-		// Pass the output from the first collector to the maven log
-		try (BufferedReader primaryReader = new BufferedReader(
-				new InputStreamReader(new ByteArrayInputStream(primaryOut.toByteArray()), StandardCharsets.UTF_8))) {
-			String line = null;
-			while ((line = primaryReader.readLine()) != null) {
-				getLog().info(line);
+			collectors.add(new CSVCollector(summaryOut));
+
+			if (iplabToken != null && projectId != null) {
+				collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class), primaryOut));
+			} else if (iplabToken != null) {
+				getLog().info(
+						"Provide both an authentication token and a project id to automatically create review tickets.");
 			}
+
+			for (LicenseData licenseData : checker.getLicenseData(deps).values()) {
+				collectors.forEach(c -> c.accept(licenseData));
+			}
+			collectors.forEach(IResultsCollector::close);
+
 		} catch (IOException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
+			throw new MojoExecutionException("Can't write dependency summary file", e);
 		}
+
+		// Pass the output from the collectors to the maven log
+		primaryOut.toString(StandardCharsets.UTF_8).lines().forEach(getLog()::info);
 
 		getLog().info("Summary file was written to: " + summary);
-		
+
 		if (failWhenReviewNeeded && needsReviewCollector.getStatus() > 0) {
 			getLog().error("Dependency license check failed. Some dependencies need to be vetted.");
 			throw new MojoFailureException("Some dependencies must be vetted.");
