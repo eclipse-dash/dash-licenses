@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021 The Eclipse Foundation and others.
+ * Copyright (c) 2021,2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -25,6 +25,9 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 			"https://search.maven.org/remotecontent?filepath={groupPath}/{artifactid}/{version}/{artifactid}-{version}-sources.jar",
 			"https://search.maven.org/remotecontent?filepath={groupPath}/{artifactid}/{version}/{artifactid}-{version}-src.zip" };
 
+	static String[] pomPathPatterns = new String[] {
+			"https://search.maven.org/remotecontent?filepath={groupPath}/{artifactid}/{version}/{artifactid}-{version}.pom" };
+
 	@Override
 	public ExtendedContentData getExtendedContentData(IContentId id) {
 		if (!"maven".equals(id.getType()))
@@ -48,16 +51,30 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 		}
 
 		public ExtendedContentData build() {
+			var sourceUrl = getSourceUrl();
+			var pomUrl = getPomUrl();
+
+			// Experimental: If there's no source, but there is a pom.xml, and
+			// the referenced thing is a "bill of materials" (BOM), use the pom.xml
+			// as the source.
+			// FIXME determine if there is a better way to know that it's a BOM.
+			if (sourceUrl == null && pomUrl != null && id.getName().endsWith("-bom")) {
+				sourceUrl = pomUrl;
+			}
+
 			var thing = new ExtendedContentData("Maven Central", getUrl());
+
 			thing.addItem("ID", id.toString());
-			thing.addLink("Source", getSourceUrl());
+			thing.addLink("Source", sourceUrl);
+			thing.addLink("POM", pomUrl);
 
 			return thing;
 		}
 
 		public String getUrl() {
-			return String.format("https://search.maven.org/artifact/%s/%s/%s/jar", id.getNamespace(), id.getName(),
-					id.getVersion());
+			return String
+					.format("https://search.maven.org/artifact/%s/%s/%s/jar", id.getNamespace(), id.getName(),
+							id.getVersion());
 		}
 
 		public String getSourceUrl() {
@@ -74,5 +91,18 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 			return null;
 		}
 
+		public String getPomUrl() {
+			for (String pattern : pomPathPatterns) {
+				var url = pattern
+						.replace("{groupPath}", id.getNamespace().replace('.', '/'))
+						.replace("{artifactid}", id.getName())
+						.replace("{version}", id.getVersion());
+
+				if (httpClientService.remoteFileExists(url)) {
+					return url;
+				}
+			}
+			return null;
+		}
 	}
 }
