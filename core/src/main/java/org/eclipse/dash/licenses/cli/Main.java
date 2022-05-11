@@ -68,7 +68,7 @@ public class Main {
 		List<IResultsCollector> collectors = new ArrayList<>();
 
 		// TODO Set up collectors based on command line parameters
-		IResultsCollector primaryCollector = new NeedsReviewCollector(System.out);
+		IResultsCollector primaryCollector = new NeedsReviewCollector();
 		collectors.add(primaryCollector);
 
 		String summaryPath = settings.getSummaryFilePath();
@@ -82,7 +82,7 @@ public class Main {
 		}
 
 		if (settings.isReview()) {
-			collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class), System.out));
+			collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class)));
 		}
 
 		Arrays.stream(settings.getFileNames()).forEach(name -> {

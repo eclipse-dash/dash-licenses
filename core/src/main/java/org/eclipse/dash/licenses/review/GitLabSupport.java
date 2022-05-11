@@ -9,7 +9,6 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -26,11 +25,14 @@ import org.eclipse.dash.licenses.extended.ExtendedContentDataService;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Issue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 
 public class GitLabSupport {
 
+	final Logger logger = LoggerFactory.getLogger(GitLabSupport.class);
 	private static final int MAXIMUM_REVIEWS = 100;
 
 	@Inject
@@ -43,7 +45,7 @@ public class GitLabSupport {
 	@Inject
 	Provider<IProxySettings> proxySettings;
 
-	public void createReviews(List<LicenseData> needsReview, PrintWriter output) {
+	public void createReviews(List<LicenseData> needsReview) {
 		execute(connection -> {
 			var count = 0;
 			for (LicenseData licenseData : needsReview) {
@@ -51,12 +53,12 @@ public class GitLabSupport {
 					break;
 				count++;
 
-				output.println(String.format("Setting up a review for %s.", licenseData.getId().toString()));
-
 				if (!licenseData.getId().isValid()) {
-					output.println(" - Don't know what to do with this.");
+					logger.info("I don't know what to do with {}.", licenseData.getId().toString());
 					continue;
 				}
+
+				logger.info("A review is required for {}.", licenseData.getId().toString());
 
 				Stream<ExtendedContentData> extendedData = dataService.findFor(licenseData.getId());
 
@@ -75,19 +77,18 @@ public class GitLabSupport {
 
 					Issue existing = connection.findIssue(review);
 					if (existing != null) {
-						output.println(String.format(" - Existing: %s", existing.getWebUrl()));
+						logger.info("A review request already exists {}.", existing.getWebUrl());
 						continue;
 					}
 
 					Issue created = connection.createIssue(review);
 					if (created == null) {
-						output.println(" - An error occurred while attempting to create a review request");
+						logger.error("An error occurred while attempting to create a review request. Aborting.");
 						// TODO If we break creating a review, then don't try to create any more.
 						break;
 					}
 
-					output.println(String.format(" - Created: %s", created.getWebUrl()));
-					output.flush();
+					logger.info("A review request was created {}.", created.getWebUrl());
 				} catch (GitLabApiException e) {
 					throw new RuntimeException(e);
 				}
@@ -95,10 +96,8 @@ public class GitLabSupport {
 			}
 
 			if (count < needsReview.size()) {
-				output.println();
-				output.println("More content needs to be reviewed.");
-				output.printf("For now, however, this experimental feature only submits the first %d.\n", count);
-				output.println();
+				logger.info("More content needs to be reviewed.");
+				logger.info("For now, however, this experimental feature only submits the first {}.\n", count);
 			}
 		});
 	}

@@ -202,7 +202,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		// would always print to stdout, so we collect the output in memory for printing
 		// to the maven log later
 		ByteArrayOutputStream primaryOut = new ByteArrayOutputStream();
-		NeedsReviewCollector needsReviewCollector = new NeedsReviewCollector(primaryOut);
+		NeedsReviewCollector needsReviewCollector = new NeedsReviewCollector();
 		collectors.add(needsReviewCollector);
 
 		Injector injector = Guice.createInjector(new LicenseToolModule(settings, createProxySettings()));
@@ -214,7 +214,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			collectors.add(new CSVCollector(summaryOut));
 
 			if (iplabToken != null && projectId != null) {
-				collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class), primaryOut));
+				collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class)));
 			} else if (iplabToken != null) {
 				getLog().info(
 						"Provide both an authentication token and a project id to automatically create review tickets.");

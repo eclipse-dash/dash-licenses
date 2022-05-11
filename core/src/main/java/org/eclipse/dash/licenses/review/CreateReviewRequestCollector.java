@@ -10,8 +10,6 @@
 package org.eclipse.dash.licenses.review;
 
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +26,10 @@ import org.eclipse.dash.licenses.cli.IResultsCollector;
 public class CreateReviewRequestCollector implements IResultsCollector {
 
 	private GitLabSupport gitLab;
-	private PrintWriter output;
 	private List<LicenseData> needsReview = new ArrayList<>();
 
-	public CreateReviewRequestCollector(GitLabSupport gitLab, OutputStream out) {
+	public CreateReviewRequestCollector(GitLabSupport gitLab) {
 		this.gitLab = gitLab;
-		output = new PrintWriter(out, false, StandardCharsets.UTF_8);
 	}
 
 	@Override
@@ -46,9 +42,8 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 	@Override
 	public void close() {
 		if (!needsReview.isEmpty()) {
-			gitLab.createReviews(needsReview, output);
+			gitLab.createReviews(needsReview);
 		}
-		output.flush();
 	}
 
 	@Override
