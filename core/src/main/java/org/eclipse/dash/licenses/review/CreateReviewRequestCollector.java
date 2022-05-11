@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2020,2021 The Eclipse Foundation and others.
+ * Copyright (c) 2020,2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -12,7 +12,9 @@ package org.eclipse.dash.licenses.review;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
+import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
 import org.eclipse.dash.licenses.cli.IResultsCollector;
@@ -27,9 +29,11 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 
 	private GitLabSupport gitLab;
 	private List<LicenseData> needsReview = new ArrayList<>();
+	private BiConsumer<IContentId, String> monitor;
 
-	public CreateReviewRequestCollector(GitLabSupport gitLab) {
+	public CreateReviewRequestCollector(GitLabSupport gitLab, BiConsumer<IContentId, String> monitor) {
 		this.gitLab = gitLab;
+		this.monitor = monitor;
 	}
 
 	@Override
@@ -42,7 +46,7 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 	@Override
 	public void close() {
 		if (!needsReview.isEmpty()) {
-			gitLab.createReviews(needsReview);
+			gitLab.createReviews(needsReview, monitor);
 		}
 	}
 

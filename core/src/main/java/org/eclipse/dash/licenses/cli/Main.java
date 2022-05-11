@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019,2021 The Eclipse Foundation and others.
+ * Copyright (c) 2019,2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -82,7 +82,8 @@ public class Main {
 		}
 
 		if (settings.isReview()) {
-			collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class)));
+			collectors
+					.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class), (id, url) -> {}));
 		}
 
 		Arrays.stream(settings.getFileNames()).forEach(name -> {

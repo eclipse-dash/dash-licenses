@@ -12,8 +12,10 @@ package org.eclipse.dash.licenses.maven;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -70,7 +72,15 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 */
 	@Parameter(property = "dash.summary", defaultValue = "${project.build.directory}/dash/summary")
 	private File summary;
-
+	
+	/**
+	 * Output a summary of created reviews to the given file. If not specified, then
+	 * a review-summary will be generated at the default location within
+	 * <code>${project.build.directory}</code>
+	 */
+	@Parameter(property = "dash.review.summary", defaultValue = "${project.build.directory}/dash/review-summary")
+	private File reviewSummary;
+	
 	/**
 	 * Batch size to use (number of entries sent per API call.)
 	 */
@@ -209,12 +219,17 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		LicenseChecker checker = injector.getInstance(LicenseChecker.class);
 
 		summary.getParentFile().mkdirs();
-		try (OutputStream summaryOut = new FileOutputStream(summary);) {
+		reviewSummary.getParentFile().mkdirs();
+		
+		try (
+				OutputStream summaryOut = new FileOutputStream(summary);
+				PrintWriter reviewSummaryOut = new PrintWriter(new FileWriter(reviewSummary))) {
 
 			collectors.add(new CSVCollector(summaryOut));
 
 			if (iplabToken != null && projectId != null) {
-				collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class)));
+				collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class), 
+						(id, url) -> reviewSummaryOut.println("[" + id + "](" + url + ")")));
 			} else if (iplabToken != null) {
 				getLog().info(
 						"Provide both an authentication token and a project id to automatically create review tickets.");

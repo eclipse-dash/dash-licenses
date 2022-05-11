@@ -11,12 +11,14 @@ package org.eclipse.dash.licenses.review;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
@@ -45,7 +47,7 @@ public class GitLabSupport {
 	@Inject
 	Provider<IProxySettings> proxySettings;
 
-	public void createReviews(List<LicenseData> needsReview) {
+	public void createReviews(List<LicenseData> needsReview, BiConsumer<IContentId, String> monitor) {
 		execute(connection -> {
 			var count = 0;
 			for (LicenseData licenseData : needsReview) {
@@ -77,6 +79,7 @@ public class GitLabSupport {
 
 					Issue existing = connection.findIssue(review);
 					if (existing != null) {
+						monitor.accept(licenseData.getId(), existing.getWebUrl());
 						logger.info("A review request already exists {}.", existing.getWebUrl());
 						continue;
 					}
@@ -88,6 +91,7 @@ public class GitLabSupport {
 						break;
 					}
 
+					monitor.accept(licenseData.getId(), created.getWebUrl());
 					logger.info("A review request was created {}.", created.getWebUrl());
 				} catch (GitLabApiException e) {
 					throw new RuntimeException(e);
