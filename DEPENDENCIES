@@ -64,7 +64,7 @@ maven/mavencentral/org.eclipse.aether/aether-util/0.9.0.M2, EPL-1.0, approved, t
 maven/mavencentral/org.eclipse.dash/org.eclipse.dash.licenses/0.0.1-SNAPSHOT, EPL-2.0, approved, technology.dash
 maven/mavencentral/org.eclipse.sisu/org.eclipse.sisu.inject/0.3.5, EPL-1.0, approved, technology.sisu
 maven/mavencentral/org.eclipse.sisu/org.eclipse.sisu.plexus/0.3.5, EPL-1.0, approved, technology.sisu
-maven/mavencentral/org.eclipse.tycho/org.eclipse.tycho.embedder.shared/2.7.0, EPL-2.0, approved, technology.tycho
+maven/mavencentral/org.eclipse.tycho/org.eclipse.tycho.embedder.shared/2.7.1, EPL-2.0, approved, technology.tycho
 maven/mavencentral/org.gitlab4j/gitlab4j-api/4.19.0, MIT, approved, clearlydefined
 maven/mavencentral/org.glassfish.hk2.external/aopalliance-repackaged/2.6.1, EPL-2.0 OR GPL-2.0-only with Classpath-exception-2.0, approved, ee4j.glassfish
 maven/mavencentral/org.glassfish.hk2.external/jakarta.inject/2.6.1, EPL-2.0 OR GPL-2.0-only with Classpath-exception-2.0, approved, ee4j.glassfish
@@ -83,3 +83,5 @@ maven/mavencentral/org.jvnet.mimepull/mimepull/1.9.11, , approved, CQ21484
 maven/mavencentral/org.slf4j/slf4j-api/1.7.32, MIT, approved, CQ13368
 maven/mavencentral/org.slf4j/slf4j-api/1.7.36, MIT, approved, CQ13368
 maven/mavencentral/org.slf4j/slf4j-simple/1.7.36, MIT, approved, CQ7952
+maven/mavencentral/org.sonatype.plexus/plexus-cipher/1.4, Apache-2.0, approved, CQ4600
+maven/mavencentral/org.sonatype.plexus/plexus-sec-dispatcher/1.4, Apache-2.0, approved, CQ16491
