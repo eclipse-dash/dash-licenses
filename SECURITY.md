@@ -1,21 +1,23 @@
+<!--
+ * Copyright (C) 2022 Eclipse Foundation and others. 
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * SPDX-FileType: DOCUMENTATION
+ * SPDX-FileCopyrightText: 2022 Eclipse Foundation
+ * SPDX-License-Identifier: EPL-2.0
+-->
+
 # Security Policy
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+There is currently no official release version of the Eclipse Dash License Tool.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+Security updates are applied to the HEAD of the master branch.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
-
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+use the Eclipse Dash License Tool's [Issue Tracker](https://github.com/eclipse/dash-licenses/issues/new) to report a vulnerability.
