@@ -1,5 +1,6 @@
 /*************************************************************************
  * Copyright (c) 2021, 2022 The Eclipse Foundation and others.
+ * Copyright (c) 2021 Oleksandr Andriienko
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -21,6 +22,8 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -43,8 +46,12 @@ public class HttpClientService implements IHttpClientService {
 	public int post(String url, String contentType, String payload, Consumer<String> handler) {
 		try {
 			Duration timeout = Duration.ofSeconds(settings.getTimeout());
-			HttpRequest request = HttpRequest.newBuilder(URI.create(url)).header("Content-Type", contentType)
-					.POST(BodyPublishers.ofString(payload, StandardCharsets.UTF_8)).timeout(timeout).build();
+			HttpRequest request = HttpRequest
+					.newBuilder(URI.create(url))
+					.header("Content-Type", contentType)
+					.POST(BodyPublishers.ofString(payload, StandardCharsets.UTF_8))
+					.timeout(timeout)
+					.build();
 
 			HttpClient httpClient = getHttpClient(timeout);
 			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
@@ -70,10 +77,21 @@ public class HttpClientService implements IHttpClientService {
 
 	@Override
 	public int get(String url, String contentType, Consumer<InputStream> handler) {
+		return get(url, contentType, Collections.emptyMap(), handler);
+	}
+
+	@Override
+	public int get(String url, String contentType, Map<String, String> headers, Consumer<InputStream> handler) {
 		try {
+			HttpRequest.Builder reqBuilder = HttpRequest
+					.newBuilder(URI.create(url))
+					.header("Content-Type", contentType)
+					.GET();
+
+			headers.forEach((key, value) -> reqBuilder.header(key, value));
+
 			Duration timeout = Duration.ofSeconds(settings.getTimeout());
-			HttpRequest request = HttpRequest.newBuilder(URI.create(url)).header("Content-Type", contentType).GET()
-					.timeout(timeout).build();
+			HttpRequest request = reqBuilder.timeout(timeout).build();
 
 			HttpClient httpClient = getHttpClient(timeout);
 			HttpResponse<InputStream> response = httpClient.send(request, BodyHandlers.ofInputStream());

@@ -18,6 +18,7 @@ import java.util.Collection;
 import org.eclipse.dash.licenses.IContentId;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
@@ -37,7 +38,15 @@ public final class JsonUtils {
 
 	public static JsonObject readJson(Reader content) {
 		JsonReader reader = Json.createReader(content);
-		JsonObject json = (JsonObject) reader.read();
-		return json;
+		return reader.read().asJsonObject();
+	}
+
+	public static JsonArray readJsonArray(InputStream content) {
+		return readJsonArray(new InputStreamReader(content, StandardCharsets.UTF_8));
+	}
+
+	public static JsonArray readJsonArray(Reader content) {
+		JsonReader reader = Json.createReader(content);
+		return reader.read().asJsonArray();
 	}
 }
