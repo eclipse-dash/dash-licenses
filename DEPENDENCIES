@@ -64,7 +64,7 @@ maven/mavencentral/org.eclipse.aether/aether-util/0.9.0.M2, EPL-1.0, approved, t
 maven/mavencentral/org.eclipse.dash/org.eclipse.dash.licenses/0.0.1-SNAPSHOT, EPL-2.0, approved, technology.dash
 maven/mavencentral/org.eclipse.sisu/org.eclipse.sisu.inject/0.3.5, EPL-1.0, approved, technology.sisu
 maven/mavencentral/org.eclipse.sisu/org.eclipse.sisu.plexus/0.3.5, EPL-1.0, approved, technology.sisu
-maven/mavencentral/org.eclipse.tycho/org.eclipse.tycho.embedder.shared/2.7.1, EPL-2.0, approved, technology.tycho
+maven/mavencentral/org.eclipse.tycho/org.eclipse.tycho.embedder.shared/2.7.3, EPL-2.0, approved, technology.tycho
 maven/mavencentral/org.gitlab4j/gitlab4j-api/4.19.0, MIT, approved, clearlydefined
 maven/mavencentral/org.glassfish.hk2.external/aopalliance-repackaged/2.6.1, EPL-2.0 OR GPL-2.0-only with Classpath-exception-2.0, approved, ee4j.glassfish
 maven/mavencentral/org.glassfish.hk2.external/jakarta.inject/2.6.1, EPL-2.0 OR GPL-2.0-only with Classpath-exception-2.0, approved, ee4j.glassfish
