@@ -108,7 +108,10 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 		}
 
 		JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
-		ids.stream().forEach(id -> builder.add(id.toString()));
+		ids.stream().forEach(id -> {
+			builder.add(id.toString());
+			logger.debug("Sending to EF {}", id);
+		});
 
 		request.add("dependencies", builder);
 
