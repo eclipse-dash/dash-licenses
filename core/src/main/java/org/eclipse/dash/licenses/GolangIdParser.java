@@ -27,7 +27,7 @@ public class GolangIdParser implements ContentIdParser {
 
 	private static Pattern pattern = Pattern.compile(
 	// @formatter:off
-			"^(?<source>[^\\/\\s]+)(?:\\/(?<path>[^\\/\\s]+)(?:\\/(?<module>[^\\s]+))?)?\\s(?<version>v[^\\s\\/]+).*$"
+			"^(?<source>[^\\/\\s]+)(?:\\/(?<path>[^\\/\\s]+)(?:\\/(?<module>[^\\s]+))?)?\\s(?<version>v[^\\s\\/+]+).*$"
 	// @formatter:on
 	);
 
@@ -59,7 +59,7 @@ public class GolangIdParser implements ContentIdParser {
 			return ContentId.getContentId("git", "github", path.toLowerCase(), module, version);
 		}
 
-		return ContentId.getContentId("go", "golang", URLEncoder.encode(namespace, Charset.defaultCharset()), name,
-				version);
+		return ContentId
+				.getContentId("go", "golang", URLEncoder.encode(namespace, Charset.defaultCharset()), name, version);
 	}
 }
