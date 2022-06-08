@@ -60,7 +60,18 @@ jobs:
             ...context.repo, comment_id: context.payload?.comment?.id, content: reaction
           });
 
+    # By default the git-ref checked out for events triggered by comments is 'refs/heads/master'
+    # and for events triggered by PR creation/updates the ref is 'refs/pull/<PR-number>/merge'.
+    # So by default only the master-branch would be considered when requesting license-reviews, but we want the PR's state.
+    # Unless the PR is closed, then we want the master-branch, which allows subsequent license review requests.
     - uses: actions/checkout@v3
+      # use default ref 'refs/pull/<PR-number>/merge' for PR-events and 'refs/heads/master' for comments if the PR is closed
+      if: github.event.issue.pull_request == '' || github.event.issue.state != 'open'
+    - uses: actions/checkout@v3
+      with:
+        ref: 'refs/pull/${{ github.event.issue.number }}/merge'
+      if: github.event.issue.pull_request != '' && github.event.issue.state == 'open'
+  
     - uses: actions/setup-java@v3
       with:
         java-version: '11'
