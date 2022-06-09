@@ -266,6 +266,7 @@ The Maven Plugin has the following "-D" options:
 - `dash.iplab.token` - The access token for automatically creating IP Team review requests. **Do not share your access token.**
 - `dash.projectId` - The project id
 - `dash.summary` - The location (where) to generate the summary file.
+- `dash.review.summary` - The location (where) to generate the review-summary file.
 
 Note that the Maven plugin always generates the summary file. The default location is `${project.build.directory}/dash/summary`.
 
