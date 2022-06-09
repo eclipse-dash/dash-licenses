@@ -51,8 +51,8 @@ jobs:
           const userPermission = payload?.data?.permission;
           let reaction = 'rocket'
           if (!(userPermission == 'write' || userPermission == 'admin')) { // not a committer
-            // Not a commiter -> abort workflow
-            core.setFailed("Only committers are permitted to request license vetting and ${context.actor} isn't one.")
+            // Not a committer -> abort workflow
+            core.setFailed("Only committers are permitted to request license vetting and " + context.actor + " isn't one.")
             reaction = '-1'
           }
           // react on comment to give early feedback that the request was understood
@@ -97,35 +97,47 @@ jobs:
       with:
         script: |
           const fs = require('fs')
-          let commentBody = '> /request-license-review\n\n'
+          
           const licenesVetted = ${{ steps.check-license-vetting.outputs.licenses-vetted }}
+          let commentBody = '> ' + context.payload.comment.body + '\n\n'
+          
           if( licenesVetted ) {
-            commentBody += 'All licenses already successfully vetted.'
+            commentBody += ':heavy_check_mark: All licenses already successfully vetted.\n'
           } else {
-
-            const runURL = context.serverUrl + "/" + process.env.GITHUB_REPOSITORY + "/actions/runs/" + context.runId
-
+            
             const reviewSummaryFile = process.env.GITHUB_WORKSPACE + '/target/dash/review-summary'
             core.info("Read review summary at " + reviewSummaryFile)
+            let content = "";
+            if ( fs.existsSync( reviewSummaryFile )) {
+              content = fs.readFileSync( reviewSummaryFile, {encoding: 'utf8'}).trim();
+            }
             
-            if (fs.existsSync( reviewSummaryFile )) {
-              let content = fs.readFileSync( reviewSummaryFile, 'utf8').trim();
-              core.warning("License reviews:\n" + content)
-
+            if ( content ) { // not empty
               commentBody += 'License review requests:\n'
-              let lines = content.split('\n')
+              const lines = content.split('\n')
               for(var line = 0; line < lines.length; line++){
                 commentBody += ('- ' + lines[line] + '\n')
               }
-              commentBody += '\nFrom run: ' + runURL + '\n'
-              commentBody += 'After all reviews have concluded, re-run the license-vetting check from the Github Actions web-interface to update its status.'
-
+              commentBody += '\n'
+              commentBody += 'After all reviews have concluded, re-run the license-vetting check from the Github Actions web-interface to update its status.\n'
+              
             } else {
-              core.setFailed("License vetting build failed, but no review summary file was written")
-              commentBody += 'Failed to request review of not vetted licenses:\n'
-              commentBody += runURL
+              core.setFailed("License vetting build failed, but no reviews are created")
+              commentBody += ':warning: Failed to request review of not vetted licenses.\n'
             }
           }
+          commentBody += '\n'
+          commentBody += 'Workflow run (with attached summary files):\n'
+          commentBody += context.serverUrl + "/" + process.env.GITHUB_REPOSITORY + "/actions/runs/" + context.runId
+          
           github.rest.issues.createComment({
             issue_number: context.issue.number, ...context.repo, body: commentBody
           })
+
+    - uses: actions/upload-artifact@v3
+      if: always() && env.request-review
+      with:
+        name: '${{ inputs.projectId }}-license-vetting-summary'
+        path: |
+          target/dash/review-summary
+          target/dash/summary
