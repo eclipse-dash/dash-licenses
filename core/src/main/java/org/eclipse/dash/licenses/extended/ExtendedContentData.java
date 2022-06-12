@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021 The Eclipse Foundation and others.
+ * Copyright (c) 2021,2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -14,6 +14,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class ExtendedContentData {
+	public static final String ID = "ID";
+	public static final String LICENSE = "License";
+	public static final String REPOSITORY = "Repository";
+	public static final String DISTRIBUTION = "Distribution";
+	public static final String SOURCE = "Source";
+
 	private String title;
 	private String url;
 	private List<ExtendedContentDataItem> items = new ArrayList<>();
@@ -47,28 +53,31 @@ public class ExtendedContentData {
 		items.add(new ExtendedContentDataLink(key, value));
 	}
 
-	public String getId() {
-		return getItems().filter(each -> "ID".equals(each.getLabel())).map(each -> each.getValue()).findAny()
+	public String get(String key) {
+		return getItems()
+				.filter(each -> key.equals(each.getLabel()))
+				.map(each -> each.getValue())
+				.findAny()
 				.orElse(null);
+	}
+
+	public String getId() {
+		return get(ID);
 	}
 
 	public String getSourceUrl() {
-		return getItems().filter(each -> "Source".equals(each.getLabel())).map(each -> each.getValue()).findAny()
-				.orElse(null);
+		return get(SOURCE);
 	}
 
 	public String getRepository() {
-		return getItems().filter(each -> "Repository".equals(each.getLabel())).map(each -> each.getValue()).findAny()
-				.orElse(null);
+		return get(REPOSITORY);
 	}
 
 	public String getDistribution() {
-		return getItems().filter(each -> "Distribution".equals(each.getLabel())).map(each -> each.getValue()).findAny()
-				.orElse(null);
+		return get(DISTRIBUTION);
 	}
 
 	public String getLicense() {
-		return getItems().filter(each -> "License".equals(each.getLabel())).map(each -> each.getValue()).findAny()
-				.orElse(null);
+		return get(LICENSE);
 	}
 }
