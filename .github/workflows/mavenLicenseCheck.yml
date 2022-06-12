@@ -74,9 +74,16 @@ jobs:
   
     - uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
-        cache: 'maven'
+    - name: Cache local Maven repository
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        # re-cache on changes in the pom and target files
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml', '**/*.target') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
 
     - name: Prepare for license check
       run: ${{ inputs.setupScript }}
