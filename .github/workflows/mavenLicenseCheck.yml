@@ -32,13 +32,15 @@ on:
 
 jobs:
   check-licenses:
-    if: github.event_name == 'pull_request' || (github.event.issue.pull_request != '' && (github.event.comment.body == '/request-license-review'))
+    if: github.event_name != 'issue_comment' || ( github.event.issue.pull_request != '' && (github.event.comment.body == '/request-license-review') )
+    # Run on all non-comment events specified by the calling workflow and for comments on PRs that have a corresponding body.
     runs-on: ubuntu-latest
     steps:
 
     - name: Set review request
       run: echo "request-review=1" >> $GITHUB_ENV
-      if: github.event.issue.pull_request != '' && (github.event.comment.body == '/request-license-review')
+      if: github.event_name == 'issue_comment'
+      # For 'issue_comment'-events this job only runs if a comment was added to a PR with body specified above
 
     - name: Process license-vetting request
       if: env.request-review
@@ -60,7 +62,7 @@ jobs:
             ...context.repo, comment_id: context.payload?.comment?.id, content: reaction
           });
 
-    # By default the git-ref checked out for events triggered by comments is 'refs/heads/master'
+    # By default the git-ref checked out for events triggered by comments to PRs is 'refs/heads/master'
     # and for events triggered by PR creation/updates the ref is 'refs/pull/<PR-number>/merge'.
     # So by default only the master-branch would be considered when requesting license-reviews, but we want the PR's state.
     # Unless the PR is closed, then we want the master-branch, which allows subsequent license review requests.
