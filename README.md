@@ -437,9 +437,10 @@ jobs:
     with:
       projectId: <PROJECT-ID>
     secrets:
-      gitlabAPIToken: ${{ secrets.M2E_GITLAB_API_TOKEN }}
+      gitlabAPIToken: ${{ secrets.<PROJECT-NAME>_GITLAB_API_TOKEN }}
 ```
 Projects that have to be set up in advance can use the `setupScript` parameter to pass a script that is executed before the license-check build is started.
+Projects that want their git submodules to be checked out and processed can use the 'submodule' parameter.
 
 On each pull-reqest event (i.e. a new PR is created or a new commit for it is pushed) the license-status of all project dependencies is checked automatically and in case unvetted licenses are found the check fails.
 Committers of that project can request a review from the IP team, by simply adding a comment with body `/request-license-review`.
