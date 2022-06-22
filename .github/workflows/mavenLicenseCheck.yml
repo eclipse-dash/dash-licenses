@@ -25,6 +25,14 @@ on:
         type: string
         required: false
         default: ''
+      submodules:
+        description: |
+          Whether to checkout submodules: `true` to checkout submodules or `recursive` to recursively checkout submodules.
+          When the `ssh-key` input is not provided, SSH URLs beginning with `git@github.com:` are converted to HTTPS.
+          The value is just passed as it is to the github/actions/checkout action: https://github.com/actions/checkout#usage
+        type: string
+        required: false
+        default: 'false'
     secrets:
       gitlabAPIToken:
         description: 'The authentication token (scope: api) from gitlab.eclipse.org of the calling repository. Only required if license vetting is requested'
@@ -69,11 +77,14 @@ jobs:
     - uses: actions/checkout@v3
       # use default ref 'refs/pull/<PR-number>/merge' for PR-events and 'refs/heads/master' for comments if the PR is closed
       if: github.event.issue.pull_request == '' || github.event.issue.state != 'open'
+      with:
+        submodules: ${{ inputs.submodules }}
     - uses: actions/checkout@v3
       with:
         ref: 'refs/pull/${{ github.event.issue.number }}/merge'
+        submodules: ${{ inputs.submodules }}
       if: github.event.issue.pull_request != '' && github.event.issue.state == 'open'
-  
+
     - uses: actions/setup-java@v3
       with:
         java-version: '17'
