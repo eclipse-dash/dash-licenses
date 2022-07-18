@@ -10,6 +10,7 @@
 package org.eclipse.dash.licenses.spdx;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 public class SpdxIdentifier extends SpdxExpression {
 
@@ -23,6 +24,11 @@ public class SpdxIdentifier extends SpdxExpression {
 		if ("NONE".equalsIgnoreCase(code))
 			return SpdxNone.INSTANCE;
 		return new SpdxIdentifier(code);
+	}
+
+	@Override
+	public String toAnnotatedString(Function<String, String> annotator) {
+		return annotator.apply(code);
 	}
 
 	@Override

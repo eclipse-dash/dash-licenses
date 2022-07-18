@@ -10,6 +10,7 @@
 package org.eclipse.dash.licenses.spdx;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 public class SpdxGroup extends SpdxExpression {
 
@@ -22,6 +23,11 @@ public class SpdxGroup extends SpdxExpression {
 	@Override
 	public String toString() {
 		return "(" + expression.toString() + ")";
+	}
+
+	@Override
+	public String toAnnotatedString(Function<String, String> annotator) {
+		return "(" + expression.toAnnotatedString(annotator) + ")";
 	}
 
 	@Override

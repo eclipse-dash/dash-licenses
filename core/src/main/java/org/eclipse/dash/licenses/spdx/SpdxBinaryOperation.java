@@ -10,6 +10,7 @@
 package org.eclipse.dash.licenses.spdx;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 public class SpdxBinaryOperation extends SpdxExpression {
 
@@ -191,6 +192,11 @@ public class SpdxBinaryOperation extends SpdxExpression {
 	@Override
 	public String toPrecedenceString() {
 		return "(" + left.toPrecedenceString() + " " + operator.toString() + " " + right.toPrecedenceString() + ")";
+	}
+
+	@Override
+	public String toAnnotatedString(Function<String, String> annotator) {
+		return left.toAnnotatedString(annotator) + " " + operator.toString() + " " + right.toAnnotatedString(annotator);
 	}
 
 	@Override

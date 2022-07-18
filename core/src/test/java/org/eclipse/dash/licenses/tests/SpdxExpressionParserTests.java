@@ -347,4 +347,25 @@ class SpdxExpressionParserTests {
 			assertTrue(new SpdxExpressionParser().parse("EPL-1.0+").matchesApproved(approved));
 		}
 	}
+
+	@Nested
+	class TestPrinting {
+		@Test
+		void testAnnotated1() {
+			var expression = new SpdxExpressionParser().parse("EPL-2.0 AND (Apache-2.0 OR 0BSD+)");
+			var output = expression.toAnnotatedString(identifier -> "**" + identifier + "**");
+			assertEquals("**EPL-2.0** AND (**Apache-2.0** OR **0BSD**+)", output);
+		}
+
+		@Test
+		void testAnnotated2() {
+			var expression = new SpdxExpressionParser().parse("GPL-2.0-only WITH Classpath-exception-2.0");
+			var output = expression
+					.toAnnotatedString(
+							identifier -> "[" + identifier + "](https://spdx.org/licenses/" + identifier + ".html)");
+			assertEquals(
+					"[GPL-2.0-only](https://spdx.org/licenses/GPL-2.0-only.html) WITH [Classpath-exception-2.0](https://spdx.org/licenses/Classpath-exception-2.0.html)",
+					output);
+		}
+	}
 }
