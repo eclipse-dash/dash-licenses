@@ -62,6 +62,9 @@ public class MavenCentralExtendedContentDataProvider implements IExtendedContent
 				sourceUrl = pomUrl;
 			}
 
+			if (sourceUrl == null && pomUrl == null)
+				return null;
+
 			var thing = new ExtendedContentData("Maven Central", getUrl());
 
 			thing.addItem("ID", id.toString());
