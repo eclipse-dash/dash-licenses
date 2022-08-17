@@ -147,8 +147,8 @@ public class YarnLockFileReader implements IDependencyListReader {
 		 * a content ID from it.
 		 */
 		public IContentId getId() {
-			var pattern = Pattern.compile("(?:(?<namespace>@[\\w-]+)\\/)?(?<name>[\\w-\\.]+)");
-			var matcher = pattern.matcher(value);
+			var pattern = Pattern.compile("^(?:(?<namespace>@[^\\/@]+)\\/)?(?<name>[^@]+)");
+			var matcher = pattern.matcher(getKey());
 			if (matcher.find()) {
 				var namespace = matcher.group("namespace");
 				if (namespace == null)
@@ -161,6 +161,29 @@ public class YarnLockFileReader implements IDependencyListReader {
 				}
 			}
 			return new InvalidContentId(value);
+		}
+
+		/**
+		 * The key may be specified in a number of different ways. Sometimes, it is
+		 * wrapped in quotes (e.g., when it includes a namespace). In some cases, the
+		 * key includes multiple entries. For our purposes, the key is always the first
+		 * "entry".
+		 * 
+		 * <p>
+		 * For example:
+		 * 
+		 * For <code>"@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4":</code>,
+		 * the key is "@babel/code-frame@^7.0.0".
+		 * 
+		 * @return
+		 */
+		public String getKey() {
+			var pattern = Pattern.compile("^(\\\"?)(?<key>[^\\\",:]*)\\1");
+			var matcher = pattern.matcher(value);
+			if (matcher.find()) {
+				return matcher.group("key");
+			}
+			return value;
 		}
 
 		/**
