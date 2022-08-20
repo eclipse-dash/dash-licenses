@@ -107,6 +107,30 @@ class YarnLockFileReaderTests {
 	}
 
 	@Test
+	void testRedirect() throws IOException {
+		// @formatter:off
+		String contents = 
+			"\"@vue/vue-loader-v15@npm:vue-loader@^15.9.7\":\n"
+			+ "  version \"15.9.8\"\n"
+			+ "  resolved \"https://registry.yarnpkg.com/vue-loader/-/vue-loader-15.9.8.tgz#4b0f602afaf66a996be1e534fb9609dc4ab10e61\"\n"
+			+ "  integrity sha512-GwSkxPrihfLR69/dSV3+5CdMQ0D+jXg8Ma1S4nQXKJAznYFX14vHdc/NetQc34Dw+rBbIJyP7JOuVb9Fhprvog==\n"
+			+ "  dependencies:\n"
+			+ "    \"@vue/component-compiler-utils\" \"^3.1.0\"\n"
+			+ "    hash-sum \"^1.0.2\"\n"
+			+ "    loader-utils \"^1.1.0\"\n"
+			+ "    vue-hot-reload-api \"^2.3.0\"\n"
+			+ "    vue-style-loader \"^4.1.0\"\n";
+		// @formatter:on
+
+		var ids = new YarnLockFileReader(new StringReader(contents)).getContentIds();
+		IContentId id = ids.get(0);
+
+		assertEquals("-", id.getNamespace());
+		assertEquals("vue-loader", id.getName());
+		assertEquals("15.9.8", id.getVersion());
+	}
+
+	@Test
 	void testInvalidEntry() throws IOException {
 
 		// @formatter:off

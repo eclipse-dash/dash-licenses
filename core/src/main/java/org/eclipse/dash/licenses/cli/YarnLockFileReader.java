@@ -145,10 +145,15 @@ public class YarnLockFileReader implements IDependencyListReader {
 		/**
 		 * Assume that the receiver represents a top-level entry in the file and extract
 		 * a content ID from it.
+		 * 
+		 * The namespace and name come from the key; the resolved version comes from the
+		 * nested "version" entry.
 		 */
 		public IContentId getId() {
+			String key = getRedirect(getHeader());
+
 			var pattern = Pattern.compile("^(?:(?<namespace>@[^\\/@]+)\\/)?(?<name>[^@]+)");
-			var matcher = pattern.matcher(getKey());
+			var matcher = pattern.matcher(key);
 			if (matcher.find()) {
 				var namespace = matcher.group("namespace");
 				if (namespace == null)
@@ -164,7 +169,32 @@ public class YarnLockFileReader implements IDependencyListReader {
 		}
 
 		/**
-		 * The key may be specified in a number of different ways. Sometimes, it is
+		 * Bearing in mind that I haven't been able to find any documentation of this
+		 * format, there's a case where the version appears to be a pointer to a
+		 * different library, which I've decided to describe as a "redirect". At
+		 * present, I've only seen one example of this, and it starts with "npm:", so
+		 * we're running with an assumption that this is what they should all look like.
+		 * 
+		 * For example, a value of
+		 * <code>@vue/vue-loader-v15@npm:vue-loader@^15.9.7</code> maps, as far as I can
+		 * tell to <code>vue-loader@^15.9.7</code>.
+		 * 
+		 * This method does that mapping.
+		 * 
+		 * @param header
+		 * @return
+		 */
+		private String getRedirect(String header) {
+			var redirect = Pattern.compile("npm:(?<redirect>(@[^\\/@]+\\/)?[^@]+@[^@\\/]+)$");
+			var matcher = redirect.matcher(header);
+			if (matcher.find()) {
+				return matcher.group("redirect");
+			}
+			return header;
+		}
+
+		/**
+		 * The header may be specified in a number of different ways. Sometimes, it is
 		 * wrapped in quotes (e.g., when it includes a namespace). In some cases, the
 		 * key includes multiple entries. For our purposes, the key is always the first
 		 * "entry".
@@ -173,17 +203,17 @@ public class YarnLockFileReader implements IDependencyListReader {
 		 * For example:
 		 * 
 		 * For <code>"@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4":</code>,
-		 * the key is "@babel/code-frame@^7.0.0".
+		 * the header is "@babel/code-frame@^7.0.0".
 		 * 
 		 * @return
 		 */
-		public String getKey() {
-			var pattern = Pattern.compile("^(\\\"?)(?<key>[^\\\",:]*)\\1");
-			var matcher = pattern.matcher(value);
-			if (matcher.find()) {
-				return matcher.group("key");
-			}
-			return value;
+		private String getHeader() {
+			var pattern = Pattern.compile("^\"?(?<key>[^\"]+)\"?(?:,.*)?\\s*:$");
+			var matcher = pattern.matcher(value.trim());
+			if (matcher.find())
+				return matcher.group("key").trim();
+
+			return null;
 		}
 
 		/**
