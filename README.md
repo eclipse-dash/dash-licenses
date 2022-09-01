@@ -66,13 +66,9 @@ The output is either a statement that the licenses for all of the content have b
 
 ### Automatic IP Team Review Requests 
 
-**EXPERIMENTAL**
-
 When the tool identifies a library that requires further review, the obvious question is: now what?
 
-The traditional means of requesting a review is by creating a [contribution questionnaire](https://www.eclipse.org/projects/handbook/#ip-prereq-cq) to request assistance from the IP Team. This still works; Eclipse committers who are familiar with this process can continue to engage in this manner (use the ClearlyDefined ID as the "Name and Version of the Library" when making the request).
-
-The tool incorporates a new experimental feature that leverages some new technology. Instead of creating a CQ via IPZilla, the tool can create an issue against the Eclipse Foundation's GitLab instance (there is discussion [here](https://gitlab.eclipse.org/eclipsefdn/iplab/emo/-/issues/2)). Note that this feature is still under development and processing in the back end may take a day or two. It's still very experimental, so there will be changes. 
+The tool incorporates a feature that can create an issue against the [IPLab](https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab) repository on the Eclipse Foundation's GitLab infrastructure.
 
 To use this feature, you must have committer status on at least one Eclipse project.
 
@@ -83,7 +79,7 @@ To use this feature, you must have committer status on at least one Eclipse proj
 
 Note that the options are slightly different for the [Maven plugin](README.md#maven-plugin-options).
 
-The tool currently limits the number of libraries that it will send for review (while we are experimenting with this feature, we want to avoid deluging our vetting system with requests). **Do not share your access token.**
+**Do not share your access token.**
 
 Example:
 
@@ -110,13 +106,9 @@ Setting up a review for npm/npmjs/-/jsdom/11.12.0.
  - Created: https://gitlab.eclipse.org/eclipsefdn/iplab/iplab/-/issues/93
 Setting up a review for npm/npmjs/-/detect-node/2.0.4.
  - Created: https://gitlab.eclipse.org/eclipsefdn/iplab/iplab/-/issues/94
-
-More content needs to be reviewed.
-For now, however, this experimental feature only submits the first five.
-
 ```
 
-Please do not incorporate this feature into your automated builds at this time. **Do not share your access token.**
+**Do not share your access token.**
 
 ### Example: Single Library
 
@@ -142,7 +134,7 @@ $ echo -e "tech.units:indriya:1.3\norg.glassfish:jakarta.json:2.0.0" | java -jar
 $ _
 ```
 
-You can use the experimental [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
+You can use the [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
 
 ```
 $ echo "tech.units:indriya:1.3" | java -jar org.eclipse.dash.licenses-<version>.jar - -review -project <project> -token <token>
@@ -173,7 +165,7 @@ $ _
 
 > :warning: If your project is a multi-module Maven project, you should provide an absolute path to `-DoutputFile` to append all dependencies in the same file (see [MDEP-542](https://issues.apache.org/jira/browse/MDEP-542)).
 
-You can use the experimental [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
+You can use the [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
 
 ```
 $ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
