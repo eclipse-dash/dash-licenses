@@ -28,6 +28,12 @@ The current implementation uses two sources for license information. The first s
 
 The idea was to have some code that can be used to check the licenses of content, but write it in a manner that would make it easy to generate, for example, a Maven plug-in. The main focus, however, has been making this work as a CLI so that it can be used to sort out licenses for Maven, `package-lock.json`, `yarn.lock`, etc.
 
+More information about the Eclipse Dash License Tool:
+
+- [Eclipse Dash License Tool Maven Plugin](https://blog.waynebeaton.ca/posts/ip/dash-license-tool-maven-plugin/)
+- [Eclipse Dash License Tool and The Maven Reactor](https://blog.waynebeaton.ca/posts/ip/dash-license-tool-maven-reactor)
+- [Eclipse Dash License Tool and Package Lock Files](https://blog.waynebeaton.ca/posts/ip/dash-license-tool-package-lock/)
+
 ## Get it
 
 Dash License Tool executable jar is published to Eclipse's Maven repo and available at https://repo.eclipse.org/content/repositories/dash-licenses/org/eclipse/dash/org.eclipse.dash.licenses/ . Latest version can be directly downloaded from https://repo.eclipse.org/service/local/artifact/maven/redirect?r=dash-licenses&g=org.eclipse.dash&a=org.eclipse.dash.licenses&v=LATEST
