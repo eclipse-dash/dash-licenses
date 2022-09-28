@@ -81,7 +81,7 @@ To use this feature, you must have committer status on at least one Eclipse proj
 * Get an [authentication token](https://gitlab.eclipse.org/-/profile/personal_access_tokens) (scope: `api`) from `gitlab.eclipse.org`;
 * Include the `-review` option;
 * Pass the token via the `-token` option; and
-* Pass the project id via the `-project` option.
+* Pass the Eclipse open source project id (e.g., `technology.dash`) via the `-project` option.
 
 Note that the options are slightly different for the [Maven plugin](README.md#maven-plugin-options).
 
@@ -262,7 +262,7 @@ The Maven Plugin has the following "-D" options:
 - `dash.skip` - Skip executing the plugin. Default: `false`.
 - `dash.fail` - Force the build to fail when license issues are found. Default: `false`. 
 - `dash.iplab.token` - The access token for automatically creating IP Team review requests. **Do not share your access token.**
-- `dash.projectId` - The project id
+- `dash.projectId` - The Eclipse open source project id (e.g. `technology.dash`)
 - `dash.summary` - The location (where) to generate the summary file.
 - `dash.review.summary` - The location (where) to generate the review-summary file.
 
