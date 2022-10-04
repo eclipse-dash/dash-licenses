@@ -23,16 +23,20 @@ class GolangIdParserTests {
 				new GolangIdParser()
 						.parseId("github.com/spf13/cobra v0.0.5 h1:f0B+LkLX6DtmRH1isoNA9VTtNUK9K8xYd28JNNfOv/s=")
 						.toString());
-		assertEquals("go/golang/golang.org%2Fx/tools/v0.0.0-20180221164845-07fd8470d635", new GolangIdParser()
-				.parseId(
-						"golang.org/x/tools v0.0.0-20180221164845-07fd8470d635/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=")
-				.toString());
 		assertEquals("go/golang/gopkg.in%2Falecthomas/kingpin.v2/v2.2.6", new GolangIdParser()
 				.parseId("gopkg.in/alecthomas/kingpin.v2 v2.2.6/go.mod h1:FMv+mEhP44yOT+4EoQTLFTRgOQ1FBLkstjWtayDeSgw=")
 				.toString());
 		assertEquals("git/github/coreos/etcd/v3.3.10", new GolangIdParser()
 				.parseId(
 						"github.com/coreos/etcd v3.3.10+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=")
+				.toString());
+	}
+
+	@Test
+	void testGolangPlatform() {
+		assertEquals("git/github/golang/tools/07fd8470d635", new GolangIdParser()
+				.parseId(
+						"golang.org/x/tools v0.0.0-20180221164845-07fd8470d635/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=")
 				.toString());
 	}
 

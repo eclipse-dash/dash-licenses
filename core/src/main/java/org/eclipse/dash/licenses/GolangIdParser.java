@@ -29,6 +29,7 @@ public class GolangIdParser implements ContentIdParser {
 	// @formatter:off
 			"^(?<source>[^\\/\\s]+)(?:\\/(?<path>[^\\/\\s]+)(?:\\/(?<module>[^\\s]+))?)?\\s(?<version>v[^\\s\\/+]+).*$"
 	// @formatter:on
+
 	);
 
 	@Override
@@ -55,8 +56,25 @@ public class GolangIdParser implements ContentIdParser {
 			name = module;
 		}
 
+		/*
+		 * In cases where the version takes the form
+		 * "v0.0.0-20190423205320-6a90982ecee2", we're likely looking at an abridged Git
+		 * commit ref ("6a90982ecee2"), so let's boil it down to that.
+		 */
+		if (version.startsWith("v0.0.0")) {
+			Pattern refPattern = Pattern.compile("^v0\\.0\\.0-(?<qualifer>[0-9]+)-(?<ref>[0-9a-f]+)$");
+			Matcher refMatcher = refPattern.matcher(version);
+			if (refMatcher.matches()) {
+				version = refMatcher.group("ref");
+			}
+		}
+
 		if ("github.com".equals(source)) {
 			return ContentId.getContentId("git", "github", path.toLowerCase(), module, version);
+		}
+
+		if ("golang.org".equals(source) && "x".equals(path)) {
+			return ContentId.getContentId("git", "github", "golang", module, version);
 		}
 
 		return ContentId

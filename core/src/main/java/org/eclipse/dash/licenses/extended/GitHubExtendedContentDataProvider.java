@@ -22,7 +22,8 @@ public class GitHubExtendedContentDataProvider implements IExtendedContentDataPr
 	static String[] sourcePathPatterns = new String[] {
 			"https://github.com/{namespace}/{name}/archive/refs/tags/release/{revision}.zip",
 			"https://github.com/{namespace}/{name}/archive/refs/tags/{revision}.zip",
-			"https://github.com/{namespace}/{name}/archive/refs/tags/v{revision}.zip" };
+			"https://github.com/{namespace}/{name}/archive/refs/tags/v{revision}.zip",
+			"https://github.com/{namespace}/{name}/archive/{revision}.zip" };
 
 	@Override
 	public ExtendedContentData getExtendedContentData(IContentId id) {
