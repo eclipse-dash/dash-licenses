@@ -33,19 +33,23 @@ class GolangIdParserTests {
 	}
 
 	@Test
-	void testGolangPlatform() {
+	void testCommitRef() {
 		assertEquals("git/github/golang/tools/07fd8470d635", new GolangIdParser()
 				.parseId(
 						"golang.org/x/tools v0.0.0-20180221164845-07fd8470d635/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=")
 				.toString());
+		assertEquals("go/golang/google.golang.org/genproto/e7d98fc518a7", new GolangIdParser()
+				.parseId(
+						"google.golang.org/genproto v0.0.0-20190418145605-e7d98fc518a7/go.mod h1:VzzqZJRnGkLBvHegQrXjBqPurQTc5/KpmUdxsrq26oE=")
+				.toString());
+		assertEquals("git/github/xordataexchange/crypt/b2862e3d0a77",
+				new GolangIdParser()
+						.parseId("github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect")
+						.toString());
 	}
 
 	@Test
 	void testNoPath() {
-		assertEquals("go/golang/google.golang.org/genproto/v0.0.0-20190418145605-e7d98fc518a7", new GolangIdParser()
-				.parseId(
-						"google.golang.org/genproto v0.0.0-20190418145605-e7d98fc518a7/go.mod h1:VzzqZJRnGkLBvHegQrXjBqPurQTc5/KpmUdxsrq26oE=")
-				.toString());
 		assertEquals("go/golang/go.etcd.io/bbolt/v1.3.2",
 				new GolangIdParser()
 						.parseId("go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=")

@@ -25,16 +25,18 @@ import java.util.regex.Pattern;
  */
 public class GolangIdParser implements ContentIdParser {
 
-	private static Pattern pattern = Pattern.compile(
+	private static Pattern recordPattern = Pattern.compile(
 	// @formatter:off
 			"^(?<source>[^\\/\\s]+)(?:\\/(?<path>[^\\/\\s]+)(?:\\/(?<module>[^\\s]+))?)?\\s(?<version>v[^\\s\\/+]+).*$"
-	// @formatter:on
-
 	);
+
+	Pattern refPattern = Pattern
+			.compile("^v(?<version>\\d+\\.\\d+\\.\\d+)-(?:\\d\\.)?(?<qualifier>\\d{14})-(?<ref>[\\da-f]{12})$");
+	// @formatter:on
 
 	@Override
 	public IContentId parseId(String value) {
-		Matcher matcher = pattern.matcher(value.trim());
+		Matcher matcher = recordPattern.matcher(value.trim());
 		if (!matcher.matches())
 			return null;
 
@@ -61,12 +63,9 @@ public class GolangIdParser implements ContentIdParser {
 		 * "v0.0.0-20190423205320-6a90982ecee2", we're likely looking at an abridged Git
 		 * commit ref ("6a90982ecee2"), so let's boil it down to that.
 		 */
-		if (version.startsWith("v0.0.0")) {
-			Pattern refPattern = Pattern.compile("^v0\\.0\\.0-(?<qualifer>[0-9]+)-(?<ref>[0-9a-f]+)$");
-			Matcher refMatcher = refPattern.matcher(version);
-			if (refMatcher.matches()) {
-				version = refMatcher.group("ref");
-			}
+		Matcher refMatcher = refPattern.matcher(version);
+		if (refMatcher.matches()) {
+			version = refMatcher.group("ref");
 		}
 
 		if ("github.com".equals(source)) {
