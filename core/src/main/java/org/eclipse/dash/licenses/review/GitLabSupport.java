@@ -80,7 +80,7 @@ public class GitLabSupport {
 					Issue existing = connection.findIssue(review);
 					if (existing != null) {
 						monitor.accept(licenseData.getId(), existing.getWebUrl());
-						logger.info("A review request already exists {}.", existing.getWebUrl());
+						logger.info("A review request already exists {} .", existing.getWebUrl());
 						continue;
 					}
 
@@ -92,7 +92,7 @@ public class GitLabSupport {
 					}
 
 					monitor.accept(licenseData.getId(), created.getWebUrl());
-					logger.info("A review request was created {}.", created.getWebUrl());
+					logger.info("A review request was created {} .", created.getWebUrl());
 				} catch (GitLabApiException e) {
 					throw new RuntimeException(e);
 				}
