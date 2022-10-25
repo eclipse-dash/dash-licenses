@@ -69,6 +69,29 @@ class GolangIdParserTests {
 	}
 
 	@Test
+	void testRandom1() {
+		assertEquals("git/github/ugorji/go/d75b2dcb6bc8", new GolangIdParser()
+				.parseId(
+						"github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8/go.mod h1:VFNgLljTbGfSG7qAOspJ7OScBnGdDN/yBr0sguwnwf0=")
+				.toString());
+	}
+
+	@Test
+	void testRandom2() {
+		assertEquals("git/github/ugorji/go/v1.1.7", new GolangIdParser()
+				.parseId("github.com/ugorji/go/codec v1.1.7/go.mod h1:Ax+UKWsSmolVDwsd+7N3ZtXu+yMGCf907BLYF3GoBXY=")
+				.toString());
+	}
+
+	@Test
+	void testExtraVersion() {
+		assertEquals("git/github/go-playground/validator/v10.4.1", new GolangIdParser()
+				.parseId(
+						"github.com/go-playground/validator/v10 v10.4.1/go.mod h1:nlOn6nFhuKACm19sB/8EGNn9GlaMV7XkbRSipzJ0Ii4=")
+				.toString());
+	}
+
+	@Test
 	void testFails() {
 		assertNull(new GolangIdParser().parseId("groupid:artifactid:v1.0"));
 		assertNull(new GolangIdParser().parseId("groupid:artifactid 1.0"));

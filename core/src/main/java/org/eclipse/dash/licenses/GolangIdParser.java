@@ -27,7 +27,7 @@ public class GolangIdParser implements ContentIdParser {
 
 	private static Pattern recordPattern = Pattern.compile(
 	// @formatter:off
-			"^(?<source>[^\\/\\s]+)(?:\\/(?<path>[^\\/\\s]+)(?:\\/(?<module>[^\\s]+))?)?\\s(?<version>v[^\\s\\/+]+).*$"
+			"^(?<source>[^\\/\\s]+)(?:\\/(?<path>[^\\/\\s]+)(?:\\/(?<module>[^\\/\\s]+))?)?(?:\\/[^\\/\\s]+)?\\s(?<version>v[^\\s\\/+]+).*$"
 	);
 
 	Pattern refPattern = Pattern
