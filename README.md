@@ -385,6 +385,32 @@ Use the `dotnet` command to get the list of transitive dependencies, filter out 
 dotnet list package --include-transitive | grep ">" | grep -Pv "\s(Microsoft|NETStandard|NuGet|System|runtime)" | sed -E -e "s/\s+> ([a-zA-Z\.\-]+).+\s([0-9]+\.[0-9]+\.[0-9]+)\s+/nuget\/nuget\/\-\/\1\/\2/g" | java -jar /gitroot/dash/org.eclipse.dash.licenses/core/target/org.eclipse.dash.licenses-<version>.jar -
 ```
 
+### Example: Rust/Cargo
+
+The `cargo tree -e normal --prefix none --no-dedupe` command can give us a list of dependencies. If we reformat those dependencies as ClearlyDefined IDs, they can be piped directly into the Dash License Tool. 
+
+For this, we can use `sed`:
+
+```
+$ cargo tree -e normal --prefix none --no-dedupe \
+| sort -u \
+| grep -v '^[[:space:]]*$' \
+| grep -v zenoh \
+| sed -E 's|([^ ]+) v([0-9]+\.[0-9]+\.[0-9]+).*|crate/cratesio/-/\1/\2|' \
+| java -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar /gitroot/dash/org.eclipse.dash.licenses/core/target/org.eclipse.dash.licenses-<version>.jar -
+```
+
+Steps:
+
+1. Use `cargo` to generate a dependency list;
+2. Sort the results and remove duplicates;
+3. Remove empty lines;
+4. Remove references to project code;
+5. Map each line to a ClearlyDefined ID; and
+6. Invoke the tool.
+
+The above example skips code from the Eclipse Zenoh project. Anything that is not _third-party_ content can be removed in a similar manner.
+
 ### Example: SBT
 
 Find all of the potentially problematic third party libraries from an SBT build.
