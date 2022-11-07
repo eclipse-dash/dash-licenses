@@ -137,28 +137,37 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		if (start == end)
 			return;
 
-		int code = httpClientService.post(settings.getClearlyDefinedDefinitionsUrl(), "application/json",
-				JsonUtils.toJson(ids.subList(start, end)), response -> {
-					// FIXME Seems like overkill.
-					AtomicInteger counter = new AtomicInteger();
+		int code = httpClientService
+				.post(settings.getClearlyDefinedDefinitionsUrl(), "application/json",
+						JsonUtils.toJson(ids.subList(start, end)), response -> {
+							// FIXME Seems like overkill.
+							AtomicInteger counter = new AtomicInteger();
 
-					try {
-						JsonUtils.readJson(new StringReader(response)).forEach((key, each) -> {
-							ClearlyDefinedContentData data = new ClearlyDefinedContentData(key, each.asJsonObject());
-							data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
-							consumer.accept(data);
-							counter.incrementAndGet();
-							logger.debug("ClearlyDefined {} score: {} {} {}", data.getId(), data.getScore(),
-									data.getLicense(), data.getStatus() == Status.Approved ? "approved" : "restricted");
+							try {
+								JsonUtils.readJson(new StringReader(response)).forEach((key, each) -> {
+									ClearlyDefinedContentData data = new ClearlyDefinedContentData(key,
+											each.asJsonObject());
+									data.setStatus(isAccepted(data) ? Status.Approved : Status.Restricted);
+									consumer.accept(data);
+									counter.incrementAndGet();
+									logger
+											.debug("ClearlyDefined {} score: {} {} {}", data.getId(), data.getScore(),
+													data.getLicense(),
+													data.getStatus() == Status.Approved ? "approved" : "restricted");
+								});
+
+								logger.info("Found {} items.", counter.get());
+							} catch (JsonParsingException e) {
+								logger.error("Could not parse the response from ClearlyDefined: {}.", response);
+								logger.debug(e.getMessage(), e);
+								throw new ClearlyDefinedResponseException(e);
+							}
 						});
 
-						logger.info("Found {} items.", counter.get());
-					} catch (JsonParsingException e) {
-						logger.error("Could not parse the response from ClearlyDefined: {}.", response);
-						logger.debug(e.getMessage(), e);
-						throw new ClearlyDefinedResponseException(e);
-					}
-				});
+		if (code == 500) {
+			logger.error("A server error occurred while contacting ClearlyDefined");
+			throw new ClearlyDefinedResponseException();
+		}
 
 		if (code != 200) {
 			logger.error("Error response from ClearlyDefined {}", code);
@@ -199,8 +208,12 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		if (data.getLicenseScore() >= settings.getConfidenceThreshold()) {
 			if (licenseService.getStatus(data.getLicense()) != LicenseSupport.Status.Approved)
 				return false;
-			return !data.discoveredLicenses().filter(license -> !"NONE".equals(license))
-					.filter(license -> !isDiscoveredLicenseApproved(license)).findAny().isPresent();
+			return !data
+					.discoveredLicenses()
+					.filter(license -> !"NONE".equals(license))
+					.filter(license -> !isDiscoveredLicenseApproved(license))
+					.findAny()
+					.isPresent();
 		}
 		return false;
 	}
@@ -240,6 +253,10 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 
 		public ClearlyDefinedResponseException(Exception e) {
 			super(e);
+		}
+
+		public ClearlyDefinedResponseException() {
+			super();
 		}
 	}
 }
