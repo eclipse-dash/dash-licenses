@@ -411,6 +411,26 @@ Steps:
 
 The above example skips code from the Eclipse Zenoh project. Anything that is not _third-party_ content can be removed in a similar manner.
 
+Note that, in order to better leverage ClearlyDefined data, the "v" should **not** be included in the version number. For example, `serde_json v1.0.85` becomes `crate/cratesio/-/serde_json/1.0.85`.
+
+### Example Python
+
+Use `pipdeptree` to find all of the dependencies, convert them into
+
+```
+$ pipdeptree -a -f \
+| sed -E -e 's|([^= ]+)==([^= ]+)|pypi/pypi/-/\1/\2|' \
+| sort | uniq \
+| java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
+```
+
+Steps:
+
+1. Use `pipdeptree` to generate a dependency list;
+2. Map each line to a ClearlyDefined ID;
+3. Sort the results and remove duplicates; and
+4. Invoke the tool.
+
 ### Example: SBT
 
 Find all of the potentially problematic third party libraries from an SBT build.
