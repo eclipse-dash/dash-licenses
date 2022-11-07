@@ -112,11 +112,4 @@ public class HttpClientService implements IHttpClientService {
 
 		return result.build();
 	}
-
-	public String exists(String url) {
-		if (remoteFileExists(url)) {
-			return url;
-		}
-		return null;
-	}
 }

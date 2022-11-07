@@ -43,6 +43,12 @@ public interface IHttpClientService {
 
 	default int get(String url, String contentType, Map<String, String> headers, Consumer<InputStream> handler) {
 		return 500;
-	};
+	}
 
+	default String exists(String url) {
+		if (remoteFileExists(url)) {
+			return url;
+		}
+		return null;
+	}
 }
