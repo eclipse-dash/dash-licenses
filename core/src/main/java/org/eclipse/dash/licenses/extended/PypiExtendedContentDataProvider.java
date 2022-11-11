@@ -104,7 +104,7 @@ public class PypiExtendedContentDataProvider implements IExtendedContentDataProv
 		}
 
 		String getLicense() {
-			return metadata.getOrDefault("info", JsonValue.EMPTY_JSON_OBJECT).asJsonObject().getString("license");
+			return metadata.getOrDefault("info", JsonValue.EMPTY_JSON_OBJECT).asJsonObject().getString("license", null);
 		}
 	}
 }
