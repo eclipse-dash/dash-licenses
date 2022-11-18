@@ -13,6 +13,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.cli.PackageLockFileReader;
@@ -44,8 +45,27 @@ class PackageLockFileReaderTests {
 			// without having to enumerate all 574 (I think) records).
 			String[] expected = { "npm/npmjs/@babel/code-frame/7.12.13", "npm/npmjs/@babel/compat-data/7.13.15",
 					"npm/npmjs/@babel/core/7.13.15" };
-			String[] found = reader.getContentIds().stream().limit(3).map(IContentId::toString).sorted()
+			String[] found = reader
+					.getContentIds()
+					.stream()
+					.limit(3)
+					.map(IContentId::toString)
+					.sorted()
 					.toArray(String[]::new);
+			assertArrayEquals(expected, found);
+		}
+	}
+
+	@Test
+	void testResolvedToLocal() throws IOException {
+		try (InputStream input = this.getClass().getResourceAsStream("/differentResolved.json")) {
+			PackageLockFileReader reader = new PackageLockFileReader(input);
+			// This "test" is a little... abridged. At least this test proves
+			// that we're getting something in the right format from the reader
+			// without having to enumerate all 574 (I think) records).
+			String[] expected = { "npm/npmjs/@babel/code-frame/7.12.13", "npm/local/-/some_local_package/1.2.3", };
+			Arrays.sort(expected);
+			String[] found = reader.getContentIds().stream().map(IContentId::toString).sorted().toArray(String[]::new);
 			assertArrayEquals(expected, found);
 		}
 	}
