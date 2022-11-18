@@ -77,10 +77,19 @@ public class PackageLockFileReader implements IDependencyListReader {
 				if (namespace == null)
 					namespace = "-";
 				var name = matcher.group("name");
-				var version = value.asJsonObject().getString("version", null);
+				JsonObject jsonObject = value.asJsonObject();
+				var version = jsonObject.getString("version", null);
+				var resolved = jsonObject.getString("resolved", "");
+				if (resolved.startsWith("file:")) {
+					resolved = "local";
+				} else if (resolved.contains("registry.npmjs.org")) {
+					resolved = "npmjs";
+				} else {
+					resolved = "Unknown_resolved_source(" + resolved + ")";
+				}
 
 				if (version != null) {
-					IContentId contentId = ContentId.getContentId("npm", "npmjs", namespace, name, version);
+					IContentId contentId = ContentId.getContentId("npm", resolved, namespace, name, version);
 					return contentId == null ? new InvalidContentId(key + "@" + version) : contentId;
 				}
 			}
@@ -114,7 +123,9 @@ public class PackageLockFileReader implements IDependencyListReader {
 			if (dependencies == null)
 				return Stream.empty();
 
-			return dependencies.entrySet().stream()
+			return dependencies
+					.entrySet()
+					.stream()
 					.map(each -> new Dependency(each.getKey(), each.getValue().asJsonObject()));
 		}
 
@@ -132,8 +143,11 @@ public class PackageLockFileReader implements IDependencyListReader {
 
 		switch (json.getJsonNumber("lockfileVersion").intValue()) {
 		case 1:
-			return new Dependency("", json).stream().filter(each -> !each.key.isEmpty())
-					.map(dependency -> dependency.getContentId()).collect(Collectors.toList());
+			return new Dependency("", json)
+					.stream()
+					.filter(each -> !each.key.isEmpty())
+					.map(dependency -> dependency.getContentId())
+					.collect(Collectors.toList());
 		case 2:
 		case 3:
 			// @formatter:off
