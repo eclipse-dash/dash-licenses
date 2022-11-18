@@ -19,12 +19,16 @@ import javax.inject.Inject;
 import org.eclipse.dash.licenses.http.IHttpClientService;
 import org.eclipse.dash.licenses.spdx.SpdxExpression;
 import org.eclipse.dash.licenses.spdx.SpdxExpressionParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 
 public class LicenseSupport {
+
+	final Logger logger = LoggerFactory.getLogger(LicenseSupport.class);
 
 	@Inject
 	ISettings settings;
@@ -44,28 +48,19 @@ public class LicenseSupport {
 		});
 	}
 
-	private static Map<String, String> getApprovedLicenses(Reader contentReader) {
+	private Map<String, String> getApprovedLicenses(Reader contentReader) {
 		JsonReader reader = Json.createReader(contentReader);
 		JsonObject read = (JsonObject) reader.read();
 
 		Map<String, String> licenses = new HashMap<>();
 		JsonObject approved = read.getJsonObject("approved");
 		if (approved != null) {
-			approved.forEach((key, name) -> licenses.put(key.toUpperCase(), name.toString()));
+			approved.forEach((key, name) -> {
+				logger.debug("Approved License {}", key);
+				licenses.put(key.toUpperCase(), name.toString());
+			});
 		}
 
-		// Augment the official list with licenses that are acceptable, but
-		// not explicitly included in our approved list.
-		licenses.put("EPL-1.0", "Eclipse Public License, v1.0");
-		licenses.put("EPL-2.0", "Eclipse Public License, v2.0");
-		licenses.put("WTFPL", "WTFPL");
-		licenses.put("MIT-0", "MIT-0");
-		licenses.put("CC-BY-3.0", "CC-BY-3.0");
-		licenses.put("CC-BY-4.0", "CC-BY-4.0");
-		licenses.put("UNLICENSE", "Unlicense");
-		licenses.put("ARTISTIC-2.0", "Artistic-2.0");
-		licenses.put("BSD-2-Clause-FreeBSD", "BSD 2-Clause FreeBSD License");
-		licenses.put("0BSD", "BSD Zero Clause License");
 		return licenses;
 	}
 
