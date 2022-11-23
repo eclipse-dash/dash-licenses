@@ -95,6 +95,10 @@ Files: core/src/test/java/write-1.0.3.json
 Copyright: 2018 Contributors to ClearlyDefined
 License: CC0-1.0
 
+Files: core/src/test/java/differentResolved.json
+Copyright: 2022 Red Hat
+License: EPL-2.0
+
 Files: maven-plugin/src/it/**/pom.xml
 Copyright: 2022 Red Hat
 License: EPL-2.0
