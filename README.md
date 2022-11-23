@@ -335,7 +335,7 @@ $ brew install grep
 
 Afterwards `grep` will be accessible via `ggrep` so `ggrep -Poh "\S+:(system|provided|compile)` will do the trick.
  
-### Example: Yarn via `yarn.lock`
+### Example: Yarn
 
 If you've generated a `yarn.lock` file, you can feed it directly to the license tool. 
 
@@ -349,30 +349,6 @@ npm/npmjs/-/concurrently/3.6.1
 
 This content is either not correctly mapped by the system, or requires review.
 
-```
-
-### Example: Yarn via yarn
-
-We provide a tool to generate a dependency list for yarn-based builds.
-
-```
-$ (cd <path-to-this-repo>/yarn && yarn install)
-$ (cd <path-to-project> && node <path-to-this-repo>/yarn/index.js) \
- | java -jar org.eclipse.dash.licenses-<version>.jar -
-```
-
-For example:
-
-```
-$ node /dash-licenses/yarn/index.js \
-| java -jar /dash-licenses/target/org.eclipse.dash.licenses-<version>.jar -
-License information could not be automatically verified for the following content:
-
-npm/npmjs/-/babel-polyfill/6.26.0
-npm/npmjs/-/binaryextensions/2.3.0
-npm/npmjs/-/concurrently/3.6.1
-
-This content is either not correctly mapped by the system, or requires review.
 ```
 
 ### Example .NET

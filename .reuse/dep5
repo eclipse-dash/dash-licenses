@@ -47,14 +47,6 @@ Files: maven-plugin/.settings/*
 Copyright: 2019 The Eclipse Foundation
 License: EPL-2.0
 
-Files: yarn/package.json
-Copyright: 2020 Kichwa Coders Canada Inc.
-License: EPL-2.0
-
-Files: yarn/yarn.lock
-Copyright: 2020 Kichwa Coders Canada Inc.
-License: EPL-2.0
-
 Files: core/src/test/java/test_data_yarn.lock
 Copyright: 2017 Contributors to the Eclipse Theia Project
 License: EPL-2.0
