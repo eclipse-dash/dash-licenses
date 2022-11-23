@@ -91,7 +91,12 @@ public class CommandLineSettings implements ISettings {
 
 	@Override
 	public String getIpLabToken() {
-		return commandLine.getOptionValue(TOKEN_OPTION);
+		String value = commandLine.getOptionValue(TOKEN_OPTION);
+		if (value == null) {
+			// FIXME generalize this (maybe rethink the whole settings thing)
+			value = System.getenv("DASH_TOKEN");
+		}
+		return value;
 	}
 
 	public boolean isValid() {
