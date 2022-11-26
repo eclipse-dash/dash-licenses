@@ -68,7 +68,7 @@ public class Main {
 		List<IResultsCollector> collectors = new ArrayList<>();
 
 		// TODO Set up collectors based on command line parameters
-		IResultsCollector primaryCollector = new NeedsReviewCollector();
+		IResultsCollector primaryCollector = new NeedsReviewCollector(settings.isIgnoreLocals());
 		collectors.add(primaryCollector);
 
 		String summaryPath = settings.getSummaryFilePath();

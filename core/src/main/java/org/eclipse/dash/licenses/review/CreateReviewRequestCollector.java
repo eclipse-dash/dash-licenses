@@ -38,7 +38,7 @@ public class CreateReviewRequestCollector implements IResultsCollector {
 
 	@Override
 	public void accept(LicenseData data) {
-		if (data.getStatus() != Status.Approved) {
+		if (data.getStatus() != Status.Approved && !"local".equals(data.getId().getSource())) {
 			needsReview.add(data);
 		}
 	}

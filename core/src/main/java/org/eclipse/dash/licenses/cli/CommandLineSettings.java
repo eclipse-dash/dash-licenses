@@ -31,6 +31,7 @@ public class CommandLineSettings implements ISettings {
 	private static final String CONFIDENCE_OPTION = "confidence";
 	private static final String SUMMARY_OPTION = "summary";
 	private static final String REVIEW_OPTION = "review";
+	private static final String IGNORE_LOCALS_OPTION = "ignoreLocals";
 	private static final String TOKEN_OPTION = "token";
 	private static final String PROJECT_OPTION = "project";
 
@@ -151,6 +152,10 @@ public class CommandLineSettings implements ISettings {
 		return commandLine.hasOption(REVIEW_OPTION);
 	}
 
+	public boolean isIgnoreLocals() {
+		return commandLine.hasOption(IGNORE_LOCALS_OPTION);
+	}
+
 	private CommandLineSettings(CommandLine commandLine) {
 		this.commandLine = commandLine;
 	}
@@ -236,6 +241,12 @@ public class CommandLineSettings implements ISettings {
 			.hasArg(false)
 			.desc("Must also specify the project and token")
 			.build());
+
+		options.addOption(Option.builder(IGNORE_LOCALS_OPTION)
+				.required(false)
+				.hasArg(false)
+				.desc("Do not fail oon local dependencies")
+				.build());
 
 		options.addOption(Option.builder(TOKEN_OPTION)
 			.required(false)
