@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021 The Eclipse Foundation and others.
+ * Copyright (c) 2021,2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -25,13 +25,22 @@ import java.util.regex.Pattern;
  */
 public class GolangIdParser implements ContentIdParser {
 
-	private static Pattern recordPattern = Pattern.compile(
 	// @formatter:off
-			"^(?<source>[^\\/\\s]+)(?:\\/(?<path>[^\\/\\s]+)(?:\\/(?<module>[^\\/\\s]+))?)?(?:\\/[^\\/\\s]+)?\\s(?<version>v[^\\s\\/+]+).*$"
+	private static Pattern recordPattern = Pattern.compile(
+			"^(?<source>[^\\/\\s]+)"
+			+ "(?:\\/(?<path>[^\\/\\s]+)?"
+				+ "(?:\\/(?<module>[^\\/\\s]+)?"
+					+ "(?:\\/(?<directory>[^\\s]+))?)?)?"
+			+ "\\s(?<version>v[^\\s\\/+]+)(?<plus>\\+[^\\/]+)?(?<go>\\/go\\.mod)?"
+			+ "(?:\\sh\\d:(?<sha>[^=]+)=)?"
+			+ "(?:\\s+\\/\\/.*)?$"
 	);
 
-	Pattern refPattern = Pattern
-			.compile("^v(?<version>\\d+\\.\\d+\\.\\d+)-(?:\\d\\.)?(?<qualifier>\\d{14})-(?<ref>[\\da-f]{12})$");
+	Pattern refPattern = Pattern.compile(
+			"^v(?<version>\\d+\\.\\d+\\.\\d+)"
+			+ "-(?:\\d\\.)?"
+			+ "(?<qualifier>\\d{14})"
+			+ "-(?<ref>[\\da-f]{12})$");
 	// @formatter:on
 
 	@Override
@@ -43,6 +52,7 @@ public class GolangIdParser implements ContentIdParser {
 		String source = matcher.group("source");
 		String path = matcher.group("path");
 		String module = matcher.group("module");
+		String directory = matcher.group("directory");
 		String version = matcher.group("version");
 
 		String namespace, name;

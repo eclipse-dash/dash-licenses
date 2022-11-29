@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021 The Eclipse Foundation and others.
+ * Copyright (c) 2021,2022 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -80,6 +80,14 @@ class GolangIdParserTests {
 	void testRandom2() {
 		assertEquals("git/github/ugorji/go/v1.1.7", new GolangIdParser()
 				.parseId("github.com/ugorji/go/codec v1.1.7/go.mod h1:Ax+UKWsSmolVDwsd+7N3ZtXu+yMGCf907BLYF3GoBXY=")
+				.toString());
+	}
+
+	@Test
+	void testDirectory1() {
+		assertEquals("git/github/go-gl/glfw/6f7a984d4dc4", new GolangIdParser()
+				.parseId(
+						"github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=")
 				.toString());
 	}
 
