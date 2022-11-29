@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseChecker;
@@ -69,6 +70,7 @@ public class Main {
 
 		// TODO Set up collectors based on command line parameters
 		IResultsCollector primaryCollector = new NeedsReviewCollector();
+
 		collectors.add(primaryCollector);
 
 		String summaryPath = settings.getSummaryFilePath();
@@ -96,7 +98,13 @@ public class Main {
 				System.exit(1);
 			}
 			if (reader != null) {
-				Collection<IContentId> dependencies = reader.getContentIds();
+				var filter = new ExcludedSourcesFilter(settings.getExcludedSources());
+
+				Collection<IContentId> dependencies = reader
+						.getContentIds()
+						.stream()
+						.filter(each -> filter.keep(each))
+						.collect(Collectors.toList());
 
 				checker.getLicenseData(dependencies).forEach((id, licenseData) -> {
 					collectors.forEach(collector -> collector.accept(licenseData));

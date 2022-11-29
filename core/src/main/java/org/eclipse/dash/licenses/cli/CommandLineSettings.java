@@ -31,6 +31,7 @@ public class CommandLineSettings implements ISettings {
 	private static final String CONFIDENCE_OPTION = "confidence";
 	private static final String SUMMARY_OPTION = "summary";
 	private static final String REVIEW_OPTION = "review";
+	private static final String EXCLUDE_SOURCES_OPTION = "excludeSources";
 	private static final String TOKEN_OPTION = "token";
 	private static final String PROJECT_OPTION = "project";
 
@@ -237,6 +238,13 @@ public class CommandLineSettings implements ISettings {
 			.desc("Must also specify the project and token")
 			.build());
 
+		options.addOption(Option.builder(EXCLUDE_SOURCES_OPTION)
+				.required(false)
+				.hasArg(true)
+				.argName("sources")
+				.desc("Exclude values from specific sources")
+				.build());
+		
 		options.addOption(Option.builder(TOKEN_OPTION)
 			.required(false)
 			.hasArg()
@@ -293,5 +301,9 @@ public class CommandLineSettings implements ISettings {
 	@Override
 	public String getProjectId() {
 		return commandLine.getOptionValue(PROJECT_OPTION, null);
+	}
+
+	public String getExcludedSources() {
+		return commandLine.getOptionValue(EXCLUDE_SOURCES_OPTION);
 	}
 }
