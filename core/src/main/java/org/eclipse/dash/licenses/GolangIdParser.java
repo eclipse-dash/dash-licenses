@@ -9,8 +9,6 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,20 +25,8 @@ public class GolangIdParser implements ContentIdParser {
 
 	// @formatter:off
 	private static Pattern recordPattern = Pattern.compile(
-			"^(?<source>[^\\/\\s]+)"
-			+ "(?:\\/(?<path>[^\\/\\s]+)?"
-				+ "(?:\\/(?<module>[^\\/\\s]+)?"
-					+ "(?:\\/(?<directory>[^\\s]+))?)?)?"
-			+ "\\s(?<version>v[^\\s\\/+]+)(?<plus>\\+[^\\/]+)?(?<go>\\/go\\.mod)?"
-			+ "(?:\\sh\\d:(?<sha>[^=]+)=)?"
-			+ "(?:\\s+\\/\\/.*)?$"
+			"^(?:(?<namespace>[^\\s]+)\\/)?(?<name>[^\\/\\s]+)\\s(?<version>v[^\\s\\/+]+)(?<plus>\\+[^\\/]+)?(?<go>\\/go\\.mod)?(?:\\sh\\d:(?<sha>[^=]+)=)?(?:\\s+\\/\\/.*)?$"
 	);
-
-	Pattern refPattern = Pattern.compile(
-			"^v(?<version>\\d+\\.\\d+\\.\\d+)"
-			+ "-(?:\\d\\.)?"
-			+ "(?<qualifier>\\d{14})"
-			+ "-(?<ref>[\\da-f]{12})$");
 	// @formatter:on
 
 	@Override
@@ -49,44 +35,16 @@ public class GolangIdParser implements ContentIdParser {
 		if (!matcher.matches())
 			return null;
 
-		String source = matcher.group("source");
-		String path = matcher.group("path");
-		String module = matcher.group("module");
-		String directory = matcher.group("directory");
+		String namespace = matcher.group("namespace");
+		if (namespace == null) {
+			namespace = "-";
+		} else {
+			namespace = namespace.replace("/", "%2F");
+		}
+
+		String name = matcher.group("name");
 		String version = matcher.group("version");
 
-		String namespace, name;
-
-		if (path == null) {
-			namespace = "-";
-			name = source;
-		} else if (module == null) {
-			namespace = source;
-			name = path;
-		} else {
-			namespace = source + "/" + path;
-			name = module;
-		}
-
-		/*
-		 * In cases where the version takes the form
-		 * "v0.0.0-20190423205320-6a90982ecee2", we're likely looking at an abridged Git
-		 * commit ref ("6a90982ecee2"), so let's boil it down to that.
-		 */
-		Matcher refMatcher = refPattern.matcher(version);
-		if (refMatcher.matches()) {
-			version = refMatcher.group("ref");
-		}
-
-		if ("github.com".equals(source)) {
-			return ContentId.getContentId("git", "github", path.toLowerCase(), module, version);
-		}
-
-		if ("golang.org".equals(source) && "x".equals(path)) {
-			return ContentId.getContentId("git", "github", "golang", module, version);
-		}
-
-		return ContentId
-				.getContentId("go", "golang", URLEncoder.encode(namespace, Charset.defaultCharset()), name, version);
+		return ContentId.getContentId("go", "golang", namespace, name, version);
 	}
 }

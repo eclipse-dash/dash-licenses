@@ -19,14 +19,14 @@ class GolangIdParserTests {
 
 	@Test
 	void testPathAndModule() {
-		assertEquals("git/github/spf13/cobra/v0.0.5",
+		assertEquals("go/golang/github.com%2Fspf13/cobra/v0.0.5",
 				new GolangIdParser()
 						.parseId("github.com/spf13/cobra v0.0.5 h1:f0B+LkLX6DtmRH1isoNA9VTtNUK9K8xYd28JNNfOv/s=")
 						.toString());
 		assertEquals("go/golang/gopkg.in%2Falecthomas/kingpin.v2/v2.2.6", new GolangIdParser()
 				.parseId("gopkg.in/alecthomas/kingpin.v2 v2.2.6/go.mod h1:FMv+mEhP44yOT+4EoQTLFTRgOQ1FBLkstjWtayDeSgw=")
 				.toString());
-		assertEquals("git/github/coreos/etcd/v3.3.10", new GolangIdParser()
+		assertEquals("go/golang/github.com%2Fcoreos/etcd/v3.3.10", new GolangIdParser()
 				.parseId(
 						"github.com/coreos/etcd v3.3.10+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=")
 				.toString());
@@ -34,15 +34,15 @@ class GolangIdParserTests {
 
 	@Test
 	void testCommitRef() {
-		assertEquals("git/github/golang/tools/07fd8470d635", new GolangIdParser()
+		assertEquals("go/golang/golang.org%2Fx/tools/v0.0.0-20180221164845-07fd8470d635", new GolangIdParser()
 				.parseId(
 						"golang.org/x/tools v0.0.0-20180221164845-07fd8470d635/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=")
 				.toString());
-		assertEquals("go/golang/google.golang.org/genproto/e7d98fc518a7", new GolangIdParser()
+		assertEquals("go/golang/google.golang.org/genproto/v0.0.0-20190418145605-e7d98fc518a7", new GolangIdParser()
 				.parseId(
 						"google.golang.org/genproto v0.0.0-20190418145605-e7d98fc518a7/go.mod h1:VzzqZJRnGkLBvHegQrXjBqPurQTc5/KpmUdxsrq26oE=")
 				.toString());
-		assertEquals("git/github/xordataexchange/crypt/b2862e3d0a77",
+		assertEquals("go/golang/github.com%2Fxordataexchange/crypt/v0.0.3-0.20170626215501-b2862e3d0a77",
 				new GolangIdParser()
 						.parseId("github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect")
 						.toString());
@@ -69,31 +69,32 @@ class GolangIdParserTests {
 	}
 
 	@Test
-	void testRandom1() {
-		assertEquals("git/github/ugorji/go/d75b2dcb6bc8", new GolangIdParser()
+	void testUgorji1() {
+		assertEquals("go/golang/github.com%2Fugorji%2Fgo/codec/v0.0.0-20181204163529-d75b2dcb6bc8", new GolangIdParser()
 				.parseId(
 						"github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8/go.mod h1:VFNgLljTbGfSG7qAOspJ7OScBnGdDN/yBr0sguwnwf0=")
 				.toString());
 	}
 
 	@Test
-	void testRandom2() {
-		assertEquals("git/github/ugorji/go/v1.1.7", new GolangIdParser()
+	void testUgorgi2() {
+		assertEquals("go/golang/github.com%2Fugorji%2Fgo/codec/v1.1.7", new GolangIdParser()
 				.parseId("github.com/ugorji/go/codec v1.1.7/go.mod h1:Ax+UKWsSmolVDwsd+7N3ZtXu+yMGCf907BLYF3GoBXY=")
 				.toString());
 	}
 
 	@Test
 	void testDirectory1() {
-		assertEquals("git/github/go-gl/glfw/6f7a984d4dc4", new GolangIdParser()
-				.parseId(
-						"github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=")
-				.toString());
+		assertEquals("go/golang/github.com%2Fgo-gl%2Fglfw%2Fv3.3/glfw/v0.0.0-20200222043503-6f7a984d4dc4",
+				new GolangIdParser()
+						.parseId(
+								"github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=")
+						.toString());
 	}
 
 	@Test
 	void testExtraVersion() {
-		assertEquals("git/github/go-playground/validator/v10.4.1", new GolangIdParser()
+		assertEquals("go/golang/github.com%2Fgo-playground%2Fvalidator/v10/v10.4.1", new GolangIdParser()
 				.parseId(
 						"github.com/go-playground/validator/v10 v10.4.1/go.mod h1:nlOn6nFhuKACm19sB/8EGNn9GlaMV7XkbRSipzJ0Ii4=")
 				.toString());
@@ -106,5 +107,13 @@ class GolangIdParserTests {
 		assertNull(new GolangIdParser()
 				.parseId(
 						"p2/orbit/p2.eclipse-plugin/org.junit.jupiter.params/5.7.1.v20210222-1948, unknown, restricted, none"));
+	}
+
+	@Test
+	void testRussRoss() {
+		assertEquals("go/golang/github.com%2Frussross%2Fblackfriday/v2/v2.1.0", new GolangIdParser()
+				.parseId(
+						"github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=")
+				.toString());
 	}
 }
