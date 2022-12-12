@@ -27,14 +27,18 @@ public class GitLabConnection {
 
 	public Issue findIssue(GitLabReview review) throws GitLabApiException {
 		String title = review.getTitle();
-		IssueFilter filter = new IssueFilter().withSearch(title).withState(IssueState.OPENED);
-		return getIssuesApi().getIssuesStream(path, filter).filter(issue -> issue.getTitle().equals(title)).findAny()
+		IssueFilter filter = new IssueFilter().withState(IssueState.OPENED);
+		return getIssuesApi()
+				.getIssuesStream(path, filter)
+				.filter(issue -> issue.getTitle().equals(title))
+				.findAny()
 				.orElse(null);
 	}
 
 	public Issue createIssue(GitLabReview review) throws GitLabApiException {
-		return getIssuesApi().createIssue(path, review.getTitle(), review.getDescription(), false, null, null,
-				review.getLabels(), null, null, null, null);
+		return getIssuesApi()
+				.createIssue(path, review.getTitle(), review.getDescription(), false, null, null, review.getLabels(),
+						null, null, null, null);
 	}
 
 	private IssuesApi getIssuesApi() {
