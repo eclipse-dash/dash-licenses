@@ -41,8 +41,9 @@ public class GitLabReview {
 		builder.append(String.format("%s\n\n", licenseData.getId()));
 
 		if (projectId != null) {
-			builder.append(
-					String.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n", projectId, projectId));
+			builder
+					.append(String
+							.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n", projectId, projectId));
 		}
 		licenseData.contentData().forEach(data -> describeItem(data, builder));
 
@@ -55,12 +56,6 @@ public class GitLabReview {
 				builder.append("\n");
 			});
 		});
-
-		String searchUrl = IPZillaSearchBuilder.build(licenseData.getId());
-		if (searchUrl != null) {
-			builder.append("\n");
-			builder.append(String.format("[Search IPZilla](%s)\n", searchUrl));
-		}
 
 		return builder.toString();
 	}
@@ -82,7 +77,8 @@ public class GitLabReview {
 		output.append(String.format("  - Declared: %s (%d)\n", data.getLicense(), data.getScore()));
 		switch (data.getAuthority()) {
 		case ClearlyDefinedContentData.CLEARLYDEFINED:
-			((ClearlyDefinedContentData) data).discoveredLicenses()
+			((ClearlyDefinedContentData) data)
+					.discoveredLicenses()
 					.forEach(license -> output.append("  - Discovered: " + license).append('\n'));
 		};
 	}

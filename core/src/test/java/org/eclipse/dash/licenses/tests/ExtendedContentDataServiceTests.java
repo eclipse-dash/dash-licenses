@@ -9,17 +9,11 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.eclipse.dash.licenses.ContentId;
-import org.eclipse.dash.licenses.InvalidContentId;
 import org.eclipse.dash.licenses.extended.ExtendedContentData;
 import org.eclipse.dash.licenses.extended.ExtendedContentDataService;
-import org.eclipse.dash.licenses.review.IPZillaSearchBuilder;
 import org.eclipse.dash.licenses.tests.util.TestLicenseToolModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -52,7 +46,9 @@ public class ExtendedContentDataServiceTests {
 		@Test
 		void testTitle() {
 			ExtendedContentData data = dataService
-					.findFor(ContentId.getContentId("maven/mavencentral/group.path/artifact/1.0")).findAny().get();
+					.findFor(ContentId.getContentId("maven/mavencentral/group.path/artifact/1.0"))
+					.findAny()
+					.get();
 			assertEquals("Maven Central", data.getTitle());
 			assertEquals("https://search.maven.org/artifact/group.path/artifact/1.0/jar", data.getUrl());
 			assertEquals(
@@ -101,40 +97,5 @@ public class ExtendedContentDataServiceTests {
 
 			assertEquals("MIT", thing.getLicense());
 		}
-	}
-
-	@Nested
-	class IPZillaSearchBuilderTests {
-		@Test
-		void testBasic() throws Exception {
-			String url = IPZillaSearchBuilder.build(ContentId.getContentId("type/source/namespace/component/1.0"));
-			Matcher matcher = Pattern.compile("&short_desc=([^&]+)&").matcher(url);
-			matcher.find();
-			String group = matcher.group(1);
-			assertEquals("namespace+component", group);
-		}
-
-		@Test
-		void testExcludeCommon() throws Exception {
-			String url = IPZillaSearchBuilder
-					.build(ContentId.getContentId("type/source/namespace/eclipse.component/1.0"));
-			Matcher matcher = Pattern.compile("&short_desc=([^&]+)&").matcher(url);
-			matcher.find();
-			String group = matcher.group(1);
-			assertEquals("namespace+eclipse.component+component", group);
-		}
-
-		@Test
-		void testNoSearchableTerms() throws Exception {
-			String url = IPZillaSearchBuilder.build(ContentId.getContentId("type/source/x/y/1.0"));
-			assertNull(url);
-		}
-
-		@Test
-		void testInvalidId() throws Exception {
-			String url = IPZillaSearchBuilder.build(new InvalidContentId("invalid"));
-			assertNull(url);
-		}
-
 	}
 }
