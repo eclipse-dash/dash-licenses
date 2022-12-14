@@ -31,8 +31,21 @@ public class SpdxGroup extends SpdxExpression {
 	}
 
 	@Override
+	public SpdxExpression collapse() {
+		var collapsed = expression.collapse();
+		if (collapsed.isBinary())
+			return new SpdxGroup(collapsed);
+		return collapsed;
+	}
+
+	@Override
 	public boolean matchesApproved(Collection<String> approved) {
 		return expression.matchesApproved(approved);
+	}
+
+	@Override
+	public boolean contains(SpdxExpression value) {
+		return expression.contains(value);
 	}
 
 	@Override

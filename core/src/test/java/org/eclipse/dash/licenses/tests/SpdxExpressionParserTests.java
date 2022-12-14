@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.dash.licenses.spdx.SpdxExpression;
 import org.eclipse.dash.licenses.spdx.SpdxExpressionParser;
 import org.eclipse.dash.licenses.spdx.SpdxIdentifier;
 import org.eclipse.dash.licenses.spdx.SpdxNone;
@@ -25,6 +26,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class SpdxExpressionParserTests {
+
+	private SpdxExpression parse(String expression) {
+		return new SpdxExpressionParser().parse(expression);
+	}
 
 	@Nested
 	class TestParsing {
@@ -345,6 +350,60 @@ class SpdxExpressionParserTests {
 			approved.add("EPL-2.0");
 
 			assertTrue(new SpdxExpressionParser().parse("EPL-1.0+").matchesApproved(approved));
+		}
+	}
+
+	@Nested
+	class TestCollapsing {
+		@Test
+		void testSimpleCollapse0() {
+			var expression = parse("EPL-2.0");
+			assertEquals("EPL-2.0", expression.collapse().toString());
+		}
+
+		@Test
+		void testSimpleCollapse1() {
+			var expression = parse("EPL-2.0 AND EPL-2.0");
+			assertEquals("EPL-2.0", expression.collapse().toString());
+		}
+
+		@Test
+		void testSimpleCollapse2() {
+			var expression = parse("EPL-2.0 AND EPL-2.0 AND EPL-2.0");
+			assertEquals("EPL-2.0", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse1() {
+			var expression = parse("EPL-2.0 AND Apache-2.0 AND EPL-2.0");
+			assertEquals("EPL-2.0 AND Apache-2.0", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse2() {
+			var expression = parse("EPL-2.0 AND Apache-2.0 AND EPL-2.0 AND Apache-2.0 AND EPL-2.0");
+			assertEquals("EPL-2.0 AND Apache-2.0", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse3() {
+			var expression = parse("EPL-2.0 AND Apache-2.0 AND Apache-2.0 AND Apache-2.0 AND EPL-2.0");
+			assertEquals("EPL-2.0 AND Apache-2.0", expression.collapse().toString());
+		}
+
+		@Disabled
+		@Test
+		void testCollapse4() {
+			var expression = new SpdxExpressionParser()
+					.parse("EPL-2.0 AND Apache-2.0 AND (EPL-2.0 OR Apache-2.0) AND EPL-2.0");
+			assertEquals("EPL-2.0 AND Apache-2.0", expression.collapse().toString());
+		}
+
+		@Disabled
+		@Test
+		void testCollapse5() {
+			var expression = new SpdxExpressionParser().parse("(EPL-2.0 AND Apache-2.0) AND (EPL-2.0 OR Apache-2.0)");
+			assertEquals("EPL-2.0 AND Apache-2.0", expression.collapse().toString());
 		}
 	}
 

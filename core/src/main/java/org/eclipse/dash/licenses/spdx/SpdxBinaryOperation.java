@@ -210,6 +210,24 @@ public class SpdxBinaryOperation extends SpdxExpression {
 	}
 
 	@Override
+	public SpdxExpression collapse() {
+		SpdxExpression left = this.left.collapse();
+		SpdxExpression right = this.right.collapse();
+
+		if (right.contains(left))
+			return right;
+		if (left.contains(right))
+			return left;
+
+		return new SpdxBinaryOperation(operator, left, right);
+	}
+
+	@Override
+	public boolean contains(SpdxExpression value) {
+		return left.contains(value) || right.contains(value);
+	}
+
+	@Override
 	public boolean equals(Object object) {
 		if (object instanceof SpdxBinaryOperation) {
 			return this.operator.checkEqual(this, (SpdxBinaryOperation) object);

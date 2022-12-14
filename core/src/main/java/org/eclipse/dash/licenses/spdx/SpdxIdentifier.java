@@ -47,6 +47,11 @@ public class SpdxIdentifier extends SpdxExpression {
 	}
 
 	@Override
+	public boolean contains(SpdxExpression value) {
+		return this.equals(value);
+	}
+
+	@Override
 	public boolean equals(Object object) {
 		if (object instanceof SpdxIdentifier) {
 			var identifier = (SpdxIdentifier) object;

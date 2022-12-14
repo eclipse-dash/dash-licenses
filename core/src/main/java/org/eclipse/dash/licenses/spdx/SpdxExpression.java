@@ -90,4 +90,12 @@ public abstract class SpdxExpression {
 	public String toAnnotatedString(Function<String, String> annotator) {
 		return toString();
 	}
+
+	public SpdxExpression collapse() {
+		return this;
+	}
+
+	public boolean contains(SpdxExpression left) {
+		return false;
+	}
 }
