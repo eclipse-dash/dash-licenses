@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -22,8 +21,6 @@ import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
-import org.eclipse.dash.licenses.extended.ExtendedContentData;
-import org.eclipse.dash.licenses.extended.ExtendedContentDataService;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Issue;
@@ -39,9 +36,6 @@ public class GitLabSupport {
 
 	@Inject
 	ISettings settings;
-
-	@Inject
-	ExtendedContentDataService dataService;
 
 	/** Optional HTTP proxy settings. */
 	@Inject
@@ -62,8 +56,6 @@ public class GitLabSupport {
 
 				logger.info("A review is required for {}.", licenseData.getId().toString());
 
-				Stream<ExtendedContentData> extendedData = dataService.findFor(licenseData.getId());
-
 				/*
 				 * Ideally, we need a way to "create if does not already exist" feature in the
 				 * GitLab API. But since we don't have that, we'll leverage the expectation that
@@ -75,7 +67,7 @@ public class GitLabSupport {
 				 * required to prevent rare duplication.
 				 */
 				try {
-					GitLabReview review = new GitLabReview(settings.getProjectId(), licenseData, extendedData);
+					GitLabReview review = new GitLabReview(settings.getProjectId(), licenseData);
 
 					Issue existing = connection.findIssue(review);
 					if (existing != null) {

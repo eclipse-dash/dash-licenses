@@ -9,23 +9,18 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
-import java.util.stream.Stream;
-
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedContentData;
-import org.eclipse.dash.licenses.extended.ExtendedContentData;
 
 public class GitLabReview {
 	private String projectId;
 	private LicenseData licenseData;
-	private Stream<ExtendedContentData> extendedData;
 
-	public GitLabReview(String projectId, LicenseData licenseData, Stream<ExtendedContentData> extendedData) {
+	public GitLabReview(String projectId, LicenseData licenseData) {
 		this.projectId = projectId;
 		this.licenseData = licenseData;
-		this.extendedData = extendedData;
 	}
 
 	public String getTitle() {
@@ -46,16 +41,6 @@ public class GitLabReview {
 							.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n", projectId, projectId));
 		}
 		licenseData.contentData().forEach(data -> describeItem(data, builder));
-
-		extendedData.forEach(each -> {
-			builder.append("\n");
-			builder.append(String.format("[%s](%s)", each.getTitle(), each.getUrl()));
-			builder.append("\n");
-			each.getItems().forEach(item -> {
-				builder.append(String.format("  - %s", item.asMarkdown()));
-				builder.append("\n");
-			});
-		});
 
 		return builder.toString();
 	}

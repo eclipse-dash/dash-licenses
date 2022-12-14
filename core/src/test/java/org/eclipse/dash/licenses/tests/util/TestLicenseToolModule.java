@@ -22,16 +22,10 @@ import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
-import org.eclipse.dash.licenses.extended.ExtendedContentDataService;
-import org.eclipse.dash.licenses.extended.IExtendedContentDataProvider;
-import org.eclipse.dash.licenses.extended.MavenCentralExtendedContentDataProvider;
-import org.eclipse.dash.licenses.extended.NpmjsExtendedContentDataProvider;
-import org.eclipse.dash.licenses.extended.PypiExtendedContentDataProvider;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
 import org.eclipse.dash.licenses.http.IHttpClientService;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -55,14 +49,6 @@ public class TestLicenseToolModule extends AbstractModule {
 		bind(EclipseFoundationSupport.class).toInstance(new EclipseFoundationSupport());
 		bind(ClearlyDefinedSupport.class).toInstance(new ClearlyDefinedSupport());
 		bind(LicenseSupport.class).toInstance(new LicenseSupport());
-		bind(ExtendedContentDataService.class).toInstance(new ExtendedContentDataService());
-
-		Multibinder<IExtendedContentDataProvider> classifierBinder = Multibinder.newSetBinder(binder(),
-				IExtendedContentDataProvider.class);
-		classifierBinder.addBinding().to(NpmjsExtendedContentDataProvider.class);
-		classifierBinder.addBinding().to(MavenCentralExtendedContentDataProvider.class);
-		classifierBinder.addBinding().to(PypiExtendedContentDataProvider.class);
-		// classifierBinder.addBinding().to(GithubDataProvider.class);
 	}
 
 	public IHttpClientService getHttpClientService() {
@@ -92,16 +78,18 @@ public class TestLicenseToolModule extends AbstractModule {
 						case "npm/npmjs/-/write/1.0.4":
 						case "npm/npmjs/-/write/1.0.5":
 						case "npm/npmjs/-/write/1.0.6":
-							builder.append(new BufferedReader(new InputStreamReader(
-									this.getClass().getResourceAsStream("/write-1.0.3.json"), StandardCharsets.UTF_8))
-											.lines().collect(Collectors.joining("\n")));
+							builder
+									.append(new BufferedReader(new InputStreamReader(
+											this.getClass().getResourceAsStream("/write-1.0.3.json"),
+											StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")));
 							break;
 						case "npm/npmjs/@yarnpkg/lockfile/1.1.0":
 						case "npm/npmjs/@yarnpkg/lockfile/1.1.1":
 						case "npm/npmjs/@yarnpkg/lockfile/1.1.2":
 						case "npm/npmjs/@yarnpkg/lockfile/1.1.3":
-							builder.append(new BufferedReader(
-									new InputStreamReader(this.getClass().getResourceAsStream("/lockfile-1.1.0.json"),
+							builder
+									.append(new BufferedReader(new InputStreamReader(
+											this.getClass().getResourceAsStream("/lockfile-1.1.0.json"),
 											StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")));
 							break;
 						/*
@@ -112,8 +100,8 @@ public class TestLicenseToolModule extends AbstractModule {
 						 */
 						case "npm/npmjs/breaky/mcbreakyface/1.0.0":
 						case "npm/npmjs/breaky/mcbreakyface/1.0.1":
-							handler.accept(
-									"An error occurred when trying to fetch coordinates for one of the components");
+							handler
+									.accept("An error occurred when trying to fetch coordinates for one of the components");
 							return 200;
 						default:
 							builder.append("{}");
