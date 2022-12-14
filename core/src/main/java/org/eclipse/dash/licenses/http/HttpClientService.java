@@ -69,7 +69,7 @@ public class HttpClientService implements IHttpClientService {
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 			connection.setRequestMethod("HEAD");
-			return (connection.getResponseCode() != HttpURLConnection.HTTP_NOT_FOUND);
+			return (connection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST);
 		} catch (Exception e) {
 			return false;
 		}
