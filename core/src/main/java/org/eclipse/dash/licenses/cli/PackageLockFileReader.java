@@ -20,10 +20,13 @@ import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.InvalidContentId;
 import org.eclipse.dash.licenses.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.json.JsonObject;
 
 public class PackageLockFileReader implements IDependencyListReader {
+	final Logger logger = LoggerFactory.getLogger(PackageLockFileReader.class);
 
 	private final InputStream input;
 
@@ -85,7 +88,8 @@ public class PackageLockFileReader implements IDependencyListReader {
 				} else if (resolved.contains("registry.npmjs.org")) {
 					resolved = "npmjs";
 				} else {
-					resolved = "Unknown_resolved_source(" + resolved + ")";
+					logger.debug("Unknown resolved source: {}", resolved);
+					resolved = "npmjs";
 				}
 
 				if (version != null) {
