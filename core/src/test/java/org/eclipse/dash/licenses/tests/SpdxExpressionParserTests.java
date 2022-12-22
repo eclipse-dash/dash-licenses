@@ -405,6 +405,14 @@ class SpdxExpressionParserTests {
 			var expression = new SpdxExpressionParser().parse("(EPL-2.0 AND Apache-2.0) AND (EPL-2.0 OR Apache-2.0)");
 			assertEquals("EPL-2.0 AND Apache-2.0", expression.collapse().toString());
 		}
+
+		@Disabled
+		@Test
+		void testCollapse6() {
+			var expression = new SpdxExpressionParser()
+					.parse("Apache-2.0 AND (Apache-2.0 AND BSD-3-Clause) AND BSD-3-Clause AND (Apache-2.0 AND MIT)");
+			assertEquals("Apache-2.0 AND BSD-3-Clause AND MIT", expression.collapse().toString());
+		}
 	}
 
 	@Nested
