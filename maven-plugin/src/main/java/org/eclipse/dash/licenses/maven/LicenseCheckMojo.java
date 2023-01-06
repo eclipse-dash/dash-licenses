@@ -55,7 +55,7 @@ import com.google.inject.Injector;
 /**
  * Maven goal for running the Dash License Check tool.
  */
-@Mojo(name = "license-check", requiresProject = true, aggregator = true, requiresDependencyResolution = ResolutionScope.TEST, defaultPhase = LifecyclePhase.VERIFY)
+@Mojo(name = "license-check", requiresProject = true, aggregator = true, requiresDependencyResolution = ResolutionScope.TEST, defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
 public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 
 	/**
@@ -72,7 +72,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 */
 	@Parameter(property = "dash.summary", defaultValue = "${project.build.directory}/dash/summary")
 	private File summary;
-	
+
 	/**
 	 * Output a summary of created reviews to the given file. If not specified, then
 	 * a review-summary will be generated at the default location within
@@ -80,7 +80,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 */
 	@Parameter(property = "dash.review.summary", defaultValue = "${project.build.directory}/dash/review-summary")
 	private File reviewSummary;
-	
+
 	/**
 	 * Batch size to use (number of entries sent per API call.)
 	 */
@@ -103,7 +103,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 * URL that returns the list of approved licenses. This URL should return a JSON
 	 * document containing a map of SPDX license identifiers and their descriptions,
 	 * for example:
-	 * 
+	 *
 	 * <pre>
 	 * {
 	 *   "approved": {
@@ -143,7 +143,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 */
 	@Parameter(property = "dash.proxy")
 	private String proxy;
-	
+
 	/**
 	 * The Maven session.
 	 */
@@ -161,12 +161,12 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 */
 	@Component
 	private SecDispatcher securityDispatcher;
-    
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		// We are aggregating the deps for all projects in the reactor, so we only need
 		// to execute once. This check ensures we run only during the build of the
-		// top-level reactor project and avoids duplicate invokations
+		// top-level reactor project and avoids duplicate invocations
 		if (!mavenSession.getCurrentProject().equals(mavenSession.getTopLevelProject())) {
 			return;
 		}
@@ -220,7 +220,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 
 		summary.getParentFile().mkdirs();
 		reviewSummary.getParentFile().mkdirs();
-		
+
 		try (
 				OutputStream summaryOut = new FileOutputStream(summary);
 				PrintWriter reviewSummaryOut = new PrintWriter(new FileWriter(reviewSummary))) {
@@ -228,7 +228,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			collectors.add(new CSVCollector(summaryOut));
 
 			if (iplabToken != null && projectId != null) {
-				collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class), 
+				collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class),
 						(id, url) -> reviewSummaryOut.println("[" + id + "](" + url + ")")));
 			} else if (iplabToken != null) {
 				getLog().info(
