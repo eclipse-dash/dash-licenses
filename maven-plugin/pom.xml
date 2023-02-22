@@ -53,7 +53,7 @@
 		<dependency>
 			<groupId>org.eclipse.tycho</groupId>
 			<artifactId>org.eclipse.tycho.embedder.shared</artifactId>
-			<version>2.7.3</version>
+			<version>3.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sonatype.plexus</groupId>
