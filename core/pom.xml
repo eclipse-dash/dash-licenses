@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-csv</artifactId>
-			<version>1.9.0</version>
+			<version>1.10.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-cli</groupId>
@@ -66,7 +66,7 @@
 		<dependency>
 			<groupId>org.eclipse.tycho</groupId>
 			<artifactId>org.eclipse.tycho.embedder.shared</artifactId>
-			<version>2.7.3</version>
+			<version>3.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -83,7 +83,7 @@
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-suite-api</artifactId>
-			<version>1.8.2</version>
+			<version>1.9.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
