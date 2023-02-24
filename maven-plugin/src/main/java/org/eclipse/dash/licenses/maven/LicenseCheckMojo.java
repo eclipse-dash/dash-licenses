@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2020, 2022 Red Hat Inc. and others
+ * Copyright (c) 2020,2023 Red Hat Inc. and others
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -46,7 +46,6 @@ import org.eclipse.dash.licenses.cli.NeedsReviewCollector;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 import org.eclipse.dash.licenses.review.GitLabSupport;
-import org.eclipse.tycho.TychoConstants;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
 import com.google.inject.Guice;
@@ -58,6 +57,9 @@ import com.google.inject.Injector;
 @Mojo(name = "license-check", requiresProject = true, aggregator = true, requiresDependencyResolution = ResolutionScope.TEST, defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
 public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 
+	// @FIXME Refactor
+	// @see MavenIdParser::P2_GROUPID_PREFIX
+	private static final String P2_GROUPID_PREFIX = "p2.";
 	/**
 	 * Optionally process the request within the context of an Eclipse Foundation
 	 * project. (E.g., technology.dash)
@@ -198,9 +200,10 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		// Adapt dependency artifacts to dash content IDs
 		List<IContentId> deps = new ArrayList<>();
 		filteredArtifacts.stream().sorted().forEach(a -> {
-			String type = a.getGroupId().startsWith(TychoConstants.P2_GROUPID_PREFIX) ? "p2" : "maven";
+			// FIXME Refactor. This is duplicated from MavenIdParser
+			String type = a.getGroupId().startsWith(P2_GROUPID_PREFIX) ? "p2" : "maven";
 			// TODO deps are not necessarily from orbit or maven central
-			String source = a.getGroupId().startsWith(TychoConstants.P2_GROUPID_PREFIX) ? "orbit" : "mavencentral";
+			String source = a.getGroupId().startsWith(P2_GROUPID_PREFIX) ? "orbit" : "mavencentral";
 			// TODO could get duplicates here if two artifact coords differ only by
 			// classifier
 			deps.add(ContentId.getContentId(type, source, a.getGroupId(), a.getArtifactId(), a.getVersion()));

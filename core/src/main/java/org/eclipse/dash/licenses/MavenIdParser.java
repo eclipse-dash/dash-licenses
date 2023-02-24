@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019, The Eclipse Foundation and others.
+ * Copyright (c) 2019,2023 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -12,8 +12,6 @@ package org.eclipse.dash.licenses;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.tycho.TychoConstants;
-
 public class MavenIdParser implements ContentIdParser {
 
 	// @formatter:off
@@ -24,6 +22,16 @@ public class MavenIdParser implements ContentIdParser {
 			+ ":(?<version>v?\\d[^: ]*)"
 			+ "(:(?<phase>[^:]*))?";
 	// @formatter:on
+
+	/*
+	 * We set the type and source to "p2" and "orbit" when we encounter something
+	 * with a p2 prefix. We had previously grabbed this value directly from Tycho
+	 * (<code>org.eclipse.tycho:org.eclipse.tycho.embedder.shared</code>) but doing
+	 * so periodically introduced incompatibilities after updates. Also... we really
+	 * only need this value and really don't expect it to change, so pulling in even
+	 * just an entire class seems excessive.
+	 */
+	private static final String P2_GROUPID_PREFIX = "p2.";
 
 	private static Pattern mavenPattern = Pattern.compile(MAVEN_PATTERN);
 	private Pattern antBundleClassifierPattern = Pattern.compile("lib/(?<artifactid>.*)\\.jar");
@@ -52,8 +60,8 @@ public class MavenIdParser implements ContentIdParser {
 		String artifactid = matcher.group("artifactid");
 		String version = matcher.group("version");
 
-		String type = groupid.startsWith(TychoConstants.P2_GROUPID_PREFIX) ? "p2" : "maven";
-		String source = groupid.startsWith(TychoConstants.P2_GROUPID_PREFIX) ? "orbit" : "mavencentral";
+		String type = groupid.startsWith(P2_GROUPID_PREFIX) ? "p2" : "maven";
+		String source = groupid.startsWith(P2_GROUPID_PREFIX) ? "orbit" : "mavencentral";
 
 		/*
 		 * So this is a complete hack. If we're looking at the Apache Ant bundle, then
