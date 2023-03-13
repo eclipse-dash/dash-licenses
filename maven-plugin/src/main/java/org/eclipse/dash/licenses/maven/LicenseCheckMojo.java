@@ -46,6 +46,7 @@ import org.eclipse.dash.licenses.cli.NeedsReviewCollector;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 import org.eclipse.dash.licenses.review.GitLabSupport;
+import org.eclipse.dash.licenses.validation.EclipseProjectIdValidator;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
 import com.google.inject.Guice;
@@ -219,6 +220,14 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		collectors.add(needsReviewCollector);
 
 		Injector injector = Guice.createInjector(new LicenseToolModule(settings, createProxySettings()));
+		
+		if (settings.getProjectId() != null) {
+			var validator = injector.getInstance(EclipseProjectIdValidator.class);
+			if (!validator.validate(settings.getProjectId(), message -> getLog().error(message))) {
+				throw new MojoExecutionException("Invalid project id.");
+			}
+		}
+		
 		LicenseChecker checker = injector.getInstance(LicenseChecker.class);
 
 		summary.getParentFile().mkdirs();

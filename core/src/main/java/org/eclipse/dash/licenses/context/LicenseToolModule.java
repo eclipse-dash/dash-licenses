@@ -9,6 +9,10 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.context;
 
+import java.io.InputStream;
+import java.util.function.Consumer;
+
+import org.eclipse.dash.api.EclipseApi;
 import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
@@ -38,13 +42,20 @@ public class LicenseToolModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		HttpClientService httpClientService = new HttpClientService();
+		bind(IHttpClientService.class).toInstance(httpClientService);
 		bind(ISettings.class).toInstance(settings);
 		bind(LicenseChecker.class).toInstance(new LicenseChecker());
+		bind(EclipseApi.class).toInstance(new EclipseApi(new EclipseApi.HttpService() {
+			@Override
+			public int get(String url, String contentType, Consumer<InputStream> handler) {
+				return httpClientService.get(url, contentType, handler);
+			}
+		}));
 		bind(EclipseFoundationSupport.class).toInstance(new EclipseFoundationSupport());
 		bind(ClearlyDefinedSupport.class).toInstance(new ClearlyDefinedSupport());
 		bind(LicenseSupport.class).toInstance(new LicenseSupport());
 		bind(GitLabSupport.class).toInstance(new GitLabSupport());
-		bind(IHttpClientService.class).toInstance(new HttpClientService());
 		bind(IProxySettings.class).toProvider(Providers.of(proxySettings));
 	}
 }

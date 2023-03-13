@@ -98,7 +98,7 @@ public class GitLabSupport {
 		});
 	}
 
-	void execute(Consumer<GitLabConnection> callable) {
+	public void execute(Consumer<GitLabConnection> callable) {
 		Map<String, Object> clientConfig = null;
 		IProxySettings proxySettings = this.proxySettings.get();
 		if (proxySettings != null) {

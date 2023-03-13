@@ -41,6 +41,14 @@ public class GitLabConnection {
 						null, null, null, null);
 	}
 
+	public String getUserId() {
+		try {
+			return gitLabApi.getUserApi().getCurrentUser().getUsername();
+		} catch (GitLabApiException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private IssuesApi getIssuesApi() {
 		return gitLabApi.getIssuesApi();
 	}

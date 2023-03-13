@@ -27,6 +27,7 @@ import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 import org.eclipse.dash.licenses.review.GitLabSupport;
+import org.eclipse.dash.licenses.validation.EclipseProjectIdValidator;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -64,6 +65,14 @@ public class Main {
 		}
 
 		Injector injector = Guice.createInjector(new LicenseToolModule(settings));
+
+		if (settings.getProjectId() != null) {
+			var validator = injector.getInstance(EclipseProjectIdValidator.class);
+			if (!validator.validate(settings.getProjectId(), message -> System.out.println(message))) {
+				System.exit(1);
+			}
+		}
+
 		LicenseChecker checker = injector.getInstance(LicenseChecker.class);
 
 		List<IResultsCollector> collectors = new ArrayList<>();
