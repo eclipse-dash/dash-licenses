@@ -144,4 +144,13 @@
 			</resource>
 		</resources>
 	</build>
+	<repositories>
+		<repository>
+			<id>dash-licenses-snapshots</id>
+			<url>https://repo.eclipse.org/content/repositories/dash-licenses-snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
