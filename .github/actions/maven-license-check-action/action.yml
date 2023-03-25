@@ -1,11 +1,12 @@
 # *************************************************************************
-# * Copyright (c) 2022 Hannes Wellmann and others.
+# * Copyright (c) 2022, 2023 Hannes Wellmann and others.
 # *
 # * This program and the accompanying materials are made available under
 # * the terms of the Eclipse Public License 2.0 which accompanies this
 # * distribution, and is available at https://www.eclipse.org/legal/epl-2.0
 # *
 # * SPDX-License-Identifier: EPL-2.0
+# *      Hannes Wellmann - initial API and implementation
 # *************************************************************************
 
 name: 'Check license vetting status'
@@ -24,7 +25,9 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: |
+    - id: license-check-with-review-request
+      shell: bash {0} # do not fail-fast
+      run: |
         mvnArgs="-U -B -ntp org.eclipse.dash:license-tool-plugin:license-check -Ddash.fail=true --settings $GITHUB_ACTION_PATH/licenseCheckMavenSettings.xml"
         if [ ${{ inputs.request-review }} ]; then
           mvn ${mvnArgs} -Ddash.iplab.token=$GITLAB_API_TOKEN -Ddash.projectId=${{ inputs.project-id }}
@@ -40,5 +43,3 @@ runs:
             exit 1
           fi
         fi
-      shell: bash {0} # do not fail-fast
-      id: license-check-with-review-request
