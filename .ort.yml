@@ -1,0 +1,5 @@
+excludes:
+  paths:
+  - pattern: "core/src/test/java/**"
+    reason: "TEST_OF"
+    comment: "This directory contains licence test data which are not distributed."
