@@ -391,11 +391,11 @@ Note that, in order to better leverage ClearlyDefined data, the "v" should **not
 
 ### Example Python
 
-Use `pipdeptree` to find all of the dependencies, convert them into
+Use `pipdeptree` to find all of the dependencies, convert them into ClearlyDefined IDs, and pipe the results to the Eclipse Dash License Tool:
 
 ```
 $ pipdeptree -a -f \
-| sed -E -e 's|([^= ]+)==([^= ]+)|pypi/pypi/-/\1/\2|' \
+| sed -E -e 's|([^= ]+)==([^= ]+)|pypi/pypi/-/\1/\2|' -e 's| ||g' \
 | sort | uniq \
 | java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
 ```
