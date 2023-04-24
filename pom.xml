@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: EPL-2.0
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.dash</groupId>
 	<artifactId>dash-licenses-parent</artifactId>
@@ -40,17 +38,18 @@
 		<url>https://eclipse.org/dash</url>
 	</organization>
 
+	<name>Eclipse Dash License Tool Root</name>
 	<description>The Eclipse Dash License Tool identifies the licenses of content.</description>
 	<url>https://github.com/eclipse/dash-licenses</url>
 
 	<scm>
 		<url>https://github.com/eclipse/dash-licenses</url>
 	</scm>
-	
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/eclipse/dash-licenses/issues</url>
-    </issueManagement>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/eclipse/dash-licenses/issues</url>
+	</issueManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
