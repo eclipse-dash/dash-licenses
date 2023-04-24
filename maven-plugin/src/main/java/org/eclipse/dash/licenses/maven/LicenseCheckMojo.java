@@ -55,7 +55,7 @@ import com.google.inject.Injector;
 /**
  * Maven goal for running the Dash License Check tool.
  */
-@Mojo(name = "license-check", requiresProject = true, aggregator = true, requiresDependencyResolution = ResolutionScope.TEST, defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
+@Mojo(name = "license-check", requiresProject = true, aggregator = true, requiresDependencyCollection = ResolutionScope.TEST, defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
 public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 
 	// @FIXME Refactor
