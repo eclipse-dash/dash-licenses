@@ -32,9 +32,9 @@ runs:
         if [ ${{ inputs.request-review }} ]; then
           mvn ${mvnArgs} -Ddash.iplab.token=$GITLAB_API_TOKEN -Ddash.projectId=${{ inputs.project-id }}
           if [[ $? == 0 ]]; then # All licenses are vetted
-            echo "::set-output name=build-succeeded::$(echo 1)"
+            echo "build-succeeded=1" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=build-succeeded::$(echo 0)"
+            echo "build-succeeded=0" >> $GITHUB_OUTPUT
           fi
         else
           mvn ${mvnArgs}
