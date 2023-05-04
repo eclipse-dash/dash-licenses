@@ -51,12 +51,19 @@ import com.google.inject.Injector;
  * @param args
  */
 public class Main {
+	/**
+	 * Exit code that indicates there was an internal error, orthogonal to
+	 * license check results, that prevented `dash-licenses` from successfully
+	 * running or completing its work. Depending on the exact problem, a 
+	 * re-try might or might no work.
+	 */ 
+	final static Integer INTERNAL_ERROR = 127;
 
 	public static void main(String[] args) {
 		CommandLineSettings settings = CommandLineSettings.getSettings(args);
 		if (!settings.isValid()) {
 			CommandLineSettings.printUsage(System.out);
-			System.exit(1);
+			System.exit(INTERNAL_ERROR);
 		}
 
 		if (settings.isShowHelp()) {
@@ -69,7 +76,7 @@ public class Main {
 		if (settings.getProjectId() != null) {
 			var validator = injector.getInstance(EclipseProjectIdValidator.class);
 			if (!validator.validate(settings.getProjectId(), message -> System.out.println(message))) {
-				System.exit(1);
+				System.exit(INTERNAL_ERROR);
 			}
 		}
 
@@ -88,7 +95,7 @@ public class Main {
 				collectors.add(new CSVCollector(getWriter(summaryPath)));
 			} catch (FileNotFoundException e1) {
 				System.out.println("Can't write to " + summaryPath);
-				System.exit(1);
+				System.exit(INTERNAL_ERROR);
 			}
 		}
 
@@ -104,7 +111,7 @@ public class Main {
 			} catch (FileNotFoundException e) {
 				System.out.println(String.format("The file \"%s\" does not exist.", name));
 				CommandLineSettings.printUsage(System.out);
-				System.exit(1);
+				System.exit(INTERNAL_ERROR);
 			}
 			if (reader != null) {
 				var filter = new ExcludedSourcesFilter(settings.getExcludedSources());
@@ -115,15 +122,19 @@ public class Main {
 						.filter(each -> filter.keep(each))
 						.collect(Collectors.toList());
 
-				checker.getLicenseData(dependencies).forEach((id, licenseData) -> {
-					collectors.forEach(collector -> collector.accept(licenseData));
-				});
+				try {
+					checker.getLicenseData(dependencies).forEach((id, licenseData) -> {
+						collectors.forEach(collector -> collector.accept(licenseData));
+					});
+				} catch (RuntimeException e) {
+					System.exit(INTERNAL_ERROR);
+				}
 			}
 		});
 
 		collectors.forEach(IResultsCollector::close);
-
-		System.exit(primaryCollector.getStatus());
+		final int rawStatus = primaryCollector.getStatus();
+		System.exit(rawStatus >= INTERNAL_ERROR ? INTERNAL_ERROR - 1 : rawStatus );
 	}
 
 	private static OutputStream getWriter(String path) throws FileNotFoundException {
