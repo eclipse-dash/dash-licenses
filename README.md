@@ -158,30 +158,6 @@ $ _
 
 In the case where the license information for the library is not already known, this will create a review request. **Do not share your access token.**
 
-### Example: Maven
-
-You can use the Maven `dependency` plugin to generate a list of dependencies and then feed that list into the tool.
-
-```
-$ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
-$ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps
-...
-$ _
-```
-
-> :warning: If your project is a multi-module Maven project, you should provide an absolute path to `-DoutputFile` to append all dependencies in the same file (see [MDEP-542](https://issues.apache.org/jira/browse/MDEP-542)).
-
-You can use the [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
-
-```
-$ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
-$ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps -review -project <project> -token <token>
-...
-$ _
-```
-
-In the case where the license information for content is not already known, this will create review requests (the current implementation will make five requests maximum). **Do not share your access token.**
-
 ### Example: Maven Plugin
 
 To call the Dash License Tool plugin via `mvn` CLI:
@@ -314,6 +290,32 @@ In this case, you can provide Maven with a list of exclusions.
 Maven will skip matching content when it resolves dependencies.
 
 Note that this "problem" is not a _Dash License Tool problem_, but rather is a dependency management problem. Try not to think in terms of making changes to satisfy quirks of this particular tool, but rather of making your project's dependency list as accurate as possible. Other tools, like the GitHub Dependabot and the [OSS Review Toolkit](https://github.com/oss-review-toolkit/ort), use this information as well.
+
+### Example: Maven
+
+Consider using the [Maven plugin](#example-maven-plugin) instead.
+
+You can use the Maven `dependency` plugin to generate a list of dependencies and then feed that list into the tool.
+
+```
+$ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
+$ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps
+...
+$ _
+```
+
+> :warning: If your project is a multi-module Maven project, you should provide an absolute path to `-DoutputFile` to append all dependencies in the same file (see [MDEP-542](https://issues.apache.org/jira/browse/MDEP-542)).
+
+You can use the [IP Team Review request](README.md#automatic-ip-team-review-requests) feature to automatically set up a review.
+
+```
+$ mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=true -DoutputFile=maven.deps
+$ java -jar org.eclipse.dash.licenses-<version>.jar maven.deps -review -project <project> -token <token>
+...
+$ _
+```
+
+In the case where the license information for content is not already known, this will create review requests (the current implementation will make five requests maximum). **Do not share your access token.**
 
 ### Example: Gradle
 
