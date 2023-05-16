@@ -233,7 +233,7 @@ Add the `repo.eclipse.org` plugin repository so that the license check plugin is
 
 #### Maven Plugin Options
 
-The Maven Plugin has the following "-D" options:
+The Maven Plugin has the following options that can passed either via the command-line or as configuration options in your `pom.xml` file:
 
 - `dash.skip` - Skip executing the plugin. Default: `false`.
 - `dash.fail` - Force the build to fail when license issues are found. Default: `false`. 
@@ -257,6 +257,14 @@ $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<tok
 ```
 
 **Do not share your access token.**
+
+### Eclipse Tycho
+
+The Eclipse Dash License Tool's Maven plugin uses the standard Maven Reactor to determine the list of dependencies that it needs to check.
+
+Eclipse Tycho uses a different mechanism to resolve dependencies that is not always invoked.
+
+Add `-Dtycho.target.eager=true` to force Tycho to resolve the dependencies.
 
 ### Troubleshooting Maven Dependencies
 
