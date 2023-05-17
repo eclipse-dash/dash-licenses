@@ -28,7 +28,7 @@ runs:
     - id: license-check-with-review-request
       shell: bash {0} # do not fail-fast
       run: |
-        mvnArgs="-U -B -ntp org.eclipse.dash:license-tool-plugin:license-check -Ddash.fail=true --settings $GITHUB_ACTION_PATH/licenseCheckMavenSettings.xml"
+        mvnArgs="-U -B -ntp org.eclipse.dash:license-tool-plugin:license-check -Ddash.fail=true -Dtycho.target.eager=true --settings $GITHUB_ACTION_PATH/licenseCheckMavenSettings.xml"
         if [ ${{ inputs.request-review }} ]; then
           mvn ${mvnArgs} -Ddash.iplab.token=$GITLAB_API_TOKEN -Ddash.projectId=${{ inputs.project-id }}
           if [[ $? == 0 ]]; then # All licenses are vetted
