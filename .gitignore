@@ -1,1 +1,6 @@
 target/
+#Generated Eclipse configuration files
+.project
+.classpath
+.factorypath
+org.eclipse.jdt.apt.core.prefs
