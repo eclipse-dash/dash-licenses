@@ -19,14 +19,17 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -55,12 +58,15 @@ import com.google.inject.Injector;
 /**
  * Maven goal for running the Dash License Check tool.
  */
-@Mojo(name = "license-check", requiresProject = true, aggregator = true, requiresDependencyResolution = ResolutionScope.TEST, defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
+@Mojo(name = "license-check", requiresProject = true, requiresDependencyResolution = ResolutionScope.TEST, defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
 public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 
 	// @FIXME Refactor
 	// @see MavenIdParser::P2_GROUPID_PREFIX
 	private static final String P2_GROUPID_PREFIX = "p2.";
+	private static final String DEPENDENCIES_MARKER = LicenseCheckMojo.class.getName() + ".dependencies";
+	private static final Object LOCK = new Object();
+
 	/**
 	 * Optionally process the request within the context of an Eclipse Foundation
 	 * project. (E.g., technology.dash)
@@ -68,12 +74,15 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	@Parameter(property = "dash.projectId")
 	private String projectId;
 
+	@Parameter(property = "project", required = true, readonly = true)
+	private MavenProject project;
+
 	/**
 	 * Output a summary to the given file. If not specified, then a dependencies
 	 * summary will be generated at the default location within
 	 * <code>${project.build.directory}</code>
 	 */
-	@Parameter(property = "dash.summary", defaultValue = "${project.build.directory}/dash/summary")
+	@Parameter(property = "dash.summary", defaultValue = "${session.topLevelProject.build.directory}/dash/summary")
 	private File summary;
 
 	/**
@@ -81,7 +90,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 * a review-summary will be generated at the default location within
 	 * <code>${project.build.directory}</code>
 	 */
-	@Parameter(property = "dash.review.summary", defaultValue = "${project.build.directory}/dash/review-summary")
+	@Parameter(property = "dash.review.summary", defaultValue = "${session.topLevelProject.build.directory}/dash/review-summary")
 	private File reviewSummary;
 
 	/**
@@ -159,6 +168,9 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	@Parameter(defaultValue = "${reactorProjects}", readonly = true, required = true)
 	private List<MavenProject> reactorProjects;
 
+	@Parameter(defaultValue = "${plugin}", required = true, readonly = true)
+	private PluginDescriptor pluginDescriptor;
+
 	/**
 	 * Maven Security Dispatcher
 	 */
@@ -166,17 +178,26 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	private SecDispatcher securityDispatcher;
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		// We are aggregating the deps for all projects in the reactor, so we only need
-		// to execute once. This check ensures we run only during the build of the
-		// top-level reactor project and avoids duplicate invocations
-		if (!mavenSession.getCurrentProject().equals(mavenSession.getTopLevelProject())) {
-			return;
-		}
 
+		Set<Artifact> artifacts;
 		if (skip) {
+			artifacts = Set.of(); // Mark as checked, but ignore actual dependencies
 			getLog().info("Skipping dependency license check");
-			return;
+		} else {
+			artifacts = project.getArtifacts();
+		}
+		getPluginContext().put(DEPENDENCIES_MARKER, artifacts);
+
+		List<MavenProject> allProjectsUsingPlugin = getAllProjectsUsingPlugin();
+		synchronized (LOCK) {
+			if (!allProjectsUsingPlugin.stream().allMatch(p -> {
+				Map<String, Object> pluginContext = mavenSession.getPluginContext(pluginDescriptor, p);
+				return pluginContext.containsKey(DEPENDENCIES_MARKER);
+			})) {
+				return;
+			}
 		}
 
 		// Validate the user-given dash license tool settings
@@ -187,11 +208,13 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			throw new MojoExecutionException("Invalid setting: " + e.getMessage());
 		}
 
-		// Get filtered list of project dependencies for all modules in the reactor
-		Set<Artifact> filteredArtifacts = new HashSet<>();
-		for (MavenProject project : reactorProjects) {
-			filteredArtifacts.addAll(filterArtifacts(project.getArtifacts()));
-		}
+		Set<Artifact> allArtifacts = allProjectsUsingPlugin.stream().map(p -> {
+			Map<String, Object> pluginContext = mavenSession.getPluginContext(pluginDescriptor, p);
+			return (Set<Artifact>) pluginContext.get(DEPENDENCIES_MARKER);
+		}).flatMap(Set::stream).collect(Collectors.toSet());
+
+		// Get filtered list of dependencies for all projects for which this mojo ran
+		Set<Artifact> filteredArtifacts = filterArtifacts(allArtifacts);
 
 		if (getLog().isDebugEnabled()) {
 			getLog().debug("Filtered dependency artifact list:");
@@ -220,21 +243,20 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		collectors.add(needsReviewCollector);
 
 		Injector injector = Guice.createInjector(new LicenseToolModule(settings, createProxySettings()));
-		
+
 		if (settings.getProjectId() != null) {
 			var validator = injector.getInstance(EclipseProjectIdValidator.class);
 			if (!validator.validate(settings.getProjectId(), message -> getLog().error(message))) {
 				throw new MojoExecutionException("Invalid project id.");
 			}
 		}
-		
+
 		LicenseChecker checker = injector.getInstance(LicenseChecker.class);
 
 		summary.getParentFile().mkdirs();
 		reviewSummary.getParentFile().mkdirs();
 
-		try (
-				OutputStream summaryOut = new FileOutputStream(summary);
+		try (OutputStream summaryOut = new FileOutputStream(summary);
 				PrintWriter reviewSummaryOut = new PrintWriter(new FileWriter(reviewSummary))) {
 
 			collectors.add(new CSVCollector(summaryOut));
@@ -265,6 +287,17 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			getLog().error("Dependency license check failed. Some dependencies need to be vetted.");
 			throw new MojoFailureException("Some dependencies must be vetted.");
 		}
+	}
+
+	private List<MavenProject> getAllProjectsUsingPlugin() {
+		List<MavenProject> projectsUsingPlugin = reactorProjects.stream().filter(p -> {
+			Plugin plugin = p.getPlugin(pluginDescriptor.getPluginLookupKey());
+			return plugin != null && plugin.getExecutions().stream()
+					.anyMatch(e -> !e.getGoals().isEmpty() && !"none".equalsIgnoreCase(e.getPhase()));
+		}).collect(Collectors.toList());
+		return !projectsUsingPlugin.isEmpty() ? projectsUsingPlugin : reactorProjects;
+		// if projectsUsingPlugin is empty it means that the this mojo is invoked
+		// directly on the command-line (otherwise it would not have been executed)
 	}
 
 	protected IProxySettings createProxySettings() {

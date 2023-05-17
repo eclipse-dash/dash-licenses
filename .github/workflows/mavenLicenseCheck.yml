@@ -26,6 +26,11 @@ on:
         type: string
         required: false
         default: ''
+      extraMavenArguments:
+        description: 'Optional additional arguments passed to the Maven command to launch license check build'
+        type: string
+        required: false
+        default: ''
       submodules:
         description: |
           Whether to checkout submodules: `true` to checkout submodules or `recursive` to recursively checkout submodules.
@@ -116,6 +121,7 @@ jobs:
       with:
         request-review: ${{ env.request-review }}
         project-id: ${{ inputs.projectId }}
+        extra-maven-arguments: ${{ inputs.extraMavenArguments }}
       env:
         GITLAB_API_TOKEN: ${{ secrets.gitlabAPIToken }}
 

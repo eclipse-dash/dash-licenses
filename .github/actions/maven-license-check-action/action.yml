@@ -18,6 +18,9 @@ inputs:
   project-id:
     description: ''
     required: false
+  extra-maven-arguments:
+    description: ''
+    required: false
 outputs:
   licenses-vetted: 
     description: "True if all licenses are vetted, else false"
@@ -28,7 +31,7 @@ runs:
     - id: license-check-with-review-request
       shell: bash {0} # do not fail-fast
       run: |
-        mvnArgs="-U -B -ntp org.eclipse.dash:license-tool-plugin:license-check -Ddash.fail=true -Dtycho.target.eager=true --settings $GITHUB_ACTION_PATH/licenseCheckMavenSettings.xml"
+        mvnArgs="${{ inputs.extra-maven-arguments }} -U -B -ntp org.eclipse.dash:license-tool-plugin:license-check -Ddash.fail=true --settings $GITHUB_ACTION_PATH/licenseCheckMavenSettings.xml"
         if [[ ${{ inputs.project-id }} != "" ]]; then
           mvnArgs+=" -Ddash.projectId=${{ inputs.project-id }}"
         fi
