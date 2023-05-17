@@ -16,7 +16,8 @@
 	<parent>
 		<groupId>org.eclipse.dash</groupId>
 		<artifactId>dash-licenses-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${revision}</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>org.eclipse.dash.licenses</artifactId>
 
