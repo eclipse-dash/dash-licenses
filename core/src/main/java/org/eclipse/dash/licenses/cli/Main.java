@@ -52,11 +52,11 @@ import com.google.inject.Injector;
  */
 public class Main {
 	/**
-	 * Exit code that indicates there was an internal error, orthogonal to
-	 * license check results, that prevented `dash-licenses` from successfully
-	 * running or completing its work. Depending on the exact problem, a 
-	 * re-try might or might no work.
-	 */ 
+	 * Exit code that indicates there was an internal error, orthogonal to license
+	 * check results, that prevented `dash-licenses` from successfully running or
+	 * completing its work. Depending on the exact problem, a re-try might or might
+	 * no work.
+	 */
 	final static Integer INTERNAL_ERROR = 127;
 
 	public static void main(String[] args) {
@@ -133,8 +133,8 @@ public class Main {
 		});
 
 		collectors.forEach(IResultsCollector::close);
-		final int rawStatus = primaryCollector.getStatus();
-		System.exit(rawStatus >= INTERNAL_ERROR ? INTERNAL_ERROR - 1 : rawStatus );
+
+		System.exit(Math.min(primaryCollector.getStatus(), INTERNAL_ERROR - 1));
 	}
 
 	private static OutputStream getWriter(String path) throws FileNotFoundException {
