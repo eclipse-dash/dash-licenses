@@ -167,10 +167,10 @@ $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDEN
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] -------------< org.eclipse.dash:org.eclipse.dash.licenses >-------------
-[INFO] Building org.eclipse.dash.licenses 0.0.1-SNAPSHOT
+[INFO] Building org.eclipse.dash.licenses 1.0.0
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
-[INFO] --- license-tool-plugin:0.0.1-SNAPSHOT:license-check (default-cli) @ org.eclipse.dash.licenses ---
+[INFO] --- license-tool-plugin:1.0.0:license-check (default-cli) @ org.eclipse.dash.licenses ---
 [INFO] Vetted license information was found for all content. No further investigation is required.
 [INFO] Summary file was written to: ./dash-licenses/license-tool-core/DEPENDENCIES
 [INFO] ------------------------------------------------------------------------
@@ -200,7 +200,7 @@ Configure the license check plugin to be auto executed (e.g. in the `verify` pha
 		<plugin>
 			<groupId>org.eclipse.dash</groupId>
 			<artifactId>license-tool-plugin</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0</version>
 			<executions>
 				<execution>
 					<id>license-check</id>
@@ -525,7 +525,7 @@ configure its ID in your project:
 		<plugin>
 			<groupId>org.eclipse.dash</groupId>
 			<artifactId>license-tool-plugin</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0</version>
 			<configuration>
 				<proxy>my-proxy</proxy>
 			</configuration>
