@@ -156,6 +156,13 @@
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>eclipse-repo</id>
+			<name>Eclipse Nexus Repository</name>
+			<url>https://repo.eclipse.org/content/repositories/dash-licenses</url>
+		</repository>
+	</repositories>
 	<distributionManagement>
 		<repository>
 			<id>repo.eclipse.org</id>
