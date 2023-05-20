@@ -45,7 +45,7 @@
 
 	<scm>
 		<url>https://github.com/eclipse/dash-licenses</url>
-		<developerConnection>scm:git:git@github.com/eclipse/dash-licenses.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:eclipse/dash-licenses.git</developerConnection>
 	</scm>
 
 	<issueManagement>
