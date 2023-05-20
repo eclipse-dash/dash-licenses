@@ -52,7 +52,7 @@
 	</issueManagement>
 
 	<properties>
-		<revision>1.0.1-SNAPSHOT</revision>
+		<revision>1.0.0</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -156,6 +156,12 @@
 			</plugin>
 		</plugins>
 	</build>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>dash-plugin-repo</id>
+			<url>https://repo.eclipse.org/content/repositories/dash-licenses</url>
+		</pluginRepository>
+	</pluginRepositories>
 	<repositories>
 		<repository>
 			<id>eclipse-repo</id>
