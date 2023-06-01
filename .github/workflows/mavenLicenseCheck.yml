@@ -34,6 +34,11 @@ on:
         type: string
         required: false
         default: 'false'
+      mavenVersion: 
+        description: 'The version of Maven set up to run the license-check build'
+        type: string
+        required: false
+        default: '3.9.2'
     secrets:
       gitlabAPIToken:
         description: 'The authentication token (scope: api) from gitlab.eclipse.org of the calling repository. Only required if license vetting is requested'
@@ -105,6 +110,11 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml', '**/*.target') }}
         restore-keys: |
           ${{ runner.os }}-maven-
+
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: ${{ inputs.mavenVersion }}
 
     - name: Prepare for license check
       run: ${{ inputs.setupScript }}
