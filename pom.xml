@@ -36,7 +36,7 @@
 
 	<organization>
 		<name>The Eclipse Dash Project</name>
-		<url>https://eclipse.org/dash</url>
+		<url>https://projects.eclipse.org/projects/technology.dash</url>
 	</organization>
 
 	<name>Eclipse Dash License Tool Root</name>
@@ -46,8 +46,8 @@
 	<scm>
 		<url>https://github.com/eclipse/dash-licenses</url>
 		<developerConnection>scm:git:git@github.com:eclipse/dash-licenses.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
@@ -55,7 +55,6 @@
 	</issueManagement>
 
 	<properties>
-		<revision>1.0.2-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
