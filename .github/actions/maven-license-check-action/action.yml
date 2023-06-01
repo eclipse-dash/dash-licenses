@@ -12,6 +12,10 @@
 name: 'Check license vetting status'
 description: 'Checks if the licenses of all dependencies are vetted and requests a review in case required and wanted'
 inputs:
+  maven-version: 
+    description: 'Configure the used maven version'
+    required: false
+    default: '3.9.2'
   request-review:
     description: ''
     required: false
@@ -25,6 +29,10 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: ${{ inputs.maven-version }}
     - id: license-check-with-review-request
       shell: bash {0} # do not fail-fast
       run: |
