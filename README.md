@@ -253,10 +253,10 @@ $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDEN
 To automatically create IP Team review requests for identified content:
 
 ```
-$ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<token> -Ddash.projectId=technology.dash
+$ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<token> -Ddash.projectId=<projectId>
 ```
 
-**Do not share your access token.**
+**Do not share your access token.** Provide the Eclipse open source project id (e.g., `technology.dash`) in place of the `<projectId>` placeholder.
 
 ### Eclipse Tycho
 
