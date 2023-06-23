@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-core</artifactId>
-			<version>3.9.0</version>
+			<version>3.9.2</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -74,17 +74,17 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.9.0</version>
+			<version>3.9.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.6.4</version>
+			<version>3.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.shared</groupId>
 			<artifactId>maven-common-artifact-filters</artifactId>
-			<version>3.2.0</version>
+			<version>3.3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sonatype.plexus</groupId>
@@ -103,7 +103,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.7.1</version>
+				<version>3.9.0</version>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -152,7 +152,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-invoker-plugin</artifactId>
-						<version>3.5.0</version>
+						<version>3.6.0</version>
 						<configuration>
 							<postBuildHookScript>verify</postBuildHookScript>
 							<goals>
