@@ -329,10 +329,11 @@ In the case where the license information for content is not already known, this
 
 Find all of the potentially problematic third party libraries from a Gradle build.
 
+Note that we have mixed success with this use of Gradle as it is very dependent on the specific nature of the build. Please verify that Gradle is correctly identifying your dependencies by invoking `./gradlew dependencies` before trying this.
+
 ```
 $ ./gradlew dependencies | grep -Poh "(?<=\s)[\w\.-]+:[\w\.-]+:[^:\s]+" | grep -v "^org\.eclipse" | sort | uniq \
- | java -jar org.eclipse.dash.licenses-<version>.jar - \
- | grep restricted
+ | java -jar org.eclipse.dash.licenses-<version>.jar - 
 ```
  
 Note that this example pre-filters content that comes from Eclipse projects (`grep -v "^org\.eclipse"`).
