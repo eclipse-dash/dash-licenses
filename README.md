@@ -264,7 +264,7 @@ The Eclipse Dash License Tool's Maven plugin uses the standard Maven Reactor to 
 
 Eclipse Tycho uses a different mechanism to resolve dependencies that is not always invoked.
 
-Add `-Dtycho.target.eager=true` to force Tycho to resolve the dependencies.
+Add `-Dtycho.target.eager=true` to turn on the [`requireEagerResolve`](https://tycho.eclipseprojects.io/doc/latest/target-platform-configuration/target-platform-configuration-mojo.html#requireEagerResolve) option to force Tycho to resolve all dependencies.
 
 #### Troubleshooting Maven Dependencies
 
