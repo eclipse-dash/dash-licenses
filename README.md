@@ -160,7 +160,7 @@ In the case where the license information for the library is not already known, 
 
 ### Example: Maven Plugin
 
-To call the Dash License Tool plugin via `mvn` CLI:
+To call the Dash License Tool plugin via `mvn`:
 
 ```
 $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDENCIES 
@@ -258,7 +258,7 @@ $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<tok
 
 **Do not share your access token.** Provide the Eclipse open source project id (e.g., `technology.dash`) in place of the `<projectId>` placeholder.
 
-### Eclipse Tycho
+#### Eclipse Tycho
 
 The Eclipse Dash License Tool's Maven plugin uses the standard Maven Reactor to determine the list of dependencies that it needs to check.
 
@@ -266,7 +266,7 @@ Eclipse Tycho uses a different mechanism to resolve dependencies that is not alw
 
 Add `-Dtycho.target.eager=true` to force Tycho to resolve the dependencies.
 
-### Troubleshooting Maven Dependencies
+#### Troubleshooting Maven Dependencies
 
 There are cases where some transitive dependency with problematic licensing that is neither directly nor indirectly required by your content is dragged in by some other transitive dependency.
 
@@ -298,6 +298,14 @@ In this case, you can provide Maven with a list of exclusions.
 Maven will skip matching content when it resolves dependencies.
 
 Note that this "problem" is not a _Dash License Tool problem_, but rather is a dependency management problem. Try not to think in terms of making changes to satisfy quirks of this particular tool, but rather of making your project's dependency list as accurate as possible. Other tools, like the GitHub Dependabot and the [OSS Review Toolkit](https://github.com/oss-review-toolkit/ort), use this information as well.
+
+#### Maven Scope
+
+You may get different results using the Maven plugin vs. the CLI.
+
+The Maven plugin only includes dependencies that are in the `compile` scope.
+
+In contrast, if you use Maven's `dependency` plugin to generate a dependency list that you then feed to the CLI, you'll get a list that includes all dependencies in all scopes (e.g., it will include content in the `test` scope).
 
 ### Example: Maven
 
