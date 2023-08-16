@@ -9,7 +9,6 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
-import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 import org.gitlab4j.api.Constants.IssueState;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -20,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GitLabConnection {
-	final Logger logger = LoggerFactory.getLogger(ClearlyDefinedSupport.class);
+	final Logger logger = LoggerFactory.getLogger(GitLabConnection.class);
 	private GitLabApi gitLabApi;
 	private String path;
 
