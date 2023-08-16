@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
@@ -32,8 +31,13 @@ import javax.inject.Provider;
 
 import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpClientService implements IHttpClientService {
+	final Logger logger = LoggerFactory.getLogger(HttpClientService.class);
+
+	final static int MAX_TRIES = 10;
 
 	@Inject
 	ISettings settings;
@@ -45,20 +49,28 @@ public class HttpClientService implements IHttpClientService {
 	@Override
 	public int post(String url, String contentType, String payload, Consumer<String> handler) {
 		try {
-			Duration timeout = Duration.ofSeconds(settings.getTimeout());
-			HttpRequest request = HttpRequest
-					.newBuilder(URI.create(url))
-					.header("Content-Type", contentType)
-					.POST(BodyPublishers.ofString(payload, StandardCharsets.UTF_8))
-					.timeout(timeout)
-					.build();
+			var tries = 0;
+			while (true) {
+				Duration timeout = Duration.ofSeconds(settings.getTimeout());
+				HttpRequest request = HttpRequest
+						.newBuilder(URI.create(url))
+						.header("Content-Type", contentType)
+						.POST(BodyPublishers.ofString(payload, StandardCharsets.UTF_8))
+						.timeout(timeout)
+						.build();
 
-			HttpClient httpClient = getHttpClient(timeout);
-			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
-			if (response.statusCode() == 200) {
-				handler.accept(response.body());
+				HttpClient httpClient = getHttpClient(timeout);
+				HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
+				if (response.statusCode() == 502 && tries++ < MAX_TRIES) {
+					logger.info("HTTP response 502 (Bad Gateway). Trying again...");
+					Thread.sleep(1000 * tries);
+					continue;
+				}
+				if (response.statusCode() == 200) {
+					handler.accept(response.body());
+				}
+				return response.statusCode();
 			}
-			return response.statusCode();
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
@@ -67,9 +79,16 @@ public class HttpClientService implements IHttpClientService {
 	@Override
 	public boolean remoteFileExists(String url) {
 		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-			connection.setRequestMethod("HEAD");
-			return (connection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST);
+			HttpRequest.Builder reqBuilder = HttpRequest
+					.newBuilder(URI.create(url))
+					.method("HEAD", HttpRequest.BodyPublishers.noBody());
+
+			Duration timeout = Duration.ofSeconds(settings.getTimeout());
+			HttpRequest request = reqBuilder.timeout(timeout).build();
+
+			HttpClient httpClient = getHttpClient(timeout);
+			HttpResponse<Void> response = httpClient.send(request, BodyHandlers.discarding());
+			return (response.statusCode() < HttpURLConnection.HTTP_BAD_REQUEST);
 		} catch (Exception e) {
 			return false;
 		}
@@ -83,33 +102,45 @@ public class HttpClientService implements IHttpClientService {
 	@Override
 	public int get(String url, String contentType, Map<String, String> headers, Consumer<InputStream> handler) {
 		try {
-			HttpRequest.Builder reqBuilder = HttpRequest
-					.newBuilder(URI.create(url))
-					.header("Content-Type", contentType)
-					.GET();
+			var tries = 0;
+			while (true) {
+				HttpRequest.Builder reqBuilder = HttpRequest
+						.newBuilder(URI.create(url))
+						.header("Content-Type", contentType)
+						.GET();
 
-			headers.forEach((key, value) -> reqBuilder.header(key, value));
+				headers.forEach((key, value) -> reqBuilder.header(key, value));
 
-			Duration timeout = Duration.ofSeconds(settings.getTimeout());
-			HttpRequest request = reqBuilder.timeout(timeout).build();
+				Duration timeout = Duration.ofSeconds(settings.getTimeout());
+				HttpRequest request = reqBuilder.timeout(timeout).build();
 
-			HttpClient httpClient = getHttpClient(timeout);
-			HttpResponse<InputStream> response = httpClient.send(request, BodyHandlers.ofInputStream());
-			if (response.statusCode() == 200) {
-				handler.accept(response.body());
+				HttpClient httpClient = getHttpClient(timeout);
+
+				HttpResponse<InputStream> response = httpClient.send(request, BodyHandlers.ofInputStream());
+				if (response.statusCode() == 502 && tries++ < MAX_TRIES) {
+					logger.info("HTTP response 502 (Bad Gateway). Trying again...");
+					Thread.sleep(1000 * tries);
+					continue;
+				}
+				if (response.statusCode() == 200) {
+					handler.accept(response.body());
+				}
+				return response.statusCode();
 			}
-			return response.statusCode();
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	protected HttpClient getHttpClient(Duration timeout) {
-		HttpClient.Builder result = HttpClient.newBuilder().connectTimeout(timeout);
+		HttpClient.Builder builder = HttpClient
+				.newBuilder()
+				.connectTimeout(timeout)
+				.followRedirects(HttpClient.Redirect.ALWAYS);
 
 		// Configure proxy, if any
-		Optional.ofNullable(this.proxySettings.get()).ifPresent(proxySettings -> proxySettings.configure(result));
+		Optional.ofNullable(this.proxySettings.get()).ifPresent(proxySettings -> proxySettings.configure(builder));
 
-		return result.build();
+		return builder.build();
 	}
 }
