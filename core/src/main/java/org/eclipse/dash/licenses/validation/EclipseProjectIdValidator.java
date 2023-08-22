@@ -11,7 +11,7 @@ package org.eclipse.dash.licenses.validation;
 
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.dash.api.EclipseApi;
 import org.eclipse.dash.licenses.review.GitLabSupport;

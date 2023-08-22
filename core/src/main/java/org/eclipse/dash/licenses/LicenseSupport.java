@@ -14,14 +14,13 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.eclipse.dash.licenses.http.IHttpClientService;
 import org.eclipse.dash.licenses.spdx.SpdxExpression;
 import org.eclipse.dash.licenses.spdx.SpdxExpressionParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
