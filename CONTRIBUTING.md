@@ -31,16 +31,16 @@ more.
 
 ## Eclipse Contributor Agreement
 
-Before your contribution can be accepted by the project team contributors must
+In order to be able to contribute to Eclipse Foundation projects you must
 electronically sign the Eclipse Contributor Agreement (ECA).
 
-* http://www.eclipse.org/legal/ECA.php
+* https://www.eclipse.org/legal/ECA.php
 
-Commits that are provided by non-committers must have a Signed-off-by field in
-the footer indicating that the author is aware of the terms by which the
-contribution has been provided to the project. The non-committer must
-additionally have an Eclipse Foundation account and must have a signed Eclipse
-Contributor Agreement (ECA) on file.
+The ECA provides the Eclipse Foundation with a permanent record that you agree
+that each of your contributions will comply with the commitments documented in
+the Developer Certificate of Origin (DCO). Having an ECA on file associated with
+the email address matching the "Author" field of your contribution's Git commits
+fulfills the DCO's requirement that you sign-off on your contributions.
 
 For more information, please see the Eclipse Committer Handbook:
 https://www.eclipse.org/projects/handbook/#resources-commit
