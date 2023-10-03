@@ -1,0 +1,4 @@
+{
+    "npm/npmjs/-/allure-commandline/2.23.0": "Approved https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab/-/issues/9379",
+    "npm/npmjs/-/eslint-plugin-deprecation/1.2.1": "Approved as 'works-with': https://dev.eclipse.org/ipzilla/show_bug.cgi?id=22573"
+}
