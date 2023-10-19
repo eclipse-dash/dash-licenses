@@ -26,4 +26,8 @@ public interface IContentData {
 	String getAuthority();
 
 	String getUrl();
+
+	default String getSourceUrl() {
+		return null;
+	}
 }

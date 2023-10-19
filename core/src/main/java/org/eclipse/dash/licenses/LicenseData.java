@@ -49,6 +49,10 @@ public class LicenseData {
 		return withDefaultContentData(IContentData::getUrl, null);
 	}
 
+	public String getSourceUrl() {
+		return withDefaultContentData(IContentData::getSourceUrl, null);
+	}
+
 	/**
 	 * Answer the result of executing the function with the default IContentData
 	 * instance. We assume that the license data sources were called in priority

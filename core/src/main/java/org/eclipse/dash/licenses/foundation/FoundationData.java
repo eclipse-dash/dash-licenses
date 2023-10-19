@@ -90,6 +90,11 @@ public class FoundationData implements IContentData {
 	}
 
 	@Override
+	public String getSourceUrl() {
+		return data.getString("sourceUrl", null);
+	}
+
+	@Override
 	public String getUrl() {
 		Matcher matcher = CQ_PATTERN.matcher(getAuthority());
 		if (matcher.matches()) {
