@@ -94,7 +94,7 @@ const dashLicensesConfigDefaults = {
     "configFile": "dashLicensesConfig.json",
     /** run this script in debug mode, printing-out more information */ 
     "debug": false,
-    /** run in dry run mode - do not create IP tickets */
+    /** run in dry run mode - do not create IP review tickets */
     "dryRun": false,
     /** 
      * file where exclusions are defined. Excluded 3PPs will be ignored, if 
@@ -110,7 +110,7 @@ const dashLicensesConfigDefaults = {
     "noColor": false,
     /** eclipse Foundation short project name. e.g. "ecd.theia", "ecd.cdt-cloud" */
     "project": "",
-    /** use dash-license "review" mode, to automatically create IP tickets for any suspicious dependencies?  */
+    /** use dash-license "review" mode, to automatically create IP review tickets for any suspicious dependencies?  */
     "review": false,
     /** summary file, in which dash-licenses will save its findings */
     "summary": "license-check-summary.txt",
@@ -283,7 +283,7 @@ function printHelp() {
     help('  --batch=<number>               Batch size. Passed as-is to dash-licenses');
     help('  --configFile=<file>            Config file, to fine-tune dash-licenses options');
     help('  --debug                        Run this script in debug mode, printing-out more information');
-    help('  --dryRun                       Run in dry run mode - do not create IP tickets');
+    help('  --dryRun                       Run in dry run mode - resolve configuration but do not run dash-licenses');
     help('  --exclusions=<file>            File where exclusions are defined. Excluded 3PPs will be ignored,'); 
     help('                                 if reported by dash-licenses, and so will not cause this script to exit');
     help('                                 with an error status');
@@ -292,7 +292,7 @@ function printHelp() {
     help('                                 e.g. a project\'s "yarn.lock" or "package-lock.json". Default: "yarn.lock"');
     help('  --noColor                      Disable color output');
     help('  --project=<name>               Eclipse Foundation short project name. e.g. "ecd.theia", "technology.dash"');
-    help('  --review                       Use dash-license "review" mode, to automatically create IP tickets for');
+    help('  --review                       Use dash-license "review" mode, to automatically create IP Review tickets for');
     help('                                 dependencies whose license require more scrutiny');
     help('  --summary=<file>               Summary file, in which dash-licenses will save its findings');
     help('  --timeout=<number>             Timeout. Passed as-is to dash-licenses');
