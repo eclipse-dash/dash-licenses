@@ -368,22 +368,27 @@ function parseConfigFile(file) {
     const configFromFile = {};
     const dashLicensesConfigFile = path.resolve(file);
     if (fs.existsSync(dashLicensesConfigFile)) {
-        const wsConfig = JSON.parse(fs.readFileSync(dashLicensesConfigFile, 'utf8'));
-        // prefer config file entries vs defaults
-        Object.keys(wsConfig).map(k => {
-            const value = wsConfig[k];
-            // only consider known parameters
-            if (k in dashLicensesConfigDefaults) {
-                // exclude undefined values and also empty or white-space strings
-                if (value !== undefined && (typeof value != 'string' || value.trim() != "")) {
-                    configFromFile[k] = wsConfig[k];    
+        try {
+            const wsConfig = JSON.parse(fs.readFileSync(dashLicensesConfigFile, 'utf8'));
+            // prefer config file entries vs defaults
+            Object.keys(wsConfig).map(k => {
+                const value = wsConfig[k];
+                // only consider known parameters
+                if (k in dashLicensesConfigDefaults) {
+                    // exclude undefined values and also empty or white-space strings
+                    if (value !== undefined && (typeof value != 'string' || value.trim() != "")) {
+                        configFromFile[k] = wsConfig[k];    
+                    } else {
+                        warn(`(${path.basename(dashLicensesConfigFile)}) - config file entry "${k}" is undefined - ignoring it`); 
+                    }
                 } else {
-                    warn(`(${path.basename(dashLicensesConfigFile)}) - config file entry "${k}" is undefined - ignoring it`); 
+                    warn(`Unknown config file entry: \"${k}\" - ignoring it"`);
                 }
-            } else {
-                warn(`Unknown config file entry: \"${k}\" - ignoring it"`);
-            }
-        });
+            });
+        } catch(e) {
+            error("parsing configuration  file: " + e);
+            process.exit(1);
+        }
     } else {
         warn(`Config file not found: ${dashLicensesConfigFile} - ignoring it"`);
     }
@@ -475,12 +480,18 @@ async function* readSummaryLines(summary) {
  * @returns {Map<string, any>} map of dependencies to ignore if restricted, value is an optional data field.
  */
 function readExclusions(exclusions) {
-    const json = JSON.parse(fs.readFileSync(exclusions, 'utf8'));
-    if (Array.isArray(json)) {
-        return new Map(json.map(element => [element, null]));
-    } else if (typeof json === 'object' && json !== null) {
-        return new Map(Object.entries(json));
+    try {
+        const json = JSON.parse(fs.readFileSync(exclusions, 'utf8'));
+        if (Array.isArray(json)) {
+            return new Map(json.map(element => [element, null]));
+        } else if (typeof json === 'object' && json !== null) {
+            return new Map(Object.entries(json));
+        }
+    } catch(e) {
+        error("parsing exclusions file: " + e);
+        process.exit(1);
     }
+        
     console.error(`ERROR: Invalid format for "${exclusions}"`);
     process.exit(1);
 }
