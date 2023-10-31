@@ -155,6 +155,11 @@ async function main() {
         process.exit(1);
     }
     info(`Using input file: ${depsInputFile} - found`);
+    if (!fs.existsSync(exclusionsFile)) {
+        warn(`Exclusions file not found: ${exclusionsFile}. Ignoring it`);
+    } else {
+        info(`Using exclusions file: ${exclusionsFile} - found`);
+    }
     if (autoReviewMode && !isPersonalAccessTokenSet) {
         warn('Please setup an Eclipse Foundation Gitlab Personal Access Token to run the license check in "review" mode');
         warn('It should be set in an environment variable named "DASH_TOKEN"');
