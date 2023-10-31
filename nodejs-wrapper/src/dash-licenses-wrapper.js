@@ -31,7 +31,7 @@ const regExpReplacer = (key, value) => {
     }
     return value;
 };
-const dashLicensesJar = path.resolve(__dirname, 'download/dash-licenses.jar');
+const dashLicensesJar = path.resolve(__dirname, '..', 'download/dash-licenses.jar');
 const dashLicensesDownloadUrl = 'https://repo.eclipse.org/service/local/artifact/maven/redirect?r=dash-licenses&g=org.eclipse.dash&a=org.eclipse.dash.licenses&v=LATEST';
 const dashLicensesInternalError = 127;
 
@@ -178,6 +178,21 @@ async function main() {
             process.exit(1);
         }
     }
+    // sanity check on downloaded dash-licenses .jar file - it can occasionally happen that the
+    // download is not a valid jar file, without curl reporting a problem. e.g. the content might
+    // be an error message in plain text, rather than the expected content. ATM the legit .jar is 
+    // expected to be ~12MB in size - if we download something much smaller, it's likely not what 
+    // we want.
+    if (fs.statSync(dashLicensesJar).size < 1000000) {
+        const invalidJar = dashLicensesJar + '.invalid';
+        error(`Downloaded dash-licenses jar file appears to be invalid or corrupted: ${dashLicensesJar}`);
+        error(`Renaming it to ${path.basename(invalidJar)} and exiting... `);
+        error("Perhaps it will work next time?");
+
+        // rename likely faulty jar so it will be downloaded again next run
+        fs.renameSync(dashLicensesJar, invalidJar);
+        process.exit(1);
+    }
     if (fs.existsSync(summaryFile)) {
         info('Backing up previous summary...');
         fs.renameSync(summaryFile, `${summaryFile}.old`);
@@ -216,16 +231,20 @@ async function main() {
     // filter-out restricted dependencies that are in the exclusion file
     if (restricted.length > 0) {
         if (fs.existsSync(exclusionsFile)) {
-            info('Checking results against the exclusions...');
+            info('Checking dash-licenses "restricted" results against configured exclusions...');
             const exclusions = readExclusions(exclusionsFile);
             const unmatched = new Set(exclusions.keys());
             const unhandled = restricted.filter(entry => {
                 unmatched.delete(entry.dependency);
-                return !exclusions.has(entry.dependency);
+                const dependencyIsExcluded = exclusions.has(entry.dependency);
+                if (dependencyIsExcluded) {
+                    debug(`Restricted dependency from dash-licenses results is in exclusion file - filtering it out: ${entry.dependency}`);
+                }
+                return !dependencyIsExcluded;
             });
             if (unmatched.size > 0) {
-                warn('Some entries in the exclusions did not match anything from dash-licenses output:');
-                warn("(perhaps these entries are no longer required?)");
+                warn('Some entries in the exclusions file did not match any restricted dependencies from dash-licenses output:');
+                warn("(perhaps the following entries are no longer required?)");
                 for (const dependency of unmatched) {
                     console.log(magenta(`> ${dependency}`));
                     const data = exclusions.get(dependency);
@@ -233,18 +252,22 @@ async function main() {
                         console.warn(`${dependency}:`, data);
                     }
                 }
+                console.log(``)
             }
             if (unhandled.length > 0) {
-                error(`Found results that aren't part of the exclusions!`);
+                error(`Found restricted dash-licenses results that are not filtered by configuration!`);
                 logRestrictedDashSummaryEntries(unhandled);
-                process.exit(1);
+                process.exit(unhandled.length);
+            } else {
+                info("Some restricted dependencies were found in dash-licenses results, but all were excluded by configuration!");
             }
         } else {
-            error(`Found unhandled restricted dependencies!`);
+            error(`Found restricted dependencies in dash-licenses results!`);
             logRestrictedDashSummaryEntries(restricted);
-            process.exit(1);
+            process.exit(restricted.length);
         }
     }
+    info("Found no dependency that requires further investigation. Good job!");
     info('Done.');
     process.exit(0);
 }
@@ -424,6 +447,7 @@ async function getRestrictedDependenciesFromSummary(summary) {
     const restricted = [];
     for await (const entry of readSummaryLines(summary)) {
         if (entry.status.toLocaleLowerCase() === 'restricted') {
+            debug(`dash-licenses found a restricted dependency: ${entry.dependency}`);
             restricted.push(entry);
         }
     }
