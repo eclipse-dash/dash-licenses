@@ -9,7 +9,11 @@
     "dash-licenses-wrapper": "src/dash-licenses-wrapper.js"
   },
   "scripts": {
-    "test": "test"
+    "test": "mocha --reporter spec"
+  },
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0"
   },
   "repository": {
     "type": "git",
@@ -23,7 +27,7 @@
     "Eclipse Foundation"
   ],
   "author": "Ericsson and others",
-  "license": "EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0",
+  "license": "EPL-2.0",
   "bugs": {
     "url": "https://github.com/eclipse/dash-licenses/issues"
   },
