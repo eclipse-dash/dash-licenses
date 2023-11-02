@@ -90,18 +90,18 @@ const dashLicensesConfig = {};
 const dashLicensesConfigDefaults = {
     /** batch size. Passed as-is to dash-licenses */
     "batch": 100,
-    /** default config file, to fine-tune dash-licenses options */
-    "configFile": "dashLicensesConfig.json",
+    /** optional config file, to fine-tune dash-licenses options */
+    "configFile": "",
     /** run this script in debug mode, printing-out more information */ 
     "debug": false,
     /** run in dry run mode - do not create IP review tickets */
     "dryRun": false,
     /** 
-     * file where exclusions are defined. Excluded 3PPs will be ignored, if 
-     * reported by dash-licenses, and so will not cause this script to exit with 
-     * an error status
+     * optional file where exclusions are defined. Excluded 3PPs will be ignored, 
+     * if reported by dash-licenses, and so will not cause this script to exit 
+     * with an error status
      */
-    "exclusions": "license-check-exclusions.json",
+    "exclusions": "",
     /** display help and exit */
     "help": false,
     /** file where dependencies are defined. Passed as-is to dash-licenses */
@@ -155,7 +155,7 @@ async function main() {
         process.exit(1);
     }
     info(`Using input file: ${depsInputFile} - found`);
-    if (!fs.existsSync(exclusionsFile)) {
+    if (exclusionsFile && !fs.existsSync(exclusionsFile)) {
         warn(`Exclusions file not found: ${exclusionsFile}. Ignoring it`);
     } else {
         info(`Using exclusions file: ${exclusionsFile} - found`);
@@ -183,11 +183,11 @@ async function main() {
             process.exit(1);
         }
     }
-    // sanity check on downloaded dash-licenses .jar file - it can occasionally happen that the
-    // download is not a valid jar file, without curl reporting a problem. e.g. the content might
-    // be an error message in plain text, rather than the expected content. ATM the legit .jar is 
-    // expected to be ~12MB in size - if we download something much smaller, it's likely not what 
-    // we want.
+    // sanity check on downloaded dash-licenses .jar file - it can occasionally happen
+    // that the download is not a valid jar file, without curl reporting a problem. e.g. 
+    // the content might be an error message in plain text, rather than the expected 
+    // content. ATM the legit .jar is expected to be ~12MB in size - if we download 
+    // something much smaller, it's likely not what we want.
     if (fs.statSync(dashLicensesJar).size < 1000000) {
         const invalidJar = dashLicensesJar + '.invalid';
         error(`Downloaded dash-licenses jar file appears to be invalid or corrupted: ${dashLicensesJar}`);
@@ -235,7 +235,7 @@ async function main() {
     const restricted = await getRestrictedDependenciesFromSummary(summaryFile);
     // filter-out restricted dependencies that are in the exclusion file
     if (restricted.length > 0) {
-        if (fs.existsSync(exclusionsFile)) {
+        if (exclusionsFile && fs.existsSync(exclusionsFile)) {
             info('Checking dash-licenses "restricted" results against configured exclusions...');
             const exclusions = readExclusions(exclusionsFile);
             const unmatched = new Set(exclusions.keys());
@@ -326,7 +326,10 @@ function resolveConfig() {
     } 
 
     // optional configuration provided from a config file
-    const configFromFile = parseConfigFile(configFile);
+    let configFromFile = [];
+    if (configFile) {
+        configFromFile = parseConfigFile(configFile);
+    }
 
     // Resolve configuration: In order of priority (highest to lowest): 
     // CLI, config file, defaults
@@ -349,19 +352,16 @@ function resolveConfig() {
         process.exit(0);
     }
 
-    debug("Parsed config file: ");
-    debug(`(From file: ${configFile})`);
-    debug("-------------------------------------");
-    debug(getPrintableConfig(configFromFile));
-    debug("-------------------------------------\n");
-    debug("Parsed CLI:");
-    debug("-------------------------------------");
-    debug(getPrintableConfig(configFromCLI));
-    debug("-------------------------------------\n");
-    info("Effective configuration: ");
-    info("-------------------------------------");
-    info(getPrintableConfig(dashLicensesConfig));
-    info("-------------------------------------\n");
+    if (configFile) {
+        // debug("Parsed config file: ");
+        debug(`(From file: ${configFile})`);
+        debug("Parsed config file: " + getPrintableConfig(configFromFile) + "\n");
+    }
+    // debug("Parsed CLI:");
+    debug("Parsed CLI: " + getPrintableConfig(configFromCLI) + "\n");
+
+    // info("Effective configuration:");
+    info("Effective configuration: " + getPrintableConfig(dashLicensesConfig) + "\n");
 }
 
 /**
@@ -559,11 +559,11 @@ function prettyCommand(status, indent = 2) {
     return JSON.stringify([status.bin, ...status.args], undefined, indent);
 }
 
-function info(text) { console.warn(cyan(`INFO: ${text}`)); }
+function info(text) { console.info(cyan(`INFO: ${text}`)); }
 function warn(text) { console.warn(yellow(`WARN: ${text}`)); }
 function error(text) { console.error(red(`ERROR: ${text}`)); }
-function debug(text) { if (dashLicensesConfig.debug) { console.warn(gray(`DEBUG: ${text}`)); } }
-function help(text) { console.warn(green(`${text}`)); }
+function debug(text) { if (dashLicensesConfig.debug) { console.info(gray(`DEBUG: ${text}`)); } }
+function help(text) { console.info(green(`${text}`)); }
 
 function style(code, text) { return noColor ? text : `\x1b[${code}m${text}\x1b[0m`; }
 function cyan(text) { return style(96, text); }

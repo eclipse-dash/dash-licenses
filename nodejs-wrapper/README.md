@@ -6,7 +6,7 @@ This npm package makes it easy to integrate [dash-licenses](https://github.com/e
 
 - called using `bash`
 - `node.js` is installed and `node` executable is in the path
-- on Linux, mac or Windows using Windows Subsystem for Linux (WSL)
+- on Linux (tested), probably works on mac and Windows using the Windows Subsystem for Linux (WSL)
 - to run `dash-licenses`: JDK or JRE 11 or later is installed and the `java` executable is in the path
 - to run `dash-licenses` in [automatic review mode](https://github.com/eclipse/dash-licenses#automatic-ip-team-review-requests):
   - a PAT (Personal Access Token) generated on the Eclipse Foundation Gitlab by an Eclipse project committer

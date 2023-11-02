@@ -15,6 +15,9 @@
     "chai": "^4.3.10",
     "mocha": "^10.2.0"
   },
+  "mocha": {
+    "timeout": 60000
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eclipse/dash-licenses.git"
