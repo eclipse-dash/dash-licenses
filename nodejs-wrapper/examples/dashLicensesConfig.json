@@ -1,9 +1,9 @@
 {
     "project": "ecd.cdt-cloud",
     "review": false,
-    "inputFile": "package-lock.json",
+    "inputFile": "examples/package-lock.json",
     "batch": 51,
     "timeout": 241,
-    "exclusions": "dashLicensesExclusions.json",
+    "exclusions": "examples/dashLicensesExclusions.json",
     "summary": "dependency-check-summary.txt"
 }

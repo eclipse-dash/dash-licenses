@@ -9,7 +9,7 @@
 // This Source Code may also be made available under the following Secondary
 // Licenses when the conditions for such availability set forth in the Eclipse
 // Public License v. 2.0 are satisfied: GNU General Public License, version 2
-// with the GNU Classpath Exception which is available at
+// with the GNU Classpath,, Exception which is available at
 // https://www.gnu.org/software/classpath/license.html.
 //
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
@@ -53,12 +53,12 @@ const dashUnsupportedCLI = {
 const wrapperCLIRegexps = {
     // supported, wrapper-specific
     "configFile": /--(configFile)=(\S+).*/,
-    "debug": /--(debug)/,
     "dryRun": /--(dryRun)/,
     "exclusions": /--(exclusions)=(\S+).*/,
     "help": /--(help)/,
     "inputFile": /--(inputFile)=(\S+).*/,
     "noColor": /--(noColor)/,
+    "verbose": /--(verbose)/,
     
     // supported, passed to dash-licenses
     "batch": /--(batch)=(\d+).*/,
@@ -92,8 +92,6 @@ const dashLicensesConfigDefaults = {
     "batch": 100,
     /** optional config file, to fine-tune dash-licenses options */
     "configFile": "",
-    /** run this script in debug mode, printing-out more information */ 
-    "debug": false,
     /** run in dry run mode - do not create IP review tickets */
     "dryRun": false,
     /** 
@@ -115,7 +113,9 @@ const dashLicensesConfigDefaults = {
     /** summary file, in which dash-licenses will save its findings */
     "summary": "license-check-summary.txt",
     /** timeout. Passed as-is to dash-licenses */
-    "timeout": 30
+    "timeout": 30,
+    /** run this script in verbose mode, printing-out more information */ 
+    "verbose": false,
 };
 
 resolveConfig();
@@ -282,7 +282,6 @@ function printHelp() {
     help('Options:');
     help('  --batch=<number>               Batch size. Passed as-is to dash-licenses');
     help('  --configFile=<file>            Config file, to fine-tune dash-licenses options');
-    help('  --debug                        Run this script in debug mode, printing-out more information');
     help('  --dryRun                       Run in dry run mode - resolve configuration but do not run dash-licenses');
     help('  --exclusions=<file>            File where exclusions are defined. Excluded 3PPs will be ignored,'); 
     help('                                 if reported by dash-licenses, and so will not cause this script to exit');
@@ -296,6 +295,7 @@ function printHelp() {
     help('                                 dependencies whose license require more scrutiny');
     help('  --summary=<file>               Summary file, in which dash-licenses will save its findings');
     help('  --timeout=<number>             Timeout. Passed as-is to dash-licenses');
+    help('  --verbose                      Run in verbose mode, printing-out more information');
     help('');
     help('Examples:');
     help('  npx dash-licenses-wrapper --dry-run --configFile=configs/dashLicensesConfig.json');
@@ -353,14 +353,11 @@ function resolveConfig() {
     }
 
     if (configFile) {
-        // debug("Parsed config file: ");
         debug(`(From file: ${configFile})`);
         debug("Parsed config file: " + getPrintableConfig(configFromFile) + "\n");
     }
-    // debug("Parsed CLI:");
     debug("Parsed CLI: " + getPrintableConfig(configFromCLI) + "\n");
 
-    // info("Effective configuration:");
     info("Effective configuration: " + getPrintableConfig(dashLicensesConfig) + "\n");
 }
 
@@ -562,7 +559,7 @@ function prettyCommand(status, indent = 2) {
 function info(text) { console.info(cyan(`INFO: ${text}`)); }
 function warn(text) { console.warn(yellow(`WARN: ${text}`)); }
 function error(text) { console.error(red(`ERROR: ${text}`)); }
-function debug(text) { if (dashLicensesConfig.debug) { console.info(gray(`DEBUG: ${text}`)); } }
+function debug(text) { if (dashLicensesConfig.verbose) { console.info(gray(`DEBUG: ${text}`)); } }
 function help(text) { console.info(green(`${text}`)); }
 
 function style(code, text) { return noColor ? text : `\x1b[${code}m${text}\x1b[0m`; }
