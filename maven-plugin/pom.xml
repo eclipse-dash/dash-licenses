@@ -1,11 +1,11 @@
 <!--
- * Copyright (C) 2020, Red Hat Inc. 
- * Copyright (C) 2020, 2022 The Eclipse Foundation and others. 
- * 
+ * Copyright (C) 2020, Red Hat Inc.
+ * Copyright (C) 2020, 2022 The Eclipse Foundation and others.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-FileType: DOCUMENTATION
  *
  * SPDX-License-Identifier: EPL-2.0
@@ -19,7 +19,7 @@
 		<version>1.0.3-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	
+
 	<artifactId>license-tool-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 
@@ -75,6 +75,7 @@
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
 			<version>3.9.4</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.plugin-tools</groupId>
@@ -108,7 +109,7 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
