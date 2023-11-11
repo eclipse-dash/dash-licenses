@@ -47,6 +47,15 @@ import org.eclipse.dash.licenses.InvalidContentId;
  *   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.12.7.tgz#9329b4782a7d6bbd7eef57e11addf91ee3ef1e41"
  *   integrity sha512-YaxPMGs/XIWtYqrdEOZOCPsVWfEoriXopnsz3/i7apYPXQ3698UFhS6dVT1KN5qOsWmVgw/FOrmQgpRaZayGsw==
  * </pre>
+ * 
+ * It appears that, in some cases, the keys are surrounded by quotes (#281).
+ * We've observed this in "v1" lock files. For example:
+ * 
+ * <pre>
+ * "ansi-colors@4.1.1": "integrity"
+ * "sha512-JoX0apGbHaUJBNl6yF+p6JAFYZ666/hhCGKN5t9QFjbJQKUU/g8MNbFDbvfrgKXvI1QpZplPOnwIo99lX/AAmA=="
+ * "resolved" "https://registry.npmjs.org/ansi-colors/-/ansi-colors-4.1.1.tgz"
+ * "version" "4.1.1" </pre
  *
  * The implementation is only as sophisticated as it needs to be and only
  * provides the behaviour that I require to determine a ClearlyDefined ID from
@@ -223,10 +232,12 @@ public class YarnLockFileReader implements IDependencyListReader {
 		 * 
 		 * FIXME Validate that we can assume that the version is surrounded by quotes.
 		 * 
+		 * 2023-11-10 sometimes the key is surrounded by quotes (#281)
+		 * 
 		 * @return
 		 */
 		public String getVersion() {
-			var pattern = Pattern.compile("version \"(?<version>[^\"]+)\"");
+			var pattern = Pattern.compile("(?:version|\"version\") \"(?<version>[^\"]+)\"");
 			for (Record child : nested) {
 				var matcher = pattern.matcher(child.value);
 				if (matcher.matches()) {

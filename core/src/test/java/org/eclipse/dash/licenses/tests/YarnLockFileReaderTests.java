@@ -20,6 +20,7 @@ import java.io.StringReader;
 
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.cli.YarnLockFileReader;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class YarnLockFileReaderTests {
@@ -145,5 +146,20 @@ class YarnLockFileReaderTests {
 		IContentId id = ids.get(0);
 
 		assertFalse(id.isValid());
+	}
+
+	@Nested
+	class Yarn2Tests {
+
+		@Test
+		void test() throws IOException {
+			try (InputStream input = this.getClass().getResourceAsStream("/test_data_yarn2.lock")) {
+				var ids = new YarnLockFileReader(new InputStreamReader(input)).getContentIds();
+				assertEquals("npm/npmjs/-/ansi-colors/4.1.1", ids.get(0).toString());
+				assertEquals("npm/npmjs/-/ansi-regex/5.0.1", ids.get(1).toString());
+				assertEquals("npm/npmjs/-/ansi-styles/4.3.0", ids.get(2).toString());
+				assertEquals("npm/npmjs/-/anymatch/3.1.3", ids.get(3).toString());
+			}
+		}
 	}
 }
