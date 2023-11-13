@@ -94,7 +94,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dash</groupId>
-			<artifactId>org.eclipse.dash.licenses</artifactId>
+			<artifactId>org.eclipse.dash.licenses.core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

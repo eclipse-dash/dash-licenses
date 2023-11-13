@@ -19,7 +19,7 @@
 		<version>1.0.3-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>org.eclipse.dash.licenses</artifactId>
+	<artifactId>org.eclipse.dash.licenses.core</artifactId>
 
 	<licenses>
 		<license>
@@ -130,32 +130,10 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.5.0</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>org.eclipse.dash.licenses.cli.Main</mainClass>
-								</transformer>
-							</transformers>
-							<createDependencyReducedPom>
-								false
-							</createDependencyReducedPom>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.1.2</version>
 				<configuration>
+					<test>org.eclipse.dash.licenses.tests.TestSuite</test>
 					<additionalClasspathElements>
 						<additionalClasspathElement>${basedir}/src/test/java</additionalClasspathElement>
 					</additionalClasspathElements>
@@ -176,13 +154,4 @@
 			</resource>
 		</resources>
 	</build>
-	<repositories>
-		<repository>
-			<id>dash-licenses-snapshots</id>
-			<url>https://repo.eclipse.org/content/repositories/dash-licenses-snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 </project>

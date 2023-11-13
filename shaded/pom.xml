@@ -1,0 +1,92 @@
+<!--
+ * Copyright (C) 2023 Eclipse Foundation and others. 
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * SPDX-FileType: DOCUMENTATION
+ *
+ * SPDX-FileCopyrightText: 2023 Eclipse Foundation
+ * SPDX-License-Identifier: EPL-2.0
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.eclipse.dash</groupId>
+		<artifactId>dash-licenses-parent</artifactId>
+		<version>1.0.3-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>org.eclipse.dash.licenses</artifactId>
+
+	<licenses>
+		<license>
+			<name>Eclipse Public License 2.0</name>
+			<url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Wayne Beaton</name>
+			<organization>The Eclipse Foundation</organization>
+			<organizationUrl>https://eclipse.org</organizationUrl>
+		</developer>
+	</developers>
+
+	<organization>
+		<name>The Eclipse Dash Project</name>
+		<url>https://eclipse.org/dash</url>
+	</organization>
+
+	<name>Eclipse Dash License Tool Executable JAR</name>
+	<description>The Eclipse Dash License Tool bundled as an executable JAR.</description>
+	<url>https://github.com/eclipse/dash-licenses</url>
+
+	<scm>
+		<url>https://github.com/eclipse/dash-licenses</url>
+	  <tag>HEAD</tag>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/eclipse/dash-licenses/issues</url>
+	</issueManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.dash</groupId>
+			<artifactId>org.eclipse.dash.licenses.core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.5.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>org.eclipse.dash.licenses.cli.Main</mainClass>
+								</transformer>
+							</transformers>
+							<createDependencyReducedPom>
+								false
+							</createDependencyReducedPom>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

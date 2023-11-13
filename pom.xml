@@ -60,6 +60,7 @@
 	<modules>
 		<module>core</module>
 		<module>maven-plugin</module>
+		<module>shaded</module>
 	</modules>
 
 	<build>
