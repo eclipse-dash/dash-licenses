@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 public class SpdxGroup extends SpdxExpression {
 
-	private SpdxExpression expression;
+	SpdxExpression expression;
 
 	public SpdxGroup(SpdxExpression expression) {
 		this.expression = expression;
@@ -55,6 +55,11 @@ public class SpdxGroup extends SpdxExpression {
 			return this.expression.equals(group.expression);
 		}
 		return false;
+	}
+
+	@Override
+	boolean equalsBinaryOperation(SpdxBinaryOperation spdxBinaryOperation) {
+		return expression.equalsBinaryOperation(spdxBinaryOperation);
 	}
 
 	@Override

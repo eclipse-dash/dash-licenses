@@ -98,4 +98,8 @@ public abstract class SpdxExpression {
 	public boolean contains(SpdxExpression left) {
 		return false;
 	}
+
+	boolean equalsBinaryOperation(SpdxBinaryOperation spdxBinaryOperation) {
+		return false;
+	};
 }

@@ -413,6 +413,30 @@ class SpdxExpressionParserTests {
 					.parse("Apache-2.0 AND (Apache-2.0 AND BSD-3-Clause) AND BSD-3-Clause AND (Apache-2.0 AND MIT)");
 			assertEquals("Apache-2.0 AND BSD-3-Clause AND MIT", expression.collapse().toString());
 		}
+
+		@Test
+		void testCollapse7() {
+			var expression = new SpdxExpressionParser().parse("A AND (A AND B)");
+			assertEquals("(A AND B)", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse8() {
+			var expression = new SpdxExpressionParser().parse("(A AND B) AND A");
+			assertEquals("(A AND B)", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse10() {
+			var expression = new SpdxExpressionParser().parse("(A AND B) AND (A AND B)");
+			assertEquals("(A AND B)", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse11() {
+			var expression = new SpdxExpressionParser().parse("(B AND A) AND (A AND B)");
+			assertEquals("(B AND A)", expression.collapse().toString());
+		}
 	}
 
 	@Nested

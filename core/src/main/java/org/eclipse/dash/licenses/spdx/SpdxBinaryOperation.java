@@ -219,6 +219,9 @@ public class SpdxBinaryOperation extends SpdxExpression {
 		if (left.contains(right))
 			return left;
 
+		if (left.equals(right))
+			return left;
+
 		return new SpdxBinaryOperation(operator, left, right);
 	}
 
@@ -229,10 +232,16 @@ public class SpdxBinaryOperation extends SpdxExpression {
 
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof SpdxBinaryOperation) {
-			return this.operator.checkEqual(this, (SpdxBinaryOperation) object);
+		if (object instanceof SpdxExpression) {
+			// Do a little double dispatching...
+			return ((SpdxExpression) object).equalsBinaryOperation(this);
 		}
 		return false;
+	}
+
+	@Override
+	boolean equalsBinaryOperation(SpdxBinaryOperation operand) {
+		return this.operator.checkEqual(this, operand);
 	}
 
 	@Override
