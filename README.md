@@ -283,17 +283,13 @@ $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<tok
 
 You can filter which dependencies are included and excluded from consideration by the Eclipse Dash License Tool. Inclusions override exclusions.
 
-Use `includeScope` to specify the scope of dependencies to include, as determined by Maven. If specified, it must be one of the following values:
+Use `includeScope` and `excludeScope` to specify the scope of dependencies to include or exclude:
 
-- runtime -- gives runtime and compile dependencies only.
-- compile -- (default) gives compile, provided, and system dependencies only.
-- test -- gives all dependencies.
-- provided -- gives provided dependencies only.
-- system -- gives system dependencies only.
-
-If no scope is specified, then the default value of compile is used, including compile, provided, and system dependencies only.
-
-Use `excludeScope` to specify the scope to exclude. An empty string indicates no scopes (default).
+- `runtime` means runtime and compile dependencies only;
+- `compile` (default for `includeScope`) means compile, provided, and system dependencies only;
+- `test` means all dependencies;
+- `provided` means provided dependencies only; and
+- `system` means system dependencies only.
 
 Use `includeTypes` and `excludeTypes` to specify, by comma-separated list, the types to include or exclude.
 
