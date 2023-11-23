@@ -42,6 +42,27 @@ It's also available as a [Maven plugin](#example-maven-plugin).
 
 Alternatively, you can get the source code and build it yourself. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
+## Build It
+
+The Eclipse Dash License Tool has a Maven-based build.
+
+Requirements:
+
+- Java&trade; Development Kit (JDK) version 11 (or later); and
+- [Maven](https://maven.apache.org/) version 3.6.3 (or later).
+
+Any compatible JDK will do, but consider using an 100% open source distribution such as [Eclipse Temurin](https://adoptium.net).
+
+Steps:
+
+- Clone this repository;
+- `cd` into the root; and
+- Execute `mvn clean verify`.
+
+If you're going to use the Dash License Tool's Maven plugin locally, then you'll need to install it into the local repo:
+
+- Execute `mvn clean install`
+
 ## Usage
 
 The project uses Java 11 language features. **Java 11 or greater is required.**
