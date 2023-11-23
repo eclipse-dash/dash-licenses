@@ -279,6 +279,38 @@ $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<tok
 
 **Do not share your access token.** Provide the Eclipse open source project id (e.g., `technology.dash`) in place of the `<projectId>` placeholder.
 
+#### Maven Plugin Inclusions and Exclusions
+
+You can filter which dependencies are included and excluded from consideration by the Eclipse Dash License Tool. Inclusions override exclusions.
+
+Use `includeScope` to specify the scope of dependencies to include, as determined by Maven. If specified, it must be one of the following values:
+
+- runtime -- gives runtime and compile dependencies only.
+- compile -- (default) gives compile, provided, and system dependencies only.
+- test -- gives all dependencies.
+- provided -- gives provided dependencies only.
+- system -- gives system dependencies only.
+
+If no scope is specified, then the default value of compile is used, including compile, provided, and system dependencies only.
+
+Use `excludeScope` to specify the scope to exclude. An empty string indicates no scopes (default).
+
+Use `includeTypes` and `excludeTypes` to specify, by comma-separated list, the types to include or exclude.
+
+Use `includeClassifiers` and `excludeClassifiers` to specify, by comma-separated list, the classifiers to include or exclude.
+
+Use `includeGroupIds` and `excludeGroupIds` to specify, by comma-separated list, the group ids to include or exclude. Partial matches are supported (e.g., specifying `org.eclipse` as an exclusion will exclude `org.eclipse.jdt`).
+
+Use `includeArtifactIds` and `excludeArtifactIds` to specify, by comma-separate list, the artifact ids to include or exclude.
+
+Note that partial matches are only supported for group ids. All other filters work by exact match.
+
+To exclude all Eclipse project content in  an `org.eclipse.*` namespace:
+
+```
+$ mvn org.eclipse.dash:license-tool-plugin:license-check -DexcludeGroupIds=org.eclipse
+```
+
 #### Eclipse Tycho
 
 The Eclipse Dash License Tool's Maven plugin uses the standard Maven Reactor to determine the list of dependencies that it needs to check.
