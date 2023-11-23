@@ -10,11 +10,16 @@
 package org.eclipse.dash.licenses.tests;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
+import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.cli.PackageLockFileReader;
 import org.junit.jupiter.api.Test;
@@ -57,15 +62,41 @@ class PackageLockFileReaderTests {
 	}
 
 	@Test
-	void testResolvedToLocal() throws IOException {
+	void testV3Format() throws IOException {
+		try (InputStream input = this.getClass().getResourceAsStream("/test_data_package-lock-v3.json")) {
+			PackageLockFileReader reader = new PackageLockFileReader(input);
+			var ids = reader.contentIds().collect(Collectors.toList());
+
+			assertEquals(769, ids.size());
+
+			// Issue #285 Component name is remapped. Make sure that we don't see the key
+			// in the results. This record should manifest as langium-statemachine-dsl (see
+			// below)
+			assertFalse(ids.stream().anyMatch(each -> "statemachine".equals(each.getName())));
+
+			// Test that a handful of content ids are detected as expected.
+			var includes = new IContentId[] { ContentId.getContentId("npm", "npmjs", "-", "ansi-styles", "3.2.1"),
+					ContentId.getContentId("npm", "npmjs", "@typescript-eslint", "eslint-plugin", "6.4.1"),
+					ContentId.getContentId("npm", "npmjs", "@types", "minimatch", "3.0.5"),
+					ContentId.getContentId("npm", "local", "-", "langium-requirements-dsl", "2.1.0"),
+					ContentId.getContentId("npm", "local", "-", "langium-domainmodel-dsl", "2.1.0"),
+					ContentId.getContentId("npm", "local", "-", "langium-statemachine-dsl", "2.1.0") };
+
+			for (int index = 0; index < includes.length; index++) {
+				var id = includes[index];
+				assertTrue("Should include: " + id.toString(), ids.contains(id));
+			}
+		}
+	}
+
+	@Test
+	void testAllRecordsDetected() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/differentResolved.json")) {
 			PackageLockFileReader reader = new PackageLockFileReader(input);
-			// This "test" is a little... abridged. At least this test proves
-			// that we're getting something in the right format from the reader
-			// without having to enumerate all 574 (I think) records).
+
 			String[] expected = { "npm/npmjs/@babel/code-frame/7.12.13", "npm/local/-/some_local_package/1.2.3", };
 			Arrays.sort(expected);
-			String[] found = reader.getContentIds().stream().map(IContentId::toString).sorted().toArray(String[]::new);
+			String[] found = reader.contentIds().map(IContentId::toString).sorted().toArray(String[]::new);
 			assertArrayEquals(expected, found);
 		}
 	}

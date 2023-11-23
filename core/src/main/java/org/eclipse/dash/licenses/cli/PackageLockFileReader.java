@@ -27,6 +27,7 @@ import jakarta.json.JsonObject;
 
 public class PackageLockFileReader implements IDependencyListReader {
 	final Logger logger = LoggerFactory.getLogger(PackageLockFileReader.class);
+	private static final Pattern Name_Pattern = Pattern.compile("(?:(?<scope>@[^\\/]+)\\/)?(?<name>[^\\/]+)$");
 
 	private final InputStream input;
 
@@ -73,36 +74,62 @@ public class PackageLockFileReader implements IDependencyListReader {
 		 * It's relatively easy to handle all cases with a regular expression.
 		 */
 		IContentId getContentId() {
-			Pattern pattern = Pattern.compile("(?:(?<scope>@[^\\/]+)\\/)?(?<name>[^\\/]+)$");
-			Matcher matcher = pattern.matcher(key);
-			if (matcher.find()) {
-				var namespace = matcher.group("scope");
-				if (namespace == null)
-					namespace = "-";
-				var name = matcher.group("name");
-				JsonObject jsonObject = value.asJsonObject();
-				var version = jsonObject.getString("version", null);
-				var resolved = jsonObject.getString("resolved", "");
-				if (resolved.startsWith("file:")) {
-					resolved = "local";
-				} else if (resolved.contains("registry.npmjs.org")) {
-					resolved = "npmjs";
-				} else {
-					logger.debug("Unknown resolved source: {}", resolved);
-					resolved = "npmjs";
-				}
+			var namespace = getNameSpace();
+			var name = getName();
+			var version = value.asJsonObject().getString("version", null);
 
-				if (version != null) {
-					IContentId contentId = ContentId.getContentId("npm", resolved, namespace, name, version);
-					return contentId == null ? new InvalidContentId(key + "@" + version) : contentId;
-				}
+			if (version != null) {
+				IContentId contentId = ContentId.getContentId("npm", getSource(), namespace, name, version);
+				return contentId == null ? new InvalidContentId(key + "@" + version) : contentId;
 			}
 			return new InvalidContentId(key);
 		}
 
+		String getSource() {
+			if (isResolvedLocally())
+				return "local";
+
+			var resolved = value.asJsonObject().getString("resolved", "");
+			if (resolved.contains("registry.npmjs.org")) {
+				return "npmjs";
+			} else {
+				logger.debug("Unknown resolved source: {}", resolved);
+				return "npmjs";
+			}
+		}
+
+		String getNameSpace() {
+			var name = value.asJsonObject().getString("name", key);
+			Matcher matcher = Name_Pattern.matcher(name);
+			if (matcher.find()) {
+				var scope = matcher.group("scope");
+				if (scope != null)
+					return scope;
+			}
+
+			return "-";
+		}
+
+		String getName() {
+			var name = value.asJsonObject().getString("name", key);
+			Matcher matcher = Name_Pattern.matcher(name);
+			if (matcher.find()) {
+				return matcher.group("name");
+			}
+
+			return null;
+		}
+
 		public boolean isResolvedLocally() {
+			var resolved = value.asJsonObject().getString("resolved", null);
+			if (resolved == null)
+				return true;
+			if (resolved.startsWith("file:"))
+				return true;
+
 			if (key.startsWith("packages/"))
 				return true;
+
 			if (value.asJsonObject().getBoolean("link", false))
 				return true;
 			if (value.asJsonObject().getString("version", "").startsWith("file:"))
@@ -143,6 +170,10 @@ public class PackageLockFileReader implements IDependencyListReader {
 
 	@Override
 	public Collection<IContentId> getContentIds() {
+		return contentIds().filter(contentId -> "local" != contentId.getSource()).collect(Collectors.toList());
+	}
+
+	public Stream<IContentId> contentIds() {
 		JsonObject json = JsonUtils.readJson(input);
 
 		switch (json.getJsonNumber("lockfileVersion").intValue()) {
@@ -150,21 +181,18 @@ public class PackageLockFileReader implements IDependencyListReader {
 			return new Dependency("", json)
 					.stream()
 					.filter(each -> !each.key.isEmpty())
-					.map(dependency -> dependency.getContentId())
-					.collect(Collectors.toList());
+					.map(dependency -> dependency.getContentId());
 		case 2:
 		case 3:
 			// @formatter:off
 			return json.getJsonObject("packages").entrySet().stream()
 					.filter(entry -> !entry.getKey().isEmpty())
 					.map(entry -> new Package(entry.getKey(), entry.getValue().asJsonObject()))
-					.filter(dependency -> !dependency.isResolvedLocally())
-					.map(dependency -> dependency.getContentId())
-					.distinct().collect(Collectors.toList());
+					.map(dependency -> dependency.getContentId());
 			// @formatter:on
 		}
 
-		return null;
+		return Stream.empty();
 	}
 
 }
