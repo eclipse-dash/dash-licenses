@@ -17,9 +17,11 @@ import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedContentData;
 public class GitLabReview {
 	private String projectId;
 	private LicenseData licenseData;
+	private String repository;
 
-	public GitLabReview(String projectId, LicenseData licenseData) {
+	public GitLabReview(String projectId, String repository, LicenseData licenseData) {
 		this.projectId = projectId;
+		this.repository = repository;
 		this.licenseData = licenseData;
 	}
 
@@ -38,8 +40,12 @@ public class GitLabReview {
 		if (projectId != null) {
 			builder
 					.append(String
-							.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n", projectId, projectId));
+							.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n\n", projectId, projectId));
 		}
+		if (repository != null) {
+			builder.append(String.format("Repository: %s\n\n", repository));
+		}
+		
 		licenseData.contentData().forEach(data -> describeItem(data, builder));
 
 		return builder.toString();
@@ -53,8 +59,6 @@ public class GitLabReview {
 	 */
 	private void describeItem(IContentData data, StringBuilder output) {
 		// FIXME This is clunky
-
-		output.append("\n");
 		String authority = data.getAuthority();
 		if (data.getUrl() != null)
 			authority = String.format("[%s](%s)", authority, data.getUrl());
@@ -66,6 +70,7 @@ public class GitLabReview {
 					.discoveredLicenses()
 					.forEach(license -> output.append("  - Discovered: " + license).append('\n'));
 		};
+		output.append("\n");
 	}
 
 	private IContentId getContentId() {

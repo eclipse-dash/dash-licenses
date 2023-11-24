@@ -67,6 +67,13 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	 */
 	@Parameter(property = "dash.projectId")
 	private String projectId;
+	
+
+	/**
+	 * Optionally specify the Eclipse Project repository that is the source of the request
+	 */
+	@Parameter(property = "dash.repo")
+	private String repo;
 
 	/**
 	 * Output a summary to the given file. If not specified, then a dependencies
@@ -182,7 +189,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		// Validate the user-given dash license tool settings
 		ISettings settings;
 		try {
-			settings = new MavenSettings(batch, foundationApi, clearlyDefinedApi, licenses, confidence, projectId, iplabToken);
+			settings = new MavenSettings(batch, foundationApi, clearlyDefinedApi, licenses, confidence, projectId, repo, iplabToken);
 		} catch (IllegalArgumentException e) {
 			throw new MojoExecutionException("Invalid setting: " + e.getMessage());
 		}

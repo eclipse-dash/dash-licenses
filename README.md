@@ -101,7 +101,8 @@ To use this feature, you must have committer status on at least one Eclipse proj
 
 * Get an [authentication token](https://gitlab.eclipse.org/-/profile/personal_access_tokens) (scope: `api`) from `gitlab.eclipse.org`;
 * Include the `-review` option;
-* Pass the token via the `-token` option; and
+* Pass the token via the `-token` option; 
+* Pass the Eclipse project's repository URL (e.g., `https://github.com/eclipse/dash-licenses`) via the `-repo` option; and
 * Pass the Eclipse open source project id (e.g., `technology.dash`) via the `-project` option.
 
 Note that the options are slightly different for the [Maven plugin](README.md#maven-plugin-options).
@@ -254,14 +255,17 @@ Add the `repo.eclipse.org` plugin repository so that the license check plugin is
 
 #### Maven Plugin Options
 
-The Maven Plugin has the following options that can passed either via the command-line or as configuration options in your `pom.xml` file:
+The Maven Plugin has the following properties that can passed either via the command-line or as configuration parameters in your `pom.xml` file:
 
-- `dash.skip` - Skip executing the plugin. Default: `false`.
-- `dash.fail` - Force the build to fail when license issues are found. Default: `false`. 
-- `dash.iplab.token` - The access token for automatically creating IP Team review requests. **Do not share your access token.**
-- `dash.projectId` - The Eclipse open source project id (e.g. `technology.dash`)
-- `dash.summary` - The location (where) to generate the summary file.
+- `dash.skip` - Skip executing the plugin. Default: `false`;
+- `dash.fail` - Force the build to fail when license issues are found. Default: `false`;
+- `dash.iplab.token` - The access token for automatically creating IP Team review requests **Do not share your access token.**;
+- `dash.projectId` - The Eclipse open source project id (e.g. `technology.dash`);
+- `dash.repo` - Specify the Eclipse Project repository that is the source of the request (e.g., `https://github.com/eclipse/dash-licenses`);
+- `dash.summary` - The location (where) to generate the summary file; and
 - `dash.review.summary` - The location (where) to generate the review-summary file.
+
+All properties are optional.
 
 Note that the Maven plugin always generates the summary file. The default location is `${project.build.directory}/dash/summary`.
 
@@ -512,14 +516,21 @@ Sort out the licenses and approval of dependencies.
                                    integer percent (0-100)
  -ef,--foundation-api <url>        Eclipse Foundation license check API
                                    URL.
+ -excludeSources <sources>         Exclude values from specific sources
  -help,--help                      Display help
- -summary <file>                   Output a summary to a file
  -lic,--licenses <url>             Approved Licenses List URL
+ -project <shortname>              Process the request in the context of
+                                   an Eclipse project (e.g.,
+                                   technology.dash)
+ -repo <url>                       The Eclipse Project repository that is
+                                   the source of the request
+ -review                           Must also specify the project and token
+ -summary <file>                   Output a summary to a file
+ -timeout <seconds>                Timeout for HTTP calls (in seconds)
+ -token <token>                    The GitLab authentication token
 
-<file> is the path to a file, or "-" to indicate stdin. Multiple files may
-be provided
-e.g.,
-npm list | grep -Poh "\S+@\d+(?:\.\d+){2}" | sort | uniq | LicenseFinder -
+<file> is the path to a file, or "-" to indicate stdin.
+For more help and examples, see https://github.com/eclipse/dash-licenses
 ```
 
 ### Reusable Github workflow for automatic license check and IP Team Review Requests 

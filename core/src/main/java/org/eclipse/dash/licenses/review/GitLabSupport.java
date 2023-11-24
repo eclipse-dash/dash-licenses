@@ -21,6 +21,7 @@ import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
+import org.eclipse.dash.licenses.util.GitUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Issue;
@@ -40,7 +41,7 @@ public class GitLabSupport {
 	/** Optional HTTP proxy settings. */
 	@Inject
 	Provider<IProxySettings> proxySettings;
-
+	
 	public void createReviews(List<LicenseData> needsReview, BiConsumer<IContentId, String> monitor) {
 		execute(connection -> {
 			var count = 0;
@@ -67,7 +68,7 @@ public class GitLabSupport {
 				 * required to prevent rare duplication.
 				 */
 				try {
-					GitLabReview review = new GitLabReview(settings.getProjectId(), licenseData);
+					GitLabReview review = new GitLabReview(settings.getProjectId(), getRepository(), licenseData);
 
 					Issue existing = connection.findIssue(review);
 					if (existing != null) {
@@ -96,6 +97,13 @@ public class GitLabSupport {
 				logger.info("For now, however, this experimental feature only submits the first {}.\n", count);
 			}
 		});
+	}
+
+	String getRepository() {
+		var repository = settings.getRepository();
+		if (repository != null) return repository;
+		
+		return GitUtils.getEclipseRemote();
 	}
 
 	public void execute(Consumer<GitLabConnection> callable) {

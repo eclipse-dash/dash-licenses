@@ -11,6 +11,8 @@ package org.eclipse.dash.licenses;
 
 import java.io.File;
 
+import org.eclipse.dash.licenses.util.GitUtils;
+
 public interface ISettings {
 
 	/**
@@ -127,5 +129,9 @@ public interface ISettings {
 
 	default File getSummaryFile() {
 		return new File(getSummaryFilePath());
+	}
+	
+	default String getRepository() {
+		return null;
 	}
 }
