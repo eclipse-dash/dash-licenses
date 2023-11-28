@@ -447,7 +447,7 @@ $ cargo tree -e normal --prefix none --no-dedupe \
 | sort -u \
 | grep -v '^[[:space:]]*$' \
 | grep -v zenoh \
-| sed -E 's|([^ ]+) v([0-9]+\.[0-9]+\.[0-9]+).*|crate/cratesio/-/\1/\2|' \
+| sed -E 's|([^ ]+) v([^ ]+).*|crate/cratesio/-/\1/\2|' \
 | java -jar org.eclipse.dash.licenses-<version>.jar -
 ```
 
