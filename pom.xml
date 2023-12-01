@@ -15,7 +15,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.dash</groupId>
 	<artifactId>dash-licenses-parent</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<packaging>pom</packaging>
 
 	<licenses>
@@ -45,7 +45,7 @@
 	<scm>
 		<url>https://github.com/eclipse/dash-licenses</url>
 		<developerConnection>scm:git:git@github.com:eclipse/dash-licenses.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>1.1.0</tag>
 	</scm>
 
 	<issueManagement>
