@@ -28,12 +28,14 @@ import org.eclipse.dash.licenses.context.LicenseToolModule;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 import org.eclipse.dash.licenses.validation.EclipseProjectIdValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
- * This class provides a CLI entrypoint to determine licenses for content. The
+ * This class provides a CLI entry point to determine licenses for content. The
  * tool can be invoked in a few different ways, e.g.
  *
  * <pre>
@@ -59,8 +61,14 @@ public class Main {
 	 */
 	final static Integer INTERNAL_ERROR = 127;
 
+	final Logger logger = LoggerFactory.getLogger(Main.class);
+
 	public static void main(String[] args) {
 		CommandLineSettings settings = CommandLineSettings.getSettings(args);
+		new Main().doit(settings);
+	}
+
+	void doit(CommandLineSettings settings) {
 		if (!settings.isValid()) {
 			CommandLineSettings.printUsage(System.out);
 			System.exit(INTERNAL_ERROR);
@@ -127,6 +135,7 @@ public class Main {
 						collectors.forEach(collector -> collector.accept(licenseData));
 					});
 				} catch (RuntimeException e) {
+					logger.debug(e.getMessage(), e);
 					System.exit(INTERNAL_ERROR);
 				}
 			}
@@ -137,14 +146,14 @@ public class Main {
 		System.exit(Math.min(primaryCollector.getStatus(), INTERNAL_ERROR - 1));
 	}
 
-	private static OutputStream getWriter(String path) throws FileNotFoundException {
+	private OutputStream getWriter(String path) throws FileNotFoundException {
 		if ("-".equals(path))
 			return System.out;
 		return new FileOutputStream(new File(path));
 	}
 
 	@SuppressWarnings("resource")
-	private static IDependencyListReader getReader(String name) throws FileNotFoundException {
+	private IDependencyListReader getReader(String name) throws FileNotFoundException {
 		if ("-".equals(name)) {
 			return new FlatFileReader(new InputStreamReader(System.in));
 		} else {
