@@ -19,8 +19,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import jakarta.inject.Inject;
-
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
@@ -32,6 +30,7 @@ import org.eclipse.dash.licenses.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import jakarta.json.stream.JsonParsingException;
 
 public class ClearlyDefinedSupport implements ILicenseDataProvider {
@@ -105,17 +104,22 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	/**
 	 * This method coordinates calling ClearlyDefined.
 	 * 
+	 * <p>
 	 * We've run into cases where the ClearlyDefined API throws an error because of
 	 * one apparently well-formed and otherwise correct ID. When this situation is
 	 * encountered, an error message and nothing else is returned, regardless of how
 	 * many IDs were included in the request. Effectively, this throws away all of
 	 * the potentially useful results because of one (or more) problematic IDs.
 	 * 
+	 * <p>
 	 * When this happens, we split the content and attempt to invoke the API with
 	 * each half. This happens recursively, so eventually we end up sending just the
 	 * problematic IDs. We log the problematic IDs, but don't take any further
 	 * action. IDs with problematic results are effectively be treated as IDs for
 	 * which no information is found.
+	 * 
+	 * <p>
+	 * See https://github.com/clearlydefined/service/issues/957
 	 */
 	private void queryClearlyDefined(List<IContentId> filteredIds, int start, int end,
 			Consumer<IContentData> consumer) {
@@ -228,6 +232,9 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		 * FIXME This is a hack. AFAICT, there is no API that answers the list of valid
 		 * types and providers, so we grab them directly from a schema file in the
 		 * GitHub repository. This is not an official API and so is subject to change.
+		 *
+		 * https://github.com/clearlydefined/service/blob/master/schemas/coordinates-1.0
+		 * .json
 		 * 
 		 * FIXME A hack on top of a hack. I suspect that we're hitting a rate limit on
 		 * raw.githubusercontent.com. We need a better solution that what we have and
@@ -239,13 +246,13 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 
 		validTypes
 				.addAll(Arrays.asList(new String[]
-				{ "npm", "crate", "git", "maven", "nuget", "gem", "go", "composer", "pod", "pypi", "sourcearchive",
+				{ "npm", "crate", "git", "maven", "composer", "nuget", "gem", "go", "pod", "pypi", "sourcearchive",
 						"deb", "debsrc" }));
 
 		validProviders
 				.addAll(Arrays.asList(new String[]
-				{ "npmjs", "cocoapods", "cratesio", "github", "gitlab", "mavencentral", "mavengoogle", "gradleplugin",
-						"packagist", "golang", "nuget", "rubygems", "pypi", "debian" }));
+				{ "npmjs", "cocoapods", "cratesio", "github", "gitlab", "packagist", "golang", "mavencentral",
+						"mavengoogle", "nuget", "rubygems", "pypi", "debian" }));
 	}
 
 	class ClearlyDefinedResponseException extends RuntimeException {
