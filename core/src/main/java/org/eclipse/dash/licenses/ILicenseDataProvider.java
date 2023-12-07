@@ -15,4 +15,8 @@ import java.util.function.Consumer;
 public interface ILicenseDataProvider {
 
 	void queryLicenseData(Collection<IContentId> ids, Consumer<IContentData> consumer);
+	
+	default int getWeight() {
+		return 50;
+	}
 }

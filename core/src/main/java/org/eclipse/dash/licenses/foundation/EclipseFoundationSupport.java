@@ -132,5 +132,4 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 
 		return builder.build();
 	}
-
 }

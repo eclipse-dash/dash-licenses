@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.eclipse.dash.licenses.ILicenseDataProvider;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport;
@@ -26,6 +27,7 @@ import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
 import org.eclipse.dash.licenses.http.IHttpClientService;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -46,9 +48,16 @@ public class TestLicenseToolModule extends AbstractModule {
 		bind(ISettings.class).toInstance(settings);
 		bind(IHttpClientService.class).toInstance(getHttpClientService());
 		bind(LicenseChecker.class).toInstance(new LicenseChecker());
-		bind(EclipseFoundationSupport.class).toInstance(new EclipseFoundationSupport());
-		bind(ClearlyDefinedSupport.class).toInstance(new ClearlyDefinedSupport());
 		bind(LicenseSupport.class).toInstance(new LicenseSupport());
+
+		var licenseDataProviders = Multibinder.newSetBinder(binder(), ILicenseDataProvider.class);
+		licenseDataProviders.addBinding().toInstance(new EclipseFoundationSupport() {
+			@Override
+			public int getWeight() {
+				return 100;
+			}
+		});
+		licenseDataProviders.addBinding().toInstance(new ClearlyDefinedSupport());
 	}
 
 	public IHttpClientService getHttpClientService() {

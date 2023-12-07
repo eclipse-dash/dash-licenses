@@ -11,26 +11,25 @@ package org.eclipse.dash.licenses;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import jakarta.inject.Inject;
+import java.util.stream.Stream;
 
 import org.eclipse.dash.licenses.LicenseSupport.Status;
-import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
-import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
 import org.eclipse.dash.licenses.util.Batchifier;
+
+import jakarta.inject.Inject;
 
 public class LicenseChecker {
 	@Inject
 	ISettings settings;
 	@Inject
-	EclipseFoundationSupport ipzillaService;
-	@Inject
-	ClearlyDefinedSupport clearlyDefinedService;
+	Set<ILicenseDataProvider> licenseDataProviders;
 
-	private ILicenseDataProvider[] getLicenseDataProviders() {
-		return new ILicenseDataProvider[] { ipzillaService, clearlyDefinedService };
+	private Stream<ILicenseDataProvider> getLicenseDataProviders() {
+		// Compare in reverse order. We want the "heaviest" one first.
+		return licenseDataProviders.stream().sorted((a,b)-> Integer.compare(b.getWeight(), a.getWeight()));
 	}
 
 	/**
@@ -44,8 +43,7 @@ public class LicenseChecker {
 		Map<IContentId, LicenseData> licenseData = ids.stream().map(id -> new LicenseData(id)).collect(
 				Collectors.toMap(LicenseData::getId, Function.identity(), (existing, replacement) -> existing));
 
-		for (ILicenseDataProvider provider : getLicenseDataProviders()) {
-			// @formatter:off
+		getLicenseDataProviders().forEach(provider -> {
 			new Batchifier<IContentId>()
 				.setBatchSize(settings.getBatchSize())
 				.setConsumer(batch -> {
@@ -58,8 +56,7 @@ public class LicenseChecker {
 						.filter(IContentId::isValid)
 						.filter(id -> licenseData.get(id).getStatus() != Status.Approved)
 						.iterator());
-			// @formatter:on
-		}
+		});
 
 		return licenseData;
 	}

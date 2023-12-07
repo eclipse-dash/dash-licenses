@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.util.function.Consumer;
 
 import org.eclipse.dash.api.EclipseApi;
+import org.eclipse.dash.licenses.ILicenseDataProvider;
 import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
@@ -24,6 +25,7 @@ import org.eclipse.dash.licenses.http.IHttpClientService;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.util.Providers;
 
 public class LicenseToolModule extends AbstractModule {
@@ -52,8 +54,16 @@ public class LicenseToolModule extends AbstractModule {
 				return httpClientService.get(url, contentType, handler);
 			}
 		}));
-		bind(EclipseFoundationSupport.class).toInstance(new EclipseFoundationSupport());
-		bind(ClearlyDefinedSupport.class).toInstance(new ClearlyDefinedSupport());
+
+		var licenseDataProviders = Multibinder.newSetBinder(binder(), ILicenseDataProvider.class);
+		licenseDataProviders.addBinding().toInstance(new EclipseFoundationSupport() {
+			@Override
+			public int getWeight() {
+				return 100;
+			}
+		});
+		licenseDataProviders.addBinding().to(ClearlyDefinedSupport.class);
+
 		bind(LicenseSupport.class).toInstance(new LicenseSupport());
 		bind(GitLabSupport.class).toInstance(new GitLabSupport());
 		bind(IProxySettings.class).toProvider(Providers.of(proxySettings));
