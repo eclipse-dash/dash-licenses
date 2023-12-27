@@ -46,6 +46,7 @@ public interface IHttpClientService {
 	}
 
 	default String exists(String url) {
+		if (url == null) return null;
 		if (remoteFileExists(url)) {
 			return url;
 		}
