@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Parse ids specified in the purl format.
+ * Parse ids specified in the Package URL format.
  * 
  * <p>
  * The purl format is specified here: https://github.com/package-url/purl-spec
@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * <p>
  * From the documentation (which is licensed under MIT)...
  * 
- * <blockquote>The defintion for each components is:
+ * <blockquote>The definition for each components is:
  * <ul>
  * <li><strong>scheme</strong>: this is the URL scheme with the constant value
  * of "pkg". One of the primary reason for this single scheme is to facilitate
@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  * Strictly speaking, the version is considered optional. For our purposes,
  * we've made it mandatory.
  */
-public class PurlIdParser implements ContentIdParser {
+public class PackageUrlIdParser implements ContentIdParser {
 
 	// @formatter:off
 	private static final String PURL_PATTERN =
