@@ -39,6 +39,11 @@ on:
         type: string
         required: false
         default: '3.9.6'
+      javaVersion:
+        description: 'The version of Java set up to run the license-check build'
+        type: string
+        required: false
+        default: '17'  
     secrets:
       gitlabAPIToken:
         description: 'The authentication token (scope: api) from gitlab.eclipse.org of the calling repository. Only required if license vetting is requested'
@@ -102,7 +107,7 @@ jobs:
 
     - uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: ${{ inputs.javaVersion }}
         distribution: 'temurin'
     - name: Cache local Maven repository
       uses: actions/cache@v4
