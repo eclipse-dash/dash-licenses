@@ -145,11 +145,15 @@ jobs:
           
           const licenesVetted = ${{ steps.check-license-vetting.outputs.licenses-vetted }}
           let commentBody = ''
+          // if context.payload.comment is empty, this is an explicit review-request through a comment, if not an automated one, e.g. for dependabot PRs
           if ( context.payload.comment ) {
             commentBody += '> ' + context.payload.comment.body + '\n\n'
           } else if ( licenesVetted ){
             core.info('License review request made automatically but all licenses are already vetted.')
             return; // Don't create a comment in this case, the checks in the UI indicate the state already.
+          } else {
+            // This run encountered pending reviews, which have been requested automatically, e.g. for dependabot PRs
+            core.setFailed("Some dependencies must be vetted and their review was requested. Rerun this check once these reviews succeeded.")
           }
           
           if( licenesVetted ) {
