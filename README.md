@@ -388,27 +388,108 @@ In the case where the license information for content is not already known, this
 
 ### Example: Gradle
 
+Before you begin, it is recommended to add the following two lines to your `.gitignore`:
+
+```
+deps.txt
+dasj.jar
+```
+
+To use Dash directly within Gradle, add the following code to your `build.gradle`.
+
+NOTE: you'll need to input values for the `<an-up-to-date-version>` and the `<your-project-here>` variables from the snippet below.
+
+```groovy
+plugins {
+    // used to download the 'dash.jar' for license checks
+    // docs: https://github.com/michel-kraemer/gradle-download-task
+    id "de.undercouch.download" version "<an-up-to-date-version>"
+}
+
+repositories {
+	maven {
+        // Used to resolve Dash License Tool
+        // Dash has a maven plugin, BUT is not resolvable through mavenCentral()
+        url = uri("https://repo.eclipse.org/content/repositories/dash-licenses/")
+    }
+}
+
+// uses the 'download' plugin
+// docs: https://plugins.gradle.org/plugin/de.undercouch.download
+tasks.register('dashDownload', Download) {
+    description = 'Download the Dash License Tool standalone jar'
+    group = 'License'
+    src 'https://repo.eclipse.org/service/local/artifact/maven/redirect?r=dash-licenses&g=org.eclipse.dash&a=org.eclipse.dash.licenses&v=LATEST'
+    dest layout.projectDirectory.file('dash.jar')
+    // will not replace an existing file. If you know you need a new version
+    // then manually delete the file yourself, or run `dashClean`
+    overwrite false
+}
+
+// This task is primarily used by CIs
+tasks.register('dashClean') {
+    description = "Clean all files used by the 'License' group"
+    group = 'License'
+    logger.lifecycle("Removing 'dash.jar'")
+    file('dash.jar').delete()
+    logger.lifecycle("Removing 'deps.txt'")
+    file('deps.txt').delete()
+}
+
+// Usage: in the root of the project: `./gradlew -q dashDependencies`
+// The `-q` option is important if you want to use the output in a pipe.
+tasks.register('dashDependencies') { dashDependencies ->
+    description = "Output all project dependencies as a flat list and save an intermediate file 'deps.txt'."
+    group = 'License'
+    dashDependencies.dependsOn('dashDownload')
+    doLast {
+        def deps = []
+        project.configurations.each { conf ->
+            // resolving 'archives' or 'default' is deprecated
+            if (conf.canBeResolved && conf.getName() != 'archives' && conf.getName() != 'default') {
+                deps.addAll(conf.incoming.resolutionResult.allDependencies
+                        // the 'allDependencies' method return a 'DependencyResult'
+                        // we're only interested in the 'ResolvedDependencyResult' sub-interface
+                        // docs: https://docs.gradle.org/current/javadoc/org/gradle/api/artifacts/result/ResolutionResult.html#allDependencies-groovy.lang.Closure-
+                        // docs: https://docs.gradle.org/current/javadoc/org/gradle/api/artifacts/result/DependencyResult.html
+                        // docs: https://docs.gradle.org/current/javadoc/org/gradle/api/artifacts/result/ResolvedDependencyResult.html
+                        .findAll({ it instanceof ResolvedDependencyResult })
+                        .collect { ResolvedDependencyResult dep ->
+                            "${dep.selected}"
+                        })
+            }
+        }
+
+        def sorted = deps.unique().sort()
+        filtered.each { logger.quiet("{}", it) }
+        file("deps.txt").write(sorted.join('\n'))
+    }
+}
+
+tasks.register('dashLicenseCheck', JavaExec) { dashLicenseCheck ->
+    description = "Run the Dash License Tool and save the summary in the 'DEPENDENCIES' file"
+    group = 'License'
+    dashLicenseCheck.dependsOn('dashDownload')
+    dashLicenseCheck.dependsOn('dashDependencies')
+    doFirst {
+        classpath = files('dash.jar')
+        // docs: https://eclipse-tractusx.github.io/docs/release/trg-7/trg-7-04
+        args('-project', '<your-project-here>',  '-summary', 'DEPENDENCIES', 'deps.txt')
+    }
+    doLast {
+        logger.lifecycle("Removing 'deps.txt' now.")
+        file('deps.txt').delete()
+    }
+}
+```
+
 Find all of the potentially problematic third party libraries from a Gradle build.
 
-Note that we have mixed success with this use of Gradle as it is very dependent on the specific nature of the build. Please verify that Gradle is correctly identifying your dependencies by invoking `./gradlew dependencies` before trying this.
-
+```bash
+$ ./gradlew dashLicenseCheck
 ```
-$ ./gradlew dependencies \
-| grep -Poh "(?<=\-\-\- ).*" \
-| grep -Pv "\([c\*]\)" \
-| perl -pe 's/([\w\.\-]+):([\w\.\-]+):(?:[\w\.\-]+ -> )?([\w\.\-]+).*$/$1:$2:$3/gmi;t' \
-| sort -u \
-| java -jar org.eclipse.dash.licenses-<version>.jar -
-```
- 
-Steps:
 
-1. Use the Gradle `dependencies` command to generate a dependency list;
-2. Extract the lines that contain references to content;
-3. Remove the lines that are dependency constraints `(c)` or are duplicates `(*)`;
-4. Normalise the GAV to the `groupid`, `artifactid` and resolved `version` (e.g., when the version is "1.8.20 -> 1.9.0", map that to "1.9.0");
-5. Sort and remove duplicates; and
-6. Invoke the tool.
+You can use the `$ ./gradlew dashClean` command to remove your `dash.jar` and receive an updated copy through the execution of the `$ ./gradlew dashLicenseCheck` command.
  
 ### Example: Yarn
 
