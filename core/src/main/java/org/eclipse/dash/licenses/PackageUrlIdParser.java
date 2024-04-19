@@ -75,6 +75,11 @@ public class PackageUrlIdParser implements ContentIdParser {
 			source = "mavencentral";
 		if ("npm".equals(type))
 			source = "npmjs";
+		if ("golang".equals(type)) {
+			type = "go";
+			source = "golang";
+			name = name.replace("/", "%2F");
+		}
 
 		if (group == null)
 			group = "-";
