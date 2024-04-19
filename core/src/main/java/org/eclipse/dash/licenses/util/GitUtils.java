@@ -42,7 +42,7 @@ public class GitUtils {
 					.flatMap(each -> each.getURIs().stream())
 					.filter(each -> each.isRemote())
 					.filter(each -> isEclipseRemote(each));
-		} catch (IOException | GitAPIException e) {
+		} catch (IOException | GitAPIException | IllegalArgumentException e) {
 			// FIXME Log this (or maybe just don't...)
 		}
 		return Stream.empty();
