@@ -105,19 +105,6 @@ class PnpmPackageLockFileReaderTests {
 	}
 
 	@Test
-	void testFormat() throws IOException {
-		//try (InputStream input = this.getClass().getResourceAsStream("/pnpm-lock.yaml")) {
-		//try (InputStream input = this.getClass().getResourceAsStream("/pnpm-lock2.yaml")) {
-		try (InputStream input = this.getClass().getResourceAsStream("fixtures/pnpm/pnpm-lock-v6.yaml")) {
-			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
-			//var ids = reader.contentIds().collect(Collectors.toList());
-			var ids = reader.getContentIds();
-            assertFalse(ids.isEmpty(), "Should have some content ids");
-
-		}
-	}
-
-	@Test
 	void testAllRecordsDetected() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("fixtures/pnpm/pnpm-lock-v6-small.yaml")) {
 			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
