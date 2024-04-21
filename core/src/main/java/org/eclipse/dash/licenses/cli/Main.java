@@ -159,13 +159,15 @@ public class Main {
 		} else {
 			File input = new File(name);
 			if (input.exists()) {
-				if ("package-lock.json".equals(input.getName())) {
-					return new PackageLockFileReader(new FileInputStream(input));
-				}
-				if ("yarn.lock".equals(input.getName())) {
-					return new YarnLockFileReader(new FileReader(input));
-				}
-				return new FlatFileReader(new FileReader(input));
+                switch (input.getName()) {
+                    case "pnpm-lock.yaml":
+                        return new PnpmPackageLockFileReader(new FileInputStream(input));
+                    case "package-lock.json":
+                        return new PackageLockFileReader(new FileInputStream(input));
+                    case "yarn.lock":
+                        return new YarnLockFileReader(new FileReader(input));
+                }
+                return new FlatFileReader(new FileReader(input));
 			} else {
 				throw new FileNotFoundException(name);
 			}
