@@ -62,7 +62,10 @@ public class LicenseToolModule extends AbstractModule {
 				return 100;
 			}
 		});
-		licenseDataProviders.addBinding().to(ClearlyDefinedSupport.class);
+
+		if (!"skip".equals(settings.getClearlyDefinedDefinitionsUrl())) {
+			licenseDataProviders.addBinding().to(ClearlyDefinedSupport.class);
+		}
 
 		bind(LicenseSupport.class).toInstance(new LicenseSupport());
 		bind(GitLabSupport.class).toInstance(new GitLabSupport());
