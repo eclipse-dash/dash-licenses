@@ -409,7 +409,15 @@ Steps:
 4. Normalise the GAV to the `groupid`, `artifactid` and resolved `version` (e.g., when the version is "1.8.20 -> 1.9.0", map that to "1.9.0");
 5. Sort and remove duplicates; and
 6. Invoke the tool.
- 
+
+### Example: Package Lock
+
+The Eclipse Dash License Tool can parse a `package-lock.json` file.
+
+```
+$ java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar package-lock.json
+```
+
 ### Example: Yarn
 
 If you've generated a `yarn.lock` file, you can feed it directly to the license tool. 
@@ -503,6 +511,14 @@ $ pipdeptree -a -f \
 | sed -E -e 's|([^= ]+)==([^= ]+)|pypi/pypi/-/\1/\2|' -e 's| ||g' \
 | sort | uniq \
 | java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
+```
+
+### Example: Go
+
+The Eclipse Dash License Tool can parse a `go.sum` file.
+
+```
+$ java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar go.sum
 ```
 
 ### Example: SBT
