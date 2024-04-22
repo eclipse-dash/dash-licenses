@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2020,2021 The Eclipse Foundation and others.
+ * Copyright (c) 2020 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -11,6 +11,7 @@ package org.eclipse.dash.licenses.cli;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -24,12 +25,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.JsonValue;
 
 public class PackageLockFileReader implements IDependencyListReader {
 	final Logger logger = LoggerFactory.getLogger(PackageLockFileReader.class);
 	private static final Pattern Name_Pattern = Pattern.compile("(?:(?<scope>@[^\\/]+)\\/)?(?<name>[^\\/]+)$");
 
 	private final InputStream input;
+	private JsonObject json;
 
 	public PackageLockFileReader(InputStream input) {
 		this.input = input;
@@ -49,6 +53,16 @@ public class PackageLockFileReader implements IDependencyListReader {
 			this.value = value;
 		}
 
+		Collection<Package> getPackages() {
+			/*
+			 * More research is needed. AFAICT, it's possible to specify
+			 * a relative directory as the key and, my observation is that,
+			 * the directory may itself have a package-lock.json file which
+			 * would describe additional packages.
+			 */
+			return Collections.singleton(this);
+		}
+		
 		/**
 		 * The content id needs to be extracted from a combination of the key and values
 		 * from the associated associative array.
@@ -89,8 +103,8 @@ public class PackageLockFileReader implements IDependencyListReader {
 			if (isResolvedLocally())
 				return "local";
 
-			var resolved = value.asJsonObject().getString("resolved", "");
-			if (resolved.contains("registry.npmjs.org")) {
+			var resolved = getResolved();
+			if (resolved != null && resolved.contains("registry.npmjs.org")) {
 				return "npmjs";
 			} else {
 				logger.debug("Unknown resolved source: {}", resolved);
@@ -120,21 +134,35 @@ public class PackageLockFileReader implements IDependencyListReader {
 			return null;
 		}
 
-		public boolean isResolvedLocally() {
-			var resolved = value.asJsonObject().getString("resolved", null);
+		boolean isResolvedLocally() {
+			var resolved = getResolved();
 			if (resolved == null)
-				return true;
+				return false;
+
 			if (resolved.startsWith("file:"))
 				return true;
 
-			if (key.startsWith("packages/"))
-				return true;
-
-			if (value.asJsonObject().getBoolean("link", false))
-				return true;
 			if (value.asJsonObject().getString("version", "").startsWith("file:"))
 				return true;
+
 			return false;
+		}
+
+		private String getResolved() {
+			return value.asJsonObject().getString("resolved", null);
+		}
+
+		private boolean isLink() {
+			return value.asJsonObject().getBoolean("link", false);
+		}
+
+		public boolean isProjectContent() {
+			return isLink() && isInWorkspace(getResolved());
+		}
+
+		@Override
+		public String toString() {
+			return key + " : " + getResolved();
 		}
 	}
 
@@ -154,9 +182,7 @@ public class PackageLockFileReader implements IDependencyListReader {
 			if (dependencies == null)
 				return Stream.empty();
 
-			return dependencies
-					.entrySet()
-					.stream()
+			return dependencies.entrySet().stream()
 					.map(each -> new Dependency(each.getKey(), each.getValue().asJsonObject()));
 		}
 
@@ -174,13 +200,11 @@ public class PackageLockFileReader implements IDependencyListReader {
 	}
 
 	public Stream<IContentId> contentIds() {
-		JsonObject json = JsonUtils.readJson(input);
+		json = JsonUtils.readJson(input);
 
 		switch (json.getJsonNumber("lockfileVersion").intValue()) {
 		case 1:
-			return new Dependency("", json)
-					.stream()
-					.filter(each -> !each.key.isEmpty())
+			return new Dependency("", json).stream().filter(each -> !each.key.isEmpty())
 					.map(dependency -> dependency.getContentId());
 		case 2:
 		case 3:
@@ -188,6 +212,8 @@ public class PackageLockFileReader implements IDependencyListReader {
 			return json.getJsonObject("packages").entrySet().stream()
 					.filter(entry -> !entry.getKey().isEmpty())
 					.map(entry -> new Package(entry.getKey(), entry.getValue().asJsonObject()))
+					.flatMap(item -> item.getPackages().stream())
+					.filter(item -> !item.isProjectContent())
 					.map(dependency -> dependency.getContentId());
 			// @formatter:on
 		}
@@ -195,4 +221,58 @@ public class PackageLockFileReader implements IDependencyListReader {
 		return Stream.empty();
 	}
 
+	/**
+	 * Answer whether or not a resolved link points to a workspace. This is true
+	 * when the link is <code>true</code> and the resolved path matches a workspace
+	 * specified in the header.
+	 * 
+	 * <pre>
+	 * ...
+	 * "node_modules/vscode-js-profile-core": {
+	 *   "resolved": "packages/vscode-js-profile-core",
+	 *   "link": true
+	 * },
+	 * ...
+	 * </pre>
+	 * 
+	 * @param value
+	 * @return
+	 */
+	boolean isInWorkspace(String value) {
+		if (value == null) return false;
+
+		return getWorkspaces().anyMatch(each -> glob(each, value));
+	}
+
+	private Stream<String> getWorkspaces() {
+		return getRootPackage()
+				.getOrDefault("workspaces", JsonValue.EMPTY_JSON_ARRAY).asJsonArray()
+				.getValuesAs(JsonString.class).stream().map(JsonString::getString);
+	}
+
+	/**
+	 * The root package is the one that has an empty string as the key. It's not at
+	 * all clear to me whether package-lock.json file have more than one package;
+	 * more research is required.
+	 */
+	private JsonObject getRootPackage() {
+		return getPackages().entrySet().stream()
+				.filter(entry -> entry.getKey().isEmpty())
+				.map(entry -> entry.getValue().asJsonObject())
+				.findFirst().orElse(JsonValue.EMPTY_JSON_OBJECT);
+	}
+
+	private JsonObject getPackages() {
+		return json.getOrDefault("packages", JsonValue.EMPTY_JSON_OBJECT).asJsonObject();
+	}
+
+	/**
+	 * Do a glob match. The build-in function is a little too tightly coupled with
+	 * the file system for my liking. This implements a simple translation from glob
+	 * to regex that should hopefully suit most of our requirements.
+	 */
+	boolean glob(String pattern, String value) {
+		var regex = pattern.replace("/", "\\/").replace(".", "/.").replace("*", ".*");
+		return Pattern.matches(regex, value);
+	}
 }
