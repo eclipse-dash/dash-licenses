@@ -4,4 +4,4 @@ bin/
 .project
 .classpath
 .factorypath
-.settings
+**/.settings/**
