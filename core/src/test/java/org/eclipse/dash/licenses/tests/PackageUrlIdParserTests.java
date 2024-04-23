@@ -9,8 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.eclipse.dash.licenses.PackageUrlIdParser;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,9 @@ class PackageUrlIdParserTests {
 	@Test
 	void testBasic1() {
 		assertEquals("bitbucket/-/birkenfeld/pygments-main/244fd47e07d1014f0aed9c",
-				new PackageUrlIdParser().parseId("pkg:bitbucket/birkenfeld/pygments-main@244fd47e07d1014f0aed9c").toString());
+				new PackageUrlIdParser()
+						.parseId("pkg:bitbucket/birkenfeld/pygments-main@244fd47e07d1014f0aed9c")
+						.toString());
 		assertEquals("deb/-/debian/curl/7.50.3-1",
 				new PackageUrlIdParser().parseId("pkg:deb/debian/curl@7.50.3-1?arch=i386&distro=jessie").toString());
 		assertEquals("npm/npmjs/-/foobar/12.3.1", new PackageUrlIdParser().parseId("pkg:npm/foobar@12.3.1").toString());

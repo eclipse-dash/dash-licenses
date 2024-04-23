@@ -9,10 +9,10 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.tests;
 
-import org.eclipse.dash.licenses.ContentId;
-import org.eclipse.dash.licenses.IContentId;
-import org.eclipse.dash.licenses.cli.PnpmPackageLockFileReader;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -20,17 +20,16 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.eclipse.dash.licenses.ContentId;
+import org.eclipse.dash.licenses.IContentId;
+import org.eclipse.dash.licenses.cli.PnpmPackageLockFileReader;
+import org.junit.jupiter.api.Test;
 
 class PnpmPackageLockFileReaderTests {
 
 	@Test
 	void testNoPackages() throws IOException {
-		try (InputStream input = this.getClass().getResourceAsStream("fixtures/pnpm/pnpm-lock-no-packages.yaml")) {
+		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-no-packages.yaml")) {
 			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
 			var ids = reader.getContentIds();
 			assertTrue(ids.isEmpty());
@@ -39,7 +38,7 @@ class PnpmPackageLockFileReaderTests {
 
 	@Test
 	void testDuplicates() throws IOException {
-		try (InputStream input = this.getClass().getResourceAsStream("fixtures/pnpm/pnpm-lock-duplicate.yaml")) {
+		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-duplicate.yaml")) {
 			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
 			var ids = reader.getContentIds();
 			assertEquals(1, ids.size());
@@ -49,7 +48,7 @@ class PnpmPackageLockFileReaderTests {
 
 	@Test
 	void testV5Format() throws IOException {
-		try (InputStream input = this.getClass().getResourceAsStream("fixtures/pnpm/pnpm-lock-v5.yaml")) {
+		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-v5.yaml")) {
 			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
 			var ids = reader.getContentIds();
 
@@ -68,7 +67,7 @@ class PnpmPackageLockFileReaderTests {
 
 	@Test
 	void testV6Format() throws IOException {
-		try (InputStream input = this.getClass().getResourceAsStream("fixtures/pnpm/pnpm-lock-v6.yaml")) {
+		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-v6.yaml")) {
 			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
 			var ids = reader.getContentIds();
 
@@ -79,15 +78,15 @@ class PnpmPackageLockFileReaderTests {
 					ContentId.getContentId("npm", "npmjs", "-", "git-semver-tags", "4.1.1"),
 					ContentId.getContentId("npm", "npmjs", "-", "yargs", "17.6.2") };
 
-            for (IContentId id : includes) {
-                assertTrue(ids.contains(id), "Should include: " + id);
-            }
+			for (IContentId id : includes) {
+				assertTrue(ids.contains(id), "Should include: " + id);
+			}
 		}
 	}
 
 	@Test
 	void testV9Format() throws IOException {
-		try (InputStream input = this.getClass().getResourceAsStream("fixtures/pnpm/pnpm-lock-v9.yaml")) {
+		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-v9.yaml")) {
 			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
 			var ids = reader.getContentIds();
 
@@ -106,10 +105,11 @@ class PnpmPackageLockFileReaderTests {
 
 	@Test
 	void testAllRecordsDetected() throws IOException {
-		try (InputStream input = this.getClass().getResourceAsStream("fixtures/pnpm/pnpm-lock-v6-small.yaml")) {
+		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-v6-small.yaml")) {
 			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
 
-			String[] expected = { "npm/npmjs/-/git-semver-tags/4.1.1", "npm/npmjs/@babel/code-frame/7.18.6", "npm/npmjs/@babel/preset-modules/0.1.6-no-external-plugins"};
+			String[] expected = { "npm/npmjs/-/git-semver-tags/4.1.1", "npm/npmjs/@babel/code-frame/7.18.6",
+					"npm/npmjs/@babel/preset-modules/0.1.6-no-external-plugins" };
 			Arrays.sort(expected);
 			String[] found = reader.contentIds().map(IContentId::toString).sorted().toArray(String[]::new);
 			assertArrayEquals(expected, found);

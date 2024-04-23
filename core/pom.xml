@@ -11,7 +11,9 @@
  * SPDX-License-Identifier: EPL-2.0
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.eclipse.dash</groupId>
@@ -42,13 +44,14 @@
 	</organization>
 
 	<name>Eclipse Dash License Tool Core and CLI</name>
-	<description>The Eclipse Dash License Tool identifies the licenses of content.</description>
+	<description>The Eclipse Dash License Tool identifies the licenses of
+		content.</description>
 	<url>https://github.com/eclipse/dash-licenses</url>
 
 	<scm>
 		<url>https://github.com/eclipse/dash-licenses</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
@@ -120,19 +123,19 @@
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-runner</artifactId>
+			<artifactId>junit-platform-suite-engine</artifactId>
 			<version>1.10.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.10.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-suite-api</artifactId>
-			<version>1.10.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-suite-engine</artifactId>
 			<version>1.10.2</version>
 			<scope>test</scope>
 		</dependency>
@@ -145,15 +148,24 @@
 				<version>3.2.5</version>
 				<configuration>
 					<test>org.eclipse.dash.licenses.tests.TestSuite</test>
-					<additionalClasspathElements>
-						<additionalClasspathElement>${basedir}/src/test/java</additionalClasspathElement>
-					</additionalClasspathElements>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.2.5</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-runner</artifactId>
+						<version>1.10.2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.junit.jupiter</groupId>
+						<artifactId>junit-jupiter-engine</artifactId>
+						<version>5.10.2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-suite-engine</artifactId>
+						<version>1.10.2</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 		<resources>
