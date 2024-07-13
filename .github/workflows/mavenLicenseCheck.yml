@@ -129,7 +129,7 @@ jobs:
 
     - name: Check license vetting status (and ask for review if requested)
       id: check-license-vetting
-      uses: eclipse/dash-licenses/.github/actions/maven-license-check-action@master
+      uses: eclipse-dash/dash-licenses/.github/actions/maven-license-check-action@master
       with:
         request-review: ${{ env.request-review }}
         project-id: ${{ inputs.projectId }}
