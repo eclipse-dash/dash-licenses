@@ -508,7 +508,7 @@ Very often, you can get away with `grep`ing the `requirements.txt` file check de
 
 ```
 cat requirements.txt | grep -v \# \
-| sed -E -e 's|([^= ]+)==([^= ]+)|pypi/pypi/-/\1/\2|' -e 's| ||g' \
+| sed -E -e 's|([^= ]+)==([^= ]+)|pypi/pypi/-/\1/\2|' -e 's| ||g' -e 's|\[.*\]||g' \
 | sort | uniq \
 | java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
 ```
