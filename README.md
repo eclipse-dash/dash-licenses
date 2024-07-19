@@ -520,6 +520,8 @@ Steps:
 3. Sort the results and remove duplicates; and
 4. Invoke the tool.
 
+> **Note:** This is a quick workaround and not intended to be a robust or reliable solution.
+
 Alternatively, use `pipdeptree` to find all of the dependencies in your _virtual environment_, convert them into ClearlyDefined IDs, and pipe the results to the Eclipse Dash License Tool:
 
 ```
