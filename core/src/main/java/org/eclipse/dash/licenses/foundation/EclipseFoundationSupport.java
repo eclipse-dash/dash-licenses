@@ -85,7 +85,7 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			logger.info("Found {} items.", counter.get());
 		});
 		if (code != 200) {
-			logger.error("Error response from the Eclipse Foundation {}", code);
+			logger.error("Error response from the Eclipse Foundation HTTP {}", code);
 			throw new RuntimeException("Received an error response from the Eclipse Foundation.");
 		}
 	}

@@ -581,6 +581,26 @@ Sort out the licenses and approval of dependencies.
 <file> is the path to a file, or "-" to indicate stdin.
 For more help and examples, see https://github.com/eclipse/dash-licenses
 ```
+### Errors
+
+The Eclipse Dash License Tool throws and exception and fails when it encounters an error condition. This is intentional: the tools fails fast and leaves it up to the caller to decide what to do next (e.g., try again). We decided that this was especially important for when the tool is integrated into builds, for which timely execution is important. We may consider making this configurable (open an issue if this is something that you care about).
+
+The most common errors are connection errors while attempting to connect to services like ClearlyDefined or IPLab.
+
+e.g., 
+
+```
+[main] INFO Querying ClearlyDefined for license data for 15 items.
+[main] ERROR Error response from ClearlyDefined HTTP 524
+```
+
+In the above example, the tool encountered an HTTP 524 (time out) error while attempting to communicate with the ClearlyDefined server.
+
+The tool does try to batch requests to the IP data services to reduce the probability of hitting API limits resulting in an HTTP 429 (too many requests) error; but these may happen too.
+
+The one exception to the _fail fast_ rule is HTTP 502 (bad gateway) errors. For reasons that we have not investigated fully, we encounter this error relatively frequently when calling the ClearlyDefined API; but the error is transient and retrying is usually immediately successful.
+
+If you're having trouble, try adding `-Dorg.slf4j.simpleLogger.defaultLogLevel=debug` to your invocation of the tool (Maven or CLI) and open an issue. It's difficult for us to diagnose network errors, but we'll help as best we can.
 
 ### Reusable Github workflow for automatic license check and IP Team Review Requests 
 
