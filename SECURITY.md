@@ -20,4 +20,4 @@ Security updates are applied to the HEAD of the master branch.
 
 ## Reporting a Vulnerability
 
-use the Eclipse Dash License Tool's [Issue Tracker](https://github.com/eclipse/dash-licenses/issues/new) to report a vulnerability.
+use the Eclipse Dash License Tool's [Issue Tracker](https://github.com/eclipse-dash/dash-licenses/issues/new) to report a vulnerability.

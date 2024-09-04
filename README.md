@@ -103,7 +103,7 @@ To use this feature, you must have committer status on at least one Eclipse proj
 * Get an [authentication token](https://gitlab.eclipse.org/-/profile/personal_access_tokens) (scope: `api`) from `gitlab.eclipse.org`;
 * Include the `-review` option;
 * Pass the token via the `-token` option; 
-* Pass the Eclipse project's repository URL (e.g., `https://github.com/eclipse/dash-licenses`) via the `-repo` option; and
+* Pass the Eclipse project's repository URL (e.g., `https://github.com/eclipse-dash/dash-licenses`) via the `-repo` option; and
 * Pass the Eclipse open source project id (e.g., `technology.dash`) via the `-project` option.
 
 Note that the options are slightly different for the [Maven plugin](README.md#maven-plugin-options).
@@ -262,7 +262,7 @@ The Maven Plugin has the following properties that can passed either via the com
 - `dash.fail` - Force the build to fail when license issues are found. Default: `false`;
 - `dash.iplab.token` - The access token for automatically creating IP Team review requests **Do not share your access token.**;
 - `dash.projectId` - The Eclipse open source project id (e.g. `technology.dash`);
-- `dash.repo` - Specify the Eclipse Project repository that is the source of the request (e.g., `https://github.com/eclipse/dash-licenses`);
+- `dash.repo` - Specify the Eclipse Project repository that is the source of the request (e.g., `https://github.com/eclipse-dash/dash-licenses`);
 - `dash.summary` - The location (where) to generate the summary file; and
 - `dash.review.summary` - The location (where) to generate the review-summary file.
 
@@ -579,7 +579,7 @@ Sort out the licenses and approval of dependencies.
  -token <token>                    The GitLab authentication token
 
 <file> is the path to a file, or "-" to indicate stdin.
-For more help and examples, see https://github.com/eclipse/dash-licenses
+For more help and examples, see https://github.com/eclipse-dash/dash-licenses
 ```
 ### Errors
 
@@ -623,7 +623,7 @@ on:
     types: [created]
 jobs:
   call-license-check:
-    uses: eclipse/dash-licenses/.github/workflows/mavenLicenseCheck.yml@master
+    uses: eclipse-dash/dash-licenses/.github/workflows/mavenLicenseCheck.yml@master
     with:
       projectId: <PROJECT-ID>
     secrets:

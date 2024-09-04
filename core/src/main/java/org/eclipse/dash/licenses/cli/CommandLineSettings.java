@@ -297,7 +297,7 @@ public class CommandLineSettings implements ISettings {
 		final String syntax = String.format("%s [options] <file> ...", Main.class.getName());
 		final String usageHeader = "Sort out the licenses and approval of dependencies.";
 		final String usageFooter = "\n<file> is the path to a file, or \"-\" to indicate stdin. "
-				+ "\nFor more help and examples, see https://github.com/eclipse/dash-licenses";
+				+ "\nFor more help and examples, see https://github.com/eclipse-dash/dash-licenses";
 
 		formatter.printHelp(syntax, usageHeader, getOptions(), usageFooter);
 	}

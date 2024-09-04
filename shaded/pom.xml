@@ -43,16 +43,16 @@
 
 	<name>Eclipse Dash License Tool Executable JAR</name>
 	<description>The Eclipse Dash License Tool bundled as an executable JAR.</description>
-	<url>https://github.com/eclipse/dash-licenses</url>
+	<url>https://github.com/eclipse-dash/dash-licenses</url>
 
 	<scm>
-		<url>https://github.com/eclipse/dash-licenses</url>
+		<url>https://github.com/eclipse-dash/dash-licenses</url>
 	  <tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/eclipse/dash-licenses/issues</url>
+		<url>https://github.com/eclipse-dash/dash-licenses/issues</url>
 	</issueManagement>
 
 	<dependencies>
