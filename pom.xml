@@ -40,17 +40,17 @@
 
 	<name>Eclipse Dash License Tool Root</name>
 	<description>The Eclipse Dash License Tool identifies the licenses of content.</description>
-	<url>https://github.com/eclipse/dash-licenses</url>
+	<url>https://github.com/eclipse-dash/dash-licenses</url>
 
 	<scm>
-		<url>https://github.com/eclipse/dash-licenses</url>
-		<developerConnection>scm:git:git@github.com:eclipse/dash-licenses.git</developerConnection>
+		<url>https://github.com/eclipse-dash/dash-licenses</url>
+		<developerConnection>scm:git:git@github.com:eclipse-dash/dash-licenses.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/eclipse/dash-licenses/issues</url>
+		<url>https://github.com/eclipse-dash/dash-licenses/issues</url>
 	</issueManagement>
 
 	<properties>

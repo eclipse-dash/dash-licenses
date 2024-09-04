@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Eclipse Dash
 Upstream-Contact: Wayne Beaton <wayne.beaton@eclipse-foundation.org>
-Source: https://github.com/eclipse/dash-licenses
+Source: https://github.com/eclipse-dash/dash-licenses
 
 Files: CODE_OF_CONDUCT.md
 Copyright: 2023 The Eclipse Foundation
