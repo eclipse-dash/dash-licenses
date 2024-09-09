@@ -55,7 +55,7 @@ jobs:
     if: >
       github.event_name != 'issue_comment' ||
       (github.event.issue.pull_request &&
-         (contains(github.event.comment.body, '/request-license-review') || 
+         (contains(github.event.comment.body, '/request-license-review') ||
           contains(github.event.comment.body, '/license-check')))
     runs-on: ubuntu-latest
     outputs:
@@ -64,7 +64,7 @@ jobs:
     steps:
     - name: Check dependabot PR
       if: >
-        github.event_name == 'pull_request' 
+        github.event_name == 'pull_request'
         && (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
         && github.actor == 'dependabot[bot]' && github.actor_id == '49699333'
       run: echo "isDependabotPR=1" >> $GITHUB_ENV

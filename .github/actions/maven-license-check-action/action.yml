@@ -30,7 +30,7 @@ runs:
       run: |
         mvnArgs="-U -B -ntp org.eclipse.dash:license-tool-plugin:license-check -Ddash.fail=true -Dtycho.target.eager=true --settings $GITHUB_ACTION_PATH/licenseCheckMavenSettings.xml"
         mvnArgs+=" -Ddash.repo=https://github.com/${{ github.repository }}"
-        
+
         if [[ "${{ inputs.project-id }}" != "" ]]; then
           mvnArgs+=" -Ddash.projectId=${{ inputs.project-id }}"
         fi
