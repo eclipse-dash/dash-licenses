@@ -29,20 +29,22 @@ runs:
       shell: bash {0} # do not fail-fast
       run: |
         mvnArgs="-U -B -ntp org.eclipse.dash:license-tool-plugin:license-check -Ddash.fail=true -Dtycho.target.eager=true --settings $GITHUB_ACTION_PATH/licenseCheckMavenSettings.xml"
-        if [[ ${{ inputs.project-id }} != "" ]]; then
+        mvnArgs+=" -Ddash.repo=https://github.com/${{ github.repository }}"
+        
+        if [[ "${{ inputs.project-id }}" != "" ]]; then
           mvnArgs+=" -Ddash.projectId=${{ inputs.project-id }}"
         fi
-        if [ ${{ inputs.request-review }} ]; then
+        if [ "${{ inputs.request-review }}" != "" ]; then
           mvn ${mvnArgs} -Ddash.iplab.token=$GITLAB_API_TOKEN
-          if [[ $? == 0 ]]; then # All licenses are vetted
-            echo "build-succeeded=1" >> $GITHUB_OUTPUT
-          else
-            echo "build-succeeded=0" >> $GITHUB_OUTPUT
-          fi
         else
           mvn ${mvnArgs}
-          if [[ $? != 0 ]]; then
+        fi
+
+        if [[ $? == 0 ]]; then # All licenses are vetted
+          echo "build-succeeded=1" >> $GITHUB_OUTPUT
+        else
+          if [[ "${{ inputs.request-review }}" = "" ]]; then
             echo "Committers can request a review by commenting '/request-license-review'"
-            exit 1
           fi
+          echo "build-succeeded=0" >> $GITHUB_OUTPUT
         fi
