@@ -55,8 +55,8 @@ jobs:
     if: >
       github.event_name != 'issue_comment' ||
       (github.event.issue.pull_request &&
-         (contains(github.event.comment.body, '/request-license-review') ||
-          contains(github.event.comment.body, '/license-check')))
+         (github.event.comment.body == '/request-license-review') ||
+          (github.event.comment.body == '/license-check')))
     runs-on: ubuntu-latest
     outputs:
       request-review: ${{ steps.request-review.outputs.request-review }}
