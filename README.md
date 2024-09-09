@@ -624,6 +624,11 @@ on:
 jobs:
   call-license-check:
     uses: eclipse-dash/dash-licenses/.github/workflows/mavenLicenseCheck.yml@master
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      actions: write
     with:
       projectId: <PROJECT-ID>
     secrets:
@@ -632,17 +637,17 @@ jobs:
 Projects that have to be set up in advance can use the `setupScript` parameter to pass a script that is executed before the license-check build is started.
 Projects that want their git submodules to be checked out and processed can use the 'submodule' parameter.
 
-On each pull-reqest event (i.e. a new PR is created or a new commit for it is pushed) the license-status of all project dependencies is checked automatically and in case unvetted licenses are found the check fails.
+On each pull-request event (i.e. a new PR is created or a new commit for it is pushed) the license-status of all project dependencies is checked automatically and in case unvetted licenses are found the check fails.
 Committers of that project can request a review from the IP team, by simply adding a comment with body `/request-license-review`.
 The github-actions bot reacts with a 'rocket' to indicate the request was understood and is processed.
 Attempts to request license review by non-committers are rejected with a thumps-down reaction.
 After the license-review build has terminated the github-action bot will reply with a comment to show the result of the license review request.
-Committers can later re-run this license-check workflow from the Github actions web-interface to check for license-status changes.
+Committers can later re-run this license-check workflow from the GitHub actions web-interface to check for license-status changes of by adding a comment with body `/license-check`.
 
 #### Requirements
 - Maven based build
 - Root pom.xml must reside in the repository root
-- An [authentication token (scope: api) from gitlab.eclipse.org](README.md#automatic-ip-team-review-requests) has to be stored in the repositories secret store(Settings -> Scrects -> Actions) with name `M2E_GITLAB_API_TOKEN`.
+- An [authentication token (scope: api) from gitlab.eclipse.org](README.md#automatic-ip-team-review-requests) has to be stored in the repositories secret store(Settings -> Secrets -> Actions) with name `M2E_GITLAB_API_TOKEN`.
 
 ## Advanced Scenarios
 
