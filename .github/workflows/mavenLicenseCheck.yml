@@ -86,7 +86,7 @@ jobs:
       if: |
         (steps.request-review.outputs.request-review || steps.license-check.outputs.license-check)
         && (!env.isDependabotPR)
-      uses: actions/github-script@v7
+      uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
       with:
         script: |
           const payload = await github.rest.repos.getCollaboratorPermissionLevel({
@@ -104,6 +104,7 @@ jobs:
             ...context.repo, comment_id: context.payload?.comment?.id, content: reaction
           });
 
+
   check-licenses:
     needs: check-request
     if: ${{needs.check-request.outputs.license-check == ''}}
@@ -119,25 +120,25 @@ jobs:
     # and for events triggered by PR creation/updates the ref is 'refs/pull/<PR-number>/merge'.
     # So by default only the master-branch would be considered when requesting license-reviews, but we want the PR's state.
     # Unless the PR is closed, then we want the master-branch, which allows subsequent license review requests.
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       # use default ref 'refs/pull/<PR-number>/merge' for PR-events and 'refs/heads/master' for comments if the PR is closed
       if: github.event.issue.pull_request == '' || github.event.issue.state != 'open'
       with:
         submodules: ${{ inputs.submodules }}
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       if: github.event.issue.pull_request != '' && github.event.issue.state == 'open'
       with:
         ref: 'refs/pull/${{ github.event.issue.number }}/merge'
         submodules: ${{ inputs.submodules }}
 
-    - uses: actions/setup-java@v4
+    - uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88 # v4.3.0
       with:
         java-version: ${{ inputs.javaVersion }}
         distribution: 'temurin'
 
     - name: Cache local Maven repository
-      uses: actions/cache@v4
+      uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
       with:
         path: ~/.m2/repository
         # re-cache on changes in the pom and target files
@@ -156,7 +157,7 @@ jobs:
 
     - name: Check license vetting status (and ask for review if requested)
       id: check-license-vetting
-      uses: netomi/dash-licenses/.github/actions/maven-license-check-action@master
+      uses: eclipse-dash/dash-licenses/.github/actions/maven-license-check-action@07a2f0e44c1948918f6ba3e5a0aa1b52b1413847 # master
       with:
         request-review: ${{ env.request-review }}
         project-id: ${{ inputs.projectId }}
@@ -166,7 +167,7 @@ jobs:
     - name: Process license check results
       id: process-results
       if: always()
-      uses: actions/github-script@v7
+      uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
       with:
         result-encoding: string
         script: |
@@ -201,7 +202,8 @@ jobs:
               let notVettedDependencies = 0
               for (const line of lines) {
                 if (line.includes('restricted')) {
-                  commentBody += `| ${line.split(", ").join(" | ")} |\n`
+                  depLine = `| ${line.split(", ").join(" | ")} |\n`
+                  commentBody += depLine.replace(/#([0-9]+)/gm, "[#\$1](https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab/-/issues/\$1)")
                   notVettedDependencies++
                 }
               }
@@ -247,7 +249,7 @@ jobs:
     # Add the process result as comment to the PR if an update has been requested
     # or if the PR is not coming from a fork (in which case we don't have write tokens)
     - name: Adding comment to PR
-      uses: marocchino/sticky-pull-request-comment@v2
+      uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
       if: |
         always()
         && (github.event_name == 'issue_comment' || github.event.pull_request.head.repo.full_name == github.repository)
