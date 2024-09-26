@@ -161,6 +161,28 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>biz.aQute.bnd</groupId>
+				<artifactId>bnd-maven-plugin</artifactId>
+				<version>6.4.0</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>jar</id>
+						<configuration>
+							<bnd><![CDATA[
+				                -noextraheaders: true
+				                -reproducible: true
+				                
+				                Export-Package: org.eclipse.dash.licenses*
+					        ]]></bnd>
+						</configuration>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<resources>
 			<resource>
