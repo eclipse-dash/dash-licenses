@@ -121,6 +121,6 @@ public class PnpmPackageLockFileReader implements IDependencyListReader {
 		representer.getPropertyUtils().setSkipMissingProperties(true);
 		LoaderOptions loaderOptions = new LoaderOptions();
 		SafeConstructor constructor = new SafeConstructor(loaderOptions);
-		return new Yaml(constructor, representer);
+		return new Yaml(constructor, representer, new DumperOptions());
 	}
 }
