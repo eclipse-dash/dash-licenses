@@ -9,26 +9,22 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
+import java.net.http.HttpClient;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.util.GitUtils;
-import org.gitlab4j.api.GitLabApi;
-import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.models.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Maps;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 public class GitLabSupport {
 
@@ -41,7 +37,7 @@ public class GitLabSupport {
 	/** Optional HTTP proxy settings. */
 	@Inject
 	Provider<IProxySettings> proxySettings;
-	
+
 	public void createReviews(List<LicenseData> needsReview, BiConsumer<IContentId, String> monitor) {
 		execute(connection -> {
 			var count = 0;
@@ -70,14 +66,17 @@ public class GitLabSupport {
 				try {
 					GitLabReview review = new GitLabReview(settings.getProjectId(), getRepository(), licenseData);
 
-					Issue existing = connection.findIssue(review);
-					if (existing != null) {
-						monitor.accept(licenseData.getId(), existing.getWebUrl());
-						logger.info("A review request already exists {} .", existing.getWebUrl());
+					Optional<GitLabIssue> oGitLabIssue = connection.findIssue(review);
+					if (oGitLabIssue.isPresent()) {
+						oGitLabIssue.ifPresent(issue -> {
+							monitor.accept(licenseData.getId(), issue.getWebUrl());
+							logger.info("A review request already exists {} .", issue.getWebUrl());
+						});
+
 						continue;
 					}
 
-					Issue created = connection.createIssue(review);
+					GitLabIssue created = connection.createIssue(review);
 					if (created == null) {
 						logger.error("An error occurred while attempting to create a review request. Aborting.");
 						// TODO If we break creating a review, then don't try to create any more.
@@ -101,22 +100,23 @@ public class GitLabSupport {
 
 	String getRepository() {
 		var repository = settings.getRepository();
-		if (repository != null) return repository;
-		
+		if (repository != null)
+			return repository;
+
 		return GitUtils.getEclipseRemote();
 	}
 
 	public void execute(Consumer<GitLabConnection> callable) {
-		Map<String, Object> clientConfig = null;
+
+		HttpClient.Builder builder = HttpClient.newBuilder();
 		IProxySettings proxySettings = this.proxySettings.get();
 		if (proxySettings != null) {
 			// Configure GitLab API for the proxy server
-			clientConfig = Maps.newHashMap();
-			proxySettings.configureJerseyClient(clientConfig);
+			proxySettings.configure(builder);
 		}
 
-		try (GitLabApi gitLabApi = new GitLabApi(settings.getIpLabHostUrl(), settings.getIpLabToken(), clientConfig)) {
-			callable.accept(new GitLabConnection(gitLabApi, settings.getIpLabRepositoryPath()));
+		try (GitLabApi gitLabApi = new GitLabApi(settings.getIpLabHostUrl(), settings.getIpLabToken(), builder)) {
+			callable.accept(new GitLabConnection(gitLabApi));
 		}
 	}
 }

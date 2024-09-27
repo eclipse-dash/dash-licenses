@@ -9,48 +9,38 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
-import org.gitlab4j.api.Constants.IssueState;
-import org.gitlab4j.api.GitLabApi;
-import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.IssuesApi;
-import org.gitlab4j.api.models.Issue;
-import org.gitlab4j.api.models.IssueFilter;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GitLabConnection {
 	final Logger logger = LoggerFactory.getLogger(GitLabConnection.class);
 	private GitLabApi gitLabApi;
-	private String path;
 
-	public GitLabConnection(GitLabApi gitLabApi, String path) {
+	public GitLabConnection(GitLabApi gitLabApi) {
 		this.gitLabApi = gitLabApi;
-		this.path = path;
 	}
 
-	public Issue findIssue(GitLabReview review) throws GitLabApiException {
+	public Optional<GitLabIssue> findIssue(GitLabReview review) throws GitLabApiException {
 		return rateLimit(() -> {
 
 			String title = review.getTitle();
+			String projectId = review.getProjectId();
 
 			logger.debug("Querying GitLab for {}", title);
 
-			IssueFilter filter = new IssueFilter().withState(IssueState.OPENED);
-			return getIssuesApi()
-					.getIssuesStream(path, filter)
-					.filter(issue -> issue.getTitle().equals(title))
-					.findAny()
-					.orElse(null);
+			return gitLabApi.getAnyIssueOpenWithTitle(projectId, title);
+
 		});
 	}
 
-	public Issue createIssue(GitLabReview review) throws GitLabApiException {
+	public GitLabIssue createIssue(GitLabReview review) throws GitLabApiException {
 		return rateLimit(() -> {
 			logger.debug("GitLab creating an issue for {}", review.getTitle());
 
-			return getIssuesApi()
-					.createIssue(path, review.getTitle(), review.getDescription(), false, null, null,
-							review.getLabels(), null, null, null, null);
+			return gitLabApi
+					.createIssue(review.getProjectId(), review.getTitle(), review.getDescription(), review.getLabels());
 		});
 	}
 
@@ -119,13 +109,10 @@ public class GitLabConnection {
 	public String getUserId() {
 		// I'm pretty sure that this API isn't rate limited.
 		try {
-			return gitLabApi.getUserApi().getCurrentUser().getUsername();
+			return gitLabApi.getCurrentUser().getUsername();
 		} catch (GitLabApiException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private IssuesApi getIssuesApi() {
-		return gitLabApi.getIssuesApi();
-	}
 }

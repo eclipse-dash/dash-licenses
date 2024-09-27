@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2022 STMicroelectronics and others.
+ * Copyright (c) 2020,2024 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -7,20 +7,22 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
-package org.eclipse.dash.licenses;
+package org.eclipse.dash.licenses.review;
 
-import java.net.http.HttpClient;
+public class GitLabUser {
 
-/**
- * Injectable HTTP proxy settings.
- */
-public interface IProxySettings {
+	private String username;
 
-	/**
-	 * Configure an HTTP client for a proxy server.
-	 * 
-	 * @param httpClientBuilder the HTTP client builder to configure
-	 */
-	void configure(HttpClient.Builder httpClientBuilder);
+	public GitLabUser() {
+	}
+
+	public GitLabUser withUsername(String username) {
+		this.username = username;
+		return this;
+	}
+
+	public String getUsername() {
+		return username;
+	}
 
 }

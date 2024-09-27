@@ -37,10 +37,10 @@ public class GitLabReview {
 		StringBuilder builder = new StringBuilder();
 		builder.append(String.format("%s\n\n", licenseData.getId()));
 
-		if (projectId != null) {
+		if (getProjectId() != null) {
 			builder
 					.append(String
-							.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n\n", projectId, projectId));
+							.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n\n", getProjectId(), getProjectId()));
 		}
 		if (repository != null) {
 			builder.append(String.format("Repository: %s\n\n", repository));
@@ -75,5 +75,9 @@ public class GitLabReview {
 
 	private IContentId getContentId() {
 		return licenseData.getId();
+	}
+
+	public String getProjectId() {
+		return projectId;
 	}
 }

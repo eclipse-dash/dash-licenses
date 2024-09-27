@@ -16,13 +16,11 @@ import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.text.MessageFormat;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.logging.Log;
 import org.eclipse.dash.licenses.IProxySettings;
-import org.gitlab4j.api.ProxyClientConfig;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 
@@ -69,11 +67,6 @@ public class MavenProxySettings implements IProxySettings {
 		if (username != null && password != null) {
 			httpClientBuilder.authenticator(new ProxyAuthenticator());
 		}
-	}
-	
-	@Override
-	public void configureJerseyClient(Map<String, Object> clientConfig) {
-		clientConfig.putAll(ProxyClientConfig.createProxyClientConfig(proxyURI.toString(), username, password));
 	}
 	
 	/**
