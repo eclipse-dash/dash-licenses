@@ -9,6 +9,7 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -27,8 +28,6 @@ import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Maps;
 
 public class GitLabSupport {
 
@@ -111,7 +110,7 @@ public class GitLabSupport {
 		IProxySettings proxySettings = this.proxySettings.get();
 		if (proxySettings != null) {
 			// Configure GitLab API for the proxy server
-			clientConfig = Maps.newHashMap();
+			clientConfig = new HashMap<>();
 			proxySettings.configureJerseyClient(clientConfig);
 		}
 
