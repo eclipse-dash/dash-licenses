@@ -26,13 +26,9 @@ import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
-import org.eclipse.dash.licenses.review.GitLabSupport;
 import org.eclipse.dash.licenses.validation.EclipseProjectIdValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 /**
  * This class provides a CLI entry point to determine licenses for content. The
@@ -79,16 +75,16 @@ public class Main {
 			System.exit(0);
 		}
 
-		Injector injector = Guice.createInjector(new LicenseToolModule(settings));
+		LicenseToolModule module = new LicenseToolModule(settings);
 
 		if (settings.getProjectId() != null) {
-			var validator = injector.getInstance(EclipseProjectIdValidator.class);
+			var validator = new EclipseProjectIdValidator(module);
 			if (!validator.validate(settings.getProjectId(), message -> System.out.println(message))) {
 				System.exit(INTERNAL_ERROR);
 			}
 		}
 
-		LicenseChecker checker = injector.getInstance(LicenseChecker.class);
+		LicenseChecker checker = module.getLicenseChecker();
 
 		List<IResultsCollector> collectors = new ArrayList<>();
 
@@ -108,8 +104,7 @@ public class Main {
 		}
 
 		if (settings.isReview()) {
-			collectors
-					.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class), (id, url) -> {}));
+			collectors.add(new CreateReviewRequestCollector(module.getGitlab(), (id, url) -> {}));
 		}
 
 		Arrays.stream(settings.getFileNames()).forEach(name -> {
@@ -159,15 +154,15 @@ public class Main {
 		} else {
 			File input = new File(name);
 			if (input.exists()) {
-                switch (input.getName()) {
-                    case "pnpm-lock.yaml":
-                        return new PnpmPackageLockFileReader(new FileInputStream(input));
-                    case "package-lock.json":
-                        return new PackageLockFileReader(new FileInputStream(input));
-                    case "yarn.lock":
-                        return new YarnLockFileReader(new FileReader(input));
-                }
-                return new FlatFileReader(new FileReader(input));
+				switch (input.getName()) {
+				case "pnpm-lock.yaml":
+					return new PnpmPackageLockFileReader(new FileInputStream(input));
+				case "package-lock.json":
+					return new PackageLockFileReader(new FileInputStream(input));
+				case "yarn.lock":
+					return new YarnLockFileReader(new FileReader(input));
+				}
+				return new FlatFileReader(new FileReader(input));
 			} else {
 				throw new FileNotFoundException(name);
 			}

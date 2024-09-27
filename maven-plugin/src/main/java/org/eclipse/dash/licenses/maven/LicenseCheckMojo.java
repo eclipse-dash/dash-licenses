@@ -226,16 +226,16 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		NeedsReviewCollector needsReviewCollector = new NeedsReviewCollector();
 		collectors.add(needsReviewCollector);
 
-		Injector injector = Guice.createInjector(new LicenseToolModule(settings, createProxySettings()));
+		LicenseToolModule module=new LicenseToolModule(settings, createProxySettings());
 		
 		if (settings.getProjectId() != null) {
-			var validator = injector.getInstance(EclipseProjectIdValidator.class);
+			var validator = new EclipseProjectIdValidator(module);
 			if (!validator.validate(settings.getProjectId(), message -> getLog().error(message))) {
 				throw new MojoExecutionException("Invalid project id.");
 			}
 		}
 		
-		LicenseChecker checker = injector.getInstance(LicenseChecker.class);
+		LicenseChecker checker = module.getLicenseChecker();
 
 		summary.getParentFile().mkdirs();
 		reviewSummary.getParentFile().mkdirs();
@@ -247,7 +247,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			collectors.add(new CSVCollector(summaryOut));
 
 			if (iplabToken != null && projectId != null) {
-				collectors.add(new CreateReviewRequestCollector(injector.getInstance(GitLabSupport.class),
+				collectors.add(new CreateReviewRequestCollector(module.getGitlab(),
 						(id, url) -> reviewSummaryOut.println("[" + id + "](" + url + ")")));
 			} else if (iplabToken != null) {
 				getLog().info(

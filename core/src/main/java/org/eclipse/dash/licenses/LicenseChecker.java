@@ -11,25 +11,26 @@ package org.eclipse.dash.licenses;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.dash.licenses.LicenseSupport.Status;
+import org.eclipse.dash.licenses.context.LicenseToolContext;
 import org.eclipse.dash.licenses.util.Batchifier;
 
-import jakarta.inject.Inject;
-
 public class LicenseChecker {
-	@Inject
-	ISettings settings;
-	@Inject
-	Set<ILicenseDataProvider> licenseDataProviders;
+
+	private LicenseToolContext ctx;
+
+	public LicenseChecker(LicenseToolContext context) {
+		this.ctx = context;
+
+	}
 
 	private Stream<ILicenseDataProvider> getLicenseDataProviders() {
 		// Compare in reverse order. We want the "heaviest" one first.
-		return licenseDataProviders.stream().sorted((a,b)-> Integer.compare(b.getWeight(), a.getWeight()));
+		return ctx.getLicenseDataProviders().stream().sorted((a, b) -> Integer.compare(b.getWeight(), a.getWeight()));
 	}
 
 	/**
@@ -40,22 +41,25 @@ public class LicenseChecker {
 	 * @return
 	 */
 	public Map<IContentId, LicenseData> getLicenseData(Collection<IContentId> ids) {
-		Map<IContentId, LicenseData> licenseData = ids.stream().map(id -> new LicenseData(id)).collect(
-				Collectors.toMap(LicenseData::getId, Function.identity(), (existing, replacement) -> existing));
+		Map<IContentId, LicenseData> licenseData = ids
+				.stream()
+				.map(id -> new LicenseData(id))
+				.collect(
+						Collectors.toMap(LicenseData::getId, Function.identity(), (existing, replacement) -> existing));
 
 		getLicenseDataProviders().forEach(provider -> {
-			new Batchifier<IContentId>()
-				.setBatchSize(settings.getBatchSize())
-				.setConsumer(batch -> {
-					provider.queryLicenseData(batch, data -> {
-						var item = licenseData.get(data.getId());
-						if (item != null) item.addContentData(data);
-					});
-				})
-				.batchify(ids.stream()
-						.filter(IContentId::isValid)
-						.filter(id -> licenseData.get(id).getStatus() != Status.Approved)
-						.iterator());
+			new Batchifier<IContentId>().setBatchSize(ctx.getSettings().getBatchSize()).setConsumer(batch -> {
+				provider.queryLicenseData(batch, data -> {
+					var item = licenseData.get(data.getId());
+					if (item != null)
+						item.addContentData(data);
+				});
+			})
+					.batchify(ids
+							.stream()
+							.filter(IContentId::isValid)
+							.filter(id -> licenseData.get(id).getStatus() != Status.Approved)
+							.iterator());
 		});
 
 		return licenseData;

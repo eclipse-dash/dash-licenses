@@ -23,14 +23,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-
-import org.eclipse.dash.licenses.IProxySettings;
-import org.eclipse.dash.licenses.ISettings;
+import org.eclipse.dash.licenses.context.LicenseToolContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,19 +34,18 @@ public class HttpClientService implements IHttpClientService {
 
 	final static int MAX_TRIES = 10;
 
-	@Inject
-	ISettings settings;
+	private LicenseToolContext ctx;
 
-	/** Optional HTTP proxy settings. */
-	@Inject
-	Provider<IProxySettings> proxySettings;
+	public HttpClientService(LicenseToolContext context) {
+		this.ctx = context;
+	}
 
 	@Override
 	public int post(String url, String contentType, String payload, Consumer<String> handler) {
 		try {
 			var tries = 0;
 			while (true) {
-				Duration timeout = Duration.ofSeconds(settings.getTimeout());
+				Duration timeout = Duration.ofSeconds(ctx.getSettings().getTimeout());
 				HttpRequest request = HttpRequest
 						.newBuilder(URI.create(url))
 						.header("Content-Type", contentType)
@@ -83,7 +77,7 @@ public class HttpClientService implements IHttpClientService {
 					.newBuilder(URI.create(url))
 					.method("HEAD", HttpRequest.BodyPublishers.noBody());
 
-			Duration timeout = Duration.ofSeconds(settings.getTimeout());
+			Duration timeout = Duration.ofSeconds(ctx.getSettings().getTimeout());
 			HttpRequest request = reqBuilder.timeout(timeout).build();
 
 			HttpClient httpClient = getHttpClient(timeout);
@@ -111,7 +105,7 @@ public class HttpClientService implements IHttpClientService {
 
 				headers.forEach((key, value) -> reqBuilder.header(key, value));
 
-				Duration timeout = Duration.ofSeconds(settings.getTimeout());
+				Duration timeout = Duration.ofSeconds(ctx.getSettings().getTimeout());
 				HttpRequest request = reqBuilder.timeout(timeout).build();
 
 				HttpClient httpClient = getHttpClient(timeout);
@@ -139,7 +133,7 @@ public class HttpClientService implements IHttpClientService {
 				.followRedirects(HttpClient.Redirect.ALWAYS);
 
 		// Configure proxy, if any
-		Optional.ofNullable(this.proxySettings.get()).ifPresent(proxySettings -> proxySettings.configure(builder));
+		ctx.proxySettings().ifPresent(proxySettings -> proxySettings.configure(builder));
 
 		return builder.build();
 	}

@@ -24,17 +24,16 @@ import org.eclipse.dash.licenses.tests.util.TestLicenseToolModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 class LicenseCheckerTests {
 
 	private LicenseChecker licenseChecker;
 
 	@BeforeEach
 	void setup() {
-		Injector injector = Guice.createInjector(new TestLicenseToolModule());
-		licenseChecker = injector.getInstance(LicenseChecker.class);
+
+		TestLicenseToolModule testLicenseToolModule = new TestLicenseToolModule();
+		licenseChecker = testLicenseToolModule.getLicenseChecker();
+
 	}
 
 	@Test

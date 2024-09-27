@@ -12,10 +12,14 @@ package org.eclipse.dash.licenses;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+import org.eclipse.dash.licenses.context.LicenseToolContext;
+
 public interface ILicenseDataProvider {
 
+	void init(LicenseToolContext context);
+
 	void queryLicenseData(Collection<IContentId> ids, Consumer<IContentData> consumer);
-	
+
 	default int getWeight() {
 		return 50;
 	}

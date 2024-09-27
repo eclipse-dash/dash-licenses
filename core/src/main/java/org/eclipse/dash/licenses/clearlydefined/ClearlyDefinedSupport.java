@@ -22,29 +22,22 @@ import java.util.stream.Collectors;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
-import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
-import org.eclipse.dash.licenses.http.IHttpClientService;
+import org.eclipse.dash.licenses.context.LicenseToolContext;
 import org.eclipse.dash.licenses.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.inject.Inject;
 import jakarta.json.stream.JsonParsingException;
 
 public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	final Logger logger = LoggerFactory.getLogger(ClearlyDefinedSupport.class);
 
-	@Inject
-	ISettings settings;
-	@Inject
-	IHttpClientService httpClientService;
-	@Inject
-	LicenseSupport licenseService;
-
 	private Set<String> validTypes;
 	private Set<String> validProviders;
+
+	private LicenseToolContext ctx;
 
 	/**
 	 * The ClearlyDefined API expects a flat array of ids in JSON format in the
@@ -141,8 +134,9 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		if (start == end)
 			return;
 
-		int code = httpClientService
-				.post(settings.getClearlyDefinedDefinitionsUrl(), "application/json",
+		int code = ctx
+				.getHttpClientService()
+				.post(ctx.getSettings().getClearlyDefinedDefinitionsUrl(), "application/json",
 						JsonUtils.toJson(ids.subList(start, end)), response -> {
 							// FIXME Seems like overkill.
 							AtomicInteger counter = new AtomicInteger();
@@ -209,8 +203,8 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 *         otherwise.
 	 */
 	public boolean isAccepted(ClearlyDefinedContentData data) {
-		if (data.getLicenseScore() >= settings.getConfidenceThreshold()) {
-			if (licenseService.getStatus(data.getLicense()) != LicenseSupport.Status.Approved)
+		if (data.getLicenseScore() >= ctx.getSettings().getConfidenceThreshold()) {
+			if (ctx.getLicenseService().getStatus(data.getLicense()) != LicenseSupport.Status.Approved)
 				return false;
 			return !data
 					.discoveredLicenses()
@@ -223,10 +217,9 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	}
 
 	boolean isDiscoveredLicenseApproved(String license) {
-		return licenseService.getStatus(license) == LicenseSupport.Status.Approved;
+		return ctx.getLicenseService().getStatus(license) == LicenseSupport.Status.Approved;
 	}
 
-	@Inject
 	void bootstrap() {
 		/*
 		 * FIXME This is a hack. AFAICT, there is no API that answers the list of valid
@@ -265,5 +258,11 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		public ClearlyDefinedResponseException() {
 			super();
 		}
+	}
+
+	@Override
+	public void init(LicenseToolContext context) {
+		this.ctx = context;
+		bootstrap();
 	}
 }

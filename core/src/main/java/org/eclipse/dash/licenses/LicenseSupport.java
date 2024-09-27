@@ -14,13 +14,12 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dash.licenses.http.IHttpClientService;
+import org.eclipse.dash.licenses.context.LicenseToolContext;
 import org.eclipse.dash.licenses.spdx.SpdxExpression;
 import org.eclipse.dash.licenses.spdx.SpdxExpressionParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
@@ -29,25 +28,30 @@ public class LicenseSupport {
 
 	final Logger logger = LoggerFactory.getLogger(LicenseSupport.class);
 
-	@Inject
-	ISettings settings;
-	@Inject
-	IHttpClientService httpClientService;
-
 	private Map<String, String> approvedLicenses;
+
+	private LicenseToolContext ctx;
 
 	public enum Status {
 		Approved, Restricted
 	}
 
-	@Inject
-	public void init() {
-		httpClientService.get(settings.getApprovedLicensesUrl(), "application/json", response -> {
-			approvedLicenses = getApprovedLicenses(new InputStreamReader(response));
-		});
+	public LicenseSupport(LicenseToolContext context) {
+		this.ctx = context;
+
 	}
 
-	private Map<String, String> getApprovedLicenses(Reader contentReader) {
+	private Map<String, String> getApprovedLicenses() {
+		if (approvedLicenses == null) {
+
+			ctx.getHttpClientService().get(ctx.getSettings().getApprovedLicensesUrl(), "application/json", response -> {
+				approvedLicenses = readApprovedLicenses(new InputStreamReader(response));
+			});
+		}
+		return approvedLicenses;
+	}
+
+	private Map<String, String> readApprovedLicenses(Reader contentReader) {
 		JsonReader reader = Json.createReader(contentReader);
 		JsonObject read = (JsonObject) reader.read();
 
@@ -89,7 +93,7 @@ public class LicenseSupport {
 		if (expression == null)
 			return Status.Restricted;
 
-		if (expression.matchesApproved(approvedLicenses.keySet())) {
+		if (expression.matchesApproved(getApprovedLicenses().keySet())) {
 			return Status.Approved;
 		}
 

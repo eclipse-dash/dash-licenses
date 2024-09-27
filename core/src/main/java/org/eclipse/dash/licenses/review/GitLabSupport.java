@@ -9,18 +9,15 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-
 import org.eclipse.dash.licenses.IContentId;
-import org.eclipse.dash.licenses.IProxySettings;
-import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
+import org.eclipse.dash.licenses.context.LicenseToolContext;
 import org.eclipse.dash.licenses.util.GitUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -28,20 +25,17 @@ import org.gitlab4j.api.models.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Maps;
-
 public class GitLabSupport {
 
 	final Logger logger = LoggerFactory.getLogger(GitLabSupport.class);
 	private static final int MAXIMUM_REVIEWS = 100;
 
-	@Inject
-	ISettings settings;
+	private LicenseToolContext ctx;
 
-	/** Optional HTTP proxy settings. */
-	@Inject
-	Provider<IProxySettings> proxySettings;
-	
+	public GitLabSupport(LicenseToolContext context) {
+		this.ctx = context;
+	}
+
 	public void createReviews(List<LicenseData> needsReview, BiConsumer<IContentId, String> monitor) {
 		execute(connection -> {
 			var count = 0;
@@ -68,7 +62,8 @@ public class GitLabSupport {
 				 * required to prevent rare duplication.
 				 */
 				try {
-					GitLabReview review = new GitLabReview(settings.getProjectId(), getRepository(), licenseData);
+					GitLabReview review = new GitLabReview(ctx.getSettings().getProjectId(), getRepository(),
+							licenseData);
 
 					Issue existing = connection.findIssue(review);
 					if (existing != null) {
@@ -100,23 +95,24 @@ public class GitLabSupport {
 	}
 
 	String getRepository() {
-		var repository = settings.getRepository();
-		if (repository != null) return repository;
-		
+		var repository = ctx.getSettings().getRepository();
+		if (repository != null)
+			return repository;
+
 		return GitUtils.getEclipseRemote();
 	}
 
 	public void execute(Consumer<GitLabConnection> callable) {
-		Map<String, Object> clientConfig = null;
-		IProxySettings proxySettings = this.proxySettings.get();
-		if (proxySettings != null) {
-			// Configure GitLab API for the proxy server
-			clientConfig = Maps.newHashMap();
-			proxySettings.configureJerseyClient(clientConfig);
-		}
+		Map<String, Object> clientConfig = new HashMap<>();
 
-		try (GitLabApi gitLabApi = new GitLabApi(settings.getIpLabHostUrl(), settings.getIpLabToken(), clientConfig)) {
-			callable.accept(new GitLabConnection(gitLabApi, settings.getIpLabRepositoryPath()));
+		ctx.proxySettings().ifPresent(proxySettings -> {
+			// Configure GitLab API for the proxy server
+			proxySettings.configureJerseyClient(clientConfig);
+		});
+
+		try (GitLabApi gitLabApi = new GitLabApi(ctx.getSettings().getIpLabHostUrl(), ctx.getSettings().getIpLabToken(),
+				clientConfig)) {
+			callable.accept(new GitLabConnection(gitLabApi, ctx.getSettings().getIpLabRepositoryPath()));
 		}
 	}
 }

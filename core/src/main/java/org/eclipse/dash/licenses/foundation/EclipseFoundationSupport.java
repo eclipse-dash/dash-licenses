@@ -16,13 +16,10 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import jakarta.inject.Inject;
-
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
-import org.eclipse.dash.licenses.ISettings;
-import org.eclipse.dash.licenses.http.IHttpClientService;
+import org.eclipse.dash.licenses.context.LicenseToolContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,19 +31,16 @@ import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonReader;
 
 public class EclipseFoundationSupport implements ILicenseDataProvider {
-	@Inject
-	ISettings settings;
-	@Inject
-	IHttpClientService httpClientService;
 
 	final Logger logger = LoggerFactory.getLogger(EclipseFoundationSupport.class);
+	private LicenseToolContext ctx;
 
 	@Override
 	public void queryLicenseData(Collection<IContentId> ids, Consumer<IContentData> consumer) {
 		if (ids.isEmpty())
 			return;
 
-		String url = settings.getLicenseCheckUrl();
+		String url = ctx.getSettings().getLicenseCheckUrl();
 		if (url.isBlank()) {
 			logger.debug("Bypassing Eclipse Foundation.");
 			return;
@@ -56,7 +50,7 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 
 		String form = encodeRequestPayload(ids);
 
-		int code = httpClientService.post(url, "application/x-www-form-urlencoded", form, response -> {
+		int code = ctx.getHttpClientService().post(url, "application/x-www-form-urlencoded", form, response -> {
 			AtomicInteger counter = new AtomicInteger();
 
 			JsonReader reader = Json.createReader(new StringReader(response));
@@ -66,8 +60,9 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			if (approved != null)
 				approved.forEach((key, each) -> {
 					FoundationData data = new FoundationData(each.asJsonObject());
-					logger.debug("EF approved: {} ({}) score: {} {} {}", data.getId(), data.getRule(), data.getScore(),
-							data.getLicense(), data.getAuthority());
+					logger
+							.debug("EF approved: {} ({}) score: {} {} {}", data.getId(), data.getRule(),
+									data.getScore(), data.getLicense(), data.getAuthority());
 					consumer.accept(data);
 					counter.incrementAndGet();
 				});
@@ -76,8 +71,9 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 			if (restricted != null)
 				restricted.forEach((key, each) -> {
 					FoundationData data = new FoundationData(each.asJsonObject());
-					logger.debug("EF restricted: {} score: {} {} {}", data.getId(), data.getScore(), data.getLicense(),
-							data.getAuthority());
+					logger
+							.debug("EF restricted: {} score: {} {} {}", data.getId(), data.getScore(),
+									data.getLicense(), data.getAuthority());
 					consumer.accept(data);
 					counter.incrementAndGet();
 				});
@@ -101,7 +97,7 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 	private JsonObject buildRequestPayload(Collection<IContentId> ids) {
 		JsonObjectBuilder request = Json.createObjectBuilder();
 
-		var projectId = settings.getProjectId();
+		var projectId = ctx.getSettings().getProjectId();
 		if (projectId != null) {
 			logger.debug("Querying for project {}.", projectId);
 			request.add("project", projectId);
@@ -131,5 +127,11 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 		ids.stream().forEach(id -> builder.add(id.toString()));
 
 		return builder.build();
+	}
+
+	@Override
+	public void init(LicenseToolContext context) {
+		this.ctx = context;
+
 	}
 }

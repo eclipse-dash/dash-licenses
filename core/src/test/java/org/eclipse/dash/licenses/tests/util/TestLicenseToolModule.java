@@ -18,46 +18,36 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.eclipse.dash.licenses.ILicenseDataProvider;
 import org.eclipse.dash.licenses.ISettings;
-import org.eclipse.dash.licenses.LicenseChecker;
-import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
+import org.eclipse.dash.licenses.context.BaseLicenseToolModule;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
 import org.eclipse.dash.licenses.http.IHttpClientService;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonReader;
 import jakarta.json.JsonString;
 
-public class TestLicenseToolModule extends AbstractModule {
+public class TestLicenseToolModule extends BaseLicenseToolModule {
 
-	private ISettings settings;
+	private static ISettings settings = new ISettings() {
+	};
 
 	public TestLicenseToolModule() {
-		this.settings = new ISettings() {
-		};
-	}
-
-	@Override
-	protected void configure() {
-		bind(ISettings.class).toInstance(settings);
-		bind(IHttpClientService.class).toInstance(getHttpClientService());
-		bind(LicenseChecker.class).toInstance(new LicenseChecker());
-		bind(LicenseSupport.class).toInstance(new LicenseSupport());
-
-		var licenseDataProviders = Multibinder.newSetBinder(binder(), ILicenseDataProvider.class);
-		licenseDataProviders.addBinding().toInstance(new EclipseFoundationSupport() {
+		super(settings);
+		bindLicenseDataProviders(new EclipseFoundationSupport() {
 			@Override
 			public int getWeight() {
 				return 100;
 			}
 		});
-		licenseDataProviders.addBinding().toInstance(new ClearlyDefinedSupport());
+		bindLicenseDataProviders(new ClearlyDefinedSupport());
+	}
+
+	@Override
+	protected IHttpClientService newHttpClient() {
+		return getHttpClientService();
 	}
 
 	public IHttpClientService getHttpClientService() {
@@ -208,4 +198,5 @@ public class TestLicenseToolModule extends AbstractModule {
 			}
 		};
 	}
+
 }

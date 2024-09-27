@@ -31,25 +31,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 class ClearlyDefinedSupportTests {
 
 	private ClearlyDefinedSupport clearlyDefined;
 
 	@BeforeEach
 	void setup() {
-		Injector injector = Guice.createInjector(new TestLicenseToolModule());
-		clearlyDefined = injector.getInstance(ClearlyDefinedSupport.class);
+		TestLicenseToolModule testLicenseToolModule = new TestLicenseToolModule();
+		clearlyDefined = testLicenseToolModule.getLicenseDataProviderOfType(ClearlyDefinedSupport.class);
 	}
 
 	@Test
 	void testMatchApproved() {
 		List<IContentData> results = new ArrayList<>();
 
-		clearlyDefined.queryLicenseData(Collections.singleton(ContentId.getContentId("npm/npmjs/-/write/1.0.3")),
-				data -> results.add(data));
+		clearlyDefined
+				.queryLicenseData(Collections.singleton(ContentId.getContentId("npm/npmjs/-/write/1.0.3")),
+						data -> results.add(data));
 
 		assertEquals(1, results.size());
 
@@ -65,9 +63,9 @@ class ClearlyDefinedSupportTests {
 	@Test
 	void testMatchRestricted() {
 		List<IContentData> results = new ArrayList<>();
-		clearlyDefined.queryLicenseData(
-				Collections.singleton(ContentId.getContentId("npm/npmjs/@yarnpkg/lockfile/1.1.0")),
-				data -> results.add(data));
+		clearlyDefined
+				.queryLicenseData(Collections.singleton(ContentId.getContentId("npm/npmjs/@yarnpkg/lockfile/1.1.0")),
+						data -> results.add(data));
 
 		assertEquals(1, results.size());
 
@@ -91,8 +89,9 @@ class ClearlyDefinedSupportTests {
 	@Test
 	void testWithUnsupported() {
 		List<IContentData> results = new ArrayList<>();
-		clearlyDefined.queryLicenseData(Collections.singleton(ContentId.getContentId("p2/eclipseplugin/-/write/0.2.0")),
-				data -> results.add(data));
+		clearlyDefined
+				.queryLicenseData(Collections.singleton(ContentId.getContentId("p2/eclipseplugin/-/write/0.2.0")),
+						data -> results.add(data));
 
 		assertTrue(results.isEmpty());
 	}
@@ -114,9 +113,10 @@ class ClearlyDefinedSupportTests {
 			};
 		// @formatter:on
 
-		clearlyDefined.queryLicenseData(
-				Arrays.stream(packages).map(each -> ContentId.getContentId(each)).collect(Collectors.toList()),
-				data -> results.add(data));
+		clearlyDefined
+				.queryLicenseData(
+						Arrays.stream(packages).map(each -> ContentId.getContentId(each)).collect(Collectors.toList()),
+						data -> results.add(data));
 
 		assertEquals(8, results.size());
 	}
@@ -139,9 +139,10 @@ class ClearlyDefinedSupportTests {
 			};
 		// @formatter:on
 
-		clearlyDefined.queryLicenseData(
-				Arrays.stream(packages).map(each -> ContentId.getContentId(each)).collect(Collectors.toList()),
-				data -> results.add(data));
+		clearlyDefined
+				.queryLicenseData(
+						Arrays.stream(packages).map(each -> ContentId.getContentId(each)).collect(Collectors.toList()),
+						data -> results.add(data));
 
 		assertEquals(7, results.size());
 	}

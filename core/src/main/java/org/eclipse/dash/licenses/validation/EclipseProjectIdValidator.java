@@ -11,21 +11,22 @@ package org.eclipse.dash.licenses.validation;
 
 import java.util.function.Consumer;
 
-import jakarta.inject.Inject;
-
 import org.eclipse.dash.api.EclipseApi;
-import org.eclipse.dash.licenses.review.GitLabSupport;
+import org.eclipse.dash.licenses.context.LicenseToolContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class EclipseProjectIdValidator {
 	final Logger logger = LoggerFactory.getLogger(EclipseProjectIdValidator.class);
 
-	@Inject
-	EclipseApi eclipseApi;
+	private LicenseToolContext ctx;
 
-	@Inject
-	GitLabSupport gitlab;
+	private EclipseApi eclipseApi;
+
+	public EclipseProjectIdValidator(LicenseToolContext context) {
+		this.ctx = context;
+		eclipseApi = ctx.getEclipseApi();
+	}
 
 	public boolean validate(String id, Consumer<String> output) {
 		var project = eclipseApi.getProject(id);
@@ -33,7 +34,7 @@ public class EclipseProjectIdValidator {
 			output.accept("The specified project cannot be found. You must provide a valid Eclipse project id.");
 			output.accept("Specify the project as [tlp].[name] (e.g., technology.dash)");
 			try {
-				gitlab.execute(connection -> {
+				ctx.getGitlab().execute(connection -> {
 					var user = connection.getUserId();
 					var account = eclipseApi.getAccount(user);
 					if (account.exists() || account.isCommitter()) {
