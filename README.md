@@ -17,6 +17,8 @@
 
 The Eclipse Dash License Tool identifies the licenses of content. It is intended primarily for use by Eclipse committers to vet third party content used by their Eclipse open source project.
 
+> The Eclipse Dash License Tool is intended to _assist_ with the process of determining the licenses of third party content and help committers identify intellectual property that require further scrutiny. The tool, like any tool, is only as good as the input provided. This documentation provides examples of how input into the tool can be tuned; these examples should be regarded as such: examples. Ultimately, is the responsibility of committers to understand the nature of their project and the third party content it requires.
+
 Each individual bit of content is identified by its ClearlyDefined id. This id uniquely defines, for example, a particular version of a JAR file, or a particular version of an NPM module. This tool knows how to read and convert Maven coordinates and NPM ids into ClearlyDefined ids. 
 
 The Eclipse Dash License Tool does not identify dependencies (at least not in general). Rather, the value it provides starts after the list of dependencies are identified by build tools. That is, the tool works on the list of dependencies with which is it provided (the Maven plugin is an exception to this; it does discover dependencies). Ultimately, the tool is only as good as the input with which it is provided and it is up to the committer to ensure that the input provided is correct (that is, dependencies that are not automatically discovered by build tools must also be vetted per the Eclipse IP Policy). 
