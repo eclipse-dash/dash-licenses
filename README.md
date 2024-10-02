@@ -560,28 +560,24 @@ The CLI tool does provide help.
 $ java -jar target/org.eclipse.dash.licenses-<version>.jar -help
 usage: org.eclipse.dash.licenses.cli.Main [options] <file> ...
 Sort out the licenses and approval of dependencies.
- -batch <int>                      Batch size (number of entries sent per
-                                   API call)
- -cd,--clearly-defined-api <url>   Clearly Defined API URL
- -confidence <int>                 Confidence threshold expressed as
-                                   integer percent (0-100)
- -ef,--foundation-api <url>        Eclipse Foundation license check API
-                                   URL.
- -excludeSources <sources>         Exclude values from specific sources
- -help,--help                      Display help
- -lic,--licenses <url>             Approved Licenses List URL
- -project <shortname>              Process the request in the context of
-                                   an Eclipse project (e.g.,
-                                   technology.dash)
- -repo <url>                       The Eclipse Project repository that is
-                                   the source of the request
- -review                           Must also specify the project and token
- -summary <file>                   Output a summary to a file
- -timeout <seconds>                Timeout for HTTP calls (in seconds)
- -token <token>                    The GitLab authentication token
+ -batch <int>                Batch size (number of entries sent per API
+                             call)
+ -confidence <int>           Confidence threshold expressed as integer
+                             percent (0-100)
+ -excludeSources <sources>   Exclude values from specific sources
+ -help,--help                Display help
+ -project <shortname>        Process the request in the context of an
+                             Eclipse project (e.g., technology.dash)
+ -repo <url>                 The Eclipse Project repository that is the
+                             source of the request
+ -review                     Must also specify the project and token
+ -summary <file>             Output a summary to a file
+ -timeout <seconds>          Timeout for HTTP calls (in seconds)
+ -token <token>              The GitLab authentication token
 
 <file> is the path to a file, or "-" to indicate stdin.
-For more help and examples, see https://github.com/eclipse-dash/dash-licenses
+For more help and examples, see
+https://github.com/eclipse-dash/dash-licenses
 ```
 ### Errors
 

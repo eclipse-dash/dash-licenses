@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2019,2021 The Eclipse Foundation and others.
+ * Copyright (c) 2019 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -23,10 +23,7 @@ import org.eclipse.dash.licenses.ISettings;
 
 public class CommandLineSettings implements ISettings {
 	private static final String HELP_OPTION = "help";
-	private static final String CD_URL_OPTION = "cd";
-	private static final String EF_URL_OPTION = "ef";
 	private static final String TIMEOUT_OPTION = "timeout";
-	private static final String APPROVED_LICENSES_URL_OPTION = "lic";
 	private static final String BATCH_OPTION = "batch";
 	private static final String CONFIDENCE_OPTION = "confidence";
 	private static final String SUMMARY_OPTION = "summary";
@@ -41,24 +38,12 @@ public class CommandLineSettings implements ISettings {
 
 	@Override
 	public int getBatchSize() {
-		if (!commandLine.hasOption(BATCH_OPTION))
-			return ISettings.DEFAULT_BATCH;
 		try {
-			return ((Number) commandLine.getParsedOptionValue(BATCH_OPTION)).intValue();
+			return ((Number) commandLine.getParsedOptionValue(BATCH_OPTION, () -> ISettings.super.getBatchSize())).intValue();
 		} catch (ParseException e) {
 			// TODO Deal with this
 			throw new RuntimeException(e);
 		}
-	}
-
-	@Override
-	public String getLicenseCheckUrl() {
-		return commandLine.getOptionValue(EF_URL_OPTION, ISettings.DEFAULT_IPZILLA_URL);
-	}
-
-	@Override
-	public String getClearlyDefinedDefinitionsUrl() {
-		return commandLine.getOptionValue(CD_URL_OPTION, ISettings.DEFAULT_CLEARLYDEFINED_URL);
 	}
 
 	@Override
@@ -76,16 +61,9 @@ public class CommandLineSettings implements ISettings {
 	}
 
 	@Override
-	public String getApprovedLicensesUrl() {
-		return commandLine.getOptionValue(APPROVED_LICENSES_URL_OPTION, ISettings.DEFAULT_APPROVED_LICENSES_URL);
-	}
-
-	@Override
 	public int getConfidenceThreshold() {
-		if (!commandLine.hasOption(CONFIDENCE_OPTION))
-			return ISettings.DEFAULT_THRESHOLD;
 		try {
-			return ((Number) commandLine.getParsedOptionValue(CONFIDENCE_OPTION)).intValue();
+			return ((Number) commandLine.getParsedOptionValue(CONFIDENCE_OPTION, () -> ISettings.super.getConfidenceThreshold())).intValue();
 		} catch (ParseException e) {
 			// TODO Deal with this
 			throw new RuntimeException(e);
@@ -94,12 +72,7 @@ public class CommandLineSettings implements ISettings {
 
 	@Override
 	public String getIpLabToken() {
-		String value = commandLine.getOptionValue(TOKEN_OPTION);
-		if (value == null) {
-			// FIXME generalize this (maybe rethink the whole settings thing)
-			value = System.getenv("DASH_TOKEN");
-		}
-		return value;
+		return commandLine.getOptionValue(TOKEN_OPTION, () -> ISettings.super.getIpLabToken());
 	}
 
 	public boolean isValid() {
@@ -177,37 +150,12 @@ public class CommandLineSettings implements ISettings {
 	private static Options getOptions() {
 		final Options options = new Options();
 
-		// @formatter:off
-		options.addOption(Option.builder(EF_URL_OPTION)
-			.longOpt("foundation-api")
-			.required(false)
-			.hasArg()
-			.argName("url")
-			.desc("Eclipse Foundation license check API URL.")
-			.build());
-
-		options.addOption(Option.builder(CD_URL_OPTION)
-			.longOpt("clearly-defined-api")
-			.required(false)
-			.hasArg()
-			.argName("url")
-			.desc("Clearly Defined API URL")
-			.build());
-		
 		options.addOption(Option.builder(TIMEOUT_OPTION)
 			.required(false)
 			.hasArg()
 			.argName("seconds")
 			.type(Number.class)
 			.desc("Timeout for HTTP calls (in seconds)")
-			.build());
-
-		options.addOption(Option.builder(APPROVED_LICENSES_URL_OPTION)
-			.longOpt("licenses")
-			.required(false)
-			.hasArg()
-			.argName("url")
-			.desc("Approved Licenses List URL")
 			.build());
 
 		options.addOption(Option.builder(BATCH_OPTION)
@@ -241,11 +189,11 @@ public class CommandLineSettings implements ISettings {
 			.build());
 
 		options.addOption(Option.builder(EXCLUDE_SOURCES_OPTION)
-				.required(false)
-				.hasArg(true)
-				.argName("sources")
-				.desc("Exclude values from specific sources")
-				.build());
+			.required(false)
+			.hasArg(true)
+			.argName("sources")
+			.desc("Exclude values from specific sources")
+			.build());
 		
 		options.addOption(Option.builder(TOKEN_OPTION)
 			.required(false)
@@ -277,7 +225,6 @@ public class CommandLineSettings implements ISettings {
 			.hasArg(false)
 			.desc("Display help")
 			.build());
-		// @formatter:on
 
 		return options;
 	}
@@ -304,22 +251,20 @@ public class CommandLineSettings implements ISettings {
 
 	@Override
 	public String getSummaryFilePath() {
-		return commandLine.getOptionValue(SUMMARY_OPTION, null);
+		return commandLine.getOptionValue(SUMMARY_OPTION, () -> ISettings.super.getSummaryFilePath());
 	}
 
 	@Override
 	public String getProjectId() {
-		return commandLine.getOptionValue(PROJECT_OPTION, null);
+		return commandLine.getOptionValue(PROJECT_OPTION, () -> ISettings.super.getProjectId());
 	}
 	
 	@Override
 	public String getRepository() {
-		var repository = commandLine.getOptionValue(REPO_OPTION, "");
-		if (repository.isBlank()) return null;
-		return repository;
+		return commandLine.getOptionValue(REPO_OPTION, () -> ISettings.super.getRepository());
 	}
 
 	public String getExcludedSources() {
-		return commandLine.getOptionValue(EXCLUDE_SOURCES_OPTION);
+		return commandLine.getOptionValue(EXCLUDE_SOURCES_OPTION, "");
 	}
 }

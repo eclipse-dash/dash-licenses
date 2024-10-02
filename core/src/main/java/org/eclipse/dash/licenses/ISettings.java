@@ -101,7 +101,11 @@ public interface ISettings {
 	 * @return the token or <code>null</code> if no value is available.
 	 */
 	default String getIpLabToken() {
-		return System.getProperty("org.eclipse.dash.token");
+		String token = System.getProperty("org.eclipse.dash.token");
+		if (token == null) {
+			return System.getenv("DASH_TOKEN");
+		}
+		return token;
 	}
 
 	/**
@@ -132,6 +136,6 @@ public interface ISettings {
 	}
 	
 	default String getRepository() {
-		return null;
+		return System.getProperty("org.eclipse.dash.repo");
 	}
 }
