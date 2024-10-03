@@ -35,7 +35,11 @@ public class GitLabConnection {
 
 			logger.debug("Querying GitLab for {}", title);
 
-			IssueFilter filter = new IssueFilter().withState(IssueState.OPENED);
+			IssueFilter filter = new IssueFilter()
+					.withSearch(title)
+					// .withIn("title") is missing in gitlab api,
+					// so look also in description see: gitlab4j-api/issues/1172
+					.withState(IssueState.OPENED);
 			return getIssuesApi()
 					.getIssuesStream(path, filter)
 					.filter(issue -> issue.getTitle().equals(title))
