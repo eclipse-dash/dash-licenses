@@ -1,4 +1,4 @@
-////
+<!--
  * Copyright (C) 2020 Eclipse Foundation and others. 
  * 
  * This program and the accompanying materials are made available under the
@@ -8,7 +8,7 @@
  * SPDX-FileType: DOCUMENTATION
  * SPDX-FileCopyrightText: 2020 Eclipse Foundation
  * SPDX-License-Identifier: EPL-2.0
-////
+-->
 
 # Contributing to Eclipse Dash, Tools for Committers
 
