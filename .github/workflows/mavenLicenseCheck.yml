@@ -43,7 +43,7 @@ on:
         description: 'The version of Java set up to run the license-check build'
         type: string
         required: false
-        default: '17'  
+        default: '21'  
     secrets:
       gitlabAPIToken:
         description: 'The authentication token (scope: api) from gitlab.eclipse.org of the calling repository. Only required if license vetting is requested'
