@@ -157,6 +157,7 @@ public class PackageLockFileReader implements IDependencyListReader {
 		}
 
 		public boolean isProjectContent() {
+			if (isInWorkspace(key)) return true;
 			return isLink() && isInWorkspace(getResolved());
 		}
 

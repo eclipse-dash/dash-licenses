@@ -93,16 +93,60 @@ class PackageLockFileReaderTests {
 			// in the results. This record should manifest as langium-statemachine-dsl (see
 			// below)
 			assertFalse(ids.stream().anyMatch(each -> "statemachine".equals(each.getName())));
+			
 
-			// Test that a handful of content ids are detected as expected.
-			var includes = new IContentId[] { ContentId.getContentId("npm", "npmjs", "-", "ansi-styles", "3.2.1"),
-					ContentId.getContentId("npm", "npmjs", "@typescript-eslint", "eslint-plugin", "6.4.1"),
-					ContentId.getContentId("npm", "npmjs", "@types", "minimatch", "3.0.5"),
+			// Test that a handful of content ids are absent as expected.
+			var absent = new IContentId[] { 
 					ContentId.getContentId("npm", "npmjs", "-", "langium-requirements-dsl", "2.1.0"),
 					ContentId.getContentId("npm", "npmjs", "-", "langium-domainmodel-dsl", "2.1.0"),
-					ContentId.getContentId("npm", "npmjs", "-", "langium-statemachine-dsl", "2.1.0") };
+					ContentId.getContentId("npm", "npmjs", "-", "langium-statemachine-dsl", "2.1.0") 
+			};
+
+			assertFalse(Arrays.stream(absent).anyMatch(each -> ids.contains(each)));
+			
+			// Test that a handful of content ids are detected as expected.
+			var includes = new IContentId[] { 
+					ContentId.getContentId("npm", "npmjs", "-", "ansi-styles", "3.2.1"),
+					ContentId.getContentId("npm", "npmjs", "@typescript-eslint", "eslint-plugin", "6.4.1"),
+					ContentId.getContentId("npm", "npmjs", "@types", "minimatch", "3.0.5")
+			};
 
 			assertTrue(Arrays.stream(includes).allMatch(each -> ids.contains(each)));
+		}
+	}
+
+	@Test
+	void testV3FormatWorkspaceIgnore() throws IOException {
+		try (InputStream input = this.getClass().getResourceAsStream("/test_data_package-lock-v3-theia.json")) {
+			PackageLockFileReader reader = new PackageLockFileReader(input);
+			var ids = reader.contentIds().collect(Collectors.toList());
+
+			assertTrue(ids.stream().allMatch(each -> each.isValid()));
+
+			// Test that a handful of content ids are absent as expected.
+			var absent = new IContentId[] { 
+					ContentId.getContentId("npm", "npmjs", "@theia", "terminal", "1.55.0"),
+					ContentId.getContentId("npm", "npmjs", "@theia", "toolbar", "1.55.0"),
+					ContentId.getContentId("npm", "npmjs", "-", "e2e-tests", "1.12.0-next"),
+					ContentId.getContentId("npm", "npmjs", "sample-namespace", "plugin-a", "1.55.0"),
+					ContentId.getContentId("npm", "npmjs", "sample-namespace", "plugin-b", "1.55.0")
+			};
+
+			assertFalse(Arrays.stream(absent).anyMatch(each -> ids.contains(each)));
+
+			// Test that a handful of content ids are detected as expected.
+			var includes = new IContentId[] { 
+					ContentId.getContentId("npm", "npmjs", "-", "p-timeout", "3.2.0"),
+					ContentId.getContentId("npm", "npmjs", "-", "xterm-addon-fit", "0.8.0"),
+					ContentId.getContentId("npm", "npmjs", "-", "async-mutex", "0.4.1") 
+			};
+
+			var exists = Arrays.stream(includes).filter(each -> ids.contains(each)).collect(Collectors.toList());
+			
+			assertTrue(Arrays.stream(includes).allMatch(each -> ids.contains(each)));
+
+			var matches = ids.stream().filter(each -> "toolbar".equals(each.getName())).collect(Collectors.toList());
+			assertFalse(ids.stream().anyMatch(each -> "plugin-a".equals(each.getName())));
 		}
 	}
 
