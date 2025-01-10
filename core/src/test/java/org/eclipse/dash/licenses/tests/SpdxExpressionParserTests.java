@@ -406,12 +406,41 @@ class SpdxExpressionParserTests {
 			assertEquals("EPL-2.0 AND Apache-2.0", expression.collapse().toString());
 		}
 
-		@Disabled
 		@Test
 		void testCollapse6() {
 			var expression = new SpdxExpressionParser()
 					.parse("Apache-2.0 AND (Apache-2.0 AND BSD-3-Clause) AND BSD-3-Clause AND (Apache-2.0 AND MIT)");
 			assertEquals("Apache-2.0 AND BSD-3-Clause AND MIT", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse7() {
+			var expression = new SpdxExpressionParser().parse("Apache-2.0 AND MIT AND Apache-2.0 AND MIT");
+			assertEquals("Apache-2.0 AND MIT", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse8() {
+			var expression = new SpdxExpressionParser().parse("Apache-2.0 and (Apache-2.0 AND MIT) AND MIT");
+			assertEquals("(Apache-2.0 AND MIT)", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse9() {
+			var expression = new SpdxExpressionParser().parse("Apache-2.0 AND MIT AND Apache-2.0 AND MIT");
+			assertEquals("Apache-2.0 AND MIT", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse10() {
+			var expression = new SpdxExpressionParser().parse("Apache-2.0 AND MIT AND Apache-2.0 AND BSD-3-Clause");
+			assertEquals("Apache-2.0 AND MIT AND BSD-3-Clause", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse11() {
+			var expression = new SpdxExpressionParser().parse("(Apache-2.0 AND MIT) AND (Apache-2.0 AND MIT)");
+			assertEquals("Apache-2.0 AND MIT", expression.collapse().toString());
 		}
 	}
 

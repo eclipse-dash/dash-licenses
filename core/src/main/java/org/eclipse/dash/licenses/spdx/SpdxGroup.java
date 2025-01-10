@@ -21,6 +21,16 @@ public class SpdxGroup extends SpdxExpression {
 	}
 
 	@Override
+	public boolean isGroup() {
+		return true;
+	}
+	
+	@Override
+	public SpdxExpression simplified() {
+		return expression;
+	}
+	
+	@Override
 	public String toString() {
 		return "(" + expression.toString() + ")";
 	}

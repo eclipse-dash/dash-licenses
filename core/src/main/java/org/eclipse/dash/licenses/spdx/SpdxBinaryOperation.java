@@ -213,7 +213,13 @@ public class SpdxBinaryOperation extends SpdxExpression {
 	public SpdxExpression collapse() {
 		SpdxExpression left = this.left.collapse();
 		SpdxExpression right = this.right.collapse();
-
+		
+		if (operator == AND && left.isGroup() && right.isGroup()) 
+			return new SpdxBinaryOperation(AND, left.collapse().simplified(),right.collapse().simplified()).collapse();
+		
+		if (operator == AND && right.isBinary() && ((SpdxBinaryOperation)right).operator == AND)
+			return left.and(((SpdxBinaryOperation)right).left).and(((SpdxBinaryOperation)right).right).collapse();
+		
 		if (right.contains(left))
 			return right;
 		if (left.contains(right))

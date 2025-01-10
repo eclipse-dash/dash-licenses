@@ -98,4 +98,12 @@ public abstract class SpdxExpression {
 	public boolean contains(SpdxExpression left) {
 		return false;
 	}
+
+	public boolean isGroup() {
+		return false;
+	}
+
+	public SpdxExpression simplified() {
+		return this;
+	}
 }
