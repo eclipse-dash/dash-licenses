@@ -10,6 +10,7 @@
 package org.eclipse.dash.licenses.tests.util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -87,19 +88,13 @@ public class TestLicenseToolModule extends AbstractModule {
 						case "npm/npmjs/-/write/1.0.4":
 						case "npm/npmjs/-/write/1.0.5":
 						case "npm/npmjs/-/write/1.0.6":
-							builder
-									.append(new BufferedReader(new InputStreamReader(
-											this.getClass().getResourceAsStream("/write-1.0.3.json"),
-											StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")));
+							appendFileContents(builder, "/write-1.0.3.json");
 							break;
 						case "npm/npmjs/@yarnpkg/lockfile/1.1.0":
 						case "npm/npmjs/@yarnpkg/lockfile/1.1.1":
 						case "npm/npmjs/@yarnpkg/lockfile/1.1.2":
 						case "npm/npmjs/@yarnpkg/lockfile/1.1.3":
-							builder
-									.append(new BufferedReader(new InputStreamReader(
-											this.getClass().getResourceAsStream("/lockfile-1.1.0.json"),
-											StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")));
+							appendFileContents(builder, "/lockfile-1.1.0.json");
 							break;
 						/*
 						 * I've run into cases where the ClearlyDefined API throws an error because of
@@ -171,6 +166,16 @@ public class TestLicenseToolModule extends AbstractModule {
 					}
 				}
 				return 404;
+			}
+
+			private void appendFileContents(StringBuilder builder, String name) {
+				try (BufferedReader writeFileReader = new BufferedReader(new InputStreamReader(
+						this.getClass().getResourceAsStream(name),
+						StandardCharsets.UTF_8))) {
+					builder.append(writeFileReader.lines().collect(Collectors.joining("\n")));
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
 			}
 
 			@Override
