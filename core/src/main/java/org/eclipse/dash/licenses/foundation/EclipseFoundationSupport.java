@@ -16,8 +16,6 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import jakarta.inject.Inject;
-
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
@@ -26,8 +24,8 @@ import org.eclipse.dash.licenses.http.IHttpClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
@@ -116,20 +114,5 @@ public class EclipseFoundationSupport implements ILicenseDataProvider {
 		request.add("dependencies", builder);
 
 		return request.build();
-	}
-
-	private String encodeJsonPayload(Collection<IContentId> ids) {
-		JsonArray build = buildJsonPayload(ids);
-		String json = build.toString();
-		String form = URLEncoder.encode("json", StandardCharsets.UTF_8) + "="
-				+ URLEncoder.encode(json, StandardCharsets.UTF_8);
-		return form;
-	}
-
-	private JsonArray buildJsonPayload(Collection<IContentId> ids) {
-		JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
-		ids.stream().forEach(id -> builder.add(id.toString()));
-
-		return builder.build();
 	}
 }

@@ -30,7 +30,7 @@ class ClearlyDefinedContentDataTests {
 	void testSingleLicense() throws Exception {
 		InputStream input = this.getClass().getResourceAsStream("/write-1.0.3.json");
 		JsonReader reader = Json.createReader(new InputStreamReader(input, StandardCharsets.UTF_8));
-		JsonObject data = ((JsonValue) reader.read()).asJsonObject();
+		JsonObject data = reader.read().asJsonObject();
 		ClearlyDefinedContentData info = new ClearlyDefinedContentData("npm/npmjs/-/write/1.0.3", data);
 
 		assertEquals("npm/npmjs/-/write/1.0.3", info.getId().toString());
@@ -51,7 +51,7 @@ class ClearlyDefinedContentDataTests {
 	void testDiscoveredLicenses() throws Exception {
 		InputStream input = this.getClass().getResourceAsStream("/lockfile-1.1.0.json");
 		JsonReader reader = Json.createReader(new InputStreamReader(input, StandardCharsets.UTF_8));
-		JsonObject data = ((JsonValue) reader.read()).asJsonObject();
+		JsonObject data = reader.read().asJsonObject();
 		ClearlyDefinedContentData info = new ClearlyDefinedContentData("npm/npmjs/-/lockfile/1.1.1", data);
 
 		assertArrayEquals(new String[] { "GPL-2.0", "MIT" }, info.discoveredLicenses().toArray(String[]::new));

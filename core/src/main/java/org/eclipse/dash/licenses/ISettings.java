@@ -11,8 +11,6 @@ package org.eclipse.dash.licenses;
 
 import java.io.File;
 
-import org.eclipse.dash.licenses.util.GitUtils;
-
 public interface ISettings {
 
 	/**

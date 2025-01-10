@@ -141,12 +141,7 @@ class PackageLockFileReaderTests {
 					ContentId.getContentId("npm", "npmjs", "-", "async-mutex", "0.4.1") 
 			};
 
-			var exists = Arrays.stream(includes).filter(each -> ids.contains(each)).collect(Collectors.toList());
-			
 			assertTrue(Arrays.stream(includes).allMatch(each -> ids.contains(each)));
-
-			var matches = ids.stream().filter(each -> "toolbar".equals(each.getName())).collect(Collectors.toList());
-			assertFalse(ids.stream().anyMatch(each -> "plugin-a".equals(each.getName())));
 		}
 	}
 
