@@ -195,7 +195,9 @@
 				<directory>${basedir}/src/main/java</directory>
 				<includes>
 					<include>simplelogger.properties</include>
+					<include>dash.properties</include>
 				</includes>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 	</build>
