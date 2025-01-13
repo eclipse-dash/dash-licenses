@@ -39,7 +39,7 @@ public class CommandLineSettings implements ISettings {
 	@Override
 	public int getBatchSize() {
 		try {
-			return commandLine.getParsedOptionValue(BATCH_OPTION, () -> ISettings.super.getBatchSize()).intValue();
+			return ((Number) commandLine.getParsedOptionValue(BATCH_OPTION, () -> ISettings.super.getBatchSize())).intValue();
 		} catch (ParseException e) {
 			// TODO Deal with this
 			throw new RuntimeException(e);
@@ -63,7 +63,7 @@ public class CommandLineSettings implements ISettings {
 	@Override
 	public int getConfidenceThreshold() {
 		try {
-			return commandLine.getParsedOptionValue(CONFIDENCE_OPTION, () -> ISettings.super.getConfidenceThreshold()).intValue();
+			return ((Number) commandLine.getParsedOptionValue(CONFIDENCE_OPTION, () -> ISettings.super.getConfidenceThreshold())).intValue();
 		} catch (ParseException e) {
 			// TODO Deal with this
 			throw new RuntimeException(e);

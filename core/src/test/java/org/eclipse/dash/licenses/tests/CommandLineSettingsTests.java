@@ -16,7 +16,7 @@ import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.cli.CommandLineSettings;
 import org.junit.jupiter.api.Test;
 
-class CommandLineSettingsTest {
+class CommandLineSettingsTests {
 
 	@Test
 	void testCustomBatchSize() {
