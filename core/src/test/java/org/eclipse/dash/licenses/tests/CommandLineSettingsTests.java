@@ -19,6 +19,18 @@ import org.junit.jupiter.api.Test;
 class CommandLineSettingsTests {
 
 	@Test
+	void testTimeout() {
+		ISettings settings = CommandLineSettings.getSettings(new String[] { "-timeout", "42" });
+		assertEquals(42, settings.getTimeout());
+	}
+
+	@Test
+	void testDefaultTimeout() {
+		ISettings settings = CommandLineSettings.getSettings(new String[] {});
+		assertEquals(ISettings.DEFAULT_TIMEOUT, settings.getTimeout());
+	}
+	
+	@Test
 	void testCustomBatchSize() {
 		ISettings settings = CommandLineSettings.getSettings(new String[] { "-batch", "42" });
 		assertEquals(42, settings.getBatchSize());

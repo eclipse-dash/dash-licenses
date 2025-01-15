@@ -39,7 +39,7 @@ public class CommandLineSettings implements ISettings {
 	@Override
 	public int getBatchSize() {
 		try {
-			return ((Number) commandLine.getParsedOptionValue(BATCH_OPTION, () -> ISettings.super.getBatchSize())).intValue();
+			return commandLine.getParsedOptionValue(BATCH_OPTION, () -> ISettings.super.getBatchSize()).intValue();
 		} catch (ParseException e) {
 			// TODO Deal with this
 			throw new RuntimeException(e);
@@ -48,12 +48,8 @@ public class CommandLineSettings implements ISettings {
 
 	@Override
 	public int getTimeout() {
-		// FIXME This gets called multiple times; consider caching.
-		if (!commandLine.hasOption(TIMEOUT_OPTION))
-			return ISettings.super.getTimeout();
-
 		try {
-			return ((Number) commandLine.getParsedOptionValue(TIMEOUT_OPTION)).intValue();
+			return commandLine.getParsedOptionValue(TIMEOUT_OPTION, () -> ISettings.super.getTimeout()).intValue();
 		} catch (ParseException e) {
 			// TODO Deal with this
 			throw new RuntimeException(e);
@@ -63,7 +59,7 @@ public class CommandLineSettings implements ISettings {
 	@Override
 	public int getConfidenceThreshold() {
 		try {
-			return ((Number) commandLine.getParsedOptionValue(CONFIDENCE_OPTION, () -> ISettings.super.getConfidenceThreshold())).intValue();
+			return commandLine.getParsedOptionValue(CONFIDENCE_OPTION, () -> ISettings.super.getConfidenceThreshold()).intValue();
 		} catch (ParseException e) {
 			// TODO Deal with this
 			throw new RuntimeException(e);
@@ -154,7 +150,7 @@ public class CommandLineSettings implements ISettings {
 			.required(false)
 			.hasArg()
 			.argName("seconds")
-			.type(Number.class)
+			.type(Integer.class)
 			.desc("Timeout for HTTP calls (in seconds)")
 			.build());
 
@@ -162,7 +158,7 @@ public class CommandLineSettings implements ISettings {
 			.required(false)
 			.hasArg()
 			.argName("int")
-			.type(Number.class)
+			.type(Integer.class)
 			.desc("Batch size (number of entries sent per API call)")
 			.build());
 
@@ -170,7 +166,7 @@ public class CommandLineSettings implements ISettings {
 			.required(false)
 			.hasArg()
 			.argName("int")
-			.type(Number.class)
+			.type(Integer.class)
 			.desc("Confidence threshold expressed as integer percent (0-100)")
 			.build());
 
