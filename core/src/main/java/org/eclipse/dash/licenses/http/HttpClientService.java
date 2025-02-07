@@ -49,6 +49,7 @@ public class HttpClientService implements IHttpClientService {
 	@Override
 	public int post(String url, String contentType, String payload, Consumer<String> handler) {
 		try {
+			logger.debug("HTTP POST: {}", url);
 			var tries = 0;
 			while (true) {
 				Duration timeout = Duration.ofSeconds(settings.getTimeout());
@@ -66,9 +67,17 @@ public class HttpClientService implements IHttpClientService {
 					Thread.sleep(1000 * tries);
 					continue;
 				}
+				
+				logger.debug("HTTP Status: {}", response.statusCode());
+
+				if (logger.isDebugEnabled()) {
+					response.headers().map().forEach((key,value) -> logger.debug("HTTP Response: {} -> {}", key, value));
+				}
+				
 				if (response.statusCode() == 200) {
 					handler.accept(response.body());
 				}
+				
 				return response.statusCode();
 			}
 		} catch (IOException | InterruptedException e) {
