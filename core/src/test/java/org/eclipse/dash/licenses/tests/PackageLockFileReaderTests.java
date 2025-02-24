@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ class PackageLockFileReaderTests {
 	@Test
 	void testV1Format() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream(PACKAGE_LOCK_JSON)) {
-			PackageLockFileReader reader = new PackageLockFileReader(input);
+			PackageLockFileReader reader = new PackageLockFileReader(new InputStreamReader(input));
 			Collection<IContentId> ids = reader.getContentIds();
 
 			IContentId[] includes = { ContentId.getContentId("npm/npmjs/-/loglevel/1.6.1"),
@@ -50,7 +51,7 @@ class PackageLockFileReaderTests {
 	@Test
 	void testV2Format() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream(PACKAGE_LOCK_V2_JSON)) {
-			PackageLockFileReader reader = new PackageLockFileReader(input);
+			PackageLockFileReader reader = new PackageLockFileReader(new InputStreamReader(input));
 			Collection<IContentId> ids = reader.getContentIds();
 
 			assertTrue(ids.stream().allMatch(each -> each.isValid()));
@@ -69,7 +70,7 @@ class PackageLockFileReaderTests {
 	@Test
 	void testV2FormatWithWorkspaces() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/test_data_package-lock-v2-2.json")) {
-			PackageLockFileReader reader = new PackageLockFileReader(input);
+			PackageLockFileReader reader = new PackageLockFileReader(new InputStreamReader(input));
 			var ids = reader.getContentIds();
 
 			assertTrue(ids.stream().allMatch(each -> each.isValid()));
@@ -84,7 +85,7 @@ class PackageLockFileReaderTests {
 	@Test
 	void testV3Format() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/test_data_package-lock-v3.json")) {
-			PackageLockFileReader reader = new PackageLockFileReader(input);
+			PackageLockFileReader reader = new PackageLockFileReader(new InputStreamReader(input));
 			var ids = reader.contentIds().collect(Collectors.toList());
 
 			assertTrue(ids.stream().allMatch(each -> each.isValid()));
@@ -118,7 +119,7 @@ class PackageLockFileReaderTests {
 	@Test
 	void testV3FormatWorkspaceIgnore() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/test_data_package-lock-v3-theia.json")) {
-			PackageLockFileReader reader = new PackageLockFileReader(input);
+			PackageLockFileReader reader = new PackageLockFileReader(new InputStreamReader(input));
 			var ids = reader.contentIds().collect(Collectors.toList());
 
 			assertTrue(ids.stream().allMatch(each -> each.isValid()));
@@ -148,7 +149,7 @@ class PackageLockFileReaderTests {
 	@Test
 	void testAllRecordsDetected() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/differentResolved.json")) {
-			PackageLockFileReader reader = new PackageLockFileReader(input);
+			PackageLockFileReader reader = new PackageLockFileReader(new InputStreamReader(input));
 
 			String[] expected = { "npm/npmjs/@babel/code-frame/7.12.13", "npm/local/-/some_local_package/1.2.3", };
 			Arrays.sort(expected);

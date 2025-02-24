@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
@@ -30,7 +31,7 @@ class PnpmPackageLockFileReaderTests {
 	@Test
 	void testNoPackages() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-no-packages.yaml")) {
-			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
+			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(new InputStreamReader(input));
 			var ids = reader.getContentIds();
 			assertTrue(ids.isEmpty());
 		}
@@ -39,7 +40,7 @@ class PnpmPackageLockFileReaderTests {
 	@Test
 	void testDuplicates() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-duplicate.yaml")) {
-			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
+			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(new InputStreamReader(input));
 			var ids = reader.getContentIds();
 			assertEquals(1, ids.size());
 			assertEquals("npm/npmjs/@babel/preset-modules/0.1.6-no-external-plugins", ids.iterator().next().toString());
@@ -49,7 +50,7 @@ class PnpmPackageLockFileReaderTests {
 	@Test
 	void testV5Format() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-v5.yaml")) {
-			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
+			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(new InputStreamReader(input));
 			var ids = reader.getContentIds();
 
 			assertEquals(12, ids.size());
@@ -68,7 +69,7 @@ class PnpmPackageLockFileReaderTests {
 	@Test
 	void testV6Format() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-v6.yaml")) {
-			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
+			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(new InputStreamReader(input));
 			var ids = reader.getContentIds();
 
 			assertEquals(579, ids.size());
@@ -87,7 +88,7 @@ class PnpmPackageLockFileReaderTests {
 	@Test
 	void testV9Format() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-v9.yaml")) {
-			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
+			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(new InputStreamReader(input));
 			var ids = reader.getContentIds();
 
 			assertEquals(12, ids.size());
@@ -106,7 +107,7 @@ class PnpmPackageLockFileReaderTests {
 	@Test
 	void testAllRecordsDetected() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-v6-small.yaml")) {
-			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
+			PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(new InputStreamReader(input));
 
 			String[] expected = { "npm/npmjs/-/git-semver-tags/4.1.1", "npm/npmjs/@babel/code-frame/7.18.6",
 					"npm/npmjs/@babel/preset-modules/0.1.6-no-external-plugins" };
@@ -119,7 +120,7 @@ class PnpmPackageLockFileReaderTests {
 	@Test
 	void shouldReturnErrorForInvalidYamlfile() {
 		InputStream input = new ByteArrayInputStream("invalid".getBytes(Charset.defaultCharset()));
-		PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
+		PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(new InputStreamReader(input));
 
 		Exception exception = assertThrows(RuntimeException.class, reader::getContentIds);
 		assertEquals("Error reading content of package-lock.yaml file", exception.getMessage());
@@ -128,7 +129,7 @@ class PnpmPackageLockFileReaderTests {
 	@Test
 	void shouldReturnErrorForEmptyfile() {
 		InputStream input = new ByteArrayInputStream("".getBytes(Charset.defaultCharset()));
-		PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(input);
+		PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(new InputStreamReader(input));
 
 		Exception exception = assertThrows(RuntimeException.class, reader::getContentIds);
 		assertEquals("Error reading content of package-lock.yaml file", exception.getMessage());

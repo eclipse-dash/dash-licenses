@@ -152,25 +152,26 @@ public class Main {
 		return new FileOutputStream(new File(path));
 	}
 
-	@SuppressWarnings("resource")
 	private IDependencyListReader getReader(String name) throws FileNotFoundException {
+		InputStreamReader input;
 		if ("-".equals(name)) {
-			return new FlatFileReader(new InputStreamReader(System.in));
+			input = new InputStreamReader(System.in);
 		} else {
-			File input = new File(name);
-			if (input.exists()) {
-                switch (input.getName()) {
-                    case "pnpm-lock.yaml":
-                        return new PnpmPackageLockFileReader(new FileInputStream(input));
-                    case "package-lock.json":
-                        return new PackageLockFileReader(new FileInputStream(input));
-                    case "yarn.lock":
-                        return new YarnLockFileReader(new FileReader(input));
-                }
-                return new FlatFileReader(new FileReader(input));
-			} else {
+			File file = new File(name);
+			if (!file.exists()) {
 				throw new FileNotFoundException(name);
 			}
+			
+			input = new FileReader(file);
+			switch (file.getName()) {
+			case "pnpm-lock.yaml":
+				return new PnpmPackageLockFileReader(input);
+			case "package-lock.json":
+				return new PackageLockFileReader(input);
+			case "yarn.lock":
+				return new YarnLockFileReader(input);
+			}
 		}
+		return new FlatFileReader(input);
 	}
 }

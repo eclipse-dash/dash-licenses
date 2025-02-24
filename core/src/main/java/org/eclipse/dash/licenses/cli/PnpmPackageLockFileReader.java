@@ -10,7 +10,7 @@
 
 package org.eclipse.dash.licenses.cli;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -46,14 +46,14 @@ public class PnpmPackageLockFileReader implements IDependencyListReader {
 	final Logger logger = LoggerFactory.getLogger(PnpmPackageLockFileReader.class);
 	private static final Pattern KEY_PATTERN = Pattern
 			.compile("^'?(\\/?(?<namespace>@[^\\/]+)\\/)?\\/?(?<name>[^\\/@]+)[@\\/](?<version>[^(@\\/'\\n]+)(?=\\()?");
-	private final InputStream input;
+	private final Reader input;
 
 	/**
 	 * Constructs a new PnpmPackageLockFileReader with the specified input stream.
 	 *
 	 * @param input the input stream of the PNPM package-lock file
 	 */
-	public PnpmPackageLockFileReader(InputStream input) {
+	public PnpmPackageLockFileReader(Reader input) {
 		this.input = input;
 	}
 

@@ -9,7 +9,7 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.cli;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.regex.Matcher;
@@ -32,10 +32,10 @@ public class PackageLockFileReader implements IDependencyListReader {
 	final Logger logger = LoggerFactory.getLogger(PackageLockFileReader.class);
 	private static final Pattern Name_Pattern = Pattern.compile("(?:(?<scope>@[^\\/]+)\\/)?(?<name>[^\\/]+)$");
 
-	private final InputStream input;
+	private final Reader input;
 	private JsonObject json;
 
-	public PackageLockFileReader(InputStream input) {
+	public PackageLockFileReader(Reader input) {
 		this.input = input;
 	}
 
