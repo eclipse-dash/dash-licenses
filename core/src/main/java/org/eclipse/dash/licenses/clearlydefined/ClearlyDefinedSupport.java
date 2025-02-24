@@ -120,6 +120,13 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 * 
 	 * <p>
 	 * See https://github.com/clearlydefined/service/issues/957
+	 * 
+	 * <p>Update: This issue has been addressed by the ClearlyDefined team. I'm
+	 * going to keep this work around in place so that we can leverage it when
+	 * we hit HTTP 524 errors. 
+	 * 
+	 * <p>
+	 * See https://github.com/eclipse-dash/dash-licenses/issues/429
 	 */
 	private void queryClearlyDefined(List<IContentId> filteredIds, int start, int end,
 			Consumer<IContentData> consumer) {
@@ -168,7 +175,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 							}
 						});
 
-		if (code == 500) {
+		if (code == 500 || code == 524) {
 			logger.error("A server error (HTTP 500) occurred while contacting ClearlyDefined");
 			throw new ClearlyDefinedResponseException();
 		}
