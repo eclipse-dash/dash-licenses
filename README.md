@@ -102,7 +102,7 @@ The tool incorporates a feature that can create an issue against the [IPLab](htt
 
 To use this feature, you must have committer status on at least one Eclipse project.
 
-* Get an [authentication token](https://gitlab.eclipse.org/-/profile/personal_access_tokens) (scope: `api`) from `gitlab.eclipse.org`;
+* Get an [authentication token](https://gitlab.eclipse.org/-/user_settings/personal_access_tokens) (scope: `api`) from `gitlab.eclipse.org`;
 * Include the `-review` option;
 * Pass the token via the `-token` option; 
 * Pass the Eclipse project's repository URL (e.g., `https://github.com/eclipse-dash/dash-licenses`) via the `-repo` option; and
