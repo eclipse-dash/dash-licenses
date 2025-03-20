@@ -38,10 +38,8 @@ public class EclipseProjectIdValidator {
 					var account = eclipseApi.getAccount(user);
 					if (account.exists() || account.isCommitter()) {
 						output.accept("For example:");
-						var projects = eclipseApi.getProjects(account);
-						projects
-								.stream()
-								.flatMap(each -> each.getRoles().stream())
+						var projects = eclipseApi.getRoles(account);
+						projects.stream()
 								.filter(each -> each.isCommitter())
 								.map(each -> each.getProject())
 								.distinct()
