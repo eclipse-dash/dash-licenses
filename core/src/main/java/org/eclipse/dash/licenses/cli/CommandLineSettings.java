@@ -167,7 +167,8 @@ public class CommandLineSettings implements ISettings {
 			.hasArg()
 			.argName("int")
 			.type(Integer.class)
-			.desc("Confidence threshold expressed as integer percent (0-100)")
+			.desc("The minimum licence score to approve components based on licence data received from ClearlyDefined, "
+					+ "expressed as integer percent (0-100). Use this option carefully.")
 			.build());
 
 		options.addOption(Option.builder(SUMMARY_OPTION)

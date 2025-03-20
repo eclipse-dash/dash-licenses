@@ -562,8 +562,10 @@ usage: org.eclipse.dash.licenses.cli.Main [options] <file> ...
 Sort out the licenses and approval of dependencies.
  -batch <int>                Batch size (number of entries sent per API
                              call)
- -confidence <int>           Confidence threshold expressed as integer
-                             percent (0-100)
+ -confidence <int>           The minimum licence score to approve
+                             components based on licence data received
+                             from ClearlyDefined, expressed as integer
+                             percent (0-100). Use this option carefully.
  -excludeSources <sources>   Exclude values from specific sources
  -help,--help                Display help
  -project <shortname>        Process the request in the context of an

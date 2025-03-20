@@ -55,6 +55,23 @@ public interface ISettings {
 		return System.getProperty("org.eclipse.dash.licenses", DEFAULT_APPROVED_LICENSES_URL);
 	};
 
+	/**
+	 * The confidence threshold is used to specify the minimum licence score to
+	 * approve components based on licence data received from ClearlyDefined.
+	 * 
+	 * <p>
+	 * The ClearlyDefined license score is a metric designed to quantify the clarity
+	 * of a software component's licensing information. It serves as an indicator of
+	 * how easily consumers can understand and comply with the software's licensing
+	 * terms. It is calculated by evaluating factors like the presence of clear
+	 * top-level license declarations, per-file license and copyright notices,
+	 * consistency between different license information sources, inclusion of
+	 * complete license texts, and the use of standard license identifiers such as
+	 * SPDX. A higher license score signifies that the software's licensing
+	 * information is more comprehensive, consistent, and readily accessible,
+	 * thereby simplifying the process of understanding and adhering to the
+	 * licensing requirements.
+	 */
 	default int getConfidenceThreshold() {
 		String value = System.getProperty("org.eclipse.dash.threshold");
 		if (value == null)
