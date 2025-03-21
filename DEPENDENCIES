@@ -43,7 +43,7 @@ maven/mavencentral/org.apache.maven/maven-repository-metadata/3.9.9, Apache-2.0,
 maven/mavencentral/org.apache.maven/maven-resolver-provider/3.9.9, Apache-2.0, approved, #7030
 maven/mavencentral/org.apache.maven/maven-settings-builder/3.9.9, Apache-2.0, approved, #7020
 maven/mavencentral/org.apache.maven/maven-settings/3.9.9, Apache-2.0, approved, #7024
-maven/mavencentral/org.checkerframework/checker-qual/3.42.0, MIT, approved, clearlydefined
+maven/mavencentral/org.checkerframework/checker-qual/3.42.0, MIT, approved, #20003
 maven/mavencentral/org.codehaus.plexus/plexus-cipher/2.0, Apache-2.0, approved, #17666
 maven/mavencentral/org.codehaus.plexus/plexus-classworlds/2.8.0, Apache-2.0 AND Plexus, approved, #17667
 maven/mavencentral/org.codehaus.plexus/plexus-component-annotations/2.1.0, Apache-2.0, approved, #809
@@ -51,8 +51,8 @@ maven/mavencentral/org.codehaus.plexus/plexus-interpolation/1.27, Apache-2.0 AND
 maven/mavencentral/org.codehaus.plexus/plexus-sec-dispatcher/2.0, Apache-2.0, approved, #17647
 maven/mavencentral/org.codehaus.plexus/plexus-utils/3.5.1, Apache-2.0 AND BSD-3-Clause AND BSD-2-Clause and LicenseRef-BSD-Style AND LicenseRef-Public-Domain, approved, #4119
 maven/mavencentral/org.codehaus.plexus/plexus-xml/3.0.0, BSD-2-Clause AND BSD-3-Clause AND Apache-2.0 AND Apache-1.1 AND LicenseRef-BSD-style AND LicenseRef-Public-domain, approved, #13653
-maven/mavencentral/org.eclipse.dash/eclipse-api-for-java/1.0.0, EPL-2.0, approved, technology.dash
-maven/mavencentral/org.eclipse.dash/org.eclipse.dash.licenses.core/1.1.1-SNAPSHOT, EPL-2.0, approved, technology.dash
+maven/mavencentral/org.eclipse.dash/eclipse-api-for-java/1.0.3-20250321.051328-398, EPL-2.0, approved, technology.dash
+maven/mavencentral/org.eclipse.dash/org.eclipse.dash.licenses.core/1.1.1-20250321.055030-472, EPL-2.0, approved, technology.dash
 maven/mavencentral/org.eclipse.jgit/org.eclipse.jgit/6.10.0.202406032230-r, BSD-3-Clause, approved, technology.jgit
 maven/mavencentral/org.eclipse.sisu/org.eclipse.sisu.inject/0.9.0.M3, EPL-1.0, approved, technology.sisu
 maven/mavencentral/org.eclipse.sisu/org.eclipse.sisu.plexus/0.9.0.M3, EPL-1.0, approved, technology.sisu
