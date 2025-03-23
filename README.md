@@ -642,7 +642,7 @@ Committers can later re-run this license-check workflow from the Github actions 
 #### Requirements
 - Maven based build
 - Root pom.xml must reside in the repository root
-- An [authentication token (scope: api) from gitlab.eclipse.org](README.md#automatic-ip-team-review-requests) has to be stored in the repositories secret store(Settings -> Scrects -> Actions) with name `M2E_GITLAB_API_TOKEN`.
+- An [authentication token (scope: api) from gitlab.eclipse.org](README.md#automatic-ip-team-review-requests) has to be stored in the repositories secret store (Settings -> Secrets -> Actions) with name `<PROJECT-NAME>_GITLAB_API_TOKEN`, such that it can be used by the above workflow definition.
 
 ## Advanced Scenarios
 
