@@ -48,6 +48,7 @@ public class HttpClientService implements IHttpClientService {
 
 	@Override
 	public int post(String url, String contentType, String payload, Consumer<String> handler) {
+		int maxRatelimitRequestsPerExecure = 5;
 		try {
 			logger.debug("HTTP POST: {}", url);
 			var tries = 0;
@@ -67,7 +68,16 @@ public class HttpClientService implements IHttpClientService {
 					Thread.sleep(1000 * tries);
 					continue;
 				}
-				
+				if (response.statusCode() == 429 && tries++ < maxRatelimitRequestsPerExecure) {
+					long saftyMargin = 100l;
+					logger.info("HTTP response 429 (ratelimit)");
+					Optional<String> oResetTime = response.headers().firstValue("x-ratelimit-reset");
+					Long resetTime = oResetTime.map(s -> Long.valueOf(s)).orElse(System.currentTimeMillis());
+					Long sleepTime = resetTime - System.currentTimeMillis() + saftyMargin;
+					logger.info("x-ratelimit-reset needs a sleep for: " + sleepTime + " ms");
+					Thread.sleep(sleepTime);
+					continue;
+				}
 				logger.debug("HTTP Status: {}", response.statusCode());
 
 				if (logger.isDebugEnabled()) {
