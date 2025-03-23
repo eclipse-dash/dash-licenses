@@ -72,7 +72,7 @@ public class HttpClientService implements IHttpClientService {
 					long saftyMargin = 100l;
 					logger.info("HTTP response 429 (ratelimit)");
 					Optional<String> oResetTime = response.headers().firstValue("x-ratelimit-reset");
-					Long resetTime = oResetTime.map(s -> Long.valueOf(s)).orElse(System.currentTimeMillis());
+					Long resetTime = oResetTime.map(Long::valueOf).orElseGet(System::currentTimeMillis);
 					Long sleepTime = resetTime - System.currentTimeMillis() + saftyMargin;
 					logger.info("x-ratelimit-reset needs a sleep for: " + sleepTime + " ms");
 					Thread.sleep(sleepTime);
