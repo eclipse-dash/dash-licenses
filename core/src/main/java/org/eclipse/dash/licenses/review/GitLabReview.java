@@ -9,18 +9,19 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
+import org.eclipse.dash.api.Project;
 import org.eclipse.dash.licenses.IContentData;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedContentData;
 
 public class GitLabReview {
-	private String projectId;
+	private Project project;
 	private LicenseData licenseData;
 	private String repository;
 
-	public GitLabReview(String projectId, String repository, LicenseData licenseData) {
-		this.projectId = projectId;
+	public GitLabReview(Project project, String repository, LicenseData licenseData) {
+		this.project = project;
 		this.repository = repository;
 		this.licenseData = licenseData;
 	}
@@ -37,10 +38,10 @@ public class GitLabReview {
 		StringBuilder builder = new StringBuilder();
 		builder.append(String.format("%s\n\n", licenseData.getId()));
 
-		if (projectId != null) {
+		if (project != null) {
 			builder
 					.append(String
-							.format("Project: [%s](https://projects.eclipse.org/projects/%s)\n\n", projectId, projectId));
+							.format("Project: [%s](%s)\n\n", project.getName(), project.getUrl()));
 		}
 		if (repository != null) {
 			builder.append(String.format("Repository: %s\n\n", repository));

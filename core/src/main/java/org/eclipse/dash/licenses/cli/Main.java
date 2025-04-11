@@ -10,7 +10,6 @@
 package org.eclipse.dash.licenses.cli;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -25,9 +24,9 @@ import java.util.stream.Collectors;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
+import org.eclipse.dash.licenses.projects.ProjectService;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 import org.eclipse.dash.licenses.review.GitLabSupport;
-import org.eclipse.dash.licenses.validation.EclipseProjectIdValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +81,7 @@ public class Main {
 		Injector injector = Guice.createInjector(new LicenseToolModule(settings));
 
 		if (settings.getProjectId() != null) {
-			var validator = injector.getInstance(EclipseProjectIdValidator.class);
+			var validator = injector.getInstance(ProjectService.class);
 			if (!validator.validate(settings.getProjectId(), message -> System.out.println(message))) {
 				System.exit(INTERNAL_ERROR);
 			}
