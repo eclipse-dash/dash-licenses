@@ -63,6 +63,23 @@
 		<module>shaded</module>
 	</modules>
 
+	<dependencies>
+			<dependency>
+			<!-- 
+				This is an indirect dependency. Force a more recent version than what's getting
+				resolved to satisfy guice requirements.
+			-->
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>33.4.8-jre</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>failureaccess</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<pluginManagement>
 			<plugins>
