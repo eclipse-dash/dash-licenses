@@ -497,6 +497,47 @@ The above example skips code from the Eclipse Zenoh project. Anything that is no
 
 Note that, in order to better leverage ClearlyDefined data, the "v" should **not** be included in the version number. For example, `serde_json v1.0.85` becomes `crate/cratesio/-/serde_json/1.0.85`.
 
+### Example C/C++
+
+We don't have a great answer for C/C++ code because the C/C++ doesn't have a good answer for identifying C/C++ libraries, nor are we aware of a common build tool that can reveal the dependencies. With these limitations, a dependency list may need to be manually created and managed. 
+
+**NOTE:** If you are using a build tool that can reveal dependencies, please open an issue (with a pointer to a real example of its use and as much information as you can provide) and we'll try to work out how to leverage it.
+
+Since many C/C++ libraries are hosted on GitHub, we may be able to leverage the Eclipse Dash License Tool to look for content there.
+
+GitHub content can be referenced using a URL of the form `git/github/<org>/<repo>/<revision>`, where:
+
+- `<org>` is the name of the GitHub organisation;
+- `<repo>` is the name of the GitHub repository; and
+- `<revision>` is the name of a release or tag associated with the repository.
+
+For example, `git/github/nlohmann/json/3.9.1` refers to `https://github.com/nlohmann/json/releases/tag/v3.9.1`.
+
+You can invoke the Eclipse Dash License Tool on a single library in this manner:
+
+```
+$ echo "git/github/nlohmann/json/3.9.1" | java -jar org.eclipse.dash.licenses-<version>.jar -
+```
+
+In the absence of having a means of generating the list automatically, you can instead manually maintain a dependency file (e.g., `dependencies.txt` or similar) and invoke the tool in this manner:
+
+```
+$ cat dependencies.txt
+...
+git/github/nlohmann/json/3.9.1
+git/github/zaphoyd/websocketpp/2.8.2
+...
+$ java -jar org.eclipse.dash.licenses-<version>.jar dependencies.txt
+```
+
+The standard mechanism, as describe above, can be used to automatically create IPLab issues for those libraries that require review.
+
+```
+$ java -jar org.eclipse.dash.licenses-<version>.jar dependencies.txt -review -project <project> -token <token>
+```
+
+In the case where automatic issue creation isn't possible, project committers can also manually create [IPLab requests](https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab/-/issues/new?issuable_template=vet-third-party) to engage the Eclipse IP Team for review.
+
 ### Example Python
 
 You can use `pip` and a `requirements.txt` (or similar) file to check Python dependencies:
