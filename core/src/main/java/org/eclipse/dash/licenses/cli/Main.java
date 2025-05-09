@@ -56,7 +56,7 @@ public class Main {
 	 * Exit code that indicates there was an internal error, orthogonal to license
 	 * check results, that prevented `dash-licenses` from successfully running or
 	 * completing its work. Depending on the exact problem, a re-try might or might
-	 * no work.
+	 * not work.
 	 */
 	final static Integer INTERNAL_ERROR = 127;
 
@@ -134,6 +134,7 @@ public class Main {
 						collectors.forEach(collector -> collector.accept(licenseData));
 					});
 				} catch (RuntimeException e) {
+					System.out.println(e.getMessage());
 					logger.debug(e.getMessage(), e);
 					System.exit(INTERNAL_ERROR);
 				}
