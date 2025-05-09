@@ -9,6 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.util;
 
+import java.util.regex.Pattern;
+
 /**
  * Maven GAVs, expressed in "colon format", come with between three and six
  * segments.
@@ -49,6 +51,8 @@ package org.eclipse.dash.licenses.util;
  */
 public class MavenCoordinatesParser {
 	
+	static Pattern SEGMENT_PATTERN = Pattern.compile("[a-zA-Z0-9_.\\-]+");
+	static Pattern CLASSIFIER_PATTERN = Pattern.compile("[a-zA-Z0-9_.\\-\\/]*");
 	public static MavenCoordinates parse(String value) {
 		var segments = value.trim().split(":");
 
@@ -73,6 +77,13 @@ public class MavenCoordinatesParser {
 		version = segments[length-1];
 		if (length > 3) type = segments[2];
 		if (length > 4) classifier = segments[3];
+		
+		if (!SEGMENT_PATTERN.matcher(groupId).matches()) return null;
+		if (!SEGMENT_PATTERN.matcher(artifactId).matches()) return null;
+		if (!SEGMENT_PATTERN.matcher(type).matches()) return null;
+		if (!CLASSIFIER_PATTERN.matcher(classifier).matches()) return null;
+		if (!SEGMENT_PATTERN.matcher(version).matches()) return null;
+		if (!isScope(scope)) return null;
 		
 		return new MavenCoordinates(groupId, artifactId, type, classifier, version, scope);
 	}

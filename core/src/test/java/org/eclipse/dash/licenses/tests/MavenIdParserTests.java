@@ -167,4 +167,11 @@ public class MavenIdParserTests {
 
 		assertNull(value);
 	}
+	
+	@Test
+	public void testInvalid2() {
+		IContentId value = parser.parseId("New Third Party Dependeny: ESP-IDF in https://github.com/eclipse-4diac/4diac-forte/pull/322");
+
+		assertNull(value);
+	}
 }
