@@ -9,8 +9,8 @@
 # *************************************************************************/
 
 version = 1
-SPDX-PackageName = "Eclipse Dash"
-SPDX-PackageSupplier = "Wayne Beaton <wayne.beaton@eclipse-foundation.org>"
+SPDX-PackageName = "Eclipse Dash License Tool"
+SPDX-PackageSupplier = "The Eclipse Dash Project"
 SPDX-PackageDownloadLocation = "https://github.com/eclipse-dash/dash-licenses"
 
 [[annotations]]
