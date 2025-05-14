@@ -225,7 +225,7 @@ Configure the license check plugin to be auto executed (e.g. in the `verify` pha
 		<plugin>
 			<groupId>org.eclipse.dash</groupId>
 			<artifactId>license-tool-plugin</artifactId>
-			<version>1.0.2</version>
+			<version>1.1.0</version>
 			<executions>
 				<execution>
 					<id>license-check</id>
