@@ -25,7 +25,7 @@ The Eclipse Dash License Tool does not identify dependencies (at least not in ge
 
 The CLI accepts a flat file with each line containing a content identifier (ClearlyDefined id, Maven coordinates, or NPM identifier); it also supports a small number of file formats including `package-lock.json`, `pnpm-lock.yaml` or `yarn.lock` files. A Maven plugin that is capable of processing a dependency list extracted from a `pom.xml` file is also provided. 
 
-Use the `-summary <file>` option to  generate a file that contains CSV content with one line for each line of input, mapping a package to a license along with whether that content is `approved` for use by an Eclipse project or `restricted`, meaning that the Eclipse IP Team needs to have a look at the Eclipse project's use of that content. This file is suitable for augmenting the IP Log of an Eclipse open source project.
+Use the `-summary <file>` argument to  generate a file that contains CSV content with one line for each line of input, mapping a package to a license along with whether that content is `approved` for use by an Eclipse project or `restricted`, meaning that the Eclipse IP Team needs to have a look at the Eclipse project's use of that content. This file is suitable for augmenting the IP Log of an Eclipse open source project.
 
 The current implementation uses two sources for license information. The first source is an Eclipse Foundation service that leverages data that the Eclipse Foundation's IP Team has collected over the years (and continues to collect). When that source does not have information for a piece of content, [ClearlyDefined](https://clearlydefined.io/)'s service is used. 
 
@@ -103,12 +103,12 @@ The tool incorporates a feature that can create an issue against the [IPLab](htt
 To use this feature, you must have committer status on at least one Eclipse project.
 
 * Get an [authentication token](https://gitlab.eclipse.org/-/user_settings/personal_access_tokens) (scope: `api`) from `gitlab.eclipse.org`;
-* Include the `-review` option;
-* Pass the token via the `-token` option; 
-* Pass the Eclipse project's repository URL (e.g., `https://github.com/eclipse-dash/dash-licenses`) via the `-repo` option; and
-* Pass the Eclipse open source project id (e.g., `technology.dash`) via the `-project` option.
+* Include the `-review` argument (required);
+* Pass the token via the `-token` argument (required); 
+* Pass the Eclipse project's repository URL (e.g., `https://github.com/eclipse-dash/dash-licenses`) via the `-repo` argument (optional); and
+* Pass the Eclipse open source project id (e.g., `technology.dash`) via the `-project` argument (required).
 
-Note that the options are slightly different for the [Maven plugin](README.md#maven-plugin-options).
+Note that the arguments are slightly different for the [Maven plugin](README.md#maven-plugin-options).
 
 **Do not share your access token.**
 
@@ -157,7 +157,7 @@ This content is either not correctly mapped by the system, or requires review.
 $ _
 ```
 
-To test multiple libraries simultaneously, you can separate them with a newline (note that you need to include the `-e` option to make `echo` understand the newline:
+To test multiple libraries simultaneously, you can separate them with a newline (note that you need to include the `-e` argument to make `echo` understand the newline:
 
 ```
 $ echo -e "tech.units:indriya:1.3\norg.glassfish:jakarta.json:2.0.0" | java -jar org.eclipse.dash.licenses-<version>.jar -
@@ -278,7 +278,7 @@ To generate a summary of dependencies named `DEPENDENCIES` in the working direct
 $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDENCIES
 ```
 
-To automatically create IP Team review requests for identified content:
+To automatically create IP Team review requests for identified content you must provide values for both the `dash.iplab.token` and `dash.projectId` arguments:
 
 ```
 $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<token> -Ddash.projectId=<projectId>
@@ -320,7 +320,7 @@ The Eclipse Dash License Tool's Maven plugin uses the standard Maven Reactor to 
 
 Eclipse Tycho uses a different mechanism to resolve dependencies that is not always invoked.
 
-Add `-Dtycho.target.eager=true` to turn on the [`requireEagerResolve`](https://tycho.eclipseprojects.io/doc/latest/target-platform-configuration/target-platform-configuration-mojo.html#requireEagerResolve) option to force Tycho to resolve all dependencies.
+Add `-Dtycho.target.eager=true` to turn on the [`requireEagerResolve`](https://tycho.eclipseprojects.io/doc/latest/target-platform-configuration/target-platform-configuration-mojo.html#requireEagerResolve) argument to force Tycho to resolve all dependencies.
 
 #### Troubleshooting Maven Dependencies
 
