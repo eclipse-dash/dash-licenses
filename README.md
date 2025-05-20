@@ -493,6 +493,8 @@ Steps:
 5. Map each line to a ClearlyDefined ID; and
 6. Invoke the tool.
 
+Note that "Cargo" is the package manager, but "Crates" is the software repository. The content ID should be specified using the latter (`crate/cratesio/...`).
+
 The above example skips code from the Eclipse Zenoh project. Anything that is not _third-party_ content can be removed in a similar manner.
 
 Note that, in order to better leverage ClearlyDefined data, the "v" should **not** be included in the version number. For example, `serde_json v1.0.85` becomes `crate/cratesio/-/serde_json/1.0.85`.
