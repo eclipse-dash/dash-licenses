@@ -40,21 +40,18 @@ import java.util.regex.Pattern;
  * package root. <em>Optional</em>.
  * </ul>
  * </blockquote>
- * 
- * Strictly speaking, the version is considered optional. For our purposes,
- * we've made it mandatory.
  */
 public class PackageUrlIdParser implements ContentIdParser {
 
 	// @formatter:off
 	private static final String PURL_PATTERN =
-			"^(?<scheme>[^:]+:)"
-			+ "(?<type>[^\\/]+)"
-			+ "(?:\\/(?<group>[^\\/]+))?"
-			+ "\\/(?<name>[^@]+)"
-			+ "@(?<version>[^?]+)"
-			+ "(?<qualifers>\\?[^#]+)?"
-			+ "(?<subpath>#.+)?$";
+			"^pkg:/*"
+			+ "(?<type>[a-zA-Z][a-zA-Z0-9.+-]*)"
+			+ "(/(?<namespace>[^?@#]+))?"
+			+ "/(?<name>[^?@#]+)"
+			+ "(@(?<version>[^?#]+))?"
+			+ "(\\?(?<qualifiers>[^#]+))?"
+			+ "(#(?<subpath>.+))?$";
 	// @formatter:on
 
 	private static Pattern purlPattern = Pattern.compile(PURL_PATTERN);
@@ -65,25 +62,33 @@ public class PackageUrlIdParser implements ContentIdParser {
 		if (!matcher.matches())
 			return null;
 
-		var type = matcher.group("type");
-		var group = matcher.group("group");
+		var type = matcher.group("type").toLowerCase();
+		var namespace = matcher.group("namespace");
 		var name = matcher.group("name");
 		var version = matcher.group("version");
+		var qualifiers = matcher.group("qualifiers");
+		var subpath = matcher.group("subpath");
 
 		var source = "-";
 		if ("maven".equals(type))
 			source = "mavencentral";
 		if ("npm".equals(type))
 			source = "npmjs";
+		if ("github".equals(type)) {
+			type = "git";
+			source = "github";
+		}
 		if ("golang".equals(type)) {
 			type = "go";
 			source = "golang";
 			name = name.replace("/", "%2F");
 		}
 
-		if (group == null)
-			group = "-";
+		if (namespace == null)
+			namespace = "-";
+		if (version == null)
+			version = "-";
 
-		return ContentId.getContentId(type, source, group, name, version);
+		return PackageUrlContentId.getContentId(type, source, namespace, name, version, qualifiers, subpath);
 	}
 }
