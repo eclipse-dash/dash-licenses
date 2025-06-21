@@ -37,9 +37,20 @@ public class ContentId implements IContentId {
 
 	@Override
 	public String toString() {
+		return getClearlyDefinedId();
+	}
+	
+	@Override
+	public String getClearlyDefinedId() {
 		return type + "/" + source + "/" + namespace + "/" + name + "/" + version;
 	}
 
+	@Override
+	public String getPackageUrl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof ContentId) {

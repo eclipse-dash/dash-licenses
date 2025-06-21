@@ -51,4 +51,16 @@ public class InvalidContentId implements IContentId {
 	public boolean isValid() {
 		return false;
 	}
+
+	@Override
+	public String getClearlyDefinedId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getPackageUrl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

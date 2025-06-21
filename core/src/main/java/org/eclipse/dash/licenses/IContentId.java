@@ -28,4 +28,7 @@ public interface IContentId extends Comparable<IContentId> {
 		return toString().compareTo(o.toString());
 	}
 
+	String getClearlyDefinedId();
+	
+	String getPackageUrl();
 }

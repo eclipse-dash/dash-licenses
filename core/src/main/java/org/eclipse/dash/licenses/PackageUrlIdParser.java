@@ -9,8 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.github.packageurl.MalformedPackageURLException;
+import com.github.packageurl.PackageURL;
 
 /**
  * Parse ids specified in the Package URL format.
@@ -46,44 +46,13 @@ import java.util.regex.Pattern;
  */
 public class PackageUrlIdParser implements ContentIdParser {
 
-	// @formatter:off
-	private static final String PURL_PATTERN =
-			"^(?<scheme>[^:]+:)"
-			+ "(?<type>[^\\/]+)"
-			+ "(?:\\/(?<group>[^\\/]+))?"
-			+ "\\/(?<name>[^@]+)"
-			+ "@(?<version>[^?]+)"
-			+ "(?<qualifers>\\?[^#]+)?"
-			+ "(?<subpath>#.+)?$";
-	// @formatter:on
-
-	private static Pattern purlPattern = Pattern.compile(PURL_PATTERN);
-
 	@Override
 	public IContentId parseId(String value) {
-		Matcher matcher = purlPattern.matcher(value.trim());
-		if (!matcher.matches())
+		try {
+			var purl = new PackageURL(value);
+			return new PackageUrl(purl);
+		} catch (MalformedPackageURLException e) {
 			return null;
-
-		var type = matcher.group("type");
-		var group = matcher.group("group");
-		var name = matcher.group("name");
-		var version = matcher.group("version");
-
-		var source = "-";
-		if ("maven".equals(type))
-			source = "mavencentral";
-		if ("npm".equals(type))
-			source = "npmjs";
-		if ("golang".equals(type)) {
-			type = "go";
-			source = "golang";
-			name = name.replace("/", "%2F");
 		}
-
-		if (group == null)
-			group = "-";
-
-		return ContentId.getContentId(type, source, group, name, version);
 	}
 }
