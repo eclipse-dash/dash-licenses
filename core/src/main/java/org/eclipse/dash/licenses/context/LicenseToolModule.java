@@ -10,6 +10,8 @@
 package org.eclipse.dash.licenses.context;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.eclipse.dash.api.EclipseApi;
@@ -20,10 +22,13 @@ import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
+import org.eclipse.dash.licenses.foundation.IPLabService;
 import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.http.IHttpClientService;
 import org.eclipse.dash.licenses.projects.ProjectService;
+import org.eclipse.dash.licenses.review.GitLabConnection;
 import org.eclipse.dash.licenses.review.GitLabSupport;
+import org.gitlab4j.api.GitLabApi;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
@@ -58,12 +63,13 @@ public class LicenseToolModule extends AbstractModule {
 		}));
 
 		var licenseDataProviders = Multibinder.newSetBinder(binder(), ILicenseDataProvider.class);
-		licenseDataProviders.addBinding().toInstance(new EclipseFoundationSupport() {
-			@Override
-			public int getWeight() {
-				return 100;
-			}
-		});
+//		licenseDataProviders.addBinding().toInstance(new EclipseFoundationSupport() {
+//			@Override
+//			public int getWeight() {
+//				return 100;
+//			}
+//		});
+		licenseDataProviders.addBinding().toInstance(new IPLabService());
 
 		if (!"skip".equals(settings.getClearlyDefinedDefinitionsUrl())) {
 			licenseDataProviders.addBinding().to(ClearlyDefinedSupport.class);
@@ -72,5 +78,9 @@ public class LicenseToolModule extends AbstractModule {
 		bind(LicenseSupport.class).toInstance(new LicenseSupport());
 		bind(GitLabSupport.class).toInstance(new GitLabSupport());
 		bind(IProxySettings.class).toProvider(Providers.of(proxySettings));
+
+		try (GitLabApi gitLabApi = new GitLabApi(settings.getIpLabHostUrl(), settings.getIpLabToken(), new HashMap<>())) {
+			bind(GitLabApi.class).toInstance(gitLabApi);
+		}
 	}
 }
