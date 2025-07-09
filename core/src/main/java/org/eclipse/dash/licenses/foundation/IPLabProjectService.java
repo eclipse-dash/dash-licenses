@@ -43,6 +43,7 @@ public class IPLabProjectService implements ILicenseDataProvider {
 	
 	@Inject
 	void init() throws GitLabApiException {
+		logger.trace("Loading project namespace hints file");
 		var file = gitlabApi.getRepositoryFileApi().getFile(settings.getIpLabRepositoryPath(), "projects/namespace.hints", "HEAD");
 		var contents = file.getDecodedContentAsString();
 		hints = Arrays.stream(contents.split("\n")).map(each -> new Hint(each)).collect(Collectors.toList());

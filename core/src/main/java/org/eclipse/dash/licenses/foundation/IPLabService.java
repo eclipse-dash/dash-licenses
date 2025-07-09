@@ -18,7 +18,6 @@ import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.ILicenseDataProvider;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseSupport.Status;
-import org.eclipse.dash.licenses.http.IHttpClientService;
 import org.eclipse.dash.licenses.util.JsonUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -31,10 +30,8 @@ public class IPLabService implements ILicenseDataProvider {
 	@Inject
 	ISettings settings;
 	@Inject
-	IHttpClientService httpClientService;
-	@Inject
 	GitLabApi gitlabApi;
-
+	
 	final Logger logger = LoggerFactory.getLogger(IPLabService.class);
 
 	@Override
@@ -48,21 +45,14 @@ public class IPLabService implements ILicenseDataProvider {
 			return;
 		}
 
-		logger.info("Querying Eclipse Foundation for license data for {} items.", ids.size());
+		logger.info("Querying curationed data for license data for {} items.", ids.size());
 
 		for(IContentId id : ids) {
-			if (findProject(id, consumer)) continue;
 			if (findCuration(id, consumer)) continue;
 			if (findMavenAlternative(id, consumer)) continue;
 		}
 	}
 
-	private boolean findProject(IContentId id, Consumer<IContentData> consumer) {
-		// TODO pre-load the project hints.
-		// TODO we need to be able to get project licence information, see https://gitlab.eclipse.org/eclipsefdn/it/websites/projects.eclipse.org/-/issues/396
-		return false;
-	}
-	
 	private boolean findCuration(IContentId id, Consumer<IContentData> consumer) {
 		var path = "curations/" + id + "/info.json";
 		logger.trace("Querying IPLab for {}.", path);

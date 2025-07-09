@@ -22,6 +22,7 @@ import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
+import org.eclipse.dash.licenses.foundation.IPLabProjectService;
 import org.eclipse.dash.licenses.foundation.IPLabService;
 import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.http.IHttpClientService;
@@ -69,6 +70,7 @@ public class LicenseToolModule extends AbstractModule {
 //				return 100;
 //			}
 //		});
+		licenseDataProviders.addBinding().toInstance(new IPLabProjectService());
 		licenseDataProviders.addBinding().toInstance(new IPLabService());
 
 		if (!"skip".equals(settings.getClearlyDefinedDefinitionsUrl())) {
@@ -79,6 +81,7 @@ public class LicenseToolModule extends AbstractModule {
 		bind(GitLabSupport.class).toInstance(new GitLabSupport());
 		bind(IProxySettings.class).toProvider(Providers.of(proxySettings));
 
+		// TODO Deal with the proxy
 		try (GitLabApi gitLabApi = new GitLabApi(settings.getIpLabHostUrl(), settings.getIpLabToken(), new HashMap<>())) {
 			bind(GitLabApi.class).toInstance(gitLabApi);
 		}
