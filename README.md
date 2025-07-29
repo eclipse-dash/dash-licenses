@@ -389,11 +389,31 @@ $ _
 
 In the case where the license information for content is not already known, this will create review requests (the current implementation will make five requests maximum). **Do not share your access token.**
 
+### Example: Gradle Lockfile
+
+A `gradle.lockfile` contains a list of the third-party dependencies resolved by your build.
+
+```
+$ cat gradle.lockfile \
+| grep -Pv '^#' \
+| grep -Pv '^empty' \
+| grep -Poh '^[^=]+' \
+| java -jar org.eclipse.dash.licenses-<version>.jar -
+```
+ 
+Steps:
+
+1. The `gradle.lockfile` is the input into this process;
+2. Skip the comment lines;
+3. Skip lines that do not define dependencies;
+4. Pull the GAV out of the remaining lines; and
+5. Invoke the tool.
+
 ### Example: Gradle
 
 Find all of the potentially problematic third party libraries from a Gradle build.
 
-Note that we have mixed success with this use of Gradle as it is very dependent on the specific nature of the build. Please verify that Gradle is correctly identifying your dependencies by invoking `./gradlew dependencies` before trying this.
+Note that we have mixed success with this use of Gradle as it is very dependent on the specific nature of the build. Please verify that Gradle is correctly identifying your dependencies by invoking `./gradlew dependencies` before trying this. Consider using a [`gradle.lock` file](#example-gradle-lockfile) instead.
 
 ```
 $ ./gradlew dependencies \
