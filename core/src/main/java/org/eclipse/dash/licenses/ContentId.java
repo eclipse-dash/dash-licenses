@@ -13,13 +13,13 @@ public class ContentId implements IContentId {
 
 	private static final ClearlyDefinedIdParser IdParser = new ClearlyDefinedIdParser();
 
-	private String type;
-	private String source;
-	private String namespace;
-	private String name;
-	private String version;
+	protected String type;
+	protected String source;
+	protected String namespace;
+	protected String name;
+	protected String version;
 
-	private ContentId(String type, String source, String namespace, String name, String version) {
+	protected ContentId(String type, String source, String namespace, String name, String version) {
 		this.type = type;
 		this.source = source;
 		this.namespace = namespace;
@@ -36,8 +36,21 @@ public class ContentId implements IContentId {
 	}
 
 	@Override
-	public String toString() {
+	public String toClearlyDefined() {
 		return type + "/" + source + "/" + namespace + "/" + name + "/" + version;
+	}
+
+	@Override
+	public String generateDownloadUrl() {
+		if ("git".equals(type) && "github".equals(source)) {
+			return String.format("https://github.com/%s/%s/archive/%s.zip", namespace, name, version);
+		}
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		return toClearlyDefined();
 	}
 
 	@Override

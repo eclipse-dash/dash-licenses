@@ -49,6 +49,11 @@ public class GitLabReview {
 		
 		licenseData.contentData().forEach(data -> describeItem(data, builder));
 
+		String downloadUrl = getContentId().generateDownloadUrl();
+		if (downloadUrl != null) {
+			builder.append(String.format("[Source](%s)\n", downloadUrl));
+		}
+
 		return builder.toString();
 	}
 
