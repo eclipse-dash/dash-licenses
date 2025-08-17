@@ -9,6 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
+import java.util.List;
+
 import org.gitlab4j.api.Constants.IssueState;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -35,7 +37,8 @@ public class GitLabConnection {
 
 			logger.debug("Querying GitLab for {}", title);
 
-			IssueFilter filter = new IssueFilter().withState(IssueState.OPENED);
+			IssueFilter filter = new IssueFilter().withState(IssueState.OPENED).withSearch(title);
+			filter.setIn(List.of("title"));
 			return getIssuesApi()
 					.getIssuesStream(path, filter)
 					.filter(issue -> issue.getTitle().equals(title))
