@@ -162,6 +162,33 @@ public class MavenIdParserTests {
 	}
 	
 	@Test
+	public void testMavenDepdendencyListOutput1() {
+		IContentId value = parser.parseId("   org.junit.platform:junit-platform-engine:jar:1.11.4:test -- module org.junit.platform.engine");
+
+		assertEquals("org.junit.platform", value.getNamespace());
+		assertEquals("junit-platform-engine", value.getName());
+		assertEquals("1.11.4", value.getVersion());
+	}
+	
+	@Test
+	public void testMavenDepdendencyListOutput2() {
+		IContentId value = parser.parseId("   org.tukaani:xz:jar:1.9:test -- module org.tukaani.xz");
+
+		assertEquals("org.tukaani", value.getNamespace());
+		assertEquals("xz", value.getName());
+		assertEquals("1.9", value.getVersion());
+	}
+	
+	@Test
+	public void testMavenDepdendencyTreeOutput1() {
+		IContentId value = parser.parseId("|  \\- com.fasterxml.jackson.core:jackson-databind:jar:2.16.0:compile");
+
+		assertEquals("com.fasterxml.jackson.core", value.getNamespace());
+		assertEquals("jackson-databind", value.getName());
+		assertEquals("2.16.0", value.getVersion());
+	}
+	
+	@Test
 	public void testInvalid1() {
 		IContentId value = parser.parseId("group:artifact:provided");
 
