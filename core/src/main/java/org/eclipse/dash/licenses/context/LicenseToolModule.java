@@ -22,8 +22,11 @@ import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport;
 import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
+import org.eclipse.dash.licenses.foundation.IPLabLocalCloneCurationDataService;
+import org.eclipse.dash.licenses.foundation.IPLabLocalCloneLicenseDataProviderService;
+import org.eclipse.dash.licenses.foundation.IPLabLocalCloneP2AlternativeLicenseDataProviderService;
 import org.eclipse.dash.licenses.foundation.IPLabProjectService;
-import org.eclipse.dash.licenses.foundation.IPLabService;
+import org.eclipse.dash.licenses.foundation.IPLabApiLicenseDataService;
 import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.http.IHttpClientService;
 import org.eclipse.dash.licenses.projects.ProjectService;
@@ -63,6 +66,8 @@ public class LicenseToolModule extends AbstractModule {
 			}
 		}));
 
+		bind(IPLabLocalCloneCurationDataService.class).toInstance(new IPLabLocalCloneCurationDataService());
+		
 		var licenseDataProviders = Multibinder.newSetBinder(binder(), ILicenseDataProvider.class);
 //		licenseDataProviders.addBinding().toInstance(new EclipseFoundationSupport() {
 //			@Override
@@ -71,7 +76,9 @@ public class LicenseToolModule extends AbstractModule {
 //			}
 //		});
 		licenseDataProviders.addBinding().toInstance(new IPLabProjectService());
-		licenseDataProviders.addBinding().toInstance(new IPLabService());
+		//licenseDataProviders.addBinding().toInstance(new IPLabService());
+		licenseDataProviders.addBinding().toInstance(new IPLabLocalCloneLicenseDataProviderService());
+		licenseDataProviders.addBinding().toInstance(new IPLabLocalCloneP2AlternativeLicenseDataProviderService());
 
 		if (!"skip".equals(settings.getClearlyDefinedDefinitionsUrl())) {
 			licenseDataProviders.addBinding().to(ClearlyDefinedSupport.class);

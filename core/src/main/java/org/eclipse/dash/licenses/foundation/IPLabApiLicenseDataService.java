@@ -26,13 +26,13 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Inject;
 
-public class IPLabService implements ILicenseDataProvider {
+public class IPLabApiLicenseDataService implements ILicenseDataProvider {
 	@Inject
 	ISettings settings;
 	@Inject
 	GitLabApi gitlabApi;
 	
-	final Logger logger = LoggerFactory.getLogger(IPLabService.class);
+	final Logger logger = LoggerFactory.getLogger(IPLabApiLicenseDataService.class);
 
 	@Override
 	public void queryLicenseData(Collection<IContentId> ids, Consumer<IContentData> consumer) {

@@ -169,6 +169,7 @@ public class Main {
 			case "package-lock.json":
 				return new PackageLockFileReader(input);
 			case "yarn.lock":
+				System.out.println("The yarn.lock file reader is deprecated\nsee https://github.com/eclipse-dash/dash-licenses/issues/500");
 				return new YarnLockFileReader(input);
 			}
 		}
