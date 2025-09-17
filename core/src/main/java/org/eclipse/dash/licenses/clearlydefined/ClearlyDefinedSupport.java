@@ -176,7 +176,7 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 						});
 
 		if (code == 500 || code == 524) {
-			logger.error("A server error (HTTP 500) occurred while contacting ClearlyDefined");
+			logger.error("A server error (HTTP {}) occurred while contacting ClearlyDefined", code);
 			throw new ClearlyDefinedResponseException();
 		}
 
