@@ -27,7 +27,7 @@ public final class JsonUtils {
 	public static String toJson(Collection<IContentId> ids) {
 		// TODO Consider generalizing
 		JsonArrayBuilder builder = Json.createBuilderFactory(null).createArrayBuilder();
-		ids.stream().forEach(id -> builder.add(id.toString()));
+		ids.stream().forEach(id -> builder.add(id.toClearlyDefined()));
 		String json = builder.build().toString();
 		return json;
 	}

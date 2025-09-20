@@ -18,6 +18,16 @@ public class InvalidContentId implements IContentId {
 	}
 
 	@Override
+	public String toClearlyDefined() {
+		return null;
+	}
+
+	@Override
+	public String generateDownloadUrl() {
+		return null;
+	}
+
+	@Override
 	public String toString() {
 		return "Invalid: " + value;
 	}
