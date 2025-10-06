@@ -41,5 +41,11 @@ class PackageUrlIdParserTests {
 		assertNull(new PackageUrlIdParser().parseId("@babel/highlight@7.5.0"));
 		assertNull(new PackageUrlIdParser().parseId("highlight@7.5.0"));
 	}
+	
+	@Test
+	void testBasic3() {
+		assertEquals("git/github/itm/shawn/45ff42d775dd72ab6819524988031719a75b206a",
+				new PackageUrlIdParser().parseId("pkg:github/itm/shawn@45ff42d775dd72ab6819524988031719a75b206a#src/apps/tcpip").toString());
+	}
 
 }
