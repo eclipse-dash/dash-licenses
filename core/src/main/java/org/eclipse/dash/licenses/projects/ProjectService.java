@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2023 The Eclipse Foundation
+ * Copyright (c) 2025 The Eclipse Foundation and others.
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -7,28 +7,44 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
-package org.eclipse.dash.licenses.validation;
+package org.eclipse.dash.licenses.projects;
 
 import java.util.function.Consumer;
 
-import jakarta.inject.Inject;
-
 import org.eclipse.dash.api.EclipseApi;
+import org.eclipse.dash.api.Project;
+import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EclipseProjectIdValidator {
-	final Logger logger = LoggerFactory.getLogger(EclipseProjectIdValidator.class);
+import jakarta.inject.Inject;
+
+public class ProjectService {
+	final Logger logger = LoggerFactory.getLogger(ProjectService.class);
 
 	@Inject
 	EclipseApi eclipseApi;
+	
+	@Inject
+	ISettings settings;
 
 	@Inject
 	GitLabSupport gitlab;
 
+	Project project;
+	
+	@Inject
+	void init() {
+		project = eclipseApi.getProject(settings.getProjectId());
+	}
+	
+	public Project getProject() {
+		return project;
+	}
+
 	public boolean validate(String id, Consumer<String> output) {
-		var project = eclipseApi.getProject(id);
+		var project = getProject();
 		if (!project.exists()) {
 			output.accept("The specified project cannot be found. You must provide a valid Eclipse project id.");
 			output.accept("Specify the project as [tlp].[name] (e.g., technology.dash)");

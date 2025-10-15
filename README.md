@@ -25,7 +25,7 @@ The Eclipse Dash License Tool does not identify dependencies (at least not in ge
 
 The CLI accepts a flat file with each line containing a content identifier (ClearlyDefined id, Maven coordinates, or NPM identifier); it also supports a small number of file formats including `package-lock.json`, `pnpm-lock.yaml` or `yarn.lock` files. A Maven plugin that is capable of processing a dependency list extracted from a `pom.xml` file is also provided. 
 
-Use the `-summary <file>` option to  generate a file that contains CSV content with one line for each line of input, mapping a package to a license along with whether that content is `approved` for use by an Eclipse project or `restricted`, meaning that the Eclipse IP Team needs to have a look at the Eclipse project's use of that content. This file is suitable for augmenting the IP Log of an Eclipse open source project.
+Use the `-summary <file>` argument to  generate a file that contains CSV content with one line for each line of input, mapping a package to a license along with whether that content is `approved` for use by an Eclipse project or `restricted`, meaning that the Eclipse IP Team needs to have a look at the Eclipse project's use of that content. This file is suitable for augmenting the IP Log of an Eclipse open source project.
 
 The current implementation uses two sources for license information. The first source is an Eclipse Foundation service that leverages data that the Eclipse Foundation's IP Team has collected over the years (and continues to collect). When that source does not have information for a piece of content, [ClearlyDefined](https://clearlydefined.io/)'s service is used. 
 
@@ -103,12 +103,12 @@ The tool incorporates a feature that can create an issue against the [IPLab](htt
 To use this feature, you must have committer status on at least one Eclipse project.
 
 * Get an [authentication token](https://gitlab.eclipse.org/-/user_settings/personal_access_tokens) (scope: `api`) from `gitlab.eclipse.org`;
-* Include the `-review` option;
-* Pass the token via the `-token` option; 
-* Pass the Eclipse project's repository URL (e.g., `https://github.com/eclipse-dash/dash-licenses`) via the `-repo` option; and
-* Pass the Eclipse open source project id (e.g., `technology.dash`) via the `-project` option.
+* Include the `-review` argument (required);
+* Pass the token via the `-token` argument (required); 
+* Pass the Eclipse project's repository URL (e.g., `https://github.com/eclipse-dash/dash-licenses`) via the `-repo` argument (optional); and
+* Pass the Eclipse open source project id (e.g., `technology.dash`) via the `-project` argument (required).
 
-Note that the options are slightly different for the [Maven plugin](README.md#maven-plugin-options).
+Note that the arguments are slightly different for the [Maven plugin](README.md#maven-plugin-options).
 
 **Do not share your access token.**
 
@@ -157,7 +157,7 @@ This content is either not correctly mapped by the system, or requires review.
 $ _
 ```
 
-To test multiple libraries simultaneously, you can separate them with a newline (note that you need to include the `-e` option to make `echo` understand the newline:
+To test multiple libraries simultaneously, you can separate them with a newline (note that you need to include the `-e` argument to make `echo` understand the newline:
 
 ```
 $ echo -e "tech.units:indriya:1.3\norg.glassfish:jakarta.json:2.0.0" | java -jar org.eclipse.dash.licenses-<version>.jar -
@@ -278,7 +278,7 @@ To generate a summary of dependencies named `DEPENDENCIES` in the working direct
 $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.summary=DEPENDENCIES
 ```
 
-To automatically create IP Team review requests for identified content:
+To automatically create IP Team review requests for identified content you must provide values for both the `dash.iplab.token` and `dash.projectId` arguments:
 
 ```
 $ mvn org.eclipse.dash:license-tool-plugin:license-check -Ddash.iplab.token=<token> -Ddash.projectId=<projectId>
@@ -320,7 +320,7 @@ The Eclipse Dash License Tool's Maven plugin uses the standard Maven Reactor to 
 
 Eclipse Tycho uses a different mechanism to resolve dependencies that is not always invoked.
 
-Add `-Dtycho.target.eager=true` to turn on the [`requireEagerResolve`](https://tycho.eclipseprojects.io/doc/latest/target-platform-configuration/target-platform-configuration-mojo.html#requireEagerResolve) option to force Tycho to resolve all dependencies.
+Add `-Dtycho.target.eager=true` to turn on the [`requireEagerResolve`](https://tycho.eclipseprojects.io/doc/latest/target-platform-configuration/target-platform-configuration-mojo.html#requireEagerResolve) argument to force Tycho to resolve all dependencies.
 
 #### Troubleshooting Maven Dependencies
 
@@ -389,11 +389,31 @@ $ _
 
 In the case where the license information for content is not already known, this will create review requests (the current implementation will make five requests maximum). **Do not share your access token.**
 
+### Example: Gradle Lockfile
+
+A `gradle.lockfile` contains a list of the third-party dependencies resolved by your build.
+
+```
+$ cat gradle.lockfile \
+| grep -Pv '^#' \
+| grep -Pv '^empty' \
+| grep -Poh '^[^=]+' \
+| java -jar org.eclipse.dash.licenses-<version>.jar -
+```
+ 
+Steps:
+
+1. The `gradle.lockfile` is the input into this process;
+2. Skip the comment lines;
+3. Skip lines that do not define dependencies;
+4. Pull the GAV out of the remaining lines; and
+5. Invoke the tool.
+
 ### Example: Gradle
 
 Find all of the potentially problematic third party libraries from a Gradle build.
 
-Note that we have mixed success with this use of Gradle as it is very dependent on the specific nature of the build. Please verify that Gradle is correctly identifying your dependencies by invoking `./gradlew dependencies` before trying this.
+Note that we have mixed success with this use of Gradle as it is very dependent on the specific nature of the build. Please verify that Gradle is correctly identifying your dependencies by invoking `./gradlew dependencies` before trying this. Consider using a [`gradle.lock` file](#example-gradle-lockfile) instead.
 
 ```
 $ ./gradlew dependencies \
@@ -493,9 +513,52 @@ Steps:
 5. Map each line to a ClearlyDefined ID; and
 6. Invoke the tool.
 
+Note that "Cargo" is the package manager, but "Crates" is the software repository. The content ID should be specified using the latter (`crate/cratesio/...`).
+
 The above example skips code from the Eclipse Zenoh project. Anything that is not _third-party_ content can be removed in a similar manner.
 
 Note that, in order to better leverage ClearlyDefined data, the "v" should **not** be included in the version number. For example, `serde_json v1.0.85` becomes `crate/cratesio/-/serde_json/1.0.85`.
+
+### Example C/C++
+
+We don't have a great answer for C/C++ code because the C/C++ doesn't have a good answer for identifying C/C++ libraries, nor are we aware of a common build tool that can reveal the dependencies. With these limitations, a dependency list may need to be manually created and managed. 
+
+**NOTE:** If you are using a build tool that can reveal dependencies, please open an issue (with a pointer to a real example of its use and as much information as you can provide) and we'll try to work out how to leverage it.
+
+Since many C/C++ libraries are hosted on GitHub, we may be able to leverage the Eclipse Dash License Tool to look for content there.
+
+GitHub content can be referenced using a URL of the form `git/github/<org>/<repo>/<revision>`, where:
+
+- `<org>` is the name of the GitHub organisation;
+- `<repo>` is the name of the GitHub repository; and
+- `<revision>` is the name of a release or tag associated with the repository.
+
+For example, `git/github/nlohmann/json/3.9.1` refers to `https://github.com/nlohmann/json/releases/tag/v3.9.1`.
+
+You can invoke the Eclipse Dash License Tool on a single library in this manner:
+
+```
+$ echo "git/github/nlohmann/json/3.9.1" | java -jar org.eclipse.dash.licenses-<version>.jar -
+```
+
+In the absence of having a means of generating the list automatically, you can instead manually maintain a dependency file (e.g., `dependencies.txt` or similar) and invoke the tool in this manner:
+
+```
+$ cat dependencies.txt
+...
+git/github/nlohmann/json/3.9.1
+git/github/zaphoyd/websocketpp/2.8.2
+...
+$ java -jar org.eclipse.dash.licenses-<version>.jar dependencies.txt
+```
+
+The standard mechanism, as describe above, can be used to automatically create IPLab issues for those libraries that require review.
+
+```
+$ java -jar org.eclipse.dash.licenses-<version>.jar dependencies.txt -review -project <project> -token <token>
+```
+
+In the case where automatic issue creation isn't possible, project committers can also manually create [IPLab requests](https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab/-/issues/new?issuable_template=vet-third-party) to engage the Eclipse IP Team for review.
 
 ### Example Python
 
@@ -650,7 +713,7 @@ Committers can later re-run this license-check workflow from the Github actions 
 #### Requirements
 - Maven based build
 - Root pom.xml must reside in the repository root
-- An [authentication token (scope: api) from gitlab.eclipse.org](README.md#automatic-ip-team-review-requests) has to be stored in the repositories secret store(Settings -> Scrects -> Actions) with name `M2E_GITLAB_API_TOKEN`.
+- An [authentication token (scope: api) from gitlab.eclipse.org](README.md#automatic-ip-team-review-requests) has to be stored in the repositories secret store (Settings -> Secrets -> Actions) with name `<PROJECT-NAME>_GITLAB_API_TOKEN`, such that it can be used by the above workflow definition.
 
 ## Advanced Scenarios
 

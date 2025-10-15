@@ -80,10 +80,10 @@ public class FlatFileReader implements IDependencyListReader {
 			return false;
 
 		switch (line.trim()) {
+		// Blank lines aren't interesting in any context
+		case "":
 		// Maven's dependency plugin prints "none" when there are no dependencies
 		case "none":
-			return false;
-
 		// Maven's dependency plugin prints a header for each target.
 		case "The following files have been resolved:":
 			return false;

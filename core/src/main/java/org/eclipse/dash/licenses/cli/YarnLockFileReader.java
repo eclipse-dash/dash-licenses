@@ -60,6 +60,8 @@ import org.eclipse.dash.licenses.InvalidContentId;
  * The implementation is only as sophisticated as it needs to be and only
  * provides the behaviour that I require to determine a ClearlyDefined ID from
  * the content.
+ * 
+ * @deprecated https://github.com/eclipse-dash/dash-licenses/issues/500
  */
 public class YarnLockFileReader implements IDependencyListReader {
 

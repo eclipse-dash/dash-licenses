@@ -22,6 +22,7 @@ import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
 import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.http.IHttpClientService;
+import org.eclipse.dash.licenses.projects.ProjectService;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 
 import com.google.inject.AbstractModule;
@@ -48,6 +49,7 @@ public class LicenseToolModule extends AbstractModule {
 		bind(IHttpClientService.class).toInstance(httpClientService);
 		bind(ISettings.class).toInstance(settings);
 		bind(LicenseChecker.class).toInstance(new LicenseChecker());
+		bind(ProjectService.class).toInstance(new ProjectService());
 		bind(EclipseApi.class).toInstance(new EclipseApi(new EclipseApi.HttpService() {
 			@Override
 			public int get(String url, String contentType, Consumer<InputStream> handler) {

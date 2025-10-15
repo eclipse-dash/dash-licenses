@@ -22,6 +22,7 @@ import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.IProxySettings;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseData;
+import org.eclipse.dash.licenses.projects.ProjectService;
 import org.eclipse.dash.licenses.util.GitUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -37,6 +38,9 @@ public class GitLabSupport {
 	@Inject
 	ISettings settings;
 
+	@Inject 
+	ProjectService projectService;
+	
 	/** Optional HTTP proxy settings. */
 	@Inject
 	Provider<IProxySettings> proxySettings;
@@ -67,7 +71,7 @@ public class GitLabSupport {
 				 * required to prevent rare duplication.
 				 */
 				try {
-					GitLabReview review = new GitLabReview(settings.getProjectId(), getRepository(), licenseData);
+					GitLabReview review = new GitLabReview(projectService.getProject(), getRepository(), licenseData);
 
 					Issue existing = connection.findIssue(review);
 					if (existing != null) {

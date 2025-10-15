@@ -45,17 +45,18 @@ import java.util.regex.Pattern;
  * we've made it mandatory.
  */
 public class PackageUrlIdParser implements ContentIdParser {
-
-	// @formatter:off
+	
+	// TODO Consider leveraging an existing parser implementation
+	// https://github.com/package-url/purl-spec?tab=readme-ov-file#known-implementations
+	
 	private static final String PURL_PATTERN =
 			"^(?<scheme>[^:]+:)"
 			+ "(?<type>[^\\/]+)"
 			+ "(?:\\/(?<group>[^\\/]+))?"
 			+ "\\/(?<name>[^@]+)"
-			+ "@(?<version>[^?]+)"
+			+ "@(?<version>[^?#]+)"
 			+ "(?<qualifers>\\?[^#]+)?"
-			+ "(?<subpath>#.+)?$";
-	// @formatter:on
+			+ "(?:#(?<subpath>.+))?$";
 
 	private static Pattern purlPattern = Pattern.compile(PURL_PATTERN);
 
@@ -69,13 +70,17 @@ public class PackageUrlIdParser implements ContentIdParser {
 		var group = matcher.group("group");
 		var name = matcher.group("name");
 		var version = matcher.group("version");
+		//var subpath = matcher.group("subpath");
 
 		var source = "-";
-		if ("maven".equals(type))
+		if ("github".equals(type)) {
+			type = "git";
+			source = "github";
+		} else if ("maven".equals(type)) {
 			source = "mavencentral";
-		if ("npm".equals(type))
+		} else if ("npm".equals(type)) {
 			source = "npmjs";
-		if ("golang".equals(type)) {
+		} else if ("golang".equals(type)) {
 			type = "go";
 			source = "golang";
 			name = name.replace("/", "%2F");
