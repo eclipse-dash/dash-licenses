@@ -66,6 +66,27 @@ class PnpmPackageLockFileReaderTests {
 		}
 	}
 
+    @Test
+    void testV5_4_Format() throws IOException {
+        try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-v5.4.yaml")) {
+            PnpmPackageLockFileReader reader = new PnpmPackageLockFileReader(new InputStreamReader(input));
+            var ids = reader.getContentIds();
+
+            assertEquals(6, ids.size());
+
+            // Test that a handful of content ids are detected as expected.
+            var includes = new IContentId[] {
+                    ContentId.getContentId("npm", "npmjs", "@babel", "helper-define-polyfill-provider", "0.3.1"),
+                    ContentId.getContentId("npm", "npmjs", "@ampproject", "remapping", "2.2.0"),
+                    ContentId.getContentId("npm", "npmjs", "-", "ts-node", "10.9.1")
+            };
+
+            for (IContentId id : includes) {
+                assertTrue(ids.contains(id), "Should include: " + id);
+            }
+        }
+    }
+
 	@Test
 	void testV6Format() throws IOException {
 		try (InputStream input = this.getClass().getResourceAsStream("/fixtures/pnpm/pnpm-lock-v6.yaml")) {

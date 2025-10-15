@@ -45,7 +45,7 @@ import org.yaml.snakeyaml.representer.Representer;
 public class PnpmPackageLockFileReader implements IDependencyListReader {
 	final Logger logger = LoggerFactory.getLogger(PnpmPackageLockFileReader.class);
 	private static final Pattern KEY_PATTERN = Pattern
-			.compile("^'?(\\/?(?<namespace>@[^\\/]+)\\/)?\\/?(?<name>[^\\/@]+)[@\\/](?<version>[^(@\\/'\\n]+)(?=\\()?");
+			.compile("^'?(\\/?(?<namespace>@[^\\/]+)\\/)?\\/?(?<name>[^\\/@]+)[@\\/](?<version>[^(@\\/'\\n_]+)(?=[(_])?");
 	private final Reader input;
 
 	/**
