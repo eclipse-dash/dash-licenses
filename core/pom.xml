@@ -129,6 +129,11 @@
 			<version>2.4</version>
 		</dependency>
 		<dependency>
+			<groupId>org.sonatype.goodies</groupId>
+			<artifactId>package-url-java</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>

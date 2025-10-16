@@ -9,8 +9,11 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.sonatype.goodies.packageurl.InvalidException;
+import org.sonatype.goodies.packageurl.PackageUrl;
+import org.sonatype.goodies.packageurl.PackageUrlParser;
 
 /**
  * Parse ids specified in the Package URL format.
@@ -46,32 +49,33 @@ import java.util.regex.Pattern;
  */
 public class PackageUrlIdParser implements ContentIdParser {
 	
-	// TODO Consider leveraging an existing parser implementation
-	// https://github.com/package-url/purl-spec?tab=readme-ov-file#known-implementations
-	
-	private static final String PURL_PATTERN =
-			"^(?<scheme>[^:]+:)"
-			+ "(?<type>[^\\/]+)"
-			+ "(?:\\/(?<group>[^\\/]+))?"
-			+ "\\/(?<name>[^@]+)"
-			+ "@(?<version>[^?#]+)"
-			+ "(?<qualifers>\\?[^#]+)?"
-			+ "(?:#(?<subpath>.+))?$";
-
-	private static Pattern purlPattern = Pattern.compile(PURL_PATTERN);
-
 	@Override
-	public IContentId parseId(String value) {
-		Matcher matcher = purlPattern.matcher(value.trim());
-		if (!matcher.matches())
+	public IContentId parseId(String input) {
+		PackageUrl packageUrl;
+		try {
+			packageUrl = new PackageUrlParser().parse(input);
+		} catch (InvalidException e) {
 			return null;
-
-		var type = matcher.group("type");
-		var group = matcher.group("group");
-		var name = matcher.group("name");
-		var version = matcher.group("version");
-		//var subpath = matcher.group("subpath");
-
+			
+		}
+		var type = packageUrl.getType();
+		var namespace = packageUrl.getNamespace() != null ? packageUrl.getNamespace().stream().collect(Collectors.joining("%2F")) : "-";
+		var name = packageUrl.getName();
+		
+		// The version is considered optional by the specification/parser. We need a version; when it's
+		// missing, we consider the ID to be incomplete/invalid.
+		var version = packageUrl.getVersion();
+		if (version == null) return null;
+		
+		var path = packageUrl.getSubpath();
+		
+		// FIXME This requires more attention. 
+		// Interpreting Package URLs is, I believe, an exercise
+		// that's left for the reader. We assume, for example, that the source for a
+		// "maven" URL is "mavencentral", but that's just the default: the specification 
+		// allows for qualifiers to provide a pointer to a specific repository. 
+		// We should respect that.
+		
 		var source = "-";
 		if ("github".equals(type)) {
 			type = "git";
@@ -85,10 +89,8 @@ public class PackageUrlIdParser implements ContentIdParser {
 			source = "golang";
 			name = name.replace("/", "%2F");
 		}
-
-		if (group == null)
-			group = "-";
-
-		return ContentId.getContentId(type, source, group, name, version);
+		
+		if (path != null && !path.isEmpty()) name += "%23" + path.stream().collect(Collectors.joining("%2F"));
+		return ContentId.getContentId(type, source, namespace, name, version);
 	}
 }
