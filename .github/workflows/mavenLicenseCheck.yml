@@ -44,6 +44,11 @@ on:
         type: string
         required: false
         default: '21'  
+      workingDirectory:
+        description: 'The directory to run the license-check build in'
+        type: string
+        required: false
+        default: '.'
     secrets:
       gitlabAPIToken:
         description: 'The authentication token (scope: api) from gitlab.eclipse.org of the calling repository. Only required if license vetting is requested'
@@ -133,6 +138,7 @@ jobs:
       with:
         request-review: ${{ env.request-review }}
         project-id: ${{ inputs.projectId }}
+        working-directory: ${{ inputs.workingDirectory }}
       env:
         GITLAB_API_TOKEN: ${{ secrets.gitlabAPIToken }}
 
