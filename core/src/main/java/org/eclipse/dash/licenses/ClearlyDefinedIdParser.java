@@ -21,11 +21,16 @@ import java.util.regex.Pattern;
  *
  */
 public class ClearlyDefinedIdParser implements ContentIdParser {
-	private static Pattern pattern = Pattern.compile(
-	// @formatter:off
-			"^(?<type>[^\\/\\s]+)\\/(?<source>[^\\/\\s]+)\\/(?<namespace>[^\\/\\s]+)\\/(?<name>[^\\/\\s]+)\\/(?<revision>[^\\/\\s]+)$"
-	// @formatter:on
-	);
+	private static String regexp = 
+			"^"
+			+ "(?<type>[\\w\\-]+)"
+			+ "\\/(?<provider>[\\w\\-\\.]+)"
+			+ "\\/(?<namespace>(?:[\\w@\\-\\.]|%2[Ff])+)"
+			+ "\\/(?<name>(?:[\\w@\\-\\.+]|%2[Ff])+)"
+			+ "\\/(?<revision>[^\\/\\s]+)"
+			+ "$";
+	
+	private static Pattern pattern = Pattern.compile(regexp);
 
 	/**
 	 * {@inheritDoc}
@@ -37,11 +42,12 @@ public class ClearlyDefinedIdParser implements ContentIdParser {
 			return null;
 
 		String type = matcher.group("type");
-		String source = matcher.group("source");
+		
+		String provider = matcher.group("provider");
 		String namespace = matcher.group("namespace");
 		String name = matcher.group("name");
 		String version = matcher.group("revision");
 
-		return ContentId.getContentId(type, source, namespace, name, version);
+		return ContentId.getContentId(type, provider, namespace, name, version);
 	}
 }
