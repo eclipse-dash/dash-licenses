@@ -18,6 +18,10 @@ inputs:
   project-id:
     description: ''
     required: false
+  working-directory:
+    description: ''
+    required: false
+    default: '.'
 outputs:
   licenses-vetted: 
     description: "True if all licenses are vetted, else false"
@@ -33,14 +37,14 @@ runs:
           mvnArgs+=" -Ddash.projectId=${{ inputs.project-id }}"
         fi
         if [ ${{ inputs.request-review }} ]; then
-          mvn ${mvnArgs} -Ddash.iplab.token=$GITLAB_API_TOKEN
+          mvn ${mvnArgs} -Ddash.iplab.token=$GITLAB_API_TOKEN -f ${{ inputs.working-directory }}
           if [[ $? == 0 ]]; then # All licenses are vetted
             echo "build-succeeded=1" >> $GITHUB_OUTPUT
           else
             echo "build-succeeded=0" >> $GITHUB_OUTPUT
           fi
         else
-          mvn ${mvnArgs}
+          mvn ${mvnArgs} -f ${{ inputs.working-directory }}
           if [[ $? != 0 ]]; then
             echo "Committers can request a review by commenting '/request-license-review'"
             exit 1
