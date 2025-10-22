@@ -38,7 +38,7 @@ on:
         description: 'The version of Maven set up to run the license-check build'
         type: string
         required: false
-        default: '3.9.6'
+        default: '3.9.11'
       javaVersion:
         description: 'The version of Java set up to run the license-check build'
         type: string
