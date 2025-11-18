@@ -99,12 +99,12 @@ jobs:
     # and for events triggered by PR creation/updates the ref is 'refs/pull/<PR-number>/merge'.
     # So by default only the master-branch would be considered when requesting license-reviews, but we want the PR's state.
     # Unless the PR is closed, then we want the master-branch, which allows subsequent license review requests.
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       # use default ref 'refs/pull/<PR-number>/merge' for PR-events and 'refs/heads/master' for comments if the PR is closed
       if: github.event.issue.pull_request == '' || github.event.issue.state != 'open'
       with:
         submodules: ${{ inputs.submodules }}
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       with:
         ref: 'refs/pull/${{ github.event.issue.number }}/merge'
         submodules: ${{ inputs.submodules }}
