@@ -16,11 +16,16 @@ import java.util.regex.Pattern;
  * Parse an ID provided in the NPM JS repository format.
  *
  * <p>
- * NPM JS coordinates take the form &quot;[@scope/]name@version&quot; used to
+ * NPM JS coordinates take the form <code>[@scope/]name@version</code> used to
  * identify content in the npmjs.com repository. This implementation is intended
  * to parse identifiers that point to very specific content, so version ranges
  * (which are supported by the format) are not supported.
  *
+ * <p>
+ * pnpm uses plus (<code>+</code>) as a separator, so it's possible that
+ * we may see IDs of the form <code>@kurkle+color@0.3.4</code>, where the plus might
+ * otherwise be a slash in npm.
+ * 
  * <p>
  * See the <a href="https://docs.npmjs.com/files/package.json">npm-package.json
  * specification</a> for more information.
@@ -28,11 +33,9 @@ import java.util.regex.Pattern;
 public class NpmJsIdParser implements ContentIdParser {
 
 	private static Pattern pattern = Pattern.compile(
-	// @formatter:off
-			"^(?:(?<namespace>@?[^\\/]+)\\/)?"
+			"^(?:(?<namespace>@?[^\\/+]+)[\\/+])?"
 			+ "(?<name>[^\\/]+)"
 			+ "@(?<version>\\d+(?:\\.\\d+){2}[^\\/]*)$"
-	// @formatter:on
 	);
 
 	@Override

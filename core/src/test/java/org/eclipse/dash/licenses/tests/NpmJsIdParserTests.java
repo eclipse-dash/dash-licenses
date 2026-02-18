@@ -39,6 +39,11 @@ class NpmJsIdParserTests {
 	}
 
 	@Test
+	void testWithPlus() {
+		assertEquals("npm/npmjs/@kurkle/color/0.3.4", new NpmJsIdParser().parseId("@kurkle+color@0.3.4").toString());
+	}
+
+	@Test
 	void testWithFile() {
 		assertNull(new NpmJsIdParser()
 				.parseId("vscode-css-languageserver@file:target/vscode-css-languageserver-1.0.0.tgz"));
