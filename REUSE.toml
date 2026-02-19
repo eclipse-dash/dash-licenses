@@ -110,6 +110,12 @@ SPDX-FileCopyrightText = "2024 Contributors to the Eclipse Theia Project"
 SPDX-License-Identifier = "EPL-2.0"
 
 [[annotations]]
+path = "core/src/test/resources/bunch_of_clearlydefined_ids.txt"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 The Eclipse Foundation"
+SPDX-License-Identifier = "EPL-2.0"
+
+[[annotations]]
 path = "core/src/test/resources/test_data_package-lock-v2-2.json"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2024 Microsoft Corp."
