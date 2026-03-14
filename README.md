@@ -39,7 +39,11 @@ More information about the Eclipse Dash License Tool:
 
 ## Get it
 
-Dash License Tool executable jar is published to Eclipse's Maven repo and available at https://repo.eclipse.org/content/repositories/dash-licenses/org/eclipse/dash/org.eclipse.dash.licenses/ . Latest version can be directly downloaded from https://repo.eclipse.org/service/local/artifact/maven/redirect?r=dash-licenses&g=org.eclipse.dash&a=org.eclipse.dash.licenses&v=LATEST
+**THE URL TO DOWNLOAD THE LATEST BUILD CHANGED WITH THE RECENT UPGRADE OF repo.eclipse.org TO NEXUS 3.x**
+
+Dash License Tool executable jar is published to Eclipse's Maven repo and available at https://repo.eclipse.org/content/repositories/dash-licenses/org/eclipse/dash/org.eclipse.dash.licenses/. 
+
+The **latest version** can be directly downloaded from https://repo.eclipse.org/service/rest/v1/search/assets/download?sort=version&repository=dash-maven2-releases&maven.groupId=org.eclipse.dash&maven.artifactId=org.eclipse.dash.licenses&maven.extension=jar
 
 It's also available as a [Maven plugin](#example-maven-plugin).
 
