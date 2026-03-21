@@ -30,9 +30,6 @@ import org.eclipse.dash.licenses.review.GitLabSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 /**
  * This class provides a CLI entry point to determine licenses for content. The
  * tool can be invoked in a few different ways, e.g.
@@ -78,7 +75,7 @@ public class Main {
 			System.exit(0);
 		}
 
-		Injector injector = Guice.createInjector(new LicenseToolModule(settings));
+		LicenseToolModule injector = new LicenseToolModule(settings);
 
 		if (settings.getProjectId() != null) {
 			var validator = injector.getInstance(ProjectService.class);

@@ -31,16 +31,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 class ClearlyDefinedSupportTests {
 
 	private ClearlyDefinedSupport clearlyDefined;
 
 	@BeforeEach
 	void setup() {
-		Injector injector = Guice.createInjector(new TestLicenseToolModule());
+		TestLicenseToolModule injector = new TestLicenseToolModule();
 		clearlyDefined = injector.getInstance(ClearlyDefinedSupport.class);
 	}
 

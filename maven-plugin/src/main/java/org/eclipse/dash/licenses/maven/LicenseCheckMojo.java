@@ -49,9 +49,6 @@ import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 /**
  * Maven goal for running the Dash License Check tool.
  */
@@ -226,7 +223,7 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 		NeedsReviewCollector needsReviewCollector = new NeedsReviewCollector();
 		collectors.add(needsReviewCollector);
 
-		Injector injector = Guice.createInjector(new LicenseToolModule(settings, createProxySettings()));
+		LicenseToolModule injector = new LicenseToolModule(settings, createProxySettings());
 		
 		if (settings.getProjectId() != null) {
 			var validator = injector.getInstance(ProjectService.class);
