@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.eclipse.dash.licenses.ILicenseDataProvider;
 import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseSupport;
@@ -77,7 +76,13 @@ public class TestLicenseToolModule {
 
 	@SuppressWarnings("unchecked")
 	public <T> T getInstance(Class<T> type) {
-		return (T) bindings.get(type);
+		if (type == null) {
+			throw new IllegalArgumentException("Cannot look up instance for null type");
+		}
+		if (!bindings.containsKey(type)) {
+			throw new IllegalStateException("No binding found for " + type.getName());
+		}
+		return (T) bindings.get(type); // Binding exists; instance is expected to be non-null
 	}
 
 	public IHttpClientService getHttpClientService() {
@@ -212,3 +217,4 @@ public class TestLicenseToolModule {
 		};
 	}
 }
+

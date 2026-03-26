@@ -11,11 +11,13 @@ package org.eclipse.dash.licenses.context;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.function.Consumer;
 
 import jakarta.inject.Provider;
@@ -107,37 +109,75 @@ public class LicenseToolModule {
 
 	@SuppressWarnings("unchecked")
 	public <T> T getInstance(Class<T> type) {
-		return (T) bindings.get(type);
+		if (type == null) {
+			throw new IllegalArgumentException("Cannot look up instance for null type");
+		}
+		if (!bindings.containsKey(type)) {
+			StringJoiner keys = new StringJoiner(", ");
+			for (Class<?> boundType : bindings.keySet()) {
+				keys.add(boundType.getName());
+			}
+			throw new IllegalStateException("No binding found for " + type.getName() + ". Bound types: " + keys);
+		}
+		return (T) bindings.get(type); // May be null if a binding is intentionally set to null.
 	}
 
 	public static void inject(Object target, String fieldName, Object value) {
+		if (target == null) {
+			throw new IllegalArgumentException("Cannot inject into null target (fieldName=" + fieldName + ")");
+		}
+		if (fieldName == null) {
+			throw new IllegalArgumentException("Cannot inject into target " + target.getClass().getName() + " with null fieldName");
+		}
 		Class<?> cls = target.getClass();
 		while (cls != null) {
 			try {
 				Field field = cls.getDeclaredField(fieldName);
-				field.setAccessible(true);
-				field.set(target, value);
+				try {
+					field.setAccessible(true);
+				} catch (SecurityException e) {
+					throw new IllegalStateException("Unable to access field '" + fieldName + "' on " + target.getClass().getName(), e);
+				}
+				try {
+					field.set(target, value);
+				} catch (IllegalArgumentException e) {
+					String valueType = (value == null) ? "null" : value.getClass().getName();
+					throw new IllegalStateException(
+							"Failed to inject into field '" + fieldName + "' on " + target.getClass().getName()
+									+ ". Expected type: " + field.getType().getName() + ", value type: " + valueType,
+							e);
+				}
 				return;
 			} catch (NoSuchFieldException e) {
 				cls = cls.getSuperclass();
 			} catch (IllegalAccessException e) {
-				throw new RuntimeException("Cannot inject " + fieldName, e);
+				throw new IllegalStateException("Cannot inject field '" + fieldName + "' on " + target.getClass().getName(), e);
 			}
 		}
-		throw new RuntimeException("Field not found: " + fieldName);
+		throw new IllegalStateException("Field '" + fieldName + "' not found on " + target.getClass().getName() + " (or any superclass)");
 	}
 
 	public static void invokeInit(Object target) {
+		if (target == null) {
+			throw new IllegalArgumentException("Cannot invoke init/bootstrap on null target");
+		}
 		for (String name : new String[]{"init", "bootstrap"}) {
 			try {
 				Method m = target.getClass().getDeclaredMethod(name);
 				m.setAccessible(true);
-				m.invoke(target);
+				try {
+					m.invoke(target);
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException("Failed to invoke " + name + "() on " + target.getClass().getName(), e);
+				} catch (InvocationTargetException e) {
+					throw new RuntimeException("Failed to invoke " + name + "() on " + target.getClass().getName() + ": " + e.getTargetException(), e.getTargetException());
+				}
 				return;
 			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
 				throw new RuntimeException("Failed to invoke " + name + "() on " + target.getClass().getName(), e);
 			}
 		}
+		// Neither init() nor bootstrap() exists; keep existing behavior (silently return).
 	}
 }
