@@ -9,12 +9,12 @@
  *************************************************************************/
 package org.eclipse.dash.licenses.review;
 
-import org.gitlab4j.api.Constants.IssueState;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.IssuesApi;
 import org.gitlab4j.api.models.Issue;
 import org.gitlab4j.api.models.IssueFilter;
+import org.gitlab4j.models.Constants.IssueState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
