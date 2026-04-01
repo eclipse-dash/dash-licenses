@@ -505,7 +505,7 @@ For this, we can use `sed`:
 $ cargo tree -e normal --prefix none --no-dedupe \
 | sort -u \
 | grep -v '^[[:space:]]*$' \
-| grep -v zenoh \
+| grep -v "/ankaios/" \
 | sed -E 's|([^ ]+) v([^ ]+).*|crate/cratesio/-/\1/\2|' \
 | java -jar org.eclipse.dash.licenses-<version>.jar -
 ```
@@ -515,13 +515,26 @@ Steps:
 1. Use `cargo` to generate a dependency list;
 2. Sort the results and remove duplicates;
 3. Remove empty lines;
-4. Remove references to project code;
+4. Remove references to project code (lines that represent project code will include a local directory);
 5. Map each line to a ClearlyDefined ID; and
 6. Invoke the tool.
 
 Note that "Cargo" is the package manager, but "Crates" is the software repository. The content ID should be specified using the latter (`crate/cratesio/...`).
 
-The above example skips code from the Eclipse Zenoh project. Anything that is not _third-party_ content can be removed in a similar manner.
+The `cargo tree` command doesn't have any switches that allow you to distinguish between project content third-party content, but the output does provide clues that that we can leverage (project code has local directory information next to it). When you list the packages via `cargo tree ...` you'll see lines like this:
+
+```
+$ cargo tree -e normal --prefix none --no-dedupe | grep "/ankaios/" | sort | uniq
+ank-agent v1.0.0 (/gitroot/temp/ankaios/agent)
+ankaios-api v1.0.0 (/gitroot/temp/ankaios/ankaios_api)
+ank-schema v1.0.0 (/gitroot/temp/ankaios/ank_schema)
+ank-server v1.0.0 (/gitroot/temp/ankaios/server)
+ank v1.0.0 (/gitroot/temp/ankaios/ank)
+```
+
+In this example, we've cloned the Eclipse Ankaios repository into the `/gitroot/temp/` directory. Using any regular expression that successfully skips these entries should do the job.
+
+Anything that is not _third-party_ content can be removed using `grep -v` in a similar manner.
 
 Note that, in order to better leverage ClearlyDefined data, the "v" should **not** be included in the version number. For example, `serde_json v1.0.85` becomes `crate/cratesio/-/serde_json/1.0.85`.
 
