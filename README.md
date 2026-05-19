@@ -624,6 +624,20 @@ $ pipdeptree -a -f \
 | java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
 ```
 
+### Example: Poetry (Python)
+
+There may (must?) be a better way to do this. Please open an issue if you have a more elegant solution.
+
+Use `poetry lock` to generate a `poetry.lock` file and then use brute force to extract dependency information.
+
+```
+$ poetry lock
+...
+$ awk -F '"' '/^name = / {name=$2} /^version = / {print "pypi/pypi/-/" name "/" $2}' poetry.lock \
+| sort -u \
+| java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
+```
+
 ### Example: Go
 
 The Eclipse Dash License Tool can parse a `go.sum` file.
