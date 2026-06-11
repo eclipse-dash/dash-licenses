@@ -251,15 +251,12 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		validTypes = new HashSet<>();
 		validProviders = new HashSet<>();
 
-		validTypes
-				.addAll(Arrays.asList(new String[]
-				{ "npm", "crate", "git", "maven", "composer", "nuget", "gem", "go", "pod", "pypi", "sourcearchive",
-						"deb", "debsrc" }));
+		validTypes.addAll(Arrays.asList(new String[] { "npm", "conda", "condasrc", "crate", "git", "maven", "composer",
+				"nuget", "gem", "go", "pod", "pypi", "sourcearchive", "deb", "debsrc" }));
 
-		validProviders
-				.addAll(Arrays.asList(new String[]
-				{ "npmjs", "cocoapods", "cratesio", "github", "gitlab", "packagist", "golang", "mavencentral",
-						"mavengoogle", "nuget", "rubygems", "pypi", "debian" }));
+		validProviders.addAll(Arrays.asList(new String[] { "anaconda-main", "anaconda-r", "npmjs", "cocoapods",
+				"conda-forge", "cratesio", "github", "gitlab", "packagist", "golang", "mavencentral", "mavengoogle",
+				"gradleplugin", "nuget", "rubygems", "pypi", "debian" }));
 	}
 
 	class ClearlyDefinedResponseException extends RuntimeException {
