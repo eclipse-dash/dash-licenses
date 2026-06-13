@@ -1,0 +1,244 @@
+{
+  "bomFormat" : "CycloneDX",
+  "specVersion" : "1.4",
+  "serialNumber" : "urn:uuid:ea55d11e-ed0f-44b4-bb62-c228b2544e16",
+  "version" : 1,
+  "metadata" : {
+    "timestamp" : "2023-10-12T09:37:32Z",
+    "tools" : [
+      {
+        "vendor" : "OWASP Foundation",
+        "name" : "CycloneDX Maven plugin",
+        "version" : "2.7.9",
+        "hashes" : [
+          {
+            "alg" : "MD5",
+            "content" : "8e595cdb67f17e4b41e046456970591d"
+          },
+          {
+            "alg" : "SHA-1",
+            "content" : "69e8ca804520d09ce4657e7235bae84d01cbffa6"
+          },
+          {
+            "alg" : "SHA-256",
+            "content" : "aa09074fe5aa403c008cd4fc7ef8ce41cd244489337f16b3e91a3914158a4db8"
+          },
+          {
+            "alg" : "SHA-512",
+            "content" : "1488a8112da8e675813d7585f57c5efb178aed32901118186ee12d0e4ae3d19c53774c7f860bf70d17d70f050119b69443a2637cf641675b4b5d9cdcdd69b89b"
+          },
+          {
+            "alg" : "SHA-384",
+            "content" : "b097295dfbf10887abc6eec58d4d0822cde5a73d1f5c1cf183a57bf569016ad5ced9d34efae3e574d82bb62837540c6c"
+          },
+          {
+            "alg" : "SHA3-384",
+            "content" : "289f9520bd73a2031276248a6ef8f0891c691062c2d1ea86a2bc9ea8db2c52377d92a53be9957179e71aee3deda26a8c"
+          },
+          {
+            "alg" : "SHA3-256",
+            "content" : "32b50a7efe5d491a4039c0017eca3cf49d98b55fc66d06b3dd06209487323474"
+          },
+          {
+            "alg" : "SHA3-512",
+            "content" : "1daf813da53e5d5cda4d0302ff3a5e388aa45d96ebe6dcbe240f35d33f14b1e6390f6bbe7f21f3ed8cf96ebd9f5516a08b18487b7339715109c81cebfc1563df"
+          }
+        ]
+      }
+    ],
+    "component" : {
+      "publisher" : "MicroStream Software",
+      "group" : "org.eclipse.serializer",
+      "name" : "afs",
+      "version" : "1.0.0",
+      "description" : "Abstract Eclipse Serializer File System Implementation",
+      "licenses" : [
+        {
+          "license" : {
+            "id" : "EPL-2.0"
+          }
+        }
+      ],
+      "purl" : "pkg:maven/org.eclipse.serializer/afs@1.0.0?type=jar",
+      "externalReferences" : [
+        {
+          "type" : "website",
+          "url" : "https://projects.eclipse.org/projects/technology.serializer"
+        },
+        {
+          "type" : "distribution",
+          "url" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+        },
+        {
+          "type" : "vcs",
+          "url" : "https://github.com/eclipse-serializer/afs-parent/afs"
+        }
+      ],
+      "type" : "library",
+      "bom-ref" : "pkg:maven/org.eclipse.serializer/afs@1.0.0?type=jar"
+    },
+    "properties" : [
+      {
+        "name" : "maven.goal",
+        "value" : "makeBom"
+      },
+      {
+        "name" : "maven.scopes",
+        "value" : "compile,provided,runtime,system"
+      }
+    ]
+  },
+  "components" : [
+    {
+      "publisher" : "MicroStream Software",
+      "group" : "org.eclipse.serializer",
+      "name" : "base",
+      "version" : "1.0.0",
+      "description" : "Commons Module of the Eclipse Serializer Framework",
+      "scope" : "required",
+      "hashes" : [
+        {
+          "alg" : "MD5",
+          "content" : "b63998dcfd4c366d444ac417ac4fc9fb"
+        },
+        {
+          "alg" : "SHA-1",
+          "content" : "b0b94bcb924b98572e36f46e029a9b463b935d08"
+        },
+        {
+          "alg" : "SHA-256",
+          "content" : "b8d234f39d430aea342f260af6e307eb502a49f6bc854f47b5f46cfbb1c537ce"
+        },
+        {
+          "alg" : "SHA-512",
+          "content" : "6db010640cba2cea34301c9ce37c1caad0ffefc6e73d26db3e5f5ad20026b0e7ed572823b6e0060419280f1faf73fa4410ab4d7131637f2904ca7dd7e9e9e486"
+        },
+        {
+          "alg" : "SHA-384",
+          "content" : "18b2f2bb37dc82a7294788a2214775595050622a2aa00caefa4871cd296f4494bbe7e15873135f29552100f0e60bd380"
+        },
+        {
+          "alg" : "SHA3-384",
+          "content" : "b448377fc4b6ef6c0fde0477b2558f325729c0debecdcc6aa9d095e9801975af71a6a854d51fb3f92b8d76c07a9f1ab8"
+        },
+        {
+          "alg" : "SHA3-256",
+          "content" : "6c1a909a69eb49bd74e7c39d4152f25b7876a77b9c17db6e7a8b42c251e7c011"
+        },
+        {
+          "alg" : "SHA3-512",
+          "content" : "7aa0158b37700c50bb4eea81594000161153717d3ae67d6546fa97ead7f6b395ac344ddaf609749ab8acb919b8af8b58488b3a6843c1ac72d143e5075f9fca0a"
+        }
+      ],
+      "licenses" : [
+        {
+          "license" : {
+            "id" : "EPL-2.0"
+          }
+        }
+      ],
+      "purl" : "pkg:maven/org.eclipse.serializer/base@1.0.0?type=jar",
+      "externalReferences" : [
+        {
+          "type" : "website",
+          "url" : "https://projects.eclipse.org/projects/technology.serializer"
+        },
+        {
+          "type" : "distribution",
+          "url" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+        },
+        {
+          "type" : "vcs",
+          "url" : "https://github.com/eclipse-serializer/base"
+        }
+      ],
+      "type" : "library",
+      "bom-ref" : "pkg:maven/org.eclipse.serializer/base@1.0.0?type=jar"
+    },
+    {
+      "publisher" : "QOS.ch",
+      "group" : "org.slf4j",
+      "name" : "slf4j-api",
+      "version" : "1.7.32",
+      "description" : "The slf4j API",
+      "scope" : "required",
+      "hashes" : [
+        {
+          "alg" : "MD5",
+          "content" : "fbcf58513bc25b80f075d812aad3e3cf"
+        },
+        {
+          "alg" : "SHA-1",
+          "content" : "cdcff33940d9f2de763bc41ea05a0be5941176c3"
+        },
+        {
+          "alg" : "SHA-256",
+          "content" : "3624f8474c1af46d75f98bc097d7864a323c81b3808aa43689a6e1c601c027be"
+        },
+        {
+          "alg" : "SHA-512",
+          "content" : "4ca4045775a879c3ce3021908db7b4778235a322fd8e2567da960156f24b9da86e6812a4956c8dc19920cd83e4c61141168c580829f43f10bbac925d465c3fd1"
+        },
+        {
+          "alg" : "SHA-384",
+          "content" : "c95aa5a652533b3b54e721b7f20c4ef19a022ac6c8cd353b032bfd65f636b1adc3eb2e5ca0b409f19456e265cbfd3cb0"
+        },
+        {
+          "alg" : "SHA3-384",
+          "content" : "b08f2d668d9233a3380c37c028486014db65000e918aa1c59e2db35fb5661b3a40183e51677b73a5d96a308f9c2346c0"
+        },
+        {
+          "alg" : "SHA3-256",
+          "content" : "f6a3b253b2c5a06a9559fd9f21e36d04198e660d4e9437ddeb78245969f03fe4"
+        },
+        {
+          "alg" : "SHA3-512",
+          "content" : "0a45c046c106cf88a510bde208b1ac92d7b3dc547b2516583afdbb829219ec31b0bba9fc4b7fd240d2ef859abb722ce307f9572d87409d261887130a5df6827d"
+        }
+      ],
+      "licenses" : [
+        {
+          "license" : {
+            "id" : "MIT",
+            "url" : "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "purl" : "pkg:maven/org.slf4j/slf4j-api@1.7.32?type=jar",
+      "externalReferences" : [
+        {
+          "type" : "website",
+          "url" : "http://www.slf4j.org"
+        },
+        {
+          "type" : "distribution",
+          "url" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+        },
+        {
+          "type" : "vcs",
+          "url" : "https://github.com/qos-ch/slf4j/slf4j-api"
+        }
+      ],
+      "type" : "library",
+      "bom-ref" : "pkg:maven/org.slf4j/slf4j-api@1.7.32?type=jar"
+    }
+  ],
+  "dependencies" : [
+    {
+      "ref" : "pkg:maven/org.eclipse.serializer/afs@1.0.0?type=jar",
+      "dependsOn" : [
+        "pkg:maven/org.eclipse.serializer/base@1.0.0?type=jar"
+      ]
+    },
+    {
+      "ref" : "pkg:maven/org.eclipse.serializer/base@1.0.0?type=jar",
+      "dependsOn" : [
+        "pkg:maven/org.slf4j/slf4j-api@1.7.32?type=jar"
+      ]
+    },
+    {
+      "ref" : "pkg:maven/org.slf4j/slf4j-api@1.7.32?type=jar",
+      "dependsOn" : [ ]
+    }
+  ]
+}
