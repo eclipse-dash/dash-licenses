@@ -538,7 +538,29 @@ Anything that is not _third-party_ content can be removed using `grep -v` in a s
 
 Note that, in order to better leverage ClearlyDefined data, the "v" should **not** be included in the version number. For example, `serde_json v1.0.85` becomes `crate/cratesio/-/serde_json/1.0.85`.
 
-### Example C/C++
+### Example: Haskell using Cabal
+
+**NOTE:** We've only done limited testing with Haskell and Cabal. Please open an issue if you have insight that can help us improve this.
+
+The `cabal freeze --dry-run` command can give us a list of dependencies. If we reformat those dependencies as ClearlyDefined IDs, they can be piped directly into the Eclipse Dash License Tool. 
+
+```
+$ cabal freeze --dry-run \
+| grep "any\." \
+| sed -E 's/.*any\.([a-zA-Z0-9-]+) ==([0-9.]+).*/haskell\/hackage\/-\/\1\/\2/' \
+| java -jar org.eclipse.dash.licenses-<version>.jar -
+```
+
+Steps:
+
+1. Use `cabal` to generate a dependency list;
+2. Extract lines that define a dependency
+3. Map each line to a ClearlyDefined ID; and
+4. Invoke the tool.
+
+Note that as of this writing, ClearlyDefined does not support Haskell.
+
+### Example: C/C++
 
 We don't have a great answer for C/C++ code because the C/C++ doesn't have a good answer for identifying C/C++ libraries, nor are we aware of a common build tool that can reveal the dependencies. With these limitations, a dependency list may need to be manually created and managed. 
 
