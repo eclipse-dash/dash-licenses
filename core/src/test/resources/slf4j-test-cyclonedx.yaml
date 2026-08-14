@@ -1,0 +1,8 @@
+bomFormat: CycloneDX
+specVersion: "1.4"
+version: 1
+components:
+  - type: library
+    name: slf4j-api
+    version: 1.7.32
+    purl: pkg:maven/org.slf4j/slf4j-api@1.7.32

@@ -146,6 +146,10 @@ public interface ISettings {
 		return System.getProperty("org.eclipse.dash.summary");
 	};
 
+	default String getSbomOutputFilePath() {
+		return null;
+	}
+
 	default File getSummaryFile() {
 		return new File(getSummaryFilePath());
 	}

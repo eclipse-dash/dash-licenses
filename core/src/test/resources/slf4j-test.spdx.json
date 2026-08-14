@@ -1,0 +1,21 @@
+{
+    "spdxVersion": "SPDX-2.3",
+    "dataLicense": "CC0-1.0",
+    "SPDXID": "SPDXRef-DOCUMENT",
+    "name": "test-sbom",
+    "packages": [
+        {
+            "SPDXID": "SPDXRef-Package",
+            "name": "slf4j-api",
+            "versionInfo": "1.7.32",
+            "downloadLocation": "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.32/slf4j-api-1.7.32.jar",
+            "externalRefs": [
+                {
+                    "referenceCategory": "PACKAGE_MANAGER",
+                    "referenceType": "purl",
+                    "referenceLocator": "pkg:maven/org.slf4j/slf4j-api@1.7.32"
+                }
+            ]
+        }
+    ]
+}

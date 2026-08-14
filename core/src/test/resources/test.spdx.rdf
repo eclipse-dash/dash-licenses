@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+    xmlns:spdx="http://spdx.org/rdf/terms#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <spdx:SpdxDocument rdf:about="http://example.org/spdxdocs/commons-doc#SPDXRef-DOCUMENT">
+    <spdx:specVersion>SPDX-2.3</spdx:specVersion>
+    <spdx:name>commons-lang3-test-sbom</spdx:name>
+    <spdx:dataLicense rdf:resource="http://spdx.org/licenses/CC0-1.0"/>
+    <spdx:creationInfo>
+      <spdx:CreationInfo>
+        <spdx:created>2024-01-01T00:00:00Z</spdx:created>
+        <spdx:creator>Tool: dash-test-fixture</spdx:creator>
+      </spdx:CreationInfo>
+    </spdx:creationInfo>
+    <spdx:relationship>
+      <spdx:Relationship>
+        <spdx:relationshipType rdf:resource="http://spdx.org/rdf/terms#relationshipType_describes"/>
+        <spdx:relatedSpdxElement>
+          <spdx:Package rdf:about="http://example.org/spdxdocs/commons-doc#SPDXRef-Package">
+            <spdx:name>commons-lang3</spdx:name>
+            <spdx:downloadLocation>NOASSERTION</spdx:downloadLocation>
+            <spdx:copyrightText>NOASSERTION</spdx:copyrightText>
+            <spdx:filesAnalyzed rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</spdx:filesAnalyzed>
+            <spdx:licenseConcluded rdf:resource="http://spdx.org/licenses/Apache-2.0"/>
+            <spdx:licenseDeclared rdf:resource="http://spdx.org/licenses/Apache-2.0"/>
+            <!-- The purl ref that should be extracted -->
+            <spdx:externalRef>
+              <spdx:ExternalRef>
+                <spdx:referenceCategory rdf:resource="http://spdx.org/rdf/terms#referenceCategory_packageManager"/>
+                <spdx:referenceType rdf:resource="http://spdx.org/rdf/references/purl"/>
+                <spdx:referenceLocator>pkg:maven/org.apache.commons/commons-lang3@3.12.0</spdx:referenceLocator>
+              </spdx:ExternalRef>
+            </spdx:externalRef>
+            <!-- A non-purl (SECURITY / cpe) ref that MUST be skipped by parseSpdxRdfXml -->
+            <spdx:externalRef>
+              <spdx:ExternalRef>
+                <spdx:referenceCategory rdf:resource="http://spdx.org/rdf/terms#referenceCategory_security"/>
+                <spdx:referenceType rdf:resource="http://spdx.org/rdf/references/cpe23Type"/>
+                <spdx:referenceLocator>cpe:2.3:a:apache:commons_lang:3.12.0:*:*:*:*:*:*:*</spdx:referenceLocator>
+              </spdx:ExternalRef>
+            </spdx:externalRef>
+          </spdx:Package>
+        </spdx:relatedSpdxElement>
+      </spdx:Relationship>
+    </spdx:relationship>
+  </spdx:SpdxDocument>
+</rdf:RDF>

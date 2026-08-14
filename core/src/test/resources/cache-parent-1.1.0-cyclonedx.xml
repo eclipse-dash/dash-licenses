@@ -1,0 +1,53 @@
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" serialNumber="urn:uuid:d538ce99-2889-4a8c-a0ff-6cca8c5d421e" version="1">
+<metadata>
+<timestamp>2024-01-24T12:32:12Z</timestamp>
+<tools>
+<tool>
+<vendor>OWASP Foundation</vendor>
+<name>CycloneDX Maven plugin</name>
+<version>2.7.10</version>
+<hashes>
+<hash alg="MD5">1cc7f6a0382f8bb2f758d6a6ea401d1b</hash>
+<hash alg="SHA-1">a4297947a1f2d7d453105db542651614bbd37f38</hash>
+<hash alg="SHA-256">bd0fdd8f2f2116eee5e715aeac1580f19eb7a10ec2b6f805b53567067658e872</hash>
+<hash alg="SHA-512">9cde8352a427e10b96cae01348fc7cfe5d4aa9cd0a5e5dd93b414ce3bb7d112993c3b3004e53af52567fbfa16de0704ec59a5556a635ad70571fd124ae389f39</hash>
+<hash alg="SHA-384">93d7bf5b5c735347edfbfbd66810273ca840f9a322b816d22d44c3d8e8255c09e86570bb23712aeb0cade0f478be5aeb</hash>
+<hash alg="SHA3-384">4467f16e9ca32190a6e49c65339eb28ee5e8c78f4e918fcf95128a4b7648898de56ccb43eacfad0c9391ef8cdb7d629a</hash>
+<hash alg="SHA3-256">ed2996c99b483e969221d5e9a40f562ea2ab85442d361d72a90e85266a3ed781</hash>
+<hash alg="SHA3-512">c8e6ea9ddc38edc77e284b3bf541663e84752bdc59ed1935799847a48a14ea2fa531b61008fefcba37d732a56702a11ac112437b9b80d18f4ecc8ef0ecfb32cf</hash>
+</hashes>
+</tool>
+</tools>
+<component type="library" bom-ref="pkg:maven/org.eclipse.store/cache-parent@1.1.0?type=pom">
+<publisher>MicroStream Software</publisher>
+<group>org.eclipse.store</group>
+<name>cache-parent</name>
+<version>1.1.0</version>
+<description>EclipseStore Cache Project</description>
+<licenses>
+<license>
+<id>EPL-2.0</id>
+</license>
+</licenses>
+<purl>pkg:maven/org.eclipse.store/cache-parent@1.1.0?type=pom</purl>
+<externalReferences>
+<reference type="website">
+<url>https://projects.eclipse.org/projects/technology.store</url>
+</reference>
+<reference type="distribution">
+<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+</reference>
+<reference type="vcs">
+<url>https://github.com/eclipse-store/cache-parent</url>
+</reference>
+</externalReferences>
+</component>
+<properties>
+<property name="maven.goal">makeBom</property>
+<property name="maven.scopes">compile,provided,runtime,system</property>
+</properties>
+</metadata>
+<dependencies>
+<dependency ref="pkg:maven/org.eclipse.store/cache-parent@1.1.0?type=pom"/>
+</dependencies>
+</bom>

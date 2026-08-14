@@ -115,6 +115,16 @@ public class Main {
 			IDependencyListReader reader = null;
 			try {
 				reader = getReader(name);
+
+				// If enriched-SBOM output was requested and this input is a CycloneDX SBOM,
+				// reuse the already-parsed Bom to write it. The writer is a collector, so it
+				// receives the license results during processing below and writes on close().
+				if (settings.getSbomOutputFilePath() != null
+						&& reader instanceof CycloneDXSbomReader
+						&& ((CycloneDXSbomReader) reader).getSbom() != null) {
+					var output = new File(settings.getSbomOutputFilePath());
+					collectors.add(new CycloneDXSbomWriter(((CycloneDXSbomReader) reader).getSbom(), output));
+				}
 			} catch (FileNotFoundException e) {
 				System.out.println(String.format("The file \"%s\" does not exist.", name));
 				CommandLineSettings.printUsage(System.out);
@@ -141,6 +151,8 @@ public class Main {
 			}
 		});
 
+		// close() flushes every collector, including the CycloneDXSbomWriter added
+		// above, whose close() writes the enriched SBOM to disk.
 		collectors.forEach(IResultsCollector::close);
 
 		System.exit(Math.min(primaryCollector.getStatus(), INTERNAL_ERROR - 1));
@@ -153,25 +165,37 @@ public class Main {
 	}
 
 	private IDependencyListReader getReader(String name) throws FileNotFoundException {
-		InputStreamReader input;
 		if ("-".equals(name)) {
-			input = new InputStreamReader(System.in);
-		} else {
-			File file = new File(name);
-			if (!file.exists()) {
-				throw new FileNotFoundException(name);
-			}
-			
-			input = new FileReader(file);
-			switch (file.getName()) {
-			case "pnpm-lock.yaml":
-				return new PnpmPackageLockFileReader(input);
-			case "package-lock.json":
-				return new PackageLockFileReader(input);
-			case "yarn.lock":
-				return new YarnLockFileReader(input);
-			}
+			return new FlatFileReader(new InputStreamReader(System.in));
 		}
-		return new FlatFileReader(input);
+
+		File file = new File(name);
+		if (!file.exists()) {
+			throw new FileNotFoundException(name);
+		}
+
+		switch (file.getName()) {
+		case "pnpm-lock.yaml":
+			return new PnpmPackageLockFileReader(new FileReader(file));
+		case "package-lock.json":
+			return new PackageLockFileReader(new FileReader(file));
+		case "yarn.lock":
+			return new YarnLockFileReader(new FileReader(file));
+		}
+
+		// Reader chain: try CycloneDX first; if the file isn't CycloneDX, try SPDX;
+		// if it's neither, fall back to the plain flat-file reader. Each forFile(...)
+		// returns null when it can't handle the file, so the next one gets a turn.
+		var cyclone = CycloneDXSbomReader.forFile(file);
+		if (cyclone != null) {
+			return cyclone;
+		}
+
+		var spdx = SpdxSbomReader.forFile(file);
+		if (spdx != null) {
+			return spdx;
+		}
+
+		return new FlatFileReader(new FileReader(file));
 	}
 }
