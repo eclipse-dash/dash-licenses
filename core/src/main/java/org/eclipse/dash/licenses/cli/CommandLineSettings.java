@@ -33,6 +33,7 @@ public class CommandLineSettings implements ISettings {
 	private static final String PROJECT_OPTION = "project";
 	
 	private static final String REPO_OPTION = "repo";
+	private static final String SBOM_OUTPUT_OPTION = "sbom-output";
 
 	private CommandLine commandLine;
 
@@ -222,6 +223,13 @@ public class CommandLineSettings implements ISettings {
 			.hasArg(false)
 			.desc("Display help")
 			.build());
+		options.addOption(Option.builder(SBOM_OUTPUT_OPTION)
+			.required(false)
+			.hasArg()
+			.argName("file")
+			.type(String.class)
+			.desc("Output an enriched SBOM to a file")
+			.build());
 
 		return options;
 	}
@@ -250,7 +258,10 @@ public class CommandLineSettings implements ISettings {
 	public String getSummaryFilePath() {
 		return commandLine.getOptionValue(SUMMARY_OPTION, () -> ISettings.super.getSummaryFilePath());
 	}
-
+	@Override
+	public String getSbomOutputFilePath() {
+		return commandLine.getOptionValue(SBOM_OUTPUT_OPTION, () -> null);
+	}
 	@Override
 	public String getProjectId() {
 		return commandLine.getOptionValue(PROJECT_OPTION, () -> ISettings.super.getProjectId());

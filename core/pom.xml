@@ -137,9 +137,39 @@
 			<version>2.21.3</version>
 		</dependency>
 		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+			<version>2.21.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>2.21.3</version>
+		</dependency>
+		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
 			<version>2.21.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cyclonedx</groupId>
+			<artifactId>cyclonedx-core-java</artifactId>
+			<version>9.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.spdx</groupId>
+			<artifactId>java-spdx-library</artifactId>
+			<version>2.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.spdx</groupId>
+			<artifactId>spdx-rdf-store</artifactId>
+			<version>2.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.18.0</version>
 		</dependency>
 		
 		<!-- end -->
