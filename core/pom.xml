@@ -120,26 +120,11 @@
 		</dependency>
 		
 		<!-- org.gitlab4j:gilab4j-api:6.2.0 uses versions of FasterXML that have vulnerabilities. Override the version. -->
-		
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>2.22.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>2.21</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.21.3</version>
-		</dependency>
+		<!-- The following modules has direct dependencies to and thus defines the versions of jackson-core, jackson-databind and jackson-annotations too.-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
-			<version>2.22.0</version>
+			<version>2.22.1</version>
 		</dependency>
 		
 		<!-- end -->
