@@ -374,6 +374,12 @@ class SpdxExpressionParserTests {
 		}
 
 		@Test
+		void testSimpleCollapse3() {
+			var expression = parse("EPL-1.0 AND EPL-2.0 AND EPL-2.0");
+			assertEquals("EPL-1.0 AND EPL-2.0", expression.collapse().toString());
+		}
+
+		@Test
 		void testCollapse1() {
 			var expression = parse("EPL-2.0 AND Apache-2.0 AND EPL-2.0");
 			assertEquals("EPL-2.0 AND Apache-2.0", expression.collapse().toString());
@@ -440,6 +446,34 @@ class SpdxExpressionParserTests {
 		@Test
 		void testCollapse11() {
 			var expression = new SpdxExpressionParser().parse("(Apache-2.0 AND MIT) AND (Apache-2.0 AND MIT)");
+			assertEquals("Apache-2.0 AND MIT", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse12() {
+			var expression = new SpdxExpressionParser().parse("EPL-1.0 AND EPL-2.0 AND EPL-2.0 AND (CPL-1.0 AND EPL-1.0)");
+			// FIXME We can do better than this
+			assertEquals("EPL-1.0 AND EPL-2.0 AND (CPL-1.0 AND EPL-1.0)", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse13() {
+			var expression = new SpdxExpressionParser().parse("EPL-1.0 AND EPL-2.0 AND EPL-2.0 AND EPL-1.0");
+			// FIXME We can do better than this
+			assertEquals("EPL-1.0 AND EPL-2.0", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse14() {
+			var expression = new SpdxExpressionParser().parse("Apache-2.0 AND MIT AND Apache-2.0 AND MIT");
+			// FIXME We can do better than this
+			assertEquals("Apache-2.0 AND MIT", expression.collapse().toString());
+		}
+
+		@Test
+		void testCollapse15() {
+			var expression = new SpdxExpressionParser().parse("Apache-2.0 AND MIT AND MIT AND Apache-2.0");
+			// FIXME We can do better than this
 			assertEquals("Apache-2.0 AND MIT", expression.collapse().toString());
 		}
 	}
