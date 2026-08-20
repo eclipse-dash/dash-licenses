@@ -25,8 +25,8 @@ public class ClearlyDefinedIdParser implements ContentIdParser {
 			"^"
 			+ "(?<type>[\\w\\-]+)"
 			+ "\\/(?<provider>[\\w\\-\\.]+)"
-			+ "\\/(?<namespace>(?:[\\w@\\-\\.]|%2[Ff])+)"
-			+ "\\/(?<name>(?:[\\w@\\-\\.+]|%2[Ff])+)"
+			+ "\\/(?<namespace>(?:[\\w@\\-\\.]|%[0-9a-fA-F]{2})+)"
+			+ "\\/(?<name>(?:[\\w@\\-\\.+]|%[0-9a-fA-F]{2})+)"
 			+ "\\/(?<revision>[^\\/\\s]+)"
 			+ "$";
 	

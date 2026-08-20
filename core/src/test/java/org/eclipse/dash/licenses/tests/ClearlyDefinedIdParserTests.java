@@ -104,4 +104,18 @@ class ClearlyDefinedIdParserTests {
 			});
 		}
 	}
+	
+	
+	@Test
+	void testValidButProblematic() {
+		String[] valid = {
+				"git/github/itm/shawn%23src%2Fapps%2Ftcpip/45ff42d775dd72ab6819524988031719a75b206a"
+		};
+
+		Arrays.stream(valid).forEach(each -> {
+			var id = new ClearlyDefinedIdParser().parseId(each);
+			assertNotNull(id, each);
+			assertEquals(each, id.toString(), each);
+		});
+	}
 }
