@@ -9,11 +9,8 @@
  *************************************************************************/
 package org.eclipse.dash.licenses;
 
-import java.util.stream.Collectors;
-
-import org.sonatype.goodies.packageurl.InvalidException;
-import org.sonatype.goodies.packageurl.PackageUrl;
-import org.sonatype.goodies.packageurl.PackageUrlParser;
+import com.github.packageurl.MalformedPackageURLException;
+import com.github.packageurl.PackageURL;
 
 /**
  * Parse ids specified in the Package URL format.
@@ -51,15 +48,16 @@ public class PackageUrlIdParser implements ContentIdParser {
 	
 	@Override
 	public IContentId parseId(String input) {
-		PackageUrl packageUrl;
+		PackageURL packageUrl;
 		try {
-			packageUrl = new PackageUrlParser().parse(input);
-		} catch (InvalidException e) {
+			packageUrl = new PackageURL(input);
+		} catch (MalformedPackageURLException e) {
+			// No harm, no foul.
 			return null;
-			
 		}
+		
 		var type = packageUrl.getType();
-		var namespace = packageUrl.getNamespace() != null ? packageUrl.getNamespace().stream().collect(Collectors.joining("%2F")) : "-";
+		var namespace = packageUrl.getNamespace() != null ? packageUrl.getNamespace().replace("/","%2F") : "-";
 		var name = packageUrl.getName();
 		
 		// The version is considered optional by the specification/parser. We need a version; when it's
@@ -90,7 +88,7 @@ public class PackageUrlIdParser implements ContentIdParser {
 			name = name.replace("/", "%2F");
 		}
 		
-		if (path != null && !path.isEmpty()) name += "%23" + path.stream().collect(Collectors.joining("%2F"));
+		if (path != null && !path.isEmpty()) name += "%23" + path.replace("/","%2F");
 		return ContentId.getContentId(type, source, namespace, name, version);
 	}
 }
