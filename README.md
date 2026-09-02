@@ -660,6 +660,21 @@ $ awk -F '"' '/^name = / {name=$2} /^version = / {print "pypi/pypi/-/" name "/" 
 | java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
 ```
 
+### Example: Dart/pubdev
+
+You can use `dart` and from a Dart project pubdev-based dependencies:
+
+```
+$ dart pub get
+$ dart pub deps --no-dev --style=list \
+  | sed -n 's|^- \([a-zA-Z0-9_]*\) \(.*\)$|pub/pub.dev/-/\1/\2|p' \
+  | sort -u \
+  | java -jar /dash-licenses/org.eclipse.dash.licenses-<version>.jar -
+
+```
+
+Note that this has been provided by a member from the community and the Eclipse Dash project team haven't tested this ourselves. Please open an issue if you can refine this one or have a more elegant solution.
+
 ### Example: Go
 
 The Eclipse Dash License Tool can parse a `go.sum` file.
