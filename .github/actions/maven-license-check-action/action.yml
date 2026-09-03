@@ -32,7 +32,9 @@ runs:
     - id: license-check-with-review-request
       shell: bash {0} # do not fail-fast
       run: |
-        mvnArgs="-U -B -ntp org.eclipse.dash:license-tool-plugin:license-check -Ddash.fail=true -Dtycho.target.eager=true --settings $GITHUB_ACTION_PATH/licenseCheckMavenSettings.xml"
+        mvnArgs="-U -B -ntp org.eclipse.dash:license-tool-plugin:license-check -Ddash.fail=true -Ddash.batch=100"
+        mvnArgs+=" -Dtycho.target.eager=true"
+        mvnArgs+=" --settings $GITHUB_ACTION_PATH/licenseCheckMavenSettings.xml"
         if [[ ${{ inputs.project-id }} != "" ]]; then
           mvnArgs+=" -Ddash.projectId=${{ inputs.project-id }}"
         fi
