@@ -146,6 +146,34 @@ class ClearlyDefinedSupportTests {
 		assertEquals(7, results.size());
 	}
 
+	@Test
+	void testMultipleWithTimeout() {
+		List<IContentData> results = new ArrayList<>();
+
+		// @formatter:off
+		var packages = new String[] { 
+				"npm/npmjs/@yarnpkg/lockfile/1.1.0", 
+				"npm/npmjs/@yarnpkg/lockfile/1.1.1",
+				"npm/npmjs/@yarnpkg/lockfile/1.1.2", 
+				"npm/npmjs/-/write/1.0.3", 
+				"npm/npmjs/timeouty/mctimeoutface/1.0.0",
+				"npm/npmjs/-/write/1.0.4",
+				"npm/npmjs/-/write/1.0.5", 
+				"npm/npmjs/-/write/1.0.6", 
+			};
+		// @formatter:on
+
+		clearlyDefined.queryLicenseData(
+				Arrays.stream(packages).map(each -> ContentId.getContentId(each)).collect(Collectors.toList()),
+				data -> results.add(data));
+
+		// The one timing-out id is isolated and reported; the remaining seven
+		// still resolve.
+		assertEquals(7, results.size());
+		assertFalse(results.stream()
+				.anyMatch(each -> each.getId().toString().equals("npm/npmjs/timeouty/mctimeoutface/1.0.0")));
+	}
+
 	@Nested
 	class TestServiceMethods {
 

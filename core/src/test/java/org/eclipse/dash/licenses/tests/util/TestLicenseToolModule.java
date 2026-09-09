@@ -73,6 +73,18 @@ public class TestLicenseToolModule extends AbstractModule {
 					JsonReader reader = Json.createReader(new StringReader(payload));
 					JsonArray items = (JsonArray) reader.read();
 
+					/*
+					 * Simulate a Cloudflare gateway timeout (HTTP 524) when the batch
+					 * contains a "timeouty" id. The tool is expected to reduce the batch
+					 * size and retry, eventually isolating the offending id. See
+					 * https://github.com/eclipse-dash/dash-licenses/issues/603
+					 */
+					for (int index = 0; index < items.size(); index++) {
+						if (items.getString(index).startsWith("npm/npmjs/timeouty/")) {
+							return 524;
+						}
+					}
+
 					var builder = new StringBuilder();
 					builder.append("{");
 					for (int index = 0; index < items.size(); index++) {
