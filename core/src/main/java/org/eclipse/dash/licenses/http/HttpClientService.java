@@ -42,6 +42,37 @@ public class HttpClientService implements IHttpClientService {
 	@Inject
 	ISettings settings;
 
+	/**
+	 * Answers whether an HTTP status code represents a transient gateway/backend
+	 * error that is worth retrying.
+	 * <p>
+	 * These are upstream failures (the backend server was unreachable, overloaded,
+	 * or timed out) rather than a definitive answer from the service. Retrying with
+	 * backoff frequently succeeds.
+	 * <ul>
+	 * <li>502 Bad Gateway</li>
+	 * <li>503 Service Unavailable</li>
+	 * <li>504 Gateway Timeout</li>
+	 * <li>524 A Timeout Occurred (Cloudflare: the origin did not respond within the
+	 * gateway timeout)</li>
+	 * </ul>
+	 * See https://github.com/eclipse-dash/dash-licenses/issues/603
+	 *
+	 * @param statusCode the HTTP status code returned by the server
+	 * @return <code>true</code> if the request should be retried
+	 */
+	public static boolean isTransientGatewayError(int statusCode) {
+		switch (statusCode) {
+		case 502: // Bad Gateway
+		case 503: // Service Unavailable
+		case 504: // Gateway Timeout
+		case 524: // Cloudflare: A Timeout Occurred
+			return true;
+		default:
+			return false;
+		}
+	}
+
 	/** Optional HTTP proxy settings. */
 	@Inject
 	Provider<IProxySettings> proxySettings;
@@ -62,8 +93,10 @@ public class HttpClientService implements IHttpClientService {
 
 				HttpClient httpClient = getHttpClient(timeout);
 				HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
-				if (response.statusCode() == 502 && tries++ < MAX_TRIES) {
-					logger.info("HTTP response 502 (Bad Gateway). Trying again...");
+				if (isTransientGatewayError(response.statusCode()) && tries++ < MAX_TRIES) {
+					logger
+							.info("HTTP response {} (transient gateway error). Trying again...",
+									response.statusCode());
 					Thread.sleep(1000 * tries);
 					continue;
 				}
@@ -126,8 +159,10 @@ public class HttpClientService implements IHttpClientService {
 				HttpClient httpClient = getHttpClient(timeout);
 
 				HttpResponse<InputStream> response = httpClient.send(request, BodyHandlers.ofInputStream());
-				if (response.statusCode() == 502 && tries++ < MAX_TRIES) {
-					logger.info("HTTP response 502 (Bad Gateway). Trying again...");
+				if (isTransientGatewayError(response.statusCode()) && tries++ < MAX_TRIES) {
+					logger
+							.info("HTTP response {} (transient gateway error). Trying again...",
+									response.statusCode());
 					Thread.sleep(1000 * tries);
 					continue;
 				}

@@ -36,6 +36,13 @@ import jakarta.json.stream.JsonParsingException;
 public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	final Logger logger = LoggerFactory.getLogger(ClearlyDefinedSupport.class);
 
+	/**
+	 * How long to pause (in milliseconds) before retrying a ClearlyDefined batch
+	 * that timed out (HTTP 524). See
+	 * https://github.com/eclipse-dash/dash-licenses/issues/603
+	 */
+	static final long RETRY_PAUSE_MILLIS = 3000L;
+
 	@Inject
 	ISettings settings;
 	@Inject
@@ -127,11 +134,37 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 	 * 
 	 * <p>
 	 * See https://github.com/eclipse-dash/dash-licenses/issues/429
+	 * 
+	 * <p>
+	 * When ClearlyDefined answers with an HTTP 524 (a Cloudflare gateway timeout),
+	 * the batch took too long to process. In that case we halve the batch and retry
+	 * each half after a short pause, recursing until the batch contains a single
+	 * item. If that single item still times out, we print it as the erroneous one
+	 * and move on (it is treated as an id for which no information was found).
+	 * 
+	 * <p>
+	 * See https://github.com/eclipse-dash/dash-licenses/issues/603
 	 */
 	private void queryClearlyDefined(List<IContentId> filteredIds, int start, int end,
 			Consumer<IContentData> consumer) {
 		try {
 			doQueryClearlyDefined(filteredIds, start, end, consumer);
+		} catch (ClearlyDefinedTimeoutException e) {
+			if (start + 1 == end) {
+				// We're down to a single item and it still times out. Report it and
+				// move on; it is treated as an id for which no information is found.
+				logger.error("ClearlyDefined timed out (HTTP 524) for {}", filteredIds.get(start));
+			} else {
+				// Halve the batch and retry each half after a short pause so we don't
+				// immediately hammer an already-overloaded backend.
+				int middle = start + (end - start) / 2;
+				logger
+						.info("ClearlyDefined timed out (HTTP 524) for a batch of {} items. "
+								+ "Reducing the batch size and retrying.", end - start);
+				pauseBeforeRetry();
+				queryClearlyDefined(filteredIds, start, middle, consumer);
+				queryClearlyDefined(filteredIds, middle, end, consumer);
+			}
 		} catch (ClearlyDefinedResponseException e) {
 			if (start + 1 == end) {
 				logger.info("Error querying ClearlyDefined for {}", filteredIds.get(start));
@@ -140,6 +173,19 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 				queryClearlyDefined(filteredIds, start, middle, consumer);
 				queryClearlyDefined(filteredIds, middle, end, consumer);
 			}
+		}
+	}
+
+	/**
+	 * Pause between retries of a timed-out ClearlyDefined batch. We wait three
+	 * seconds to give the backend a chance to recover before trying the smaller
+	 * batch.
+	 */
+	private void pauseBeforeRetry() {
+		try {
+			Thread.sleep(RETRY_PAUSE_MILLIS);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -175,7 +221,12 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 							}
 						});
 
-		if (code == 500 || code == 524) {
+		if (code == 524) {
+			logger.error("A server error (HTTP {}) occurred while contacting ClearlyDefined", code);
+			throw new ClearlyDefinedTimeoutException();
+		}
+
+		if (code == 500) {
 			logger.error("A server error (HTTP {}) occurred while contacting ClearlyDefined", code);
 			throw new ClearlyDefinedResponseException();
 		}
@@ -267,6 +318,23 @@ public class ClearlyDefinedSupport implements ILicenseDataProvider {
 		}
 
 		public ClearlyDefinedResponseException() {
+			super();
+		}
+	}
+
+	/**
+	 * Thrown when ClearlyDefined answers with an HTTP 524 (gateway timeout),
+	 * signalling that the batch should be reduced and retried rather than treated
+	 * as a hard failure.
+	 * 
+	 * @see <a href=
+	 *      "https://github.com/eclipse-dash/dash-licenses/issues/603">issue
+	 *      603</a>
+	 */
+	class ClearlyDefinedTimeoutException extends ClearlyDefinedResponseException {
+		private static final long serialVersionUID = 1L;
+
+		public ClearlyDefinedTimeoutException() {
 			super();
 		}
 	}
