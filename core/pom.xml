@@ -116,7 +116,7 @@
 		<dependency>
 			<groupId>org.gitlab4j</groupId>
 			<artifactId>gitlab4j-api</artifactId>
-			<version>6.2.0</version>
+			<version>6.3.0</version>
 		</dependency>
 		
 		<!-- org.gitlab4j:gilab4j-api:6.2.0 uses versions of FasterXML that have vulnerabilities. Override the version. -->
