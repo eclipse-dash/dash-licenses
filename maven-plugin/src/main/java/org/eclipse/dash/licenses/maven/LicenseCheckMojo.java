@@ -11,14 +11,18 @@ package org.eclipse.dash.licenses.maven;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +38,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Proxy;
+import org.codehaus.plexus.util.DirectoryScanner;
 import org.eclipse.dash.licenses.ContentId;
 import org.eclipse.dash.licenses.IContentId;
 import org.eclipse.dash.licenses.IProxySettings;
@@ -41,8 +46,13 @@ import org.eclipse.dash.licenses.ISettings;
 import org.eclipse.dash.licenses.LicenseChecker;
 import org.eclipse.dash.licenses.LicenseData;
 import org.eclipse.dash.licenses.cli.CSVCollector;
+import org.eclipse.dash.licenses.cli.FlatFileReader;
 import org.eclipse.dash.licenses.cli.IResultsCollector;
 import org.eclipse.dash.licenses.cli.NeedsReviewCollector;
+import org.eclipse.dash.licenses.cli.PackageLockFileReader;
+import org.eclipse.dash.licenses.cli.PnpmPackageLockFileReader;
+import org.eclipse.dash.licenses.cli.ReaderType;
+import org.eclipse.dash.licenses.cli.YarnLockFileReader;
 import org.eclipse.dash.licenses.context.LicenseToolModule;
 import org.eclipse.dash.licenses.projects.ProjectService;
 import org.eclipse.dash.licenses.review.CreateReviewRequestCollector;
@@ -161,10 +171,46 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 	private MavenSession mavenSession;
 
 	/**
+	 * Maven's representation of the project in the current build.
+	 */
+	@Parameter(defaultValue = "${project}", readonly = true, required = true)
+	private MavenProject project;
+
+	/**
 	 * The Maven reactor.
 	 */
 	@Parameter(defaultValue = "${reactorProjects}", readonly = true, required = true)
 	private List<MavenProject> reactorProjects;
+
+	/**
+	 * The list of configured readers, each with a reader type and a list of file
+	 * patterns.
+	 * 
+	 * Example in pom.xml:
+	 * 
+	 * <pre>
+	 * {@code
+	 * <configuration>
+	 *   <readers>
+	 *     <reader>
+	 *       <type>pnpm</type>
+	 *       <files>
+	 *         <file>frontend/pnpm-lock.yaml</file>
+	 *       </files>
+	 *     </reader>
+	 *     <reader>
+	 *       <type>npm</type>
+	 *       <files>
+	 *         <file>frontend/package-lock.json</file>
+	 *       </files>
+	 *     </reader>
+	 *   </readers>
+	 * </configuration>
+	 * }
+	 * </pre>
+	 */
+	@Parameter
+	private List<ReaderConfig> readers;
 
 	/**
 	 * Maven Security Dispatcher
@@ -216,6 +262,10 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 			// classifier
 			deps.add(ContentId.getContentId(type, source, a.getGroupId(), a.getArtifactId(), a.getVersion()));
 		});
+
+		// read and merge the file-based dependencies
+		Collection<IContentId> fileDeps= readFileDependencyContent();
+		deps.addAll(fileDeps); 
 
 		List<IResultsCollector> collectors = new ArrayList<>();
 
@@ -294,4 +344,73 @@ public class LicenseCheckMojo extends AbstractArtifactFilteringMojo {
 				proxyServer.getPassword(), securityDispatcher, getLog());
 	}
 
+	
+	public Collection<IContentId> readFileDependencyContent() throws MojoExecutionException {
+		if (readers == null || readers.isEmpty()) {
+			getLog().warn("No readers configured. Nothing to do.");
+			return List.of();
+		}
+
+		List<IContentId> contentIds=new ArrayList<>();
+		// Iterate over all configured readers
+		for (ReaderConfig readerConfig : readers) {
+			ReaderType type = readerConfig.getReaderType();
+			List<String> filePatterns = readerConfig.getFiles();
+
+			// For each file pattern, resolve the actual files on disk
+			for (String pattern : filePatterns) {
+				List<File> matchedFiles = resolveGlobFiles(pattern);
+				for (File file : matchedFiles) {
+					getLog().info("Processing file: " + file.getAbsolutePath() + " with reader type: " + type);
+					try {
+						InputStreamReader input = new FileReader(file);
+
+						// Choose the appropriate reader for the file
+						switch (type) {
+						case PNPM:
+							contentIds.addAll( new PnpmPackageLockFileReader(input).getContentIds());
+							break;
+						case NPM:
+							contentIds.addAll(new PackageLockFileReader(input).getContentIds());
+							break;
+						case YARN:
+							contentIds.addAll(new YarnLockFileReader(input).getContentIds());
+							break;
+						case FLAT:
+							contentIds.addAll(new FlatFileReader(input).getContentIds());
+							break;
+						default:
+							throw new MojoExecutionException("Unsupported reader type: " + type);
+						}
+					} catch (FileNotFoundException e) {
+						throw new MojoExecutionException("Could nor read file: " + file.getName(), e);
+					}
+				}
+			}
+		}
+		return contentIds;
+	}
+
+	/**
+	 * Resolves a single glob pattern into a list of matching files.
+	 *
+	 * @param pattern The file pattern (glob) to scan for.
+	 * @return A list of matching File objects.
+	 */
+	private List<File> resolveGlobFiles(String pattern) {
+		File baseDir = project.getBasedir();
+
+		DirectoryScanner scanner = new DirectoryScanner();
+		scanner.setBasedir(baseDir);
+		scanner.setIncludes(new String[] { pattern });
+		scanner.scan();
+
+		String[] includedFiles = scanner.getIncludedFiles();
+		List<File> result = new ArrayList<>();
+		for (String relativePath : includedFiles) {
+			File found = new File(baseDir, relativePath);
+			result.add(found);
+		}
+		return result;
+	}
 }
