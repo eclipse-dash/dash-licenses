@@ -22,6 +22,7 @@ import org.eclipse.dash.licenses.clearlydefined.ClearlyDefinedSupport;
 import org.eclipse.dash.licenses.foundation.EclipseFoundationSupport;
 import org.eclipse.dash.licenses.http.HttpClientService;
 import org.eclipse.dash.licenses.http.IHttpClientService;
+import org.eclipse.dash.licenses.npm.NpmLicenseSupport;
 import org.eclipse.dash.licenses.projects.ProjectService;
 import org.eclipse.dash.licenses.review.GitLabSupport;
 
@@ -67,6 +68,13 @@ public class LicenseToolModule extends AbstractModule {
 
 		if (!"skip".equals(settings.getClearlyDefinedDefinitionsUrl())) {
 			licenseDataProviders.addBinding().to(ClearlyDefinedSupport.class);
+		}
+
+		// Fallback: query the npm registry for JavaScript (npm) content that neither
+		// the Eclipse Foundation nor ClearlyDefined were able to approve. The provider
+		// itself is weighted below the others (see NpmLicenseSupport.getWeight()).
+		if (!"skip".equals(settings.getNpmRegistryUrl())) {
+			licenseDataProviders.addBinding().to(NpmLicenseSupport.class);
 		}
 
 		bind(LicenseSupport.class).toInstance(new LicenseSupport());

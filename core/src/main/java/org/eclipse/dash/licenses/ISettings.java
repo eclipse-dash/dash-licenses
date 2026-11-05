@@ -21,6 +21,7 @@ public interface ISettings {
 	public static final String DEFAULT_IPLAB_PATH = "eclipsefdn/emo-team/iplab";
 	public static final String DEFAULT_APPROVED_LICENSES_URL = "https://www.eclipse.org/legal/licenses/licenses.json";
 	public static final String DEFAULT_CLEARLYDEFINED_URL = "https://api.clearlydefined.io/definitions";
+	public static final String DEFAULT_NPMJS_URL = "https://registry.npmjs.org";
 	public static final String DEFAULT_IPZILLA_URL = "https://www.eclipse.org/projects/services/license_check.php";
 	public static final int DEFAULT_THRESHOLD = 60;
 	public static final int DEFAULT_BATCH = 500;
@@ -53,6 +54,20 @@ public interface ISettings {
 
 	default String getApprovedLicensesUrl() {
 		return System.getProperty("org.eclipse.dash.licenses", DEFAULT_APPROVED_LICENSES_URL);
+	};
+
+	/**
+	 * The base URL of the npm registry. This is used as a fallback source of
+	 * license information for npm (JavaScript) content that cannot be resolved by
+	 * ClearlyDefined.
+	 * <p>
+	 * Setting this to the sentinel value <code>"skip"</code> disables the npm
+	 * registry fallback entirely.
+	 *
+	 * @return the npm registry base URL (String)
+	 */
+	default String getNpmRegistryUrl() {
+		return System.getProperty("org.eclipse.dash.npm", DEFAULT_NPMJS_URL);
 	};
 
 	/**
